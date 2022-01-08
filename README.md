@@ -24,7 +24,8 @@ From `git bash`:
   Download and install the latest release of the pheonix framework here: https://github.com/CrossTheRoadElec/Phoenix-Releases/releases
   
 * REV Robotics: for the SPARK MAX
-  Follow the java instructions here: https://docs.revrobotics.com/sparkmax/software-resources/spark-max-api-information#java-api
+  Should be added already, vendor dep URL that is currently working:
+  https://rev-robotics-software-metadata.netlify.app/REVLib.json
 
 
 For more information see here: https://docs.wpilib.org/en/stable/docs/software/vscode-overview/3rd-party-libraries.html
