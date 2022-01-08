@@ -13,7 +13,7 @@ A shortcut should be added to your desktop named: `2022 WPILib VS Code`.
 ### Clone the Repo:
 
 From `git bash`:
-  * Change directories (`cd`) to where you want a opy of the project created. (e.g. C:\Users\<username>\Documents\!FRC\git\ or wherever is convenient/memorable for you) 
+  * Change directories (`cd`) to where you want a copy of the project created. (e.g. C:\Users\<username>\Documents\!FRC\git\ or wherever is convenient/memorable for you) 
   * `git clone https://github.com/Team2168/2022_Main_Robot.git`
 
 
