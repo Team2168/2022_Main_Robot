@@ -30,11 +30,12 @@ From `git bash`:
 
 For more information see here: https://docs.wpilib.org/en/stable/docs/software/vscode-overview/3rd-party-libraries.html
 
-### Install NI Tools:
+### Install Imaging Tools:
 
-Follow the instructions here: https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/frc-game-tools.html
-
-This will include stuff like the RIO Imaging tool (to load firmware onto the roborio) and the DriverStation application.
+  * REV Hardware Client: https://www.revrobotics.com/software/
+    * After installing run an update - yea even if you just installed it.
+  * Follow the instructions here: https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/frc-game-tools.html
+    This will include stuff like the RIO Imaging tool (to load firmware onto the roborio) and the DriverStation application.
 
 ### Building code:
 
