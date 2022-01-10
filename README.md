@@ -30,6 +30,12 @@ From `git bash`:
 
 For more information see here: https://docs.wpilib.org/en/stable/docs/software/vscode-overview/3rd-party-libraries.html
 
+### Install NI Tools:
+
+Follow the instructions here: https://docs.wpilib.org/en/stable/docs/zero-to-robot/step-2/frc-game-tools.html
+
+This will include stuff like the RIO Imaging tool (to load firmware onto the roborio) and the DriverStation application.
+
 ### Building code:
 
   * From within VSCode 2022, Open the command pallet (Ctrl+Shift+P or click the WPI logo in the top right)
@@ -65,3 +71,4 @@ For more information see here: https://docs.wpilib.org/en/stable/docs/software/v
      * Double check you're in the right game mode Practice/Auto/Teloperated
      * Audibly identify you're enabling the robot (yell `ENABLING - WATCH YOUR FACE`)
      * Enable the robot
+
