@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import org.team2168.commands.*;
 import org.team2168.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
+import io.github.oblarg.oblog.Logger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,6 +25,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    Logger.configureLoggingAndConfig(this, false);
+
     // Configure the button bindings
     configureButtonBindings();
   }
