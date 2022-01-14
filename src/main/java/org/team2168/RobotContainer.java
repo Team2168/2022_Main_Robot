@@ -5,6 +5,7 @@
 package org.team2168;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import org.team2168.commands.*;
 import org.team2168.subsystems.*;
@@ -22,6 +23,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  public static Joystick driverJoystick = new Joystick(Constants.DRIVER_JOYSTICK);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
