@@ -15,4 +15,10 @@ package org.team2168;
 public final class Constants {
 
     public static final int DRIVER_JOYSTICK = 0;
+
+    public static final int ENTRANCE_LINE_BREAK = 5;
+    public static final int EXIT_LINE_BREAK = 6;
+
+    // PDP/CAN DEVICES
+    public static final int INDEXER_MOTOR_PDP = 6;
 }
