@@ -4,17 +4,14 @@
 
 We have a mirror of the 2022 javadocs for CTRE/REV/WPILib here: https://team2168.org/javadoc
 
-* CTRE
-  * [read the docs](https://docs.ctre-phoenix.com/en/stable/)
-  * [examples code](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages)
+* CTRE [read the docs](https://docs.ctre-phoenix.com/en/stable/), [examples code](https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages)
 * REV
   * REVLib [javadocs](https://codedocs.revrobotics.com/java/com/revrobotics/package-summary.html)
   * SPARKMax [documentation](https://docs.revrobotics.com/sparkmax/), [example code](https://github.com/REVrobotics/SPARK-MAX-Examples)
   * Control system component [documentation](https://docs.revrobotics.com/), [PDH example code](https://github.com/REVrobotics/Power-Distribution-Hub-Examples)
     [Pneumatic Hub example code](https://github.com/REVrobotics/Pneumatic-Hub-Examples)
 
-* WPILib
-  * [read the docs](https://docs.wpilib.org/en/stable/)
+* WPILib [read the docs](https://docs.wpilib.org/en/stable/)
 
 ## Software / Development Tools Setup
 
