@@ -1,0 +1,306 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package org.team2168.subsystems;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.team2168.Constants.CANDevices;
+
+public class Drivetrain extends SubsystemBase {
+    private WPI_TalonFX leftMotor1;
+    private WPI_TalonFX leftMotor2;
+    private WPI_TalonFX leftMotor3;
+    private WPI_TalonFX rightMotor1;
+    private WPI_TalonFX rightMotor2;
+    private WPI_TalonFX rightMotor3;
+    private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
+
+    private DifferentialDrive drive;
+    private DifferentialDriveOdometry odometry;
+
+    private static Drivetrain instance = null;
+
+    private static final boolean ENABLE_CURRENT_LIMIT = true;
+    private static final double CONTINUOUS_CURRENT_LIMIT = 40; // amps
+    private static final double TRIGGER_THRESHOLD_LIMIT = 60; // amp
+    private static final double TRIGGER_THRESHOLD_TIME = 0.2; // s
+    private final static double NEUTRALDEADBAND = 0.001;
+
+    private SupplyCurrentLimitConfiguration talonCurrentLimit;
+
+    public static final boolean DT_REVERSE_LEFT1 = false;
+    public static final boolean DT_REVERSE_LEFT2 = false;
+    public static final boolean DT_REVERSE_LEFT3 = false;
+    public static final boolean DT_REVERSE_RIGHT1 = true;
+    public static final boolean DT_REVERSE_RIGHT2 = true;
+    public static final boolean DT_REVERSE_RIGHT3 = true;
+    public static final boolean DT_3_MOTORS_PER_SIDE = true;
+
+    /** Invert Directions for Left and Right */
+    TalonFXInvertType leftInvert = TalonFXInvertType.CounterClockwise; // Same as invert = "false"
+    TalonFXInvertType rightInvert = TalonFXInvertType.Clockwise; // Same as invert = "true"
+
+    /** Config Objects for motor controllers */
+    TalonFXConfiguration leftConfig = new TalonFXConfiguration();
+    TalonFXConfiguration rightConfig = new TalonFXConfiguration();
+
+    private static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
+    private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
+    private static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
+    private static final double WHEEL_DIAMETER = 6.0; // inches
+    private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
+    private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;;
+    private static final double DEGREES_PER_REV = 360.0;
+    private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
+    private static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+
+    /**
+     * Gets the singleton instance of the drivetrain
+     * 
+     * @return drivetrain
+     */
+    public static Drivetrain getInstance() {
+        if (instance == null)
+            instance = new Drivetrain();
+        return instance;
+    }
+
+    /**
+     * Creates a new Drivetrain.
+     * This Drivetrain is configured to have 2 front "leader" motors, and 4 rear
+     * "follower" motors
+     * 
+     * Each motor in the drivetrain is coupled together mechanically, so there isn't
+     * much of a point in
+     * giving each motor freedom.
+     */
+    private Drivetrain() {
+        // Instantiate motor objects
+        leftMotor1 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_1);
+        leftMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_2);
+        leftMotor3 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_3);
+        rightMotor1 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_1);
+        rightMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_2);
+        rightMotor3 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_3);
+
+        // Instantiate gyro
+        pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
+
+        // Reset the configurations on the motor controllers
+        leftMotor1.configFactoryDefault();
+        leftMotor2.configFactoryDefault();
+        leftMotor3.configFactoryDefault();
+        rightMotor1.configFactoryDefault();
+        rightMotor2.configFactoryDefault();
+        rightMotor3.configFactoryDefault();
+
+        // Create a current limit
+        talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+                CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+
+        // Add the current limit to the motor configuration object
+        leftConfig.supplyCurrLimit = talonCurrentLimit;
+        rightConfig.supplyCurrLimit = talonCurrentLimit;
+
+        // Configure the left side of the drivetrain to use the integrated sensor
+        leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+        rightConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
+
+        leftConfig.neutralDeadband = NEUTRALDEADBAND;
+        rightConfig.neutralDeadband = NEUTRALDEADBAND;
+
+        leftMotor1.configAllSettings(leftConfig);
+        leftMotor2.configAllSettings(leftConfig);
+        leftMotor3.configAllSettings(leftConfig);
+        rightMotor1.configAllSettings(rightConfig);
+        rightMotor2.configAllSettings(rightConfig);
+        rightMotor3.configAllSettings(rightConfig);
+
+        leftMotor2.follow(leftMotor1);
+        leftMotor3.follow(leftMotor1);
+        rightMotor2.follow(rightMotor1);
+        rightMotor3.follow(rightMotor1);
+
+        leftMotor1.setInverted(leftInvert);
+        leftMotor2.setInverted(InvertType.FollowMaster);
+        leftMotor3.setInverted(InvertType.FollowMaster);
+        rightMotor1.setInverted(rightInvert);
+        rightMotor2.setInverted(InvertType.FollowMaster);
+        rightMotor3.setInverted(InvertType.FollowMaster);
+
+        setDefaultBrakeMode();
+        drive = new DifferentialDrive(leftMotor1, rightMotor1);
+        odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        odometry.update(pidgey.getRotation2d(), getLeftEncoderDistance(), getRightEncoderDistance());
+    }
+
+    /**
+     * Gets the odometry pose
+     * 
+     * @return Pose2d odometry pose
+     */
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    /**
+     * Gets wheel speeds
+     * 
+     * @return DifferentialDriveWheelSpeeds objects
+     */
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(getLeftEncoderRate(), getRightEncoderRate());
+    }
+
+    /**
+     * Gets gyro heading
+     * 
+     * @return gyro heading from -180.0 to 180.0
+     */
+    public double getHeading() {
+        return pidgey.getRotation2d().getDegrees();
+    }
+
+    /**
+     * Gets gyro turn rate
+     * 
+     * @return rate in degrees per second
+     */
+    public double getTurnRate() {
+        return -pidgey.getRate();
+    }
+
+    /**
+     * Get average encoder distance
+     * 
+     * @return gets distance in meters
+     */
+    public double getAverageEncoderDistance() {
+        return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+    }
+
+    /**
+     * Zeroes gyro heading
+     */
+    public void zeroHeading() {
+        pidgey.reset();
+    }
+
+    /**
+     * Resets encoders on motors
+     */
+    public void resetEncoders() {
+        leftMotor1.setSelectedSensorPosition(0.0);
+        rightMotor1.setSelectedSensorPosition(0.0);
+    }
+
+    /**
+     * Resets odometry to specified pose and rotation of gyro
+     * 
+     * @param pose pose to set odometry
+     */
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        odometry.resetPosition(pose, pidgey.getRotation2d());
+    }
+
+    /**
+     * Gets left encoder distance
+     * 
+     * @return encoder distance in meters
+     */
+    public double getLeftEncoderDistance() {
+        return ticksToMeters(leftMotor1.getSelectedSensorPosition());
+    }
+
+    /**
+     * Gets right encoder distance
+     * 
+     * @return encoder distance in meters
+     */
+    public double getRightEncoderDistance() {
+        return ticksToMeters(rightMotor1.getSelectedSensorPosition());
+    }
+
+    /**
+     * Gets left encoder velocity
+     * 
+     * @return encoder velocity in meters/second
+     */
+    public double getLeftEncoderRate() {
+        return ticksToMeters(leftMotor1.getSelectedSensorVelocity()) * 10.0;
+    }
+
+    /**
+     * Gets left encoder velocity
+     * 
+     * @return encoder velocity in meters/second
+     */
+    public double getRightEncoderRate() {
+        return ticksToMeters(rightMotor1.getSelectedSensorVelocity()) * 10.0;
+    }
+
+    private double ticksToInches(double setpoint) {
+        return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
+    }
+
+    private double ticksToMeters(double ticks) {
+        // the cheezy poofs have been colluding to get inside of our codebase
+        return ticksToInches(ticks) * 0.0254;
+    }
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        drive.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    public void arcadeDrive(double xSpeed, double zRotation) {
+        drive.arcadeDrive(xSpeed, zRotation);
+    }
+
+    /**
+     * Change all motors to their default mix of brake/coast modes.
+     * Should be used for normal match play.
+     */
+    public void setDefaultBrakeMode() {
+        leftMotor1.setNeutralMode(NeutralMode.Brake);
+        leftMotor2.setNeutralMode(NeutralMode.Coast);
+        leftMotor3.setNeutralMode(NeutralMode.Coast);
+        rightMotor1.setNeutralMode(NeutralMode.Brake);
+        rightMotor2.setNeutralMode(NeutralMode.Coast);
+        rightMotor3.setNeutralMode(NeutralMode.Coast);
+    }
+
+    /**
+     * Change all the drivetrain motor controllers to coast mode.
+     * Useful for allowing robot to be manually pushed around the field.
+     */
+    public void setAllMotorsCoast() {
+        leftMotor1.setNeutralMode(NeutralMode.Coast);
+        leftMotor2.setNeutralMode(NeutralMode.Coast);
+        leftMotor3.setNeutralMode(NeutralMode.Coast);
+        rightMotor1.setNeutralMode(NeutralMode.Coast);
+        rightMotor2.setNeutralMode(NeutralMode.Coast);
+        rightMotor3.setNeutralMode(NeutralMode.Coast);
+    }
+
+}
