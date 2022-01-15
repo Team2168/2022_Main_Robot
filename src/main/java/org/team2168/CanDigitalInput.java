@@ -10,8 +10,8 @@ public class CanDigitalInput {
         this.motor = motor;
     }
 
-    public boolean getForwardLimit(){
-        if(this.motor.getSensorCollection().isFwdLimitSwitchClosed() == 1)
+    public boolean isFwdLimitSwitchClosed() {
+                if(this.motor.getSensorCollection().isFwdLimitSwitchClosed() == 1)
             return true;
         else 
             return false;

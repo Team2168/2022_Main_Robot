@@ -4,22 +4,27 @@
 
 package org.team2168.subsystems;
 
-import com.revrobotics.SparkMaxLimitSwitch;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+
+import org.team2168.CanDigitalInput;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
-  private SparkMaxLimitSwitch hallEffectSensor;
-  //the name; below was by conor's request
+  private CanDigitalInput hallEffectSensor;
+  //the name below was by Conor's request
   private TalonFX turtle;
   private static Turret instance = null;
+  private final int TICKS_PER_REV = 2048;
 
   public Turret() {
-    //0 is a placeholder, move to constants later
+    //0 is a placeholdeor, move to constants later
     turtle = new TalonFX(0);
+    hallEffectSensor = new CanDigitalInput(turtle);
+
+    turtle.configFactoryDefault();
   }
 
   public static Turret getInstance() {
@@ -28,21 +33,21 @@ public class Turret extends SubsystemBase {
     return instance;
   }
 
+  public boolean isTurretAtZero() {
+    return hallEffectSensor.isFwdLimitSwitchClosed();
+  }
+
   /**
-* Is forward limit switch closed.
-*
-* @return  '1' iff forward limit switch input is closed, 0 iff switch is open. This function works
-*          regardless if limit switch feature is enabled.  Remote limit features do not impact this routine.
-*/
-//closed position = turret is 0 degrees rotated(?)
-public int isFwdLimitSwitchClosed() {
-  return turtle.isFwdLimitSwitchClosed();
-}
+   * Rotates the turret to a position
+   * @param rotation Should be between -1 and 1
+   */
+  public void rotateTurret(double rotation) {
+    turtle.set(ControlMode.Position, rotation * TICKS_PER_REV);
+  }
 
-public boolean isLimitSwitchEnabled() {
-  return hallEffectSensor.isLimitSwitchEnabled();
-}
-
+  public double position() {
+    return turtle.getSelectedSensorPosition();
+  }
 
   @Override
   public void periodic() {
