@@ -46,7 +46,7 @@ We have a mirror of the 2022 javadocs for CTRE/REV/WPILib here: https://team2168
     [Pneumatic Hub example code](https://github.com/REVrobotics/Pneumatic-Hub-Examples)
 
 * WPILib [read the docs](https://docs.wpilib.org/en/stable/)
-* OBlog [read the docs](https://oblog-docs.readthedocs.io/en/latest/) - for easy robot defined shuffleboard layouts
+* Oblog [read the docs](https://oblog-docs.readthedocs.io/en/latest/) - for easy robot defined shuffleboard layouts
 
 ## Software / Development Tools Setup
 
