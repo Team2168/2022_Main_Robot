@@ -7,6 +7,7 @@ package org.team2168;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import org.team2168.commands.*;
+import org.team2168.commands.Pixy.FindAllianceBall;
 import org.team2168.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
@@ -20,12 +21,16 @@ import io.github.oblarg.oblog.Logger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Pixy m_pixy = Pixy.getInstance();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
+
+    m_pixy.setDefaultCommand(m_findAllianceBall);
 
     // Configure the button bindings
     configureButtonBindings();
