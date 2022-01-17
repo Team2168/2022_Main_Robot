@@ -7,7 +7,6 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -18,7 +17,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
+
 import org.team2168.Constants.CANDevices;
 
 public class Drivetrain extends SubsystemBase {
@@ -62,9 +64,9 @@ public class Drivetrain extends SubsystemBase {
     private static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
     private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
     private static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
-    private static final double WHEEL_DIAMETER = 6.0; // inches
+    private static final double WHEEL_DIAMETER = 4.0; // inches
     private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
-    private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;;
+    private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
     private static final double DEGREES_PER_REV = 360.0;
     private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     private static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
@@ -117,7 +119,7 @@ public class Drivetrain extends SubsystemBase {
         leftConfig.supplyCurrLimit = talonCurrentLimit;
         rightConfig.supplyCurrLimit = talonCurrentLimit;
 
-        // Configure the left side of the drivetrain to use the integrated sensor
+        // Configure drivetrain to use integrated sensors
         leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
         rightConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
@@ -143,7 +145,7 @@ public class Drivetrain extends SubsystemBase {
         rightMotor2.setInverted(InvertType.FollowMaster);
         rightMotor3.setInverted(InvertType.FollowMaster);
 
-        setDefaultBrakeMode();
+        setMotorsBrake();
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
         odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
     }
@@ -159,44 +161,69 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return Pose2d odometry pose
      */
+    @Log(name = "Robot Pose", rowIndex = 3, columnIndex = 0)
     public Pose2d getPose() {
         return odometry.getPoseMeters();
     }
 
-    /**
-     * Gets wheel speeds
-     * 
-     * @return DifferentialDriveWheelSpeeds objects
-     */
-    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-        return new DifferentialDriveWheelSpeeds(getLeftEncoderRate(), getRightEncoderRate());
-    }
-
+    
     /**
      * Gets gyro heading
      * 
-     * @return gyro heading from -180.0 to 180.0
+     * @return gyro heading from -180.0 to 180.0 degrees
      */
+    @Log(name = "Gyro Heading", rowIndex = 2, columnIndex = 1)
     public double getHeading() {
         return pidgey.getRotation2d().getDegrees();
     }
-
+    
     /**
      * Gets gyro turn rate
      * 
      * @return rate in degrees per second
      */
+    @Log(name = "Turn velocity", rowIndex = 2, columnIndex = 0)
     public double getTurnRate() {
         return -pidgey.getRate();
     }
-
+    
     /**
      * Get average encoder distance
      * 
      * @return gets distance in meters
      */
+    @Log(name = "Average Encoder Distance (m)", rowIndex = 1, columnIndex = 0)
     public double getAverageEncoderDistance() {
         return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
+    }
+    
+    /**
+     * Gets wheel speeds in meters per second
+     * 
+     * @return DifferentialDriveWheelSpeeds object
+     */
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(getLeftEncoderRate(), getRightEncoderRate());
+    }
+    
+    /**
+     * Gets left encoder distance
+     * 
+     * @return encoder distance in meters
+     */
+    @Log(name = "Left Encoder Distance (m)", rowIndex = 1, columnIndex = 1)
+    public double getLeftEncoderDistance() {
+        return ticksToMeters(leftMotor1.getSelectedSensorPosition());
+    }
+
+    /**
+     * Gets right encoder distance
+     * 
+     * @return encoder distance in meters
+     */
+    @Log(name = "Right Encoder Distance (m)", rowIndex = 1, columnIndex = 2)
+    public double getRightEncoderDistance() {
+        return ticksToMeters(rightMotor1.getSelectedSensorPosition());
     }
 
     /**
@@ -215,38 +242,33 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
-     * Resets odometry to specified pose and rotation of gyro
+     * Resets odometry to specified pose
      * 
      * @param pose pose to set odometry
+     * @param preserveHeading do we preserve the gyro heading?
      */
-    public void resetOdometry(Pose2d pose) {
+    public void resetOdometry(Pose2d pose, boolean preserveHeading) {
         resetEncoders();
+        if (!preserveHeading)
+            zeroHeading();
         odometry.resetPosition(pose, pidgey.getRotation2d());
     }
 
     /**
-     * Gets left encoder distance
-     * 
-     * @return encoder distance in meters
+     * Reset odometry to specified pose, while resetting the gyro.
+     * @param pose pose to set odometry
      */
-    public double getLeftEncoderDistance() {
-        return ticksToMeters(leftMotor1.getSelectedSensorPosition());
+    public void resetOdometry(Pose2d pose) {
+        this.resetOdometry(pose, false);
     }
 
-    /**
-     * Gets right encoder distance
-     * 
-     * @return encoder distance in meters
-     */
-    public double getRightEncoderDistance() {
-        return ticksToMeters(rightMotor1.getSelectedSensorPosition());
-    }
 
     /**
      * Gets left encoder velocity
      * 
      * @return encoder velocity in meters/second
      */
+    @Log(name = "Left Velocity", rowIndex = 4, columnIndex = 0)
     public double getLeftEncoderRate() {
         return ticksToMeters(leftMotor1.getSelectedSensorVelocity()) * 10.0;
     }
@@ -256,6 +278,8 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return encoder velocity in meters/second
      */
+    @Log(name = "Right Velocity", rowIndex = 4, columnIndex = 1)
+
     public double getRightEncoderRate() {
         return ticksToMeters(rightMotor1.getSelectedSensorVelocity()) * 10.0;
     }
@@ -281,7 +305,7 @@ public class Drivetrain extends SubsystemBase {
      * Change all motors to their default mix of brake/coast modes.
      * Should be used for normal match play.
      */
-    public void setDefaultBrakeMode() {
+    public void setMotorsBrake() {
         leftMotor1.setNeutralMode(NeutralMode.Brake);
         leftMotor2.setNeutralMode(NeutralMode.Coast);
         leftMotor3.setNeutralMode(NeutralMode.Coast);
@@ -294,7 +318,7 @@ public class Drivetrain extends SubsystemBase {
      * Change all the drivetrain motor controllers to coast mode.
      * Useful for allowing robot to be manually pushed around the field.
      */
-    public void setAllMotorsCoast() {
+    public void setMotorsCoast() {
         leftMotor1.setNeutralMode(NeutralMode.Coast);
         leftMotor2.setNeutralMode(NeutralMode.Coast);
         leftMotor3.setNeutralMode(NeutralMode.Coast);

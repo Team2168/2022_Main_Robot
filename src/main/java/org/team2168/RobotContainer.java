@@ -21,19 +21,26 @@ import io.github.oblarg.oblog.Logger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final Drivetrain drivetrain = Drivetrain.getInstance();
 
   // private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
   OI oi = OI.getInstance();
 
+  private static RobotContainer instance = null;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  private RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
 
     // Configure the button bindings
     configureButtonBindings();
+  }
+
+  public static RobotContainer getInstance() {
+    if (instance == null)
+      instance = new RobotContainer();
+    return instance;
   }
 
   /**
