@@ -23,7 +23,7 @@ public class BackHood extends SubsystemBase implements Loggable {
 
   private double commanded_speed_rpm = 0.0;
 
-  @Log (rowIndex = 0, columnIndex = 1, width = 1, height = 1)
+  @Log (rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   private double actual_speed_rpm = 0.0;
 
   private WPI_TalonFX _motorBackHood;
@@ -133,38 +133,38 @@ public class BackHood extends SubsystemBase implements Loggable {
     }
 
 
-    /**
-     * Convert speed in motor units per 100ms to RPM
-     * 
-     * @param ticks speed (ticks/100ms) to convert to RPM
-     */
-    private double ticks_per_100ms_to_revs_per_minute(double ticks) {
-      //TODO: Verify conversion is correct
-      return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
-    }
-
-    /**
-     * Converts RPM to sensor ticks per 100ms
-     * 
-     * @param revs speed (RPM) to convert to ticks/100ms
-     */
-    private double revs_per_minute_to_ticks_per_100ms(double revs) {
-      return (revs / SECS_PER_MIN) * GEAR_RATIO * TICKS_PER_100MS;
+  /**
+   * Convert speed in motor units per 100ms to RPM
+   * 
+   * @param ticks speed (ticks/100ms) to convert to RPM
+   */
+  private double ticks_per_100ms_to_revs_per_minute(double ticks) {
+    //TODO: Verify conversion is correct
+    return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
   }
 
-  public double getVelocity()
-  {
+  /**
+   * Converts RPM to sensor ticks per 100ms
+   * 
+   * @param revs speed (RPM) to convert to ticks/100ms
+   */
+  private double revs_per_minute_to_ticks_per_100ms(double revs) {
+    return ((revs / 60.0 ) * 0.1) * GEAR_RATIO * TICKS_PER_REV;
+    // return (revs / SECS_PER_MIN) * GEAR_RATIO * TICKS_PER_100MS;
+  }
+
+  public double getVelocity() {
       return ticks_per_100ms_to_revs_per_minute(_motorBackHood.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
-  @Config (rowIndex = 1, columnIndex = 2, width = 2, height = 1)
+  @Config (rowIndex = 0, columnIndex = 2, width = 2, height = 1)
   public void set_commanded_rpm(double input) {
     commanded_speed_rpm = input;
   }
 
   @Override
   public void periodic() {
-    setSpeed(revs_per_minute_to_ticks_per_100ms(commanded_speed_rpm));
+    setSpeed(commanded_speed_rpm);
     actual_speed_rpm = getVelocity();
   }
 }
