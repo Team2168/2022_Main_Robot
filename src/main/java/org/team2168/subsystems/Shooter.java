@@ -23,7 +23,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   private double commanded_speed_rpm = 0.0;
 
-  @Log (rowIndex = 0, columnIndex = 1, width = 1, height = 1)
+  @Log (rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   private double actual_speed_rpm = 0.0;
 
   private WPI_TalonFX _motorRight;
@@ -75,23 +75,6 @@ public class Shooter extends SubsystemBase implements Loggable {
 
 
   private double setPointVelocity_sensorUnits;
-
-  private final double WALL_VEL = 1540.0;
-  private final double WHITE_LINE_VEL = 2950.0;
-  private final double FRONT_TRENCH_VEL = 3350.0;
-  private final double BACK_TRENCH_VEL = 4500.0;
-
-
-  private final double WALL_VEL_PBOT = 1540.0; //new red balls
-  private final double WHITE_LINE_VEL_PBOT = 2950.0;
-  private final double FRONT_TRENCH_VEL_PBOT = 3350.0;
-  private final double BACK_TRENCH_VEL_PBOT = 4500.0;
-
-  private static double _wallVel;
-  private static double _whiteLineVel;
-  private static double _frontTrenchVel;
-  private static double _backTrenchVel;
-  private static double velocityAdjustment = -100.0;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -155,7 +138,7 @@ public class Shooter extends SubsystemBase implements Loggable {
      */
     public void setSpeed(double setPoint)
     {
-        setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
+        setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
         _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
     }
 
@@ -175,8 +158,9 @@ public class Shooter extends SubsystemBase implements Loggable {
      * 
      * @param revs speed (RPM) to convert to ticks/100ms
      */
-    private double revs_per_minute_to_ticks_per_100ms(double revs) {
-      return (revs / SECS_PER_MIN) * GEAR_RATIO * TICKS_PER_100MS;
+  private double revs_per_minute_to_ticks_per_100ms(double revs) {
+    return ((revs / 60.0 ) * 0.1) * GEAR_RATIO * TICKS_PER_REV;
+    // return (revs / SECS_PER_MIN) * GEAR_RATIO * TICKS_PER_100MS;
   }
 
   public double getVelocity()
@@ -184,28 +168,14 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
-  @Config (rowIndex = 1, columnIndex = 2, width = 2, height = 1)
+  @Config (rowIndex = 0, columnIndex = 2, width = 2, height = 1)
   public void set_commanded_rpm(double input) {
     commanded_speed_rpm = input;
   }
 
   @Override
   public void periodic() {
-    setSpeed(revs_per_minute_to_ticks_per_100ms(commanded_speed_rpm));
+    setSpeed(commanded_speed_rpm);
     actual_speed_rpm = getVelocity();
   }
 }
-
-
-
-
-    // private final boolean _motorOneReversed = false;
-    // private final boolean _motorTwoReversed = false;
-
-
-
-    /**
-     * Which PID slot to pull gains from. Starting 2018, you can choose from
-     * 0,1,2 or 3. Only the first two (0,1) are visible in web-based
-     * configuration.
-     */
