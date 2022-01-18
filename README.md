@@ -15,24 +15,29 @@
 * Intake roller
   * 1x TalonFX
 * Intake raise/lower
-* Indexer
+  * 1x Double Solenoid
+* Indexer - ball motion preceeding the shooter
   * 1x TalonFX
-  * 2x TalonFX limitswitches for ball detection (IR sensors) 
-* Hopper
+  * 1x Digital Input for ball detection (IR sensor)
+* Hopper - ball motion between the intake and indexer (in the pooper area)
   * 1x TalonFX
+  * 1x Digital Input for ball detection (IR sensor)
+* Hopper blocker
+  * 1x Double Solenoid - prevents the ball from moving into the indexer to aid in alignment for pooper
+* Pooper
+  * 1x Double Solenoid to eject ball
 * Pixy
   * Pixy2 sensor for ball color detection
 * Climber
   * 2x TalonFX
   * 1x TalonFX limitswitch for home position / zero
-* Climber Hooks
   * 1x DigitalInput for bar detection
-* MonkeyBar pivot
-  * 1x Double Solenoid
-* MonkeyBar Hooks
+* MonkeyBar
+  * 1x Double Solenoid for pivot
   * 1x DigitalInput for bar detection
 * Drivetrain
   * 6x TalonFX
+  * 1x Pigeon IMU
 
 ## Documentation links:
 
