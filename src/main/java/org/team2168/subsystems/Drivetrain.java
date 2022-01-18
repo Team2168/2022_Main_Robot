@@ -166,7 +166,6 @@ public class Drivetrain extends SubsystemBase {
         return odometry.getPoseMeters();
     }
 
-    
     /**
      * Gets gyro heading
      * 
@@ -176,7 +175,7 @@ public class Drivetrain extends SubsystemBase {
     public double getHeading() {
         return pidgey.getRotation2d().getDegrees();
     }
-    
+
     /**
      * Gets gyro turn rate
      * 
@@ -186,7 +185,7 @@ public class Drivetrain extends SubsystemBase {
     public double getTurnRate() {
         return -pidgey.getRate();
     }
-    
+
     /**
      * Get average encoder distance
      * 
@@ -196,7 +195,7 @@ public class Drivetrain extends SubsystemBase {
     public double getAverageEncoderDistance() {
         return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
     }
-    
+
     /**
      * Gets wheel speeds in meters per second
      * 
@@ -205,7 +204,7 @@ public class Drivetrain extends SubsystemBase {
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(getLeftEncoderRate(), getRightEncoderRate());
     }
-    
+
     /**
      * Gets left encoder distance
      * 
@@ -244,7 +243,7 @@ public class Drivetrain extends SubsystemBase {
     /**
      * Resets odometry to specified pose
      * 
-     * @param pose pose to set odometry
+     * @param pose            pose to set odometry
      * @param preserveHeading do we preserve the gyro heading?
      */
     public void resetOdometry(Pose2d pose, boolean preserveHeading) {
@@ -256,12 +255,12 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * Reset odometry to specified pose, while resetting the gyro.
+     * 
      * @param pose pose to set odometry
      */
     public void resetOdometry(Pose2d pose) {
         this.resetOdometry(pose, false);
     }
-
 
     /**
      * Gets left encoder velocity
