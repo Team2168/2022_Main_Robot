@@ -1,5 +1,7 @@
 # 2022_Main_Robot
 
+![image](https://user-images.githubusercontent.com/1295877/149954913-ec88475f-dc2d-41a0-8f8a-b6b7891c93fb.png)
+
 ## Subsystems:
 
 * Shooter Wheel
