@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -61,15 +60,15 @@ public class Drivetrain extends SubsystemBase {
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
 
-    private static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
-    private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-    private static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
-    private static final double WHEEL_DIAMETER = 4.0; // inches
-    private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
-    private static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
-    private static final double DEGREES_PER_REV = 360.0;
-    private static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
-    private static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+    public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
+    public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
+    public static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
+    public static final double WHEEL_DIAMETER = 4.0; // inches
+    public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
+    public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
+    public static final double DEGREES_PER_REV = 360.0;
+    public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
+    public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
 
     /**
      * Gets the singleton instance of the drivetrain
@@ -263,13 +262,28 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
+     * Gets Left encoder velocity
+     * @return velocity in sensor ticks
+     */
+    public double getLeftEncoderRateRaw() {
+        return leftMotor1.getSelectedSensorVelocity();
+    }
+
+    /**
+     * Gets Right encoder velocity
+     * @return velocity in sensor ticks
+     */
+    public double getRightEncoderRateRaw() {
+        return rightMotor1.getSelectedSensorVelocity();
+    }
+    /**
      * Gets left encoder velocity
      * 
      * @return encoder velocity in meters/second
      */
     @Log(name = "Left Velocity", rowIndex = 4, columnIndex = 0)
     public double getLeftEncoderRate() {
-        return ticksToMeters(leftMotor1.getSelectedSensorVelocity()) * 10.0;
+        return ticksToMeters(getLeftEncoderRateRaw()) * 10.0;
     }
 
     /**
@@ -280,7 +294,7 @@ public class Drivetrain extends SubsystemBase {
     @Log(name = "Right Velocity", rowIndex = 4, columnIndex = 1)
 
     public double getRightEncoderRate() {
-        return ticksToMeters(rightMotor1.getSelectedSensorVelocity()) * 10.0;
+        return ticksToMeters(getRightEncoderRateRaw()) * 10.0;
     }
 
     private double ticksToInches(double setpoint) {

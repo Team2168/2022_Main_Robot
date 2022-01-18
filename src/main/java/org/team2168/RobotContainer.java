@@ -4,12 +4,15 @@
 
 package org.team2168;
 
+import java.util.function.DoubleFunction;
+
+import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import org.team2168.commands.*;
-import org.team2168.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -67,6 +70,21 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(); // Do nothing! (Strategically)
+    // I don't see a point of having radian conversions in our actual code, we won't
+    // need them after characterization
+    DoubleFunction<Double> degToRadians = (d) -> d * (Math.PI / 180.0);
+    DoubleFunction<Double> ticksToRadians = (t) -> ((t / Drivetrain.TICKS_PER_REV) / Drivetrain.GEAR_RATIO) * 2.0
+        * Math.PI;
+
+    return new SysIDCommand(drivetrain, (l, r) -> drivetrain.tankDrive(l, r),
+        () -> {
+          return new SysIDCommand.DriveTrainSysIdData(
+              ticksToRadians.apply(drivetrain.getLeftEncoderDistance()),
+              ticksToRadians.apply(drivetrain.getRightEncoderDistance()),
+              ticksToRadians.apply(drivetrain.getLeftEncoderRate()),
+              ticksToRadians.apply(drivetrain.getRightEncoderRate()),
+              degToRadians.apply(drivetrain.getHeading()),
+              degToRadians.apply(drivetrain.getTurnRate()));
+        }); // Drivetrain characterization
   }
 }
