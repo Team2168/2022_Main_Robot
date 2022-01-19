@@ -5,6 +5,7 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -19,20 +20,40 @@ public class Turret extends SubsystemBase {
   private CanDigitalInput hallEffectSensor;
   private TalonFX turretMotor;
   private static Turret instance = null;
-  private final int TICKS_PER_REV = 2048;
 
-  //gains
+  private final int TICKS_PER_REV = 2048;
+  private static final double GEAR_RATIO = 1.0;
+  private final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
+
+  //4663 was stolen from the CTRE docs on setting the acceleration and cuise velocity
+  private final double acceleration = 4663;
+  private final double cruiseVelocity = 4663;
+
+  // gains
   public static final int kPIDLoopIdx = 0;
   public static final int kTimeoutMs = 30;
   public static boolean kSensorPhase = true;
   public static boolean kMotorInvert = false;
-  static final Gains kGains = new Gains(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+
+  //                                     P,   I,   D,   F,  I zone, and Peak output
+  static final Gains kGains = new Gains(0.5, 0.0, 1.0, 0.0, 0, 1.0);
+
+  private SupplyCurrentLimitConfiguration talonCurrentLimit;
+  private final boolean ENABLE_CURRENT_LIMIT = true;
+  private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
+  private final double TRIGGER_THRESHOLD_TIME = 0.02; //s
+
 
   public Turret() {
     turretMotor = new TalonFX(Constants.TALONFX_TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
+    CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+
     turretMotor.configFactoryDefault();
+    turretMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
     turretMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     turretMotor.setSensorPhase(kSensorPhase);
@@ -44,10 +65,13 @@ public class Turret extends SubsystemBase {
     turretMotor.config_kP(kPIDLoopIdx, kGains.kP, kTimeoutMs);
     turretMotor.config_kI(kPIDLoopIdx, kGains.kI, kTimeoutMs);
     turretMotor.config_kD(kPIDLoopIdx, kGains.kD, kTimeoutMs);
+
+    turretMotor.configMotionAcceleration(acceleration);
+    turretMotor.configMotionCruiseVelocity(cruiseVelocity);
   }
 
   public static Turret getInstance() {
-    if(instance == null) 
+    if (instance == null)
       instance = new Turret();
     return instance;
   }
@@ -58,14 +82,23 @@ public class Turret extends SubsystemBase {
 
   /**
    * Rotates the turret to a position
+   * 
    * @param rotation Should be between -1 and 1
    */
-  public void rotateTurret(double rotation) {
+  public void setPosition(double rotation) {
     turretMotor.set(ControlMode.Position, rotation * TICKS_PER_REV);
   }
 
-  public double getposition() {
+  public void setSpeed(double speed) {
+    turretMotor.set(ControlMode.MotionMagic, speed);
+  }
+
+  public double getEncoderPosition() {
     return turretMotor.getSelectedSensorPosition();
+  }
+
+  public void zeroEncoder() {
+    turretMotor.setSelectedSensorPosition(0.0);
   }
 
   @Override
