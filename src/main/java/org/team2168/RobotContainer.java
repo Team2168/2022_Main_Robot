@@ -87,4 +87,8 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
   }
+
+  public static double getHopperJoystickValue() {
+		return  0.0; 
+	}
 }
