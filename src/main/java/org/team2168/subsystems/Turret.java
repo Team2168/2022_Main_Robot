@@ -25,11 +25,11 @@ public class Turret extends SubsystemBase {
   private static final double GEAR_RATIO = 1.0;
   private final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
-  //4663 was stolen from the CTRE docs on setting the acceleration and cuise velocity
+  //4663 was stolen from the CTRE docs page on setting the acceleration and cuise velocity
   private final double acceleration = 4663;
   private final double cruiseVelocity = 4663;
 
-  // gains
+  //gains
   public static final int kPIDLoopIdx = 0;
   public static final int kTimeoutMs = 30;
   public static boolean kSensorPhase = true;
@@ -41,8 +41,8 @@ public class Turret extends SubsystemBase {
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
-  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amp
-  private final double TRIGGER_THRESHOLD_TIME = 0.02; //s
+  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amps
+  private final double TRIGGER_THRESHOLD_TIME = 0.02; //seconds
 
 
   public Turret() {
@@ -83,10 +83,15 @@ public class Turret extends SubsystemBase {
   /**
    * Rotates the turret to a position
    * 
-   * @param rotation Should be between -1 and 1
+   * @param rotation Between -1 and 1, -1 is a -360 degree rotation, 0 is no movement, and 1 is a 360 degree rotation
    */
+
   public void setPosition(double rotation) {
-    turretMotor.set(ControlMode.Position, rotation * TICKS_PER_REV);
+    turretMotor.set(ControlMode.Position, rotation * TICKS_PER_WHEEL_ROTATION);
+  }
+
+  public void setRotationn(double degrees) {
+    turretMotor.set(ControlMode.MotionMagic, (degrees / 360) * TICKS_PER_WHEEL_ROTATION);
   }
 
   public void setSpeed(double speed) {

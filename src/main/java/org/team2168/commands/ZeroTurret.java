@@ -26,7 +26,7 @@ public class ZeroTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //if the turret 
+    //if the turret is facing the left of its 0, it will turn right and vice versa
     if (position < 0) {
       motor.setSpeed(0.5);
     }
