@@ -91,7 +91,7 @@ public class Turret extends SubsystemBase {
   }
 
   public void setRotationn(double degrees) {
-    turretMotor.set(ControlMode.MotionMagic, (degrees / 360) * TICKS_PER_WHEEL_ROTATION);
+    turretMotor.set(ControlMode.Position, (degrees / 360) * TICKS_PER_WHEEL_ROTATION);
   }
 
   public void setSpeed(double speed) {
