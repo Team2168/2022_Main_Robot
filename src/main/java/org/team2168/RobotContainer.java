@@ -8,7 +8,9 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.hopper.DriveHopperWithSetSpeed;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -28,6 +30,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final Hopper hopper = Hopper.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -62,6 +65,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    hopper.setDefaultCommand(new DriveHopperWithSetSpeed(hopper, oi::getHopperJoystickValue));
   }
 
   /**

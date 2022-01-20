@@ -53,7 +53,7 @@ public class Hopper extends SubsystemBase {
   }
 
   public void driveHopper(double speed) {
-    hopperMotor.set(ControlMode.PercentOutput, speed);
+    hopperMotor.set(ControlMode.Velocity, speed);
   }
 
   @Override
