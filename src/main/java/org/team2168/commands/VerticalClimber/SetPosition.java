@@ -2,14 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.giraffe;
+package org.team2168.commands.VerticalClimber;
+
+import org.team2168.subsystems.VerticalClimber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SetPosition extends CommandBase {
   /** Creates a new SetPosition. */
-  public SetPosition() {
+
+  public SetPosition(VerticalClimber verticalClimber) {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(verticalClimber);
   }
 
   // Called when the command is initially scheduled.
@@ -18,7 +22,9 @@ public class SetPosition extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    VerticalClimber.getInstance().setPositionControlMode();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
