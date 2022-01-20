@@ -7,7 +7,7 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 import org.team2168.utils.CanDigitalInput;
@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Turret extends SubsystemBase {
   /** Creates a new Turret. */
   private CanDigitalInput hallEffectSensor;
-  private TalonFX turretMotor;
+  private WPI_TalonFX turretMotor;
   private static Turret instance = null;
 
   private final int TICKS_PER_REV = 2048;
@@ -46,7 +46,7 @@ public class Turret extends SubsystemBase {
 
 
   public Turret() {
-    turretMotor = new TalonFX(Constants.TALONFX_TURRET_MOTOR);
+    turretMotor = new WPI_TalonFX(Constants.TALONFX_TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
