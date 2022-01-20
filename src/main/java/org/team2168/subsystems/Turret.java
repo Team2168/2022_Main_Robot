@@ -25,9 +25,11 @@ public class Turret extends SubsystemBase {
   private static final double GEAR_RATIO = 1.0;
   private final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
-  //4663 was stolen from the CTRE docs page on setting the acceleration and cuise velocity
-  private final double acceleration = 4663;
-  private final double cruiseVelocity = 4663;
+  private final double TICKS_PER_SECOND = 1024;
+  private final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10;
+
+  private final double acceleration = TICKS_PER_100_MS;
+  private final double cruiseVelocity = TICKS_PER_100_MS;
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -86,11 +88,11 @@ public class Turret extends SubsystemBase {
    * @param rotation Between -1 and 1, -1 is a -360 degree rotation, 0 is no movement, and 1 is a 360 degree rotation
    */
 
-  public void setPosition(double rotation) {
+  public void setRotation(double rotation) {
     turretMotor.set(ControlMode.Position, rotation * TICKS_PER_WHEEL_ROTATION);
   }
 
-  public void setRotationn(double degrees) {
+  public void setRotationDegrees(double degrees) {
     turretMotor.set(ControlMode.Position, (degrees / 360) * TICKS_PER_WHEEL_ROTATION);
   }
 
