@@ -61,7 +61,7 @@ public class VerticalClimber extends SubsystemBase {
     return speed * TIME_UNITS_OF_VELOCITY;
   }
 
-  public double convertHundredMstoVelocitySeconds(double speed) {
+  public double convertVelocityHundredMstoSeconds(double speed) {
     return speed / TIME_UNITS_OF_VELOCITY;
   }
 
