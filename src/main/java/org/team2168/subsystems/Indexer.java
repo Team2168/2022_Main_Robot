@@ -5,11 +5,14 @@
 package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 
 import org.team2168.Constants;
@@ -19,9 +22,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
   private final boolean _INDEXER_MOTOR_REVERSED = false;
-  private TalonSRX _srx_motor;
+  private WPI_TalonFX indexerMotor;
+
+  @Log
   private static DigitalInput entranceLineBreak;
+  @Log
   private static DigitalInput exitLineBreak;
+
   private static Indexer _instance = null;
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -31,20 +38,20 @@ public class Indexer extends SubsystemBase {
   private final double TRIGGER_THRESHOLD_TIME = 0.02; //s
 
   public Indexer() {
-    entranceLineBreak = new DigitalInput(Constants.ENTRANCE_LINE_BREAK);
-    exitLineBreak = new DigitalInput(Constants.EXIT_LINE_BREAK);
+    entranceLineBreak = new DigitalInput(Constants.Sensors.ENTRANCE_LINE_BREAK);
+    exitLineBreak = new DigitalInput(Constants.Sensors.EXIT_LINE_BREAK);
 
-    _srx_motor = new TalonSRX(Constants.INDEXER_MOTOR_PDP);
+    indexerMotor = new WPI_TalonFX(Constants.CANDevices.INDEXER_MOTOR_PDP);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
-    _srx_motor.configFactoryDefault();
-    _srx_motor.configSupplyCurrentLimit(talonCurrentLimit);
+    indexerMotor.configFactoryDefault();
+    indexerMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
-    _srx_motor.setNeutralMode(NeutralMode.Brake);
-    _srx_motor.setInverted(true); //output polarity is apparently reversed between SRX and SPARK MAX?
-    _srx_motor.configNeutralDeadband(0.05);
+    indexerMotor.setNeutralMode(NeutralMode.Brake);
+    indexerMotor.setInverted(true); //output polarity is apparently reversed between SRX and SPARK MAX?
+    indexerMotor.configNeutralDeadband(0.05);
 
   }
 
@@ -59,31 +66,11 @@ public class Indexer extends SubsystemBase {
       if(_INDEXER_MOTOR_REVERSED) {
         speed = speed * -1;
       }
-      _srx_motor.set(ControlMode.PercentOutput, speed);
+      indexerMotor.set(ControlMode.PercentOutput, speed);
     }
-  
-
-  public double isBallEnteringDashboard() {
-    if(!entranceLineBreak.get()) {
-      return 1.0;
-    }
-    else {
-      return 0.0;
-    }
-    //return !entranceLineBreak.get();
-  }
 
   public boolean isBallEntering() {
     return !entranceLineBreak.get();
-  }
-
-  public double isBallExitingDashboard() {
-    if(!exitLineBreak.get()) {
-      return 1.0;
-    }
-    else {
-      return 0.0;
-    }
   }
 
   public boolean isBallExiting() {
