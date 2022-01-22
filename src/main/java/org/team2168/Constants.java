@@ -15,4 +15,24 @@ package org.team2168;
 public final class Constants {
 
     public final static int TALONFX_TURRET_MOTOR = 0;
+
+    public static final class Joysticks {
+        public static final int DRIVER_JOYSTICK = 0;
+        public static final int OPERATOR_JOYSTICK = 1;
+        public static final int BUTTON_BOX_1 = 2;
+        public static final int BUTTON_BOX_2 = 3;
+        public static final int DRIVER_OPERATOR_E_BACKUP = 4;
+        public static final int PID_TEST_JOYSTICK = 5;
+    }
+
+    public static final class CANDevices {
+        public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
+        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
+        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
+        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
+        public static final int PIGEON_IMU = 17;
+    }
 }
+
