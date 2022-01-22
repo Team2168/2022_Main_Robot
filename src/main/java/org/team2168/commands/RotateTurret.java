@@ -12,11 +12,20 @@ public class RotateTurret extends CommandBase {
   /** Creates a new RotateTurret. */
   private Turret turret;
   private double rotation;
+
+  /**
+   * Rotates the turret
+   * @param t 
+   *  The turret subsystem to be used
+   * @param r 
+   *  The amount the turret should rotate, -1 to 1
+   */
+
   public RotateTurret(Turret t, double r) {
     // Use addRequirements() here to declare subsystem dependencies.
     turret = t;
     rotation = r;
-    
+
     addRequirements(t);
   }
 

@@ -25,11 +25,11 @@ public class Turret extends SubsystemBase {
   private static final double GEAR_RATIO = 1.0;
   private final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
-  private final double TICKS_PER_SECOND = 1024;
+  private final double TICKS_PER_SECOND = TICKS_PER_WHEEL_ROTATION;
   private final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10;
 
-  private final double acceleration = TICKS_PER_100_MS;
-  private final double cruiseVelocity = TICKS_PER_100_MS;
+  private final double ACCELERATION = TICKS_PER_100_MS;
+  private final double CRUISE_VELOCITY = TICKS_PER_100_MS;
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -47,13 +47,14 @@ public class Turret extends SubsystemBase {
   private final double TRIGGER_THRESHOLD_TIME = 0.02; //seconds
 
 
-  public Turret() {
+  private Turret() {
     turretMotor = new WPI_TalonFX(Constants.TALONFX_TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
+    //Configuring the turret motor
     turretMotor.configFactoryDefault();
     turretMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
@@ -68,8 +69,8 @@ public class Turret extends SubsystemBase {
     turretMotor.config_kI(kPIDLoopIdx, kGains.kI, kTimeoutMs);
     turretMotor.config_kD(kPIDLoopIdx, kGains.kD, kTimeoutMs);
 
-    turretMotor.configMotionAcceleration(acceleration);
-    turretMotor.configMotionCruiseVelocity(cruiseVelocity);
+    turretMotor.configMotionAcceleration(ACCELERATION);
+    turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
   }
 
   public static Turret getInstance() {
@@ -89,15 +90,15 @@ public class Turret extends SubsystemBase {
    */
 
   public void setRotation(double rotation) {
-    turretMotor.set(ControlMode.Position, rotation * TICKS_PER_WHEEL_ROTATION);
+    turretMotor.set(ControlMode.MotionMagic, rotation * TICKS_PER_WHEEL_ROTATION);
   }
-
+  //CHECK THIS
   public void setRotationDegrees(double degrees) {
-    turretMotor.set(ControlMode.Position, (degrees / 360) * TICKS_PER_WHEEL_ROTATION);
+    turretMotor.set(ControlMode.MotionMagic, ((degrees / 360) * TICKS_PER_WHEEL_ROTATION) /10);
   }
 
   public void setSpeed(double speed) {
-    turretMotor.set(ControlMode.MotionMagic, speed);
+    turretMotor.set(ControlMode.Velocity, speed);
   }
 
   public double getEncoderPosition() {

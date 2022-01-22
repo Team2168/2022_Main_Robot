@@ -16,12 +16,13 @@ public class ZeroTurret extends CommandBase {
   public ZeroTurret(Turret motor) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.motor = motor;
-    position = motor.getEncoderPosition();
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    position = motor.getEncoderPosition();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -38,8 +39,10 @@ public class ZeroTurret extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    motor.zeroEncoder();
     motor.setSpeed(0.0);
+    if (!interrupted) {
+      motor.zeroEncoder();
+    }
   }
 
   // Returns true when the command should end.

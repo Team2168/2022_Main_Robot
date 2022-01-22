@@ -14,7 +14,7 @@ public class CanDigitalInput {
         return (this.motor.isFwdLimitSwitchClosed() == 1);
     }
 
-    public boolean getReverseLimit(){
+    public boolean isRevLimitSwitchClosed(){
             return (this.motor.isRevLimitSwitchClosed() == 1);
     }
 }
