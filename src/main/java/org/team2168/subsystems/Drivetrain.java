@@ -16,6 +16,7 @@ import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;
@@ -63,7 +64,7 @@ public class Drivetrain extends SubsystemBase {
     public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
     public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
     public static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
-    public static final double WHEEL_DIAMETER = 4.0; // inches
+    public static final double WHEEL_DIAMETER = 6.0; // inches TODO this is 4 on the real robot
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
     public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
     public static final double DEGREES_PER_REV = 360.0;
@@ -205,13 +206,31 @@ public class Drivetrain extends SubsystemBase {
     }
 
     /**
+     * Gets left encoder distance in raw sensor units
+     * 
+     * @return distance in sensor ticks
+     */
+    public double getLeftEncoderDistanceRaw() {
+        return leftMotor1.getSelectedSensorPosition();
+    }
+
+    /**
      * Gets left encoder distance
      * 
      * @return encoder distance in meters
      */
     @Log(name = "Left Encoder Distance (m)", rowIndex = 1, columnIndex = 1)
     public double getLeftEncoderDistance() {
-        return ticksToMeters(leftMotor1.getSelectedSensorPosition());
+        return ticksToMeters(getLeftEncoderDistanceRaw());
+    }
+
+    /**
+     * Gets right encoder distance in raw sensor ticks
+     * 
+     * @return distance in sensor ticks
+     */
+    public double getRightEncoderDistanceRaw() {
+        return rightMotor1.getSelectedSensorPosition();
     }
 
     /**
@@ -221,7 +240,7 @@ public class Drivetrain extends SubsystemBase {
      */
     @Log(name = "Right Encoder Distance (m)", rowIndex = 1, columnIndex = 2)
     public double getRightEncoderDistance() {
-        return ticksToMeters(rightMotor1.getSelectedSensorPosition());
+        return ticksToMeters(getRightEncoderDistanceRaw());
     }
 
     /**
@@ -263,6 +282,7 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * Gets Left encoder velocity
+     * 
      * @return velocity in sensor ticks
      */
     public double getLeftEncoderRateRaw() {
@@ -271,11 +291,13 @@ public class Drivetrain extends SubsystemBase {
 
     /**
      * Gets Right encoder velocity
+     * 
      * @return velocity in sensor ticks
      */
     public double getRightEncoderRateRaw() {
         return rightMotor1.getSelectedSensorVelocity();
     }
+
     /**
      * Gets left encoder velocity
      * 
@@ -308,6 +330,11 @@ public class Drivetrain extends SubsystemBase {
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
         drive.tankDrive(leftSpeed, rightSpeed);
+    }
+
+    public void tankDriveVolts(double leftVolts, double rightVolts) {
+        double batteryVoltage = RobotController.getBatteryVoltage();
+        tankDrive(leftVolts / batteryVoltage, rightVolts / batteryVoltage);
     }
 
     public void arcadeDrive(double xSpeed, double zRotation) {

@@ -76,13 +76,14 @@ public class RobotContainer {
     DoubleFunction<Double> ticksToRadians = (t) -> ((t / Drivetrain.TICKS_PER_REV) / Drivetrain.GEAR_RATIO) * 2.0
         * Math.PI;
 
-    return new SysIDCommand(drivetrain, (l, r) -> drivetrain.tankDrive(l, r),
+    return new SysIDCommand(
+        drivetrain, (l, r) -> drivetrain.tankDriveVolts(l, r),
         () -> {
           return new SysIDCommand.DriveTrainSysIdData(
-              ticksToRadians.apply(drivetrain.getLeftEncoderDistance()),
-              ticksToRadians.apply(drivetrain.getRightEncoderDistance()),
-              ticksToRadians.apply(drivetrain.getLeftEncoderRate()),
-              ticksToRadians.apply(drivetrain.getRightEncoderRate()),
+              ticksToRadians.apply(drivetrain.getLeftEncoderDistanceRaw()),
+              ticksToRadians.apply(drivetrain.getRightEncoderDistanceRaw()),
+              ticksToRadians.apply(drivetrain.getLeftEncoderRateRaw()),
+              ticksToRadians.apply(drivetrain.getRightEncoderRateRaw()),
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization

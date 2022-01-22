@@ -4,6 +4,10 @@
 
 package org.team2168;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -23,6 +27,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
+  private NetworkTableEntry moveRobot;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -34,6 +40,11 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     robotContainer = RobotContainer.getInstance();
+
+    var nt = NetworkTableInstance.getDefault();
+    var dtTable = nt.getTable("Drivetrain");
+    moveRobot = dtTable.getEntry("Kickable Robot?");
+    moveRobot.setBoolean(false);
   }
 
   /**
@@ -63,11 +74,16 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    robotContainer.drivetrain.setMotorsCoast();
+    robotContainer.drivetrain.setMotorsBrake();
   }
 
   @Override
   public void disabledPeriodic() {
+    // Check periodically
+    if (moveRobot.getBoolean(false))
+      robotContainer.drivetrain.setMotorsCoast();
+    else
+      robotContainer.drivetrain.setMotorsBrake();
   }
 
   /**
