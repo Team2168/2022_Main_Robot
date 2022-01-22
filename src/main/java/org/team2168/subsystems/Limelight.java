@@ -18,16 +18,16 @@ public class Limelight extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private static Limelight inst;
-
-   NetworkTable networkTable;
-   NetworkTableEntry tx;
-   NetworkTableEntry ty;
-   NetworkTableEntry ta;
-   NetworkTableEntry ledMode;
-   NetworkTableEntry camMode;
-   NetworkTableEntry camtran;
-   NetworkTableEntry pipeline;
+  private static Limelight instance;
+  double[] limelightdata = new double[3];
+  NetworkTable networkTable;
+  NetworkTableEntry tx;
+  NetworkTableEntry ty;
+  NetworkTableEntry ta;
+  NetworkTableEntry ledMode;
+  NetworkTableEntry camMode;
+  NetworkTableEntry camtran;
+  NetworkTableEntry pipeline;
 
   private boolean variablesInstantiated;
 
@@ -36,7 +36,7 @@ public class Limelight extends SubsystemBase {
    * it for right now because not every ll pipeline is correlated to a shooter
    * speed anymore and I don't want to overhaul the whole subsystem :/
    */
-  //TODO create new pipelines
+  // TODO create new pipelines
   public static final int PIPELINE_FORWARD_BLUE = 0;
   public static final int PIPELINE_FORWARD_RED = 2;
   public static final int PIPELINE_BACK_TRENCH_BLUE = 1;
@@ -47,7 +47,7 @@ public class Limelight extends SubsystemBase {
   private boolean isLimelightEnabled;
 
   /*
-   * private Limelight() { // set up limelight limelight.setCamMode(0);
+   * private Limelight() { // set up limelight l imelight.setCamMode(0);
    * limelight.enableVisionProcessing(true); limelight.setLedMode(1);
    * limelight.setPipeline(PIPELINE_DRIVE_WITH_LIMELIGHT); isLimelightEnabled =
    * false; }
@@ -57,10 +57,10 @@ public class Limelight extends SubsystemBase {
    * @return an instance of the Intake Subsystem
    */
   public static Limelight getInstance() {
-    if (inst == null) {
-      inst = new Limelight();
+    if (instance == null) {
+      instance = new Limelight();
     }
-    return inst;
+    return instance;
   }
 
   /**
@@ -98,7 +98,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public void enableLimelight() {
-    // limelight.setCamMode(0);
+    setCamMode(0);
     enableVisionProcessing(true);
     setLedMode(0); // set to current pipeline setting
     setPipeline(PIPELINE_DRIVE_WITH_LIMELIGHT);
@@ -150,6 +150,7 @@ public class Limelight extends SubsystemBase {
 
     // Variables to get data from Limelight
     tx = networkTable.getEntry("tx");
+    ty = networkTable.getEntry("ty");
     ta = networkTable.getEntry("ta");
     camtran = networkTable.getEntry("camtran");
 
@@ -173,14 +174,7 @@ public class Limelight extends SubsystemBase {
    * @return is a double from 0.0 to 100.0
    */
   public double getTargetArea() {
-    if (this.connectionEstablished() && this.variablesInstantiated) {
       return ta.getDouble(0.0);
-    } else if (this.connectionEstablished() && !this.variablesInstantiated) {
-      this.instantiateLocalVariables();
-      return ta.getDouble(0.0);
-    } else {
-      return 0.0;
-    }
   }
 
   /**
@@ -211,11 +205,21 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (this.connectionEstablished() && this.variablesInstantiated) {
+      limelightdata[0] = getPositionX();
+      limelightdata[1] = getPositionY();
+      limelightdata[2] = getTargetArea();
+    } else if (this.connectionEstablished() && !this.variablesInstantiated) {
+      this.instantiateLocalVariables();
+      limelightdata[0] = getPositionX();
+      limelightdata[1] = getPositionY();
+      limelightdata[2] = getTargetArea();
+    }
   }
 
-  // public void initDefaultCommand() {
-  // Set the default command for a subsystem here.
-  // setDefaultCommand(new MySpecialCommand());
-  // setDefaultCommand(new UpdatePipeline());
-  // }
+  public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    // setDefaultCommand(new MySpecialCommand());
+    // setDefaultCommand(new UpdatePipeline());
+  }
 }
