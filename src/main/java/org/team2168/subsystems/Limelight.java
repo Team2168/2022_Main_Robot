@@ -18,16 +18,16 @@ public class Limelight extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private static Limelight _instance = null;
+  private static Limelight inst;
 
-  private NetworkTable networkTable;
-  private NetworkTableEntry tx;
-  private NetworkTableEntry ty;
-  private NetworkTableEntry ta;
-  private NetworkTableEntry ledMode;
-  private NetworkTableEntry camMode;
-  private NetworkTableEntry camtran;
-  private NetworkTableEntry pipeline;
+   NetworkTable networkTable;
+   NetworkTableEntry tx;
+   NetworkTableEntry ty;
+   NetworkTableEntry ta;
+   NetworkTableEntry ledMode;
+   NetworkTableEntry camMode;
+   NetworkTableEntry camtran;
+   NetworkTableEntry pipeline;
 
   private boolean variablesInstantiated;
 
@@ -36,6 +36,7 @@ public class Limelight extends SubsystemBase {
    * it for right now because not every ll pipeline is correlated to a shooter
    * speed anymore and I don't want to overhaul the whole subsystem :/
    */
+  //TODO create new pipelines
   public static final int PIPELINE_FORWARD_BLUE = 0;
   public static final int PIPELINE_FORWARD_RED = 2;
   public static final int PIPELINE_BACK_TRENCH_BLUE = 1;
@@ -56,10 +57,10 @@ public class Limelight extends SubsystemBase {
    * @return an instance of the Intake Subsystem
    */
   public static Limelight getInstance() {
-    if (_instance == null) {
-      _instance = new Limelight();
+    if (inst == null) {
+      inst = new Limelight();
     }
-    return _instance;
+    return inst;
   }
 
   /**
