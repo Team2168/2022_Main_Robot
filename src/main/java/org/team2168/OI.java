@@ -14,7 +14,6 @@ public class OI {
     private LinearInterpolator driverJoystickInterpolator;
     private LinearInterpolator gunStyleXInterpolator;
     private LinearInterpolator gunStyleYInterpolator;
-    private LinearInterpolator hopperJoystickInterpolator;
     private static OI instance = null;
     
     private double[][] driverJoystickInterpolation = {
@@ -38,19 +37,13 @@ public class OI {
 		{+1.00, +1.00}
 	};
 
-    private double[][] hopperJoystickInterpolation = {
-        {-1.00, -1.00},
-        {-0.15, 0.00},
-		{+0.15, 0.00},
-		{+1.00, +1.00}
-    };
+
 
 
     private OI() {
         driverJoystickInterpolator = new LinearInterpolator(driverJoystickInterpolation);
         gunStyleXInterpolator = new LinearInterpolator(gunStyleXInterpolation);
         gunStyleYInterpolator = new LinearInterpolator(gunStyleYInterpolation);
-        hopperJoystickInterpolator = new LinearInterpolator(hopperJoystickInterpolation);
     }
 
     public static OI getInstance() {
@@ -74,10 +67,6 @@ public class OI {
 
     public double getGunStyleTrigger() {
         return gunStyleYInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
-    }
-
-    public double getHopperJoystickValue() {
-        return hopperJoystickInterpolator.interpolate(F310.BUTTON_A);
     }
     
 }

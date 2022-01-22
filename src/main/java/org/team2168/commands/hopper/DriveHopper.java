@@ -4,24 +4,29 @@
 
 package org.team2168.commands.hopper;
 
+import java.util.function.DoubleSupplier;
+
 import org.team2168.OI;
-import org.team2168.RobotContainer;
+import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
+import org.team2168.utils.F310;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-
-
-public class DriveHopperWithJoystick extends CommandBase {
-
+public class DriveHopper extends CommandBase {
   private Hopper hopper;
   private OI oi;
+  private DoubleSupplier speed;
+  /** Creates a new DriveHopperWithSetSpeed. */
+ 
 
-  /** Creates a new DriveHopperWithJoystick. */
-  public DriveHopperWithJoystick() {
-    // Use addRequirements() here to declare subsystem dependencies.
-    hopper = Hopper.getInstance();
+  public DriveHopper(Hopper hopper, DoubleSupplier speed) {
+    this.hopper = hopper;
+    this.speed = speed;
+
     addRequirements(hopper);
+    
   }
 
   // Called when the command is initially scheduled.
@@ -33,14 +38,12 @@ public class DriveHopperWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hopper.driveHopper(RobotContainer.getHopperJoystickValue());
+    hopper.driveHopper(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    hopper.driveHopper(0.0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
