@@ -27,6 +27,9 @@ public class Turret extends SubsystemBase {
 
   private final double TICKS_PER_SECOND = TICKS_PER_WHEEL_ROTATION;
   private final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10;
+ 
+  //About 260/360 degrees
+  private final int MAX_ROTATION_TICKS = 1480;
 
   private final double ACCELERATION = TICKS_PER_100_MS;
   private final double CRUISE_VELOCITY = TICKS_PER_100_MS;
@@ -90,17 +93,25 @@ public class Turret extends SubsystemBase {
    */
 
   public void setRotation(double rotation) {
-    turretMotor.set(ControlMode.MotionMagic, rotation * TICKS_PER_WHEEL_ROTATION);
+    turretMotor.set(ControlMode.MotionMagic, (rotation * TICKS_PER_WHEEL_ROTATION) /10);
   }
   //CHECK THIS
   public void setRotationDegrees(double degrees) {
     turretMotor.set(ControlMode.MotionMagic, ((degrees / 360) * TICKS_PER_WHEEL_ROTATION) /10);
   }
 
-  public void setSpeed(double speed) {
-    turretMotor.set(ControlMode.Velocity, speed);
+  /**
+   * Sets the velocity 
+   * @param velocity The target velocity in ticks per 100ms
+   */
+  public void setVelocity(double velocity) {
+    turretMotor.set(ControlMode.Velocity, velocity);
   }
 
+  /**
+   * Returns the internal sensor's position
+   * @return The internal sensor's position
+   */
   public double getEncoderPosition() {
     return turretMotor.getSelectedSensorPosition();
   }
