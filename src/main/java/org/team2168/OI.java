@@ -58,6 +58,10 @@ public class OI {
         return driverJoystickInterpolator.interpolate(driverJoystick.getRightStickRaw_Y());
     }
 
+    public double getIndexerJoystick() {
+        return 0.0;
+    }
+
     public double getGunStyleWheel() {
         return gunStyleXInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
     }
