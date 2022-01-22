@@ -13,9 +13,6 @@ package org.team2168;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-
-    public final static int TALONFX_TURRET_MOTOR = 0;
-
     public static final class Joysticks {
         public static final int DRIVER_JOYSTICK = 0;
         public static final int OPERATOR_JOYSTICK = 1;
@@ -33,6 +30,8 @@ public final class Constants {
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
+         
+        public final static int TALONFX_TURRET_MOTOR = 3;   
     }
 }
 

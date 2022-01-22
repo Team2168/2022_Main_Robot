@@ -51,7 +51,7 @@ public class Turret extends SubsystemBase {
 
 
   private Turret() {
-    turretMotor = new WPI_TalonFX(Constants.TALONFX_TURRET_MOTOR);
+    turretMotor = new WPI_TalonFX(Constants.CANDevices.TALONFX_TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
@@ -106,6 +106,10 @@ public class Turret extends SubsystemBase {
    */
   public void setVelocity(double velocity) {
     turretMotor.set(ControlMode.Velocity, velocity);
+  }
+
+  public void drive(double speed) {
+    turretMotor.set(ControlMode.PercentOutput, speed);
   }
 
   /**
