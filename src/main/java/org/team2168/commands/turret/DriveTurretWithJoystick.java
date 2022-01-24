@@ -6,7 +6,6 @@ package org.team2168.commands.turret;
 
 import java.util.function.DoubleSupplier;
 
-import org.team2168.OI;
 import org.team2168.subsystems.Turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;

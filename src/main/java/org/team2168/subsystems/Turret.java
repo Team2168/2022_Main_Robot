@@ -14,25 +14,27 @@ import org.team2168.utils.CanDigitalInput;
 import org.team2168.utils.Gains;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Turret extends SubsystemBase {
+public class Turret extends SubsystemBase implements Loggable{
   /** Creates a new Turret. */
-  private CanDigitalInput hallEffectSensor;
-  private WPI_TalonFX turretMotor;
+  private static CanDigitalInput hallEffectSensor;
+  private static WPI_TalonFX turretMotor;
   private static Turret instance = null;
 
-  private final int TICKS_PER_REV = 2048;
+  private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 1.0;
-  private final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
+  private static final double TICKS_PER_TURRET_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
-  private final double TICKS_PER_SECOND = TICKS_PER_WHEEL_ROTATION;
-  private final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10;
+  private static final double TICKS_PER_SECOND = TICKS_PER_TURRET_ROTATION;
+  private static final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10.0;
  
   //About 260/360 degrees
-  private final int MAX_ROTATION_TICKS = 1480;
+  private static final int MAX_ROTATION_TICKS = 1480;
 
-  private final double ACCELERATION = TICKS_PER_100_MS;
-  private final double CRUISE_VELOCITY = TICKS_PER_100_MS;
+  private static final double ACCELERATION = TICKS_PER_100_MS;  // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY = TICKS_PER_100_MS; // TODO: Change when mechanism is avaialble
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -82,6 +84,7 @@ public class Turret extends SubsystemBase {
     return instance;
   }
 
+  @Log (rowIndex = 3, columnIndex = 0)
   public boolean isTurretAtZero() {
     return hallEffectSensor.isFwdLimitSwitchClosed();
   }
@@ -92,12 +95,46 @@ public class Turret extends SubsystemBase {
    * @param rotation Between -1 and 1, -1 is a -360 degree rotation, 0 is no movement, and 1 is a 360 degree rotation
    */
 
-  public void setRotation(double rotation) {
-    turretMotor.set(ControlMode.MotionMagic, (rotation * TICKS_PER_WHEEL_ROTATION) /10);
-  }
-  //CHECK THIS
+  // TODO: Verify - I don't think this is right, the motor's encoder is a continuous measurement, this command is creating relative movement.
+  //  e.g. 0 = no motion. for this to work you'd need to be commanding an offset to the current encoder position in the motor.  
+  // public void setRotation(double rotation) {
+  //   turretMotor.set(ControlMode.MotionMagic, (rotation * TICKS_PER_WHEEL_ROTATION) /10);
+  // }
+
+  /**
+   * Command the turret to an absolute position relative to the zero position sensor
+   * @param degrees the destination position (degrees)
+   */
   public void setRotationDegrees(double degrees) {
-    turretMotor.set(ControlMode.MotionMagic, ((degrees / 360) * TICKS_PER_WHEEL_ROTATION) /10);
+    //CHECK THIS
+    turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(degrees));
+  }
+
+  /**
+   * convert a position in degrees to units the motor understands
+   * @param degrees 
+   * @return 
+   */
+  private double degreesToEncoderTicks(double degrees) {
+    return (degrees / 360.0) * TICKS_PER_TURRET_ROTATION;
+  }
+
+  /**
+   * Convert motor ticks to a mechanism position in degrees
+   * @param ticks 
+   * @return
+   */
+  private double ticksToDegrees(double ticks) {
+    return (ticks / TICKS_PER_TURRET_ROTATION) * 360.0;
+  }
+
+  /**
+   * Convert a motor velocity to a human readable one
+   * @param ticks in native motor controller units (ticks/100mS)
+   * @return velocity in degrees/second
+   */
+  private double ticksPer100msToDegreesPerSec(double ticks) {
+    return ticksToDegrees(ticks) * 10.0;
   }
 
   /**
@@ -118,6 +155,24 @@ public class Turret extends SubsystemBase {
    */
   public double getEncoderPosition() {
     return turretMotor.getSelectedSensorPosition();
+  }
+
+  /**
+   * 
+   * @return the turret position in degrees relative to the zero position sensor
+   */
+  @Log(rowIndex = 3, columnIndex = 2)
+  public double getPositionDegrees() {
+    return ticksToDegrees(turretMotor.getSelectedSensorPosition());
+  }
+
+  /**
+   * 
+   * @return the turret velocity in degrees per second
+   */
+  @Log(rowIndex = 3, columnIndex = 3)
+  public double getVelocityDegPerSec() {
+    return ticksPer100msToDegreesPerSec(turretMotor.getSelectedSensorVelocity());
   }
 
   public void zeroEncoder() {

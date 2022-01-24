@@ -7,19 +7,13 @@ package org.team2168;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.turret.DriveTurretWithJoystick;
-import org.team2168.commands.turret.RotateTurret;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Turret;
-import org.team2168.utils.F310;
-import org.team2168.utils.JoystickAnalogButton;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.turret.*;
+import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -35,9 +29,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-
   private final Turret m_turret = Turret.getInstance();
-  private final F310 joystick = new F310(0);
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -71,10 +63,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
-    m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi::getLeftDriverJoystickX));
-
+    m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
   }
 
   /**
