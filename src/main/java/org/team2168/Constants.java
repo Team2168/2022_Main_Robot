@@ -33,5 +33,7 @@ public final class Constants {
          
         public final static int TALONFX_TURRET_MOTOR = 3;
     }
+
+    public static final double LOOP_TIMESTEP_S = 0.02;
 }
 
