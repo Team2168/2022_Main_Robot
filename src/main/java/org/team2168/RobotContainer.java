@@ -7,8 +7,9 @@ package org.team2168;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.subsystems.Drivetrain;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.turret.*;
+import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -28,6 +29,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final Turret m_turret = Turret.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -62,6 +64,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+
+    m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
   }
 
   /**
