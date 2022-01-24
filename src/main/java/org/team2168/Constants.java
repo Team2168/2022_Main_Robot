@@ -34,10 +34,4 @@ public final class Constants {
         public static final int VERTICAL_CLIMB_MOTOR_1 = 20;
         public static final int VERTICAL_CLIMB_MOTOR_2 = 21;
     }
-
-    public static final class Sensors {
-        public static final int ENTRANCE_LINE_BREAK = 5;
-        public static final int EXIT_LINE_BREAK = 6;
-    }
-    
 }

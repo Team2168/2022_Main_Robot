@@ -8,8 +8,11 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.commands.ExampleCommand;
 import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.VerticalClimber.ExtendLift;
+import org.team2168.commands.VerticalClimber.ReturnToZero;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.VerticalClimber;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -31,12 +34,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final VerticalClimber verticalClimber = VerticalClimber.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
 
   // private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  public static Joystick driverJoystick = new Joystick(Constants.Joysticks.DRIVER_JOYSTICK);
   OI oi = OI.getInstance();
 
   private static RobotContainer instance = null;
@@ -67,6 +70,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+
+    JoystickButton climberLiftButton = new JoystickButton(OI.driverJoystick, 8);
+    JoystickButton climberZeroButton = new JoystickButton(OI.driverJoystick, 5);
+
+    climberLiftButton.whenHeld(new ExtendLift(verticalClimber));
+    climberZeroButton.whenPressed(new ReturnToZero(verticalClimber));
   }
 
   /**
