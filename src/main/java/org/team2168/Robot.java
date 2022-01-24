@@ -23,6 +23,11 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
+  public Robot() {
+    //set the default loop period
+    super(Constants.LOOP_TIMESTEP_S);
+  }
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
