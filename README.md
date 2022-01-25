@@ -1,6 +1,6 @@
 # 2022_Main_Robot
 
-![image](https://user-images.githubusercontent.com/1295877/149954913-ec88475f-dc2d-41a0-8f8a-b6b7891c93fb.png)
+![image](images/robot.jpg)
 
 ## Subsystems:
 
@@ -11,6 +11,8 @@
   * 1x TalonFX limitswitch for home position / zero
 * Limelight
   * 1x Limelight
+* Photonvision
+  * 1x Photonvision
 * Turret
   * 1x TalonFX
   * 1x TalonFX limitswitch for home position / zero
@@ -18,18 +20,24 @@
   * 1x TalonFX
 * Intake raise/lower
   * 1x Double Solenoid
-* Indexer - ball motion preceeding the shooter
+* Indexer
+  ball motion preceeding the shooter
+
   * 1x TalonFX
   * 1x Digital Input for ball detection (IR sensor)
-* Hopper - ball motion between the intake and indexer (in the pooper area)
+* Hopper
+  ball motion between the intake and indexer (in the pooper area)
+
   * 1x TalonFX
   * 1x Digital Input for ball detection (IR sensor)
 * Hopper blocker
-  * 1x Double Solenoid - prevents the ball from moving into the indexer to aid in alignment for pooper
+  Prevents the ball from moving into the indexer to aid in alignment for pooper
+
+  * 1x Double Solenoid
 * Pooper
   * 1x Double Solenoid to eject ball
-* Pixy
-  * Pixy2 sensor for ball color detection
+* Pixy / Color-sensor
+  * Pixy2 / color-sensor for ball color detection
 * Climber
   * 2x TalonFX
   * 1x TalonFX limitswitch for home position / zero
