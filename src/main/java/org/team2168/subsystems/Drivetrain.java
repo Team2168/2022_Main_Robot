@@ -333,6 +333,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
+        //TODO: Change to use voltage compensation built into the motor controllers?
         double batteryVoltage = RobotController.getBatteryVoltage();
         tankDrive(leftVolts / batteryVoltage, rightVolts / batteryVoltage);
     }

@@ -4,6 +4,8 @@
 
 package org.team2168;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -30,6 +32,24 @@ public final class Constants {
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
+    }
+
+    public static final class Drivetrain {
+        public static final double ksVolts = 0.61421;
+        public static final double kvVoltSecondsPerMeter = 2.007;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.60831;
+        public static final double kPDriveVel = 2.8231; //2.8231;
+
+        public static final double kTrackwidthMeters = 0.87;//fudged to approximately right. Actual = 0.65;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
+
+        public static final double kMaxSpeedMetersPerSecond = 3.0;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.0;
+
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
+        public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7
     }
 }
 
