@@ -5,6 +5,7 @@
 package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Constipator extends SubsystemBase {
@@ -26,6 +27,14 @@ public class Constipator extends SubsystemBase {
 
   public void unblock() {
     poopBlocker.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public boolean isBlockerBlocking(){
+    return poopBlocker.get() == Value.kForward;
+  }
+
+  public boolean isBlockerNotBlocking(){
+    return poopBlocker.get() == Value.kReverse;
   }
 
   @Override
