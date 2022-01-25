@@ -6,18 +6,15 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.Constants.Joysticks;
+
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopper;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
-import org.team2168.utils.F310;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
@@ -76,7 +73,7 @@ public class RobotContainer {
 
 
     hopperButton
-    .whenHeld(new DriveHopper(hopper, () -> {
+    .whenPressed(new DriveHopper(hopper, () -> {
       return 0.3;
     } ));
 

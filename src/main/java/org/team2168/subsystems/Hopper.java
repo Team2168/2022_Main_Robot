@@ -4,8 +4,6 @@
 
 package org.team2168.subsystems;
 
-// E
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -14,8 +12,10 @@ import org.team2168.Constants.CANDevices;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
+import io.github.oblarg.oblog.Loggable;
 
-public class Hopper extends SubsystemBase {
+public class Hopper extends SubsystemBase implements Loggable {
 
   private WPI_TalonFX hopperMotor;
   private DigitalInput hopperLineBreak;
@@ -63,6 +63,7 @@ public class Hopper extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  @Log (name = "Ball Is Entering Hopper", rowIndex = 4, columnIndex = 1)
   public boolean isBallEnteringHopper() {
     return !hopperLineBreak.get();
   }
