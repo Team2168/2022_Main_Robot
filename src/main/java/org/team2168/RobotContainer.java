@@ -6,15 +6,18 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
+import org.team2168.commands.ExampleCommand;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
+import org.team2168.commands.ExampleSubsystem.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,12 +30,15 @@ import io.github.oblarg.oblog.Logger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   private final Turret m_turret = Turret.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
+
+  private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
+  private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
 
   OI oi = OI.getInstance();
 
@@ -90,5 +96,15 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
+  }
+
+  @Config(rowIndex = 3, columnIndex = 0, width = 1, height = 1, tabName = "ExampleSubsystem")
+  private void retractExample(boolean foo) {
+    retractExampleSubsystem.schedule();
+  }
+
+  @Config(rowIndex = 3, columnIndex = 1, width = 1, height = 1, tabName = "ExampleSubsystem")
+  private void extendExample(boolean foo) {
+    extendExampleSubsystem.schedule();
   }
 }
