@@ -6,11 +6,11 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
-import org.team2168.commands.ExampleSubsystem.*;
-import org.team2168.commands.Pixy.*;
+import org.team2168.commands.exampleSubsystem.*;
+import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;

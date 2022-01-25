@@ -2,19 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.ExampleSubsystem;
+package org.team2168.commands.exampleSubsystem;
 
 import org.team2168.subsystems.ExampleSubsystem;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ExtendExample extends CommandBase {
-  ExampleSubsystem subsystem;
-  /** Creates a new Extend. */
-  public ExtendExample(ExampleSubsystem s) {
+public class RetractExample extends CommandBase {
+  private ExampleSubsystem subsystem;
+
+  /** Creates a new Retract. */
+  public RetractExample(ExampleSubsystem s) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(s);
     subsystem = s;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -24,7 +25,7 @@ public class ExtendExample extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    subsystem.extend();;
+    subsystem.retract();
   }
 
   // Called once the command ends or is interrupted.
