@@ -26,6 +26,12 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
 
+  public Robot() {
+    //set the default loop period
+    super(Constants.LOOP_TIMESTEP_S);
+
+  }
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -36,7 +42,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    compressor = new Compressor(null);
+   
     robotContainer = RobotContainer.getInstance();
   }
 
@@ -122,12 +128,5 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public static void setCompressorOn(boolean on) {
-    if(on) {
-      compressor.start();
-    }
-    else {
-      compressor.stop();
-    }
-  }
+  
 }

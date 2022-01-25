@@ -28,19 +28,14 @@ public class DriveIndexerWithNoStop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(_speed != 0.0) {
-      Robot.setCompressorOn(false);
-    }
-    else {
-      Robot.setCompressorOn(true);
-    }
+  
     _indexer.drive(_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.setCompressorOn(true);
+    _indexer.drive(_speed);
   }
   
   // Returns true when the command should end.
