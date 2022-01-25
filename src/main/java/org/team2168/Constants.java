@@ -35,8 +35,8 @@ public final class Constants {
     }
 
     public static final class PneumaticsDevices {
-        public static final int TEST_RETRACT = 1; 
-        public static final int TEST_EXTEND = 2;
+        public static final int TEST_RETRACT = 14; 
+        public static final int TEST_EXTEND = 15;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
