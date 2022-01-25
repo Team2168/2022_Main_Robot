@@ -81,7 +81,7 @@ public class RobotContainer {
     } ));
 
     hopperButton
-    .whenPressed(new DriveHopper(hopper, () -> {
+    .whenReleased(new DriveHopper(hopper, () -> {
       return 0;
     } ));
   }
