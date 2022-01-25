@@ -10,7 +10,6 @@ public class OI {
     public final F310 driverJoystick = new F310(Joysticks.DRIVER_JOYSTICK);
     public final F310 operatorJoystick = new F310(Joysticks.OPERATOR_JOYSTICK);
     public final F310 testJoystick = new F310(Joysticks.PID_TEST_JOYSTICK);
-    public final F310 indexerJoystick = new F310(Joysticks.INDEXER_JOYSTICK);
 
 
     private LinearInterpolator driverJoystickInterpolator;
@@ -62,7 +61,7 @@ public class OI {
     }
 
     public double getIndexerJoystick() {
-        return indexerJoystickInterpolator.interpolate(indexerJoystick.getLeftStickRaw_Y());
+        return indexerJoystickInterpolator.interpolate(operatorJoystick.getLeftStickRaw_Y());
     }
     public double getLeftDriverJoystickX() {
         return driverJoystickInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());

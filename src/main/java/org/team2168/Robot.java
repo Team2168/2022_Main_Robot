@@ -20,7 +20,7 @@ import io.github.oblarg.oblog.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static Compressor compressor;
+
 
   private Command autonomousCommand;
 
@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     //set the default loop period
-    super(Constants.LOOP_TIMESTEP_S);
+  //  super(Constants.LOOP_TIMESTEP_S);
 
   }
 

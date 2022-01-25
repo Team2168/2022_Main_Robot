@@ -33,12 +33,13 @@ public class DriveIndexerWithJoystick extends CommandBase {
   @Override
   public void execute() {
     _indexer.drive(_oi.getIndexerJoystick());
+    _indexer.drive(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _indexer.drive(speed.getAsDouble());
+    _indexer.drive(0.0);
   }
 
   // Returns true when the command should end.

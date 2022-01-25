@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
-  private WPI_TalonFX motor;
   private final boolean _INDEXER_MOTOR_REVERSED = false;
   private static DigitalInput detector;
   private static Indexer _instance = null;
