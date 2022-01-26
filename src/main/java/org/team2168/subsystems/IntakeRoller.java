@@ -4,8 +4,6 @@
 
 package org.team2168.subsystems;
 
-import java.util.Set;
-
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -14,9 +12,9 @@ import org.team2168.Constants.CANDevices;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase {
-  private WPI_TalonFX intakeRollerOne; 
+  private static WPI_TalonFX intakeRollerOne; 
   private static IntakeRoller instance; 
-  private TalonFXConfiguration intakeRollerOneConfig;
+  private static TalonFXConfiguration intakeRollerOneConfig;
 
 
   public IntakeRoller() {
