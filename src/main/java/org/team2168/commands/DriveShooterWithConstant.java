@@ -28,7 +28,7 @@ public class DriveShooterWithConstant extends CommandBase {
   @Override
   public void execute() {
     Shooter.setSpeed(Speed);
-    //this doesn't drive yet because i haven't made the drive method yet
+    Shooter.driveShooter(Speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -38,7 +38,7 @@ public class DriveShooterWithConstant extends CommandBase {
       isFinished();
     }
     else{
-      Shooter.driveShooterMotors(0);
+      Shooter.driveShooter(0);
     }
   }
 

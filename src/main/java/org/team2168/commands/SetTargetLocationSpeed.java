@@ -5,7 +5,6 @@
 package org.team2168.commands;
 
 import org.team2168.subsystems.Shooter; 
-import org.team2168.subsystems.Shooter.FiringLocation;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -14,26 +13,28 @@ public class SetTargetLocationSpeed extends CommandBase {
 
   private Shooter shooter;
   public double targetVelocity;
-  public FiringLocation k_Location; //why is the variable type not working
+  public double[] locationCoords; 
 
 
   public SetTargetLocationSpeed(double k_setPoint, double k_targetVelocity) {
-    shooter = shooter.getInstance(); //im not sure what to get
+    shooter = shooter.getInstance(); //method not working
     addRequirements(shooter);
     k_targetVelocity = k_setPoint;
   }
 
-  public SetTargetLocationSpeed(FiringLocation d_setPoint, FiringLocation d_Location, double d_targetVelocity) {
+  public SetTargetLocationSpeed(double[] d_setPoint, double x_targetVelocity, double y_targetVelocity, double[] totalVelocity) {
     shooter = shooter.getInstance();
     addRequirements(shooter);
-    k_Location = d_setPoint;
-    d_targetVelocity = d_setPoint.getSpeed();
+    locationCoords = d_setPoint;
+    x_targetVelocity = d_setPoint[0].getSpeed();
+    y_targetVelocity = d_setPoint[1].getSpeed();
+    totalVelocity = {x_targetVelocity, y_targetVelocity}; 
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(k_Location != null){
+    if(locationCoords != null){
       shooter.setFiringLocation(targetVelocity); //new method created in shooter.java that doesn't work
     }
   }

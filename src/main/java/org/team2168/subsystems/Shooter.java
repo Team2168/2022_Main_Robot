@@ -168,18 +168,21 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
-  public void setFiringLocation(double Speed, FiringLocation set_Location) {
-    set_Location = k_Location; //why is the variables not working
-    Speed = targetVelocity; //this method doesn't work, these variables are from SetTargetLocationSpeed
+  public void setFiringLocation(double Speed, double[] set_Location) {
+    set_Location = locationCoords; //why is the variable not working
+    Speed = targetVelocity; 
   }
 
-  /*public getInstance(){
-    HAVEN'T CREATED THIS METHOD
+  public getInstance(){
+    if _instance = null{
+      _instance = new Shooter();
+    }
+    return _instance;
   }
 
-  public driveShooter(){
-    HAVEN'T CREATED THIS METHOD
-  } */
+  public driveShooter(double speed){
+    set_commanded_rpm(speed); 
+  } 
 
   @Config (rowIndex = 0, columnIndex = 2, width = 2, height = 1)
   public void set_commanded_rpm(double input) {
