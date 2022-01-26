@@ -4,37 +4,48 @@
 
 package org.team2168.subsystems;
 
+import java.util.Set;
+
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
 
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase {
   private WPI_TalonFX intakeRollerOne; 
-  private IntakeRoller _instance; 
+  private static IntakeRoller instance; 
   private TalonFXConfiguration intakeRollerOneConfig;
 
 
   public IntakeRoller() {
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
+    
 
   }
 
+  
 
-  public IntakeRoller getInstance(){
-    if (_instance == null){
-      _instance = new IntakeRoller();
+  public static IntakeRoller getInstance(){
+    if (instance == null){
+      instance = new IntakeRoller();
     }
-    return _instance; 
+    return instance; 
   }
 
-  public void MotorSpeed(double speed){
+  public void setRollerSpeed(double speed){
     intakeRollerOne.set(speed);
   }
+
+
+  public void resetIntakeMotor(double speedTwo){
+    intakeRollerOne.set(speedTwo);
+    intakeRollerOne.setVoltage(0);
+  }
+
+  
 
   @Override
   public void periodic() {

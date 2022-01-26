@@ -30,7 +30,8 @@ public final class Constants {
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
-        public static final int INTAKE_MOTOR;
+        public static final int INTAKE_MOTOR = 4;
+        ;
     }
 }
 

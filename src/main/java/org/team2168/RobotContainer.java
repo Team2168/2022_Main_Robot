@@ -9,6 +9,7 @@ import java.util.function.DoubleFunction;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.IntakeRoller;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,8 +26,8 @@ import io.github.oblarg.oblog.Logger;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // The robot's subsystems an                           d commands are defined here...
+ public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
@@ -44,6 +45,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+
+    
   }
 
   public static RobotContainer getInstance() {
