@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   private RobotContainer robotContainer;
+  private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
 
   public Robot() {
     //set the default loop period
@@ -44,6 +45,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
    
     robotContainer = RobotContainer.getInstance();
+
+    compressor.enableDigital();
   }
 
   /**
