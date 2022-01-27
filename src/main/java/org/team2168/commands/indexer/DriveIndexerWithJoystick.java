@@ -6,40 +6,38 @@ package org.team2168.commands.indexer;
 
 import java.util.function.DoubleSupplier;
 
-import org.team2168.OI;
 import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveIndexerWithJoystick extends CommandBase {
   /** Creates a new DriveIndexerWithJoystick. */
-  private Indexer _indexer;
-  private OI _oi;
-  private DoubleSupplier speed;
-  public DriveIndexerWithJoystick(Indexer _indexer,DoubleSupplier speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    _indexer = Indexer.getInstance();
+  private Indexer indexer;
 
-    addRequirements(_indexer);
+  private DoubleSupplier speed;
+  public DriveIndexerWithJoystick(Indexer indexer,DoubleSupplier speed) {
+    // Use addRequirements() here to declare subsystem dependencies.
+   
+    addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _oi = OI.getInstance();
+   
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    _indexer.drive(_oi.getIndexerJoystick());
-    _indexer.drive(speed.getAsDouble());
+
+    indexer.drive(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _indexer.drive(0.0);
+    indexer.drive(0.0);
   }
 
   // Returns true when the command should end.
