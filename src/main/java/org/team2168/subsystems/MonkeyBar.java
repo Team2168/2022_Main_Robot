@@ -45,8 +45,12 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  @Log(name="Limit Switch")
-  public boolean getLimitSwitch() {
+  /**
+   * 
+   * @return true when the monkeybar is on the bar
+   */
+  @Log(name="Hook engaged?")
+  public boolean isHookEngaged() {
     return limitSwitch.get();
   }
 
