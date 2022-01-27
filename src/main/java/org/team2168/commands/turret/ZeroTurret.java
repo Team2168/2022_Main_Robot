@@ -15,6 +15,8 @@ public class ZeroTurret extends CommandBase {
   public ZeroTurret(Turret motor) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.motor = motor;
+
+    addRequirements(motor);
   }
 
   // Called when the command is initially scheduled.
@@ -24,8 +26,7 @@ public class ZeroTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //if the turret is facing the left of its 0, it will turn right and vice versa
-      motor.setVelocity(128);
+      motor.setVelocity(10.0);
   }
 
   // Called once the command ends or is interrupted.

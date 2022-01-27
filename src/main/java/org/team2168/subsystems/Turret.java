@@ -160,13 +160,17 @@ public class Turret extends SubsystemBase implements Loggable{
   private double ticksPer100msToDegreesPerSec(double ticks) {
     return ticksToDegrees(ticks) * 10.0;
   }
+  
+  public double degreesPerSecondToTicksPer100ms(double degrees) {
+    return (degrees/360.0 * TICKS_PER_TURRET_ROTATION / 10.0);
+  }
 
   /**
-   * Sets the velocity 
-   * @param velocity The target velocity in ticks per 100ms
+   * Sets the velocity
+   * @param degrees degrees per second the motor should run
    */
-  public void setVelocity(double velocity) {
-    turretMotor.set(ControlMode.Velocity, velocity);
+  public void setVelocity(double degrees) {
+    turretMotor.set(ControlMode.Velocity, degreesPerSecondToTicksPer100ms(degrees));
   }
 
   public void drive(double speed) {
