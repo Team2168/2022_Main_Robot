@@ -4,14 +4,16 @@
 
 package org.team2168.subsystems;
 
+import org.team2168.Constants.DIO;
 import org.team2168.Constants.PneumaticsDevices;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class MonkeyBar extends SubsystemBase {
+public class MonkeyBar extends SubsystemBase implements Loggable{
   private DoubleSolenoid solenoid;
   private DigitalInput limitSwitch;
 
@@ -21,6 +23,7 @@ public class MonkeyBar extends SubsystemBase {
   private MonkeyBar() {
     solenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE, PneumaticsDevices.MONKEYBAR_EXTEND,
         PneumaticsDevices.MONKEYBAR_RETRACT);
+    limitSwitch = new DigitalInput(DIO.MONKEYBAR_LIMIT_SWITCH);
   }
 
   public static MonkeyBar getInstance() {
