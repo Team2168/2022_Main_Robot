@@ -9,10 +9,8 @@ import java.util.function.DoubleFunction;
 import org.team2168.Constants.Joysticks;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.hopper.DriveHopper;
 import org.team2168.commands.pooper.PooperPoop;
 import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Pooper;
 import org.team2168.utils.F310;
 
@@ -37,7 +35,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-  public final Hopper hopper = Hopper.getInstance();
   public final Pooper pooper = Pooper.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
@@ -79,10 +76,7 @@ public class RobotContainer {
     JoystickButton pooperButton = oi.operatorJoystick.ButtonB();
 
 
-    hopperButton
-    .whenHeld(new DriveHopper(hopper, () -> {
-      return 0.3;
-    } ));
+  
 
     pooperButton
     .whenHeld(new PooperPoop(pooper));

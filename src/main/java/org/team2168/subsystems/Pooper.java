@@ -5,6 +5,7 @@
 package org.team2168.subsystems;
 
 import org.team2168.Constants;
+import org.team2168.Constants.Pneumatics;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -14,7 +15,7 @@ public class Pooper extends SubsystemBase {
 
   public static Pooper instance = null;
 
-  private DoubleSolenoid peptobismol;
+  private DoubleSolenoid pooperSolenoid;
 
   public static Pooper getInstance() {
     if (instance == null) {
@@ -23,22 +24,24 @@ public class Pooper extends SubsystemBase {
     return instance;
   }
 
+  private Pooper() {
+    pooperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
+    Pneumatics.POOPER_DOUBLE_SOLENOID_FORWARDS, 
+    Pneumatics.POOPER_DOUBLE_SOLENOID_BACKWARDS);
+  }
+
   
 
   public void excrete() {
-    peptobismol.set(DoubleSolenoid.Value.kForward);
+    pooperSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
   public void absorb() {
-    peptobismol.set(DoubleSolenoid.Value.kReverse);
+    pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
   /** Creates a new Pooper. */
-  private Pooper() {
-    peptobismol = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
-    Constants.Pneumatics.POOPER_DOUBLE_SOLENOID_FORWARDS, 
-    Constants.Pneumatics.POOPER_DOUBLE_SOLENOID_BACKWARDS);
-  }
+  
 
   @Override
   public void periodic() {

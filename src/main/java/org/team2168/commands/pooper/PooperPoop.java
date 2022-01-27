@@ -4,7 +4,6 @@
 
 package org.team2168.commands.pooper;
 
-import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Pooper;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -14,16 +13,12 @@ public class PooperPoop extends CommandBase {
   /** Creates a new PooperPoop. */
 
   private Pooper pooper;
-  private int pooperForwards;
-  private int pooperBackwards;
+ 
 
 
 
   public PooperPoop(Pooper pooper) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.pooperForwards = pooperForwards;
-    this.pooperBackwards = pooperBackwards;
-
     addRequirements(pooper);
   }
 
