@@ -105,8 +105,23 @@ public class Limelight extends SubsystemBase {
     isLimelightEnabled = true;
   }
 
-  public void setPipeline(int pipeline) {
-    setPipeline(pipeline);
+  public void setPipeline(int pipelineNumber) {
+    if(pipelineNumber >= 0 && pipelineNumber <= 9)
+    {
+        if (this.connectionEstablished() && this.variablesInstantiated)
+        {
+            pipeline.setNumber(pipelineNumber);
+        }
+        else if (this.connectionEstablished() && !this.variablesInstantiated)
+        {
+            this.instantiateLocalVariables();
+            pipeline.setNumber(pipelineNumber);
+        }
+        // else
+        // {
+        //     System.out.println("Connection to Limelight not established. Check ethernet connectors.");
+        // }
+    }
   }
 
   public int getPipeline() {
