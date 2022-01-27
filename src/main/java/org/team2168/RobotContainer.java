@@ -75,8 +75,8 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonStart().whenHeld(new ExtendLift(verticalClimber));
-    oi.operatorJoystick.ButtonBack().whenPressed(new ReturnToZero(verticalClimber));
+    oi.operatorJoystick.ButtonX().whenHeld(new ExtendLift(verticalClimber));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(verticalClimber));
   }
 
   /**
