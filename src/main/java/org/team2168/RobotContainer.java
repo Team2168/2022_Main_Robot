@@ -11,7 +11,7 @@ import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
-import org.team2168.commands.VerticalClimber.*;
+import org.team2168.commands.verticalClimber.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
