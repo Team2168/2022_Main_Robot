@@ -67,7 +67,7 @@ public class Turret extends SubsystemBase implements Loggable{
   private static TalonFXSimCollection m_turretMotorSim;
 
   private Turret() {
-    turretMotor = new WPI_TalonFX(Constants.CANDevices.TALONFX_TURRET_MOTOR);
+    turretMotor = new WPI_TalonFX(Constants.CANDevices.TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,

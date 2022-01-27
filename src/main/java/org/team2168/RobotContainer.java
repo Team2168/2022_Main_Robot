@@ -14,6 +14,7 @@ import org.team2168.subsystems.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
 
 /**
@@ -66,6 +67,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+    JoystickButton zeroTurretButton = new JoystickButton(oi.operatorJoystick, 1);
+    zeroTurretButton.whenPressed(new ZeroTurret(m_turret));
   }
 
   /**

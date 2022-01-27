@@ -25,7 +25,7 @@ public class ZeroTurret extends CommandBase {
   @Override
   public void execute() {
     //if the turret is facing the left of its 0, it will turn right and vice versa
-      motor.setVelocity(256);
+      motor.setVelocity(128);
   }
 
   // Called once the command ends or is interrupted.
