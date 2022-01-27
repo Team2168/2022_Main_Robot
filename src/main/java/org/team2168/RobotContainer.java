@@ -6,20 +6,18 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.ExampleCommand;
-import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.VerticalClimber.ExtendLift;
-import org.team2168.commands.VerticalClimber.ReturnToZero;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.VerticalClimber;
+import org.team2168.commands.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.turret.*;
+import org.team2168.commands.exampleSubsystem.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.VerticalClimber.*;
+import org.team2168.commands.pixy.*;
+import org.team2168.subsystems.*;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
+import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -32,14 +30,18 @@ import io.github.oblarg.oblog.Logger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Pixy m_pixy = Pixy.getInstance();
+
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-  public final VerticalClimber verticalClimber = VerticalClimber.getInstance();
+  private final VerticalClimber verticalClimber = VerticalClimber.getInstance();
+  private final Turret m_turret = Turret.getInstance();
+  private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
-  // private final ExampleCommand m_autoCommand = new
-  // ExampleCommand(m_exampleSubsystem);
+  private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
+  private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
+  private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
 
-  // private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   OI oi = OI.getInstance();
 
   private static RobotContainer instance = null;
@@ -49,6 +51,8 @@ public class RobotContainer {
    */
   private RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
+
+    m_pixy.setDefaultCommand(m_findAllianceBall);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -61,21 +65,18 @@ public class RobotContainer {
   }
 
   /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing
-   * it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    //Driver Controls
+    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
-    JoystickButton climberLiftButton = new JoystickButton(OI.driverJoystick, 8);
-    JoystickButton climberZeroButton = new JoystickButton(OI.driverJoystick, 5);
-
-    climberLiftButton.whenHeld(new ExtendLift(verticalClimber));
-    climberZeroButton.whenPressed(new ReturnToZero(verticalClimber));
+    //Operator Controls
+    m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonStart().whenHeld(new ExtendLift(verticalClimber));
+    oi.operatorJoystick.ButtonBack().whenPressed(new ReturnToZero(verticalClimber));
   }
 
   /**
@@ -100,5 +101,15 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
+  }
+
+  @Config(rowIndex = 3, columnIndex = 0, width = 1, height = 1, tabName = "ExampleSubsystem")
+  private void retractExample(boolean foo) {
+    retractExampleSubsystem.schedule();
+  }
+
+  @Config(rowIndex = 3, columnIndex = 1, width = 1, height = 1, tabName = "ExampleSubsystem")
+  private void extendExample(boolean foo) {
+    extendExampleSubsystem.schedule();
   }
 }
