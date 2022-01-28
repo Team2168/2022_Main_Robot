@@ -6,10 +6,9 @@ package org.team2168.commands.hopper;
 
 import java.util.function.DoubleSupplier;
 
-import org.team2168.subsystems.Hopper;
-
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
+import org.team2168.subsystems.Hopper;
 
 
 public class DriveHopper extends CommandBase {
@@ -38,7 +37,9 @@ public class DriveHopper extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    hopper.driveHopper(0);
+  }
 
   // Returns true when the command should end.
   @Override
