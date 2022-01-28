@@ -56,54 +56,7 @@ public class Climber extends SubsystemBase {
   private final double TRIGGER_THRESHOLD_LIMIT = 30; // amp
   private final double TRIGGER_THRESHOLD_TIME = 0.2; // s
 
-  // checks if the climber is at the zero position
-  public boolean isAtZeroPosition() {
-    if (climbMotor1.isFwdLimitSwitchClosed() == 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // methods that convert a velocity value from seconds to hundreds of
-  // milliseconds and back
-  public double convertVelocitySecondstoHundredMs(double speed) {
-    return speed * TIME_UNITS_OF_VELOCITY;
-  }
-
-  public double convertVelocityHundredMstoSeconds(double speed) {
-    return speed / TIME_UNITS_OF_VELOCITY;
-  }
-
-  // returns encoder ticks for each of the motors
-  public double getEncoderTicksMotor1() {
-    return climbMotor1.getSelectedSensorPosition(kPIDLoopIdx);
-  }
-
-  public double getEncoderTicksMotor2() {
-    return climbMotor2.getSelectedSensorPosition(kPIDLoopIdx);
-  }
-
-  // sets internal sensors of Falcon 500 back to 0 - used when the lift is at a
-  // zero position.
-  public void setEncoderPosZero() {
-    climbMotor1.setSelectedSensorPosition(0.0);
-    climbMotor2.setSelectedSensorPosition(0.0);
-  }
-
-  // commands the lift to a certain velocity (in inches per second)
-  public void setSpeed(double speedInInchesPerSec) {
-    climbMotor1.set(ControlMode.Velocity,
-        (speedInInchesPerSec / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV * TIME_UNITS_OF_VELOCITY,
-        DemandType.ArbitraryFeedForward, kF);
-  }
-
-  // commands the lift to a certain position (in inches from the zero position)
-  public void setPosition(double inches) {
-    climbMotor1.set(ControlMode.MotionMagic, (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV,
-        DemandType.ArbitraryFeedForward, kF);
-  }
-
+  
   public Climber() {
     climbMotor1.configFactoryDefault();
     climbMotor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
@@ -162,6 +115,54 @@ public class Climber extends SubsystemBase {
       instance = new Climber();
     }
     return instance;
+  }
+
+  // checks if the climber is at the zero position
+  public boolean isAtZeroPosition() {
+    if (climbMotor1.isFwdLimitSwitchClosed() == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // methods that convert a velocity value from seconds to hundreds of
+  // milliseconds and back
+  public double convertVelocitySecondstoHundredMs(double speed) {
+    return speed * TIME_UNITS_OF_VELOCITY;
+  }
+
+  public double convertVelocityHundredMstoSeconds(double speed) {
+    return speed / TIME_UNITS_OF_VELOCITY;
+  }
+
+  // returns encoder ticks for each of the motors
+  public double getEncoderTicksMotor1() {
+    return climbMotor1.getSelectedSensorPosition(kPIDLoopIdx);
+  }
+
+  public double getEncoderTicksMotor2() {
+    return climbMotor2.getSelectedSensorPosition(kPIDLoopIdx);
+  }
+
+  // sets internal sensors of Falcon 500 back to 0 - used when the lift is at a
+  // zero position.
+  public void setEncoderPosZero() {
+    climbMotor1.setSelectedSensorPosition(0.0);
+    climbMotor2.setSelectedSensorPosition(0.0);
+  }
+
+  // commands the lift to a certain velocity (in inches per second)
+  public void setSpeed(double speedInInchesPerSec) {
+    climbMotor1.set(ControlMode.Velocity,
+        (speedInInchesPerSec / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV * TIME_UNITS_OF_VELOCITY,
+        DemandType.ArbitraryFeedForward, kF);
+  }
+
+  // commands the lift to a certain position (in inches from the zero position)
+  public void setPosition(double inches) {
+    climbMotor1.set(ControlMode.MotionMagic, (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV,
+        DemandType.ArbitraryFeedForward, kF);
   }
 
   @Override
