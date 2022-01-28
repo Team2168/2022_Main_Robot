@@ -22,12 +22,9 @@ public class LinearInterpolator {
 
 	/**
 	 * Augment an input value using the supplied data set.
-	 * @param imput
-	 * @param d
-	 *            the value to augment
+	 * @param input the value to augment
 	 * @return The adjusted value.
 	 */
-
 	public double interpolate(double input) {
 		double retVal = 0.0;
 		boolean done = false;
@@ -55,5 +52,4 @@ public class LinearInterpolator {
 
 		return retVal;
 	}
-
 }
