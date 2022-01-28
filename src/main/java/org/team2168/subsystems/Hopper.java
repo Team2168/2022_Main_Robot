@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
+import org.team2168.Constants.DIO;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,7 +45,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   /** Creates a new Hopper. */
   private Hopper() {
     hopperMotor = new WPI_TalonFX(CANDevices.HOPPER_MOTOR);
-    hopperLineBreak = new DigitalInput(CANDevices.HOPPER_LINE_BREAK);
+    hopperLineBreak = new DigitalInput(DIO.HOPPER_LINE_BREAK);
     
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,

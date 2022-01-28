@@ -30,11 +30,14 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
         public static final int HOPPER_MOTOR = 3;
-        public static final int HOPPER_LINE_BREAK = 4;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
+    }
+
+    public static final class DIO {
+        public static final int HOPPER_LINE_BREAK = 1;
     }
 }
 
