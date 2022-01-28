@@ -102,11 +102,6 @@ public class RobotContainer {
         }); // Drivetrain characterization
   }
 
-<<<<<<< HEAD
-  public static double getHopperJoystickValue() {
-		return  0.0; 
-	}
-=======
   @Config(rowIndex = 3, columnIndex = 0, width = 1, height = 1, tabName = "ExampleSubsystem")
   private void retractExample(boolean foo) {
     retractExampleSubsystem.schedule();
@@ -116,5 +111,4 @@ public class RobotContainer {
   private void extendExample(boolean foo) {
     extendExampleSubsystem.schedule();
   }
->>>>>>> 9601ac0f578d969509c9a9911121c0dd87f29ee3
 }
