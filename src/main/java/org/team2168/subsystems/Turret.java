@@ -162,7 +162,7 @@ public class Turret extends SubsystemBase implements Loggable{
   }
   
   public double degreesPerSecondToTicksPer100ms(double degrees) {
-    return (degrees/360.0 * TICKS_PER_TURRET_ROTATION / 10.0);
+    return (degrees/360.0 * TICKS_PER_TURRET_ROTATION * 10.0);
   }
 
   /**
