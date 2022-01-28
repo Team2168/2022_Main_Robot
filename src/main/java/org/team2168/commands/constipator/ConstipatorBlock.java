@@ -6,37 +6,41 @@ package org.team2168.commands.constipator;
 
 import org.team2168.subsystems.Constipator;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ConstipatorBlock extends CommandBase {
   /** Creates a new ConstipatorBlock. */
-  private Constipator _constipator;
-  public ConstipatorBlock() {
+  private Constipator constipator;
+  private ConstipatorBlock(Constipator constipator) {
     // Use addRequirements() here to declare subsystem dependencies.
-    _constipator = Constipator.getInstance();
+    this.constipator = constipator;
+    constipator = Constipator.getInstance();
+    addRequirements(constipator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _constipator.block();
+    
     
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    constipator.block();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    _constipator.isBlockerBlocking();
+    constipator.isBlockerBlocking();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    constipator.isBlockerBlocking();
+    return true;
   }
 }

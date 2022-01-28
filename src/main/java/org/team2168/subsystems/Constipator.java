@@ -4,6 +4,9 @@
 
 package org.team2168.subsystems;
 
+import org.team2168.Constants.CANDevices;
+import org.team2168.Constants.Solenoids;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,7 +15,9 @@ public class Constipator extends SubsystemBase {
   /** Creates a new Constipator. */
   private DoubleSolenoid poopBlocker;
   private static Constipator _instance;
-  public Constipator() {}
+  private Constipator() {
+    poopBlocker = new DoubleSolenoid( null, 3, 4);
+  }
 
   public static Constipator getInstance() {
     if(_instance == null) {

@@ -30,6 +30,13 @@ public final class Constants {
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
+        public static final int PCM_CAN_ID_CONSTIPATOR = 4;
+        
+    }
+
+    public static final class Solenoids{
+        public static final int CONSTIPATOR_BLOCK = 3;
+        public static final int CONSTIPATOR_UNBLOCK = 4;
     }
 }
 
