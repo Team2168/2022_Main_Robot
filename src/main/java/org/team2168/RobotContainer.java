@@ -12,8 +12,6 @@ import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopper;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
-import org.team2168.commands.*;
-import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
