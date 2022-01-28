@@ -11,7 +11,7 @@ import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
-import org.team2168.commands.verticalClimber.*;
+import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
@@ -34,7 +34,7 @@ public class RobotContainer {
   private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final VerticalClimber verticalClimber = VerticalClimber.getInstance();
+  private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
@@ -75,8 +75,8 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonX().whenHeld(new ExtendLift(verticalClimber));
-    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(verticalClimber));
+    oi.operatorJoystick.ButtonX().whenHeld(new ExtendLift(climber));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
   }
 
   /**

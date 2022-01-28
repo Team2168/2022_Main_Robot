@@ -15,12 +15,12 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class VerticalClimber extends SubsystemBase {
-  static VerticalClimber instance = null;
+public class Climber extends SubsystemBase {
+  static Climber instance = null;
 
-  /** Creates a new VerticalClimber. */
-  private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.VERTICAL_CLIMB_MOTOR_1);
-  private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.VERTICAL_CLIMB_MOTOR_2);
+  /** Creates a new Climber. */
+  private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1);
+  private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2);
 
   /** Track button state for single press event */
   boolean _lastButton1 = false;
@@ -104,7 +104,7 @@ public class VerticalClimber extends SubsystemBase {
         DemandType.ArbitraryFeedForward, kF);
   }
 
-  public VerticalClimber() {
+  public Climber() {
     climbMotor1.configFactoryDefault();
     climbMotor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     climbMotor1.setSensorPhase(kSensorPhase);
@@ -153,13 +153,13 @@ public class VerticalClimber extends SubsystemBase {
 
     // Tells second climber motor to do the same outputs as the first climber motor,
     // and at the same time.
-    climbMotor2.set(ControlMode.Follower, Constants.CANDevices.VERTICAL_CLIMB_MOTOR_1);
+    climbMotor2.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_1);
 
   }
 
-  public static VerticalClimber getInstance() {
+  public static Climber getInstance() {
     if (instance == null) {
-      instance = new VerticalClimber();
+      instance = new Climber();
     }
     return instance;
   }
