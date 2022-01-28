@@ -8,30 +8,34 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
 
-public class Climber extends SubsystemBase {
+public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
   /** Creates a new Climber. */
   private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1);
   private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2);
 
-  /** Track button state for single press event */
-  boolean _lastButton1 = false;
-
-  /** Save the target position to servo to */
-  double targetPositionRotations;
-
   private static final int TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (10 / 40) * (14 / 40) * (18 / 24);
-  private static final double INCHES_PER_REV = 0.6589 * 2 * Math.PI;
+  private static final double SPROCKET_RADIUS_INCHES = 0.6589;
+  private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
   private static final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
+  private static final double MIN_HEIGHT_INCHES = 0.0;
+  private static final double MAX_HEIGHT_INCHES = 40.0;
 
   private static final int kSlotIdx = 0;
   private static final int kPIDLoopIdx = 0;
@@ -40,6 +44,7 @@ public class Climber extends SubsystemBase {
   private static boolean kMotorInvert = false;
 
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
+  private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
 
   // Gains
   private static final double kP = 0.15;
@@ -56,8 +61,13 @@ public class Climber extends SubsystemBase {
   private final double TRIGGER_THRESHOLD_LIMIT = 30; // amp
   private final double TRIGGER_THRESHOLD_TIME = 0.2; // s
 
+  //Simulation objects
+  // Characterization
+  private static ElevatorSim m_climberSim;
+  private static TalonFXSimCollection m_climberMotorSim;
+  private static final double CARRIAGE_MASS_KG = 4.5;
   
-  public Climber() {
+  private Climber() {
     climbMotor1.configFactoryDefault();
     climbMotor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     climbMotor1.setSensorPhase(kSensorPhase);
@@ -108,6 +118,17 @@ public class Climber extends SubsystemBase {
     // and at the same time.
     climbMotor2.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_1);
 
+    m_climberSim = new ElevatorSim(
+        DCMotor.getFalcon500(2),
+        GEAR_RATIO,
+        CARRIAGE_MASS_KG,
+        Units.inchesToMeters(SPROCKET_RADIUS_INCHES),
+        Units.inchesToMeters(MIN_HEIGHT_INCHES),
+        Units.inchesToMeters(MAX_HEIGHT_INCHES),
+        VecBuilder.fill(0.01)
+    );
+
+    m_climberMotorSim = climbMotor1.getSimCollection();
   }
 
   public static Climber getInstance() {
@@ -168,5 +189,31 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // Affect motor outputs by main system battery voltage dip 
+    m_climberMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+
+    // Pass motor output voltage to physics sim
+    m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
+    m_climberSim.update(Constants.LOOP_TIMESTEP_S);
+
+    // Update motor sensor states based on physics model
+    // TODO: update the motor sim's position and velocity values using the elevatorsim's position and velocity.
+    //       in other words convert elevatorSim's units (meters) to TalonFX native units (ticks)
+    // m_climberSim.getPositionMeters()
+    // m_climberSim.getVelocityMetersPerSecond()
+
+    //How it was done for the turret:
+    // double sim_velocity_ticks_per_100ms = m_climberSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    // m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    // m_climberMotorSim.setIntegratedSensorRawPosition((int) (getEncoderTicksMotor1() + 
+    //   Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
+
+    //TODO: set simulated limit switch positions from simulation methods
+    // m_climberSim.hasHitLowerLimit()
+    // m_climberSim.hasHitUpperLimit()
   }
 }
