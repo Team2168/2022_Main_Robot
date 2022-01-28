@@ -10,6 +10,7 @@ import org.team2168.commands.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
+import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
@@ -33,6 +34,7 @@ public class RobotContainer {
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   private final Turret m_turret = Turret.getInstance();
+  private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -67,8 +69,13 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
+    //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+
+    //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
   }
 
   /**
