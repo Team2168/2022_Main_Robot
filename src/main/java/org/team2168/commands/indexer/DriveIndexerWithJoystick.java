@@ -17,7 +17,7 @@ public class DriveIndexerWithJoystick extends CommandBase {
   private DoubleSupplier speed;
   public DriveIndexerWithJoystick(Indexer indexer,DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-   
+    this.speed = speed;
     addRequirements(indexer);
   }
 

@@ -31,6 +31,10 @@ public class Indexer extends SubsystemBase {
   private Indexer() {
     detector = new DigitalInput(CANDevices.INDEXER_MOTOR);
     motor.setInverted(indexerInvert);
+    indexerCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, 
+      CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+
+      motor.configSupplyCurrentLimit(indexerCurrentLimit);
   }
 
   public static Indexer getInstance() {
@@ -40,20 +44,21 @@ public class Indexer extends SubsystemBase {
     return instance;
   }
 
+/**
+ * 
+ * @param speed should be set to between 1.0 and -1.0, depending on if you need it to intake or spit out a ball
+ */
+
   public void drive(double speed) {
     motor.set(TalonFXControlMode.PercentOutput, (indexer_MOTOR_REVERSED ? -speed : speed)); {
       speed = speed * -1;
     }
   }
 
-  public int isBallEnteringIndexer() {
-    if (!detector.get()) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
+/**
+ * 
+ * @return boolean is meant to detect the presence of a ball in the indexer
+ */
   public boolean isBallEntering() {
     return !detector.get();
   }

@@ -4,18 +4,20 @@
 
 package org.team2168.commands.indexer;
 
+import java.util.function.DoubleSupplier;
+
 import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveUntilBall extends CommandBase {
   /** Creates a new DriveUntilBall. */
-  private double speed;
+  private Double indexerSpeed;
   private Indexer indexer;
-  public DriveUntilBall() {
+  public DriveUntilBall(Double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     indexer = Indexer.getInstance();
-    speed = speed;
+    this.indexerSpeed = speed;
     addRequirements(indexer);
   }
 
@@ -27,7 +29,7 @@ public class DriveUntilBall extends CommandBase {
   @Override
   public void execute() {
     if (indexer.isBallEntering() == false) {
-      indexer.drive(speed);
+      indexer.drive(indexerSpeed);
     }
     else {
       indexer.drive(0.0);
