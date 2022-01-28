@@ -6,20 +6,13 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.Constants.Joysticks;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.pooper.PooperPoop;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Pooper;
-import org.team2168.utils.F310;
 
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
-import org.team2168.commands.*;
-import org.team2168.commands.drivetrain.*;
+
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;

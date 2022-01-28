@@ -6,7 +6,6 @@ package org.team2168.commands.pooper;
 
 import org.team2168.subsystems.Pooper;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class PooperPoop extends CommandBase {
