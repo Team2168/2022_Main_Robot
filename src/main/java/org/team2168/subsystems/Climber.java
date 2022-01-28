@@ -30,7 +30,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2);
 
   private static final int TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (10 / 40) * (14 / 40) * (18 / 24);
+  private static final double GEAR_RATIO = (10.0 / 40.0) * (14.0 / 40.0) * (18.0 / 24.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
   private static final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
