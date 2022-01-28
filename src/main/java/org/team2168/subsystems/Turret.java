@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Turret extends SubsystemBase implements Loggable{
+public class Turret extends SubsystemBase implements Loggable {
   /** Creates a new Turret. */
   private static CanDigitalInput hallEffectSensor;
   private static WPI_TalonFX turretMotor;
