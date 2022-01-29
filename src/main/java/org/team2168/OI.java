@@ -1,5 +1,6 @@
 package org.team2168;
 
+import javax.swing.text.html.HTMLDocument.RunElement;
 import org.team2168.Constants.Joysticks;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
@@ -56,6 +57,14 @@ public class OI {
 
     public double getDriverJoystickY() {
         return driverJoystickInterpolator.interpolate(driverJoystick.getRightStickRaw_Y());
+    }
+
+    public double getLeftDriverJoystickX() {
+        return driverJoystickInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
+    }
+
+    public double getLeftDriverJoystickY() {
+        return driverJoystickInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
     }
 
     public double getGunStyleWheel() {
