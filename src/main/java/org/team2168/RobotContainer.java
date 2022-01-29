@@ -53,7 +53,8 @@ public class RobotContainer {
     Logger.configureLoggingAndConfig(this, false);
 
     m_pixy.setDefaultCommand(m_findAllianceBall);
-
+    climber.setDefaultCommand(new ReturnToZero(climber));
+    
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -73,7 +74,7 @@ public class RobotContainer {
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    climber.setDefaultCommand(new ReturnToZero(climber));
+
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonX().whenHeld(new ExtendLift(climber));

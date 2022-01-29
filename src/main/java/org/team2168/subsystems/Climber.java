@@ -31,7 +31,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1);
   private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2);
 
-  private static final int TICKS_PER_REV = 2048;
+  private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (10.0 / 40.0) * (14.0 / 40.0) * (18.0 / 24.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
@@ -88,28 +88,6 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotor1.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
 
     climbMotor2.configFactoryDefault();
-    climbMotor2.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
-    climbMotor2.setSensorPhase(kSensorPhase);
-    climbMotor2.setInverted(kMotorInvert);
-
-    climbMotor2.configNominalOutputForward(0, kTimeoutMs);
-    climbMotor2.configNominalOutputReverse(0, kTimeoutMs);
-    climbMotor2.configPeakOutputForward(1, kTimeoutMs);
-    climbMotor2.configPeakOutputReverse(-1, kTimeoutMs);
-
-    climbMotor2.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
-
-    climbMotor2.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
-    climbMotor2.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
-    climbMotor2.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
-    climbMotor2.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
-
-    climbMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-    climbMotor1.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-
-    climbMotor2.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-    climbMotor2.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -141,12 +119,13 @@ public class Climber extends SubsystemBase implements Loggable {
   }
 
   // checks if the climber is at the zero position
+  @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isAtZeroPosition() {
-    if (climbMotor1.isFwdLimitSwitchClosed() == 1) {
-      return true;
-    } else {
-      return false;
-    }
+    return climbMotor1.isRevLimitSwitchClosed() == 1;
+  }
+
+  public boolean isAtUpperPosition() {
+    return climbMotor1.isFwdLimitSwitchClosed() == 1;
   }
 
   // methods that convert a velocity value from seconds to hundreds of
@@ -175,29 +154,46 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotor2.setSelectedSensorPosition(0.0);
   }
 
+  private double inchesToTicks(double inches) {
+    //TODO: Check math
+    return (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV;
+  }
+
+  private double ticksToInches(double ticks) {
+    //TODO: Check math
+    return (ticks / TICKS_PER_REV) / GEAR_RATIO * INCHES_PER_REV;
+  }
+
+  /**
+   * 
+   * @return current lift volocity (inches/second)
+   */
+  @Log(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3)
+  public double getSpeedInchesPerSecond() {
+    return convertVelocityHundredMstoSeconds(ticksToInches(climbMotor1.getSelectedSensorVelocity()));
+  }
+
+  /**
+   * 
+   * @return current lift position (inches), zero is fully lowered
+   */
+  @Log(name = "Position (In)", rowIndex = 3, columnIndex = 2)
+  public double getPosiitonInches() {
+    return ticksToInches(climbMotor1.getSelectedSensorPosition());
+  }
+
   // commands the lift to a certain velocity (in inches per second)
   public void setSpeed(double speedInInchesPerSec) {
-    climberCurrentVelocity = speedInInchesPerSec;
     climbMotor1.set(ControlMode.Velocity,
-        (speedInInchesPerSec / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV * TIME_UNITS_OF_VELOCITY,
+        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY,
         DemandType.ArbitraryFeedForward, kF);
   }
 
   // commands the lift to a certain position (in inches from the zero position)
   public void setPosition(double inches) {
-    climberCurrentPosition = inches;
-    climbMotor1.set(ControlMode.MotionMagic, (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV,
+    climbMotor1.set(ControlMode.MotionMagic, inchesToTicks(inches),
         DemandType.ArbitraryFeedForward, kF);
   }
-
-  // Diagnostics for dashboard
-  @Log
-  private double climberDistanceFromZeroSensor = climbMotor1.getSelectedSensorPosition();
-  @Log
-  private double climberCurrentVelocity;
-  @Log
-  private double climberCurrentPosition;
-  // TODO: create new Logged variable for current active command of climber.
 
   @Override
   public void periodic() {
@@ -206,53 +202,21 @@ public class Climber extends SubsystemBase implements Loggable {
 
   @Override
   public void simulationPeriodic() {
-    double sim_velocity_ticks_per_100_ms = (TICKS_PER_REV/INCHES_PER_REV) * Units.metersToInches(m_climberSim.getVelocityMetersPerSecond()) * TIME_UNITS_OF_VELOCITY;
 
     // Affect motor outputs by main system battery voltage dip 
     m_climberMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
-
-    // Matches motor outputs of position and velocity with sim values
-    m_climberMotorSim.setIntegratedSensorRawPosition((int) (getEncoderTicksMotor1() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
-    m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Pass motor output voltage to physics sim
     m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
     m_climberSim.update(Constants.LOOP_TIMESTEP_S);
 
-    // Sets simulated limit switch positions from simulation methods
-    m_climberSim.hasHitLowerLimit();
-    m_climberSim.hasHitUpperLimit();
-
-    if (m_climberSim.hasHitLowerLimit()) {
-      if (m_climberSim.getVelocityMetersPerSecond() < 0) {
-        m_climberMotorSim.setIntegratedSensorVelocity(0);
-        m_climberMotorSim.setIntegratedSensorRawPosition((int) (MIN_HEIGHT_INCHES * TIME_UNITS_OF_VELOCITY * (TICKS_PER_REV/INCHES_PER_REV)));
-      }
-    }
-
-    else if (m_climberSim.hasHitUpperLimit()) {
-      if (m_climberSim.getVelocityMetersPerSecond() > 0) {
-        m_climberMotorSim.setIntegratedSensorVelocity(0);
-        m_climberMotorSim.setIntegratedSensorRawPosition((int) (MAX_HEIGHT_INCHES * TIME_UNITS_OF_VELOCITY * (TICKS_PER_REV/INCHES_PER_REV)));
-      }
-    }
-
-    
-
     // Update motor sensor states based on physics model
-    // TODO: update the motor sim's position and velocity values using the elevatorsim's position and velocity.
-    //       in other words convert elevatorSim's units (meters) to TalonFX native units (ticks)
-    // m_climberSim.getPositionMeters()
-    // m_climberSim.getVelocityMetersPerSecond()
+    double sim_velocity_ticks_per_100_ms = (TICKS_PER_REV/INCHES_PER_REV) * Units.metersToInches(m_climberSim.getVelocityMetersPerSecond()) * TIME_UNITS_OF_VELOCITY;
+    m_climberMotorSim.setIntegratedSensorRawPosition((int) (getEncoderTicksMotor1() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
+    m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
-    //How it was done for the turret:
-    // double sim_velocity_ticks_per_100ms = m_climberSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    // m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    // m_climberMotorSim.setIntegratedSensorRawPosition((int) (getEncoderTicksMotor1() + 
-    //   Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
-
-    //TODO: set simulated limit switch positions from simulation methods
-    // m_climberSim.hasHitLowerLimit()
-    // m_climberSim.hasHitUpperLimit()
+    // Set simulated limit switch positions from simulation methods
+    m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
+    m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
   }
 }
