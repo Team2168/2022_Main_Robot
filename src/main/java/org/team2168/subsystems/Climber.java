@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants;
+
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
@@ -175,6 +177,7 @@ public class Climber extends SubsystemBase implements Loggable {
 
   // commands the lift to a certain velocity (in inches per second)
   public void setSpeed(double speedInInchesPerSec) {
+    climberCurrentVelocity = speedInInchesPerSec;
     climbMotor1.set(ControlMode.Velocity,
         (speedInInchesPerSec / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV * TIME_UNITS_OF_VELOCITY,
         DemandType.ArbitraryFeedForward, kF);
@@ -182,9 +185,19 @@ public class Climber extends SubsystemBase implements Loggable {
 
   // commands the lift to a certain position (in inches from the zero position)
   public void setPosition(double inches) {
+    climberCurrentPosition = inches;
     climbMotor1.set(ControlMode.MotionMagic, (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV,
         DemandType.ArbitraryFeedForward, kF);
   }
+
+  // Diagnostics for dashboard
+  @Log
+  private double climberDistanceFromZeroSensor = climbMotor1.getSelectedSensorPosition();
+  @Log
+  private double climberCurrentVelocity;
+  @Log
+  private double climberCurrentPosition;
+  // TODO: create new Logged variable for current active command of climber.
 
   @Override
   public void periodic() {
@@ -193,12 +206,38 @@ public class Climber extends SubsystemBase implements Loggable {
 
   @Override
   public void simulationPeriodic() {
+    double sim_velocity_ticks_per_100_ms = (TICKS_PER_REV/INCHES_PER_REV) * Units.metersToInches(m_climberSim.getVelocityMetersPerSecond()) * TIME_UNITS_OF_VELOCITY;
+
     // Affect motor outputs by main system battery voltage dip 
     m_climberMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+
+    // Matches motor outputs of position and velocity with sim values
+    m_climberMotorSim.setIntegratedSensorRawPosition((int) (getEncoderTicksMotor1() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
+    m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Pass motor output voltage to physics sim
     m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
     m_climberSim.update(Constants.LOOP_TIMESTEP_S);
+
+    // Sets simulated limit switch positions from simulation methods
+    m_climberSim.hasHitLowerLimit();
+    m_climberSim.hasHitUpperLimit();
+
+    if (m_climberSim.hasHitLowerLimit()) {
+      if (m_climberSim.getVelocityMetersPerSecond() < 0) {
+        m_climberMotorSim.setIntegratedSensorVelocity(0);
+        m_climberMotorSim.setIntegratedSensorRawPosition((int) (MIN_HEIGHT_INCHES * TIME_UNITS_OF_VELOCITY * (TICKS_PER_REV/INCHES_PER_REV)));
+      }
+    }
+
+    else if (m_climberSim.hasHitUpperLimit()) {
+      if (m_climberSim.getVelocityMetersPerSecond() > 0) {
+        m_climberMotorSim.setIntegratedSensorVelocity(0);
+        m_climberMotorSim.setIntegratedSensorRawPosition((int) (MAX_HEIGHT_INCHES * TIME_UNITS_OF_VELOCITY * (TICKS_PER_REV/INCHES_PER_REV)));
+      }
+    }
+
+    
 
     // Update motor sensor states based on physics model
     // TODO: update the motor sim's position and velocity values using the elevatorsim's position and velocity.
