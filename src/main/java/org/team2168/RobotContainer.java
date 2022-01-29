@@ -37,12 +37,9 @@ public class RobotContainer {
   private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-<<<<<<< HEAD
   private final Shooter m_shooter = new Shooter();
-=======
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
->>>>>>> main
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
