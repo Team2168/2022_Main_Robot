@@ -7,13 +7,13 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import org.team2168.Constants;
 
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import org.team2168.Constants;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -32,7 +32,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (10.0 / 40.0) * (14.0 / 40.0) * (18.0 / 24.0);
+  private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
   private static final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
@@ -52,9 +52,10 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kP = 0.15;
   private static final double kI = 0.0;
   private static final double kD = 1.0;
-  private static final double kF = 0.07;
+  private static final double kF = 0.04;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
+  private static final double NEUTRAL_DEADBAND = 0.01;
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -79,6 +80,7 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotor1.configNominalOutputReverse(0, kTimeoutMs);
     climbMotor1.configPeakOutputForward(1, kTimeoutMs);
     climbMotor1.configPeakOutputReverse(-1, kTimeoutMs);
+    climbMotor1.configNeutralDeadband(NEUTRAL_DEADBAND);
 
     climbMotor1.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
@@ -87,7 +89,11 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotor1.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
     climbMotor1.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
 
+    climbMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    climbMotor1.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+
     climbMotor2.configFactoryDefault();
+    climbMotor2.configNeutralDeadband(NEUTRAL_DEADBAND);
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -118,7 +124,10 @@ public class Climber extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  // checks if the climber is at the zero position
+  /**
+   * 
+   * @return true when the lift is fully lowered
+   */
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isAtZeroPosition() {
     return climbMotor1.isRevLimitSwitchClosed() == 1;
