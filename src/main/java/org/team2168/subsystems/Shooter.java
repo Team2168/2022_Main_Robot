@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import org.team2168.Constants.CANDevices;
 import org.team2168.commands.DecreaseShooterSpeed;
 import org.team2168.commands.IncreaseShooterSpeed;
 import org.team2168.commands.SetTargetLocationSpeed;
@@ -23,11 +24,9 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Shooter extends SubsystemBase implements Loggable {
+import org.team2168.commands.SetTargetLocationSpeed;
 
-  private DecreaseShooterSpeed Decrease = new DecreaseShooterSpeed(); 
-  private IncreaseShooterSpeed Increase = new IncreaseShooterSpeed();
-  private SetTargetLocationSpeed TargetLocation = new SetTargetLocationSpeed();
+public class Shooter extends SubsystemBase implements Loggable {
 
   private double commanded_speed_rpm = 0.0;
 
@@ -87,8 +86,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   /** Creates a new Shooter. */
   public Shooter() {
 
-    _motorRight = new WPI_TalonFX(1);
-    _motorLeft = new WPI_TalonFX(2);
+    _motorRight = new WPI_TalonFX(CANDevices.SHOOTER_RIGHT_MOTOR);
+    _motorLeft = new WPI_TalonFX(CANDevices.SHOOTER_LEFT_MOTOR);
 
     /* Factory Default all hardware to prevent unexpected behaviour */
     _motorRight.configFactoryDefault();
@@ -177,12 +176,12 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   public void setFiringLocation(double Speed, double[] set_Location) {
-    set_Location = TargetLocation.locationCoords;
-    Speed = TargetLocation.targetVelocity; 
+    set_Location = SetTargetLocationSpeed.locationCoords;
+    Speed = SetTargetLocationSpeed.targetVelocity; 
   }
 
-  public static getInstance(){
-    if (_instance = null){
+  public static Shooter getInstance(){
+    if (_instance == null){
       _instance = new Shooter();
     }
     return _instance;
