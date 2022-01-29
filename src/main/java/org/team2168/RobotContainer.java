@@ -77,6 +77,9 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
 
     JoystickButton zeroTurretButton = new JoystickButton(oi.operatorJoystick, 2);
+    JoystickButton rotateTurretButton = new JoystickButton(oi.operatorJoystick, 3);
+    
+    rotateTurretButton.whenPressed(new RotateTurret(m_turret, 45.0));
     zeroTurretButton.whenPressed(new ZeroTurret(m_turret));
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));

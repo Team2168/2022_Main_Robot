@@ -19,7 +19,7 @@ public class RotateTurret extends CommandBase {
    * @param t 
    *  The turret subsystem to be used
    * @param d 
-   *  The amount the turret should rotate, -1 to 1
+   *  The amount of degrees the turret should rotate
    */
 
   public RotateTurret(Turret t, double d) {
@@ -39,7 +39,7 @@ public class RotateTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.setRotationDegrees(degrees);
+    turret.setVelocity(10.0);
   }
 
   // Called once the command ends or is interrupted.
@@ -48,10 +48,10 @@ public class RotateTurret extends CommandBase {
     turret.setVelocity(0.0);
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     //Checks if the current position of the turret is where it should be (the starting postition plus the desired amount of degrees)
-    return (turret.getEncoderPosition() == position + degrees);
+    // TODO: See what in here is not working correctly and is preventing this method from ever returning true
+    return (turret.getEncoderPosition() == (position + (degrees/360 * 2048)));
   }
 }
