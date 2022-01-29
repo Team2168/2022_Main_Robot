@@ -14,6 +14,10 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import org.team2168.commands.DecreaseShooterSpeed;
+import org.team2168.commands.IncreaseShooterSpeed;
+import org.team2168.commands.SetTargetLocationSpeed;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -21,13 +25,17 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Shooter extends SubsystemBase implements Loggable {
 
+  private DecreaseShooterSpeed Decrease = new DecreaseShooterSpeed(); 
+  private IncreaseShooterSpeed Increase = new IncreaseShooterSpeed();
+  private SetTargetLocationSpeed TargetLocation = new SetTargetLocationSpeed();
+
   private double commanded_speed_rpm = 0.0;
 
   @Log (rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   private double actual_speed_rpm = 0.0;
 
-  private WPI_TalonFX _motorRight;
-  private WPI_TalonFX _motorLeft;
+  public WPI_TalonFX _motorRight;
+  public WPI_TalonFX _motorLeft;
 
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
@@ -169,29 +177,14 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   public void setFiringLocation(double Speed, double[] set_Location) {
-    set_Location = locationCoords; //why is the variable not working
-    Speed = targetVelocity; 
+    set_Location = TargetLocation.locationCoords;
+    Speed = TargetLocation.targetVelocity; 
   }
 
-  public getInstance(){
-    if _instance = null{
+  public static getInstance(){
+    if (_instance = null){
       _instance = new Shooter();
     }
     return _instance;
-  }
-
-  public driveShooter(double speed){
-    set_commanded_rpm(speed); 
-  } 
-
-  @Config (rowIndex = 0, columnIndex = 2, width = 2, height = 1)
-  public void set_commanded_rpm(double input) {
-    commanded_speed_rpm = input;
-  }
-
-  @Override
-  public void periodic() {
-    setSpeed(commanded_speed_rpm);
-    actual_speed_rpm = getVelocity();
   }
 }

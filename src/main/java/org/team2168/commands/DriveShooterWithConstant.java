@@ -10,14 +10,14 @@ import org.team2168.subsystems.Shooter;
 public class DriveShooterWithConstant extends CommandBase {
   /** Creates a new DriveShooterWithConstant. */
 
-  private double Speed;
-  private Shooter Shooter;
+  private double speed;
+  private Shooter shooter;
 
   public DriveShooterWithConstant(double k_speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    Shooter = Shooter.getInstance();
-    addRequirements(Shooter);
-    Speed = k_speed;
+    shooter = shooter.getInstance();
+    addRequirements(shooter);
+    speed = k_speed;
   }
 
   // Called when the command is initially scheduled.
@@ -27,20 +27,12 @@ public class DriveShooterWithConstant extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Shooter.setSpeed(Speed);
-    Shooter.driveShooter(Speed);
+    shooter.setSpeed(speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    if interrupted == true;{
-      isFinished();
-    }
-    else{
-      Shooter.driveShooter(0);
-    }
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
