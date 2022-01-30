@@ -15,8 +15,6 @@ public class DriveClimberWithJoystick extends CommandBase {
   private Climber climber;
   private DoubleSupplier speed;
 
-  private final double TOP_SPEED_IPS = 6.0;
-
   /** Creates a new DriverWithJoystick. */
   public DriveClimberWithJoystick(Climber climber, DoubleSupplier s) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -33,7 +31,7 @@ public class DriveClimberWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(speed.getAsDouble() * TOP_SPEED_IPS);
+    climber.setPercentOutput(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

@@ -40,9 +40,11 @@ public class ExtendLift extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (climber.getEncoderTicksMotor1() <= maxExtensionTicks || climber.getEncoderTicksMotor2() <= maxExtensionTicks) {
-      isFullyExtended = true;
-    }
-    return isFullyExtended;
+    //Not sure what the intent is here
+    // if (climber.getEncoderTicksMotor1() <= maxExtensionTicks || climber.getEncoderTicksMotor2() <= maxExtensionTicks) {
+    //   isFullyExtended = true;
+    // }
+    // return isFullyExtended;
+    return false;
   }
 }

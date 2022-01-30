@@ -15,7 +15,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -39,23 +38,23 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double MIN_HEIGHT_INCHES = 0.0;
   private static final double MAX_HEIGHT_INCHES = 40.0;
 
-  private static final int kSlotIdx = 0;
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
-  private static boolean kSensorPhase = true;
+  private static boolean kSensorPhase = false;
   private static boolean kMotorInvert = false;
 
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
-  private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
 
   // Gains
-  private static final double kP = 0.15;
+  private static final double kP = 0.5;
   private static final double kI = 0.0;
-  private static final double kD = 1.0;
-  private static final double kF = 0.04;
+  private static final double kD = 0.0;
+  private static final double kF = 0.034;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
+  private static final double ACCELERATION_LIMIT = inchesToTicks(6.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(12.0) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -72,28 +71,30 @@ public class Climber extends SubsystemBase implements Loggable {
   
   private Climber() {
     climbMotor1.configFactoryDefault();
+    climbMotor2.configFactoryDefault();
+    climbMotor1.configNeutralDeadband(NEUTRAL_DEADBAND);
+    climbMotor2.configNeutralDeadband(NEUTRAL_DEADBAND);
+    
     climbMotor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     climbMotor1.setSensorPhase(kSensorPhase);
     climbMotor1.setInverted(kMotorInvert);
 
     climbMotor1.configNominalOutputForward(0, kTimeoutMs);
     climbMotor1.configNominalOutputReverse(0, kTimeoutMs);
-    climbMotor1.configPeakOutputForward(1, kTimeoutMs);
-    climbMotor1.configPeakOutputReverse(-1, kTimeoutMs);
-    climbMotor1.configNeutralDeadband(NEUTRAL_DEADBAND);
-
-    climbMotor1.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
-
+    climbMotor1.configPeakOutputForward(kPeakOutput, kTimeoutMs);
+    climbMotor1.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
+    
     climbMotor1.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
     climbMotor1.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
     climbMotor1.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
     climbMotor1.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
+    climbMotor1.configMotionAcceleration(ACCELERATION_LIMIT);
+    climbMotor1.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
+    climbMotor1.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
     climbMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
     climbMotor1.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 
-    climbMotor2.configFactoryDefault();
-    climbMotor2.configNeutralDeadband(NEUTRAL_DEADBAND);
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -110,8 +111,7 @@ public class Climber extends SubsystemBase implements Loggable {
         CARRIAGE_MASS_KG,
         Units.inchesToMeters(SPROCKET_RADIUS_INCHES),
         Units.inchesToMeters(MIN_HEIGHT_INCHES),
-        Units.inchesToMeters(MAX_HEIGHT_INCHES),
-        VecBuilder.fill(0.01)
+        Units.inchesToMeters(MAX_HEIGHT_INCHES)
     );
 
     m_climberMotorSim = climbMotor1.getSimCollection();
@@ -139,37 +139,54 @@ public class Climber extends SubsystemBase implements Loggable {
 
   // methods that convert a velocity value from seconds to hundreds of
   // milliseconds and back
-  public double convertVelocitySecondstoHundredMs(double speed) {
+  private static double convertVelocitySecondstoHundredMs(double speed) {
     return speed * TIME_UNITS_OF_VELOCITY;
   }
 
-  public double convertVelocityHundredMstoSeconds(double speed) {
+  private static double convertVelocityHundredMstoSeconds(double speed) {
     return speed / TIME_UNITS_OF_VELOCITY;
   }
 
-  // returns encoder ticks for each of the motors
-  public double getEncoderTicksMotor1() {
+  /**
+   * 
+   * @return the leader motor position in native ticks
+   */
+  private double getEncoderTicksMotor1() {
     return climbMotor1.getSelectedSensorPosition(kPIDLoopIdx);
   }
 
-  public double getEncoderTicksMotor2() {
+  /**
+   * 
+   * @return the follower position in native ticks
+   */
+  private double getEncoderTicksMotor2() {
     return climbMotor2.getSelectedSensorPosition(kPIDLoopIdx);
   }
 
-  // sets internal sensors of Falcon 500 back to 0 - used when the lift is at a
-  // zero position.
+  /**
+   * Sets the internal sensors of Falcon 500 back to 0.
+   * Used when the lift is at a zero position.
+   */
   public void setEncoderPosZero() {
     climbMotor1.setSelectedSensorPosition(0.0);
     climbMotor2.setSelectedSensorPosition(0.0);
   }
 
-  private double inchesToTicks(double inches) {
-    //TODO: Check math
+  /**
+   * 
+   * @param inches the lift position in inches
+   * @return position in F500 internal encoder ticks
+   */
+  private static double inchesToTicks(double inches) {
     return (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV;
   }
 
-  private double ticksToInches(double ticks) {
-    //TODO: Check math
+  /**
+   * 
+   * @param ticks the lift position in F500 interal encoder ticks
+   * @return the lift position in inches
+   */
+  private static double ticksToInches(double ticks) {
     return (ticks / TICKS_PER_REV) / GEAR_RATIO * INCHES_PER_REV;
   }
 
@@ -191,17 +208,32 @@ public class Climber extends SubsystemBase implements Loggable {
     return ticksToInches(climbMotor1.getSelectedSensorPosition());
   }
 
-  // commands the lift to a certain velocity (in inches per second)
+  // 
+  /**
+   * Commands the lift at a specified velocity.
+   * @param speedInInchesPerSec speed to run the lift at, positive up.
+   */
   public void setSpeed(double speedInInchesPerSec) {
     climbMotor1.set(ControlMode.Velocity,
         inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY,
         DemandType.ArbitraryFeedForward, kF);
   }
 
-  // commands the lift to a certain position (in inches from the zero position)
+  /**
+   * Commands the lift to a specied position relative to the zero position.
+   * @param inches the position to move the lift to, positive up.
+   */
   public void setPosition(double inches) {
     climbMotor1.set(ControlMode.MotionMagic, inchesToTicks(inches),
         DemandType.ArbitraryFeedForward, kF);
+  }
+
+  /**
+   * Command the motor in open loop mode. 
+   * @param speed percentage of bus voltage to output 1.0 to -1.0
+   */
+  public void setPercentOutput(double speed) {
+    climbMotor1.set(ControlMode.PercentOutput, speed);
   }
 
   @Override
@@ -211,7 +243,6 @@ public class Climber extends SubsystemBase implements Loggable {
 
   @Override
   public void simulationPeriodic() {
-
     // Affect motor outputs by main system battery voltage dip 
     m_climberMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
 
@@ -219,9 +250,12 @@ public class Climber extends SubsystemBase implements Loggable {
     m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
     m_climberSim.update(Constants.LOOP_TIMESTEP_S);
 
+    // System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
+
     // Update motor sensor states based on physics model
-    double sim_velocity_ticks_per_100_ms = (TICKS_PER_REV/INCHES_PER_REV) * Units.metersToInches(m_climberSim.getVelocityMetersPerSecond()) * TIME_UNITS_OF_VELOCITY;
-    m_climberMotorSim.setIntegratedSensorRawPosition((int) (getEncoderTicksMotor1() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
+    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_climberSim.getVelocityMetersPerSecond())) * TIME_UNITS_OF_VELOCITY;
+    double sim_position = inchesToTicks(Units.metersToInches(m_climberSim.getPositionMeters()));
+    m_climberMotorSim.setIntegratedSensorRawPosition((int) sim_position);
     m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Set simulated limit switch positions from simulation methods

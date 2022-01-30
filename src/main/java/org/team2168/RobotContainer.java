@@ -53,7 +53,6 @@ public class RobotContainer {
     Logger.configureLoggingAndConfig(this, false);
 
     m_pixy.setDefaultCommand(m_findAllianceBall);
-    climber.setDefaultCommand(new ReturnToZero(climber));
     
     // Configure the button bindings
     configureButtonBindings();
