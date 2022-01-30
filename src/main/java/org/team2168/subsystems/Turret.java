@@ -19,6 +19,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -178,14 +179,6 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Returns the internal sensor's position
-   * @return The internal sensor's position
-   */
-  public double getEncoderPosition() {
-    return turretMotor.getSelectedSensorPosition();
-  }
-
-  /**
    * 
    * @return the turret position in degrees relative to the zero position sensor
    */
@@ -201,6 +194,15 @@ public class Turret extends SubsystemBase implements Loggable {
   @Log(name = "Speed (deg-s)", rowIndex = 3, columnIndex = 3)
   public double getVelocityDegPerSec() {
     return ticksPer100msToDegreesPerSec(turretMotor.getSelectedSensorVelocity());
+  }
+
+   /**
+   * 
+   * @return The internal sensor's position
+   */
+  @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4)
+  public double getEncoderPosition() {
+    return turretMotor.getSelectedSensorPosition();
   }
 
   public void zeroEncoder() {

@@ -52,6 +52,6 @@ public class RotateTurret extends CommandBase {
   public boolean isFinished() {
     //Checks if the current position of the turret is where it should be (the starting postition plus the desired amount of degrees)
     // TODO: See what in here is not working correctly and is preventing this method from ever returning true
-    return (turret.getEncoderPosition() == (position + (degrees/360 * 2048)));
+    return (turret.getEncoderPosition() >= (position + (degrees/360 * 2048)));
   }
 }
