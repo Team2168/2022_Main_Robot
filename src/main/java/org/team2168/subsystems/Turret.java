@@ -51,7 +51,7 @@ public class Turret extends SubsystemBase implements Loggable {
   public static boolean kMotorInvert = false;
 
   //                                     P,   I,   D,   F,  I zone, and Peak output
-  static final Gains kGains = new Gains(0.5, 0.0, 1.0, 0.0, 0, 1.0);
+  static final Gains kGains = new Gains(1.25, 0.01, 0.9, 0.0, 0, 1.0);
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
