@@ -6,10 +6,12 @@ package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -27,21 +29,20 @@ public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
   /** Creates a new Climber. */
-  private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1);
-  private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2);
+  private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1); //left motor when looking at the output shafts
+  private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2); //right motor when looking at the output shafts
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
   private static final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
-  private static final double MIN_HEIGHT_INCHES = 0.0;
-  private static final double MAX_HEIGHT_INCHES = 40.0;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
-  private static boolean kMotorInvert = false;
+  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise; // direction of output shaft rotation when looking at
+                                                                                      // the motor face w/ shaft that causes the lift to go up
 
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
@@ -68,6 +69,8 @@ public class Climber extends SubsystemBase implements Loggable {
   private static ElevatorSim m_climberSim;
   private static TalonFXSimCollection m_climberMotorSim;
   private static final double CARRIAGE_MASS_KG = 4.5;
+  private static final double MIN_HEIGHT_INCHES = 0.0;
+  private static final double MAX_HEIGHT_INCHES = 40.0;
   
   private Climber() {
     climbMotor1.configFactoryDefault();
@@ -104,6 +107,7 @@ public class Climber extends SubsystemBase implements Loggable {
     // Tells second climber motor to do the same outputs as the first climber motor,
     // and at the same time.
     climbMotor2.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_1);
+    climbMotor2.setInverted(InvertType.OpposeMaster);
 
     m_climberSim = new ElevatorSim(
         DCMotor.getFalcon500(2),
@@ -215,8 +219,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double speedInInchesPerSec) {
     climbMotor1.set(ControlMode.Velocity,
-        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY,
-        DemandType.ArbitraryFeedForward, kF);
+        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
   }
 
   /**
@@ -259,7 +262,9 @@ public class Climber extends SubsystemBase implements Loggable {
     m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Set simulated limit switch positions from simulation methods
-    m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
-    m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
+    // m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
+    // m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
+    // m_climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
+    // m_climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
   }
 }
