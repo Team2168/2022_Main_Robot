@@ -219,7 +219,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double speedInInchesPerSec) {
     climbMotor1.set(ControlMode.Velocity,
-        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
+        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY, DemandType.ArbitraryFeedForward, kF);
   }
 
   /**
@@ -253,7 +253,7 @@ public class Climber extends SubsystemBase implements Loggable {
     m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
     m_climberSim.update(Constants.LOOP_TIMESTEP_S);
 
-    // System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
+    System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
 
     // Update motor sensor states based on physics model
     double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_climberSim.getVelocityMetersPerSecond())) * TIME_UNITS_OF_VELOCITY;
@@ -262,9 +262,9 @@ public class Climber extends SubsystemBase implements Loggable {
     m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Set simulated limit switch positions from simulation methods
-    // m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
-    // m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
-    // m_climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
-    // m_climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
+    m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
+    m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
+    m_climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
+    m_climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
   }
 }

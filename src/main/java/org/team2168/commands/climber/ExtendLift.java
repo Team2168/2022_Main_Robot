@@ -12,8 +12,7 @@ public class ExtendLift extends CommandBase {
   /** Creates a new ExtendLift. */
   Climber climber;
   private boolean isFullyExtended = false;
-  private double liftAscentVelocity = -2.0; // inches per second
-  private double maxExtensionTicks = -4096; // arbitrary max encoder value for when lift is fully extended
+  private double liftAscentVelocity = 3.0; // inches per second
 
   public ExtendLift(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -40,11 +39,6 @@ public class ExtendLift extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Not sure what the intent is here
-    // if (climber.getEncoderTicksMotor1() <= maxExtensionTicks || climber.getEncoderTicksMotor2() <= maxExtensionTicks) {
-    //   isFullyExtended = true;
-    // }
-    // return isFullyExtended;
-    return false;
+    return climber.isAtUpperPosition();
   }
 }
