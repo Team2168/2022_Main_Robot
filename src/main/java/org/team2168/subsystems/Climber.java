@@ -50,12 +50,13 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kP = 0.5;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
-  private static final double kF = 0.034;
+  private static final double kF = 0.011; // original value 0.034
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
   private static final double ACCELERATION_LIMIT = inchesToTicks(6.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
   private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(12.0) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
+  // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -93,6 +94,7 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotor1.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
     climbMotor1.configMotionAcceleration(ACCELERATION_LIMIT);
     climbMotor1.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
+    // climbMotor1.configMotionSCurveStrength(S_CURVE_STRENGTH);
     climbMotor1.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
     climbMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
@@ -196,7 +198,7 @@ public class Climber extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @return current lift volocity (inches/second)
+   * @return current lift velocity (inches/second)
    */
   @Log(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3)
   public double getSpeedInchesPerSecond() {
@@ -208,7 +210,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @return current lift position (inches), zero is fully lowered
    */
   @Log(name = "Position (In)", rowIndex = 3, columnIndex = 2)
-  public double getPosiitonInches() {
+  public double getPositionInches() {
     return ticksToInches(climbMotor1.getSelectedSensorPosition());
   }
 
@@ -236,7 +238,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotor1.set(ControlMode.PercentOutput, speed);
+    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kF);
   }
 
   @Override
@@ -262,9 +264,9 @@ public class Climber extends SubsystemBase implements Loggable {
     m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Set simulated limit switch positions from simulation methods
-    m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
-    m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
-    m_climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
-    m_climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
+    // m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
+    // m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
+    // m_climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
+    // m_climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
   }
 }
