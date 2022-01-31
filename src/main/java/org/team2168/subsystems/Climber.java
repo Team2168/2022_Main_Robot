@@ -255,7 +255,7 @@ public class Climber extends SubsystemBase implements Loggable {
     m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
     m_climberSim.update(Constants.LOOP_TIMESTEP_S);
 
-    System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
+    // System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
 
     // Update motor sensor states based on physics model
     double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_climberSim.getVelocityMetersPerSecond())) * TIME_UNITS_OF_VELOCITY;
