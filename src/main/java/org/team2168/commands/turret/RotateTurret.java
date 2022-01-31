@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class RotateTurret extends CommandBase {
   /** Creates a new RotateTurret. */
   private Turret turret;
-  private double degrees;
-  private double position;
+ // private double degrees;
+ // private double position;
+  private final static double ACCEPTABLE_ERROR_DEGREES = 0.2;
 
   /**
    * Rotates the turret
@@ -25,7 +26,7 @@ public class RotateTurret extends CommandBase {
   public RotateTurret(Turret t, double d) {
     // Use addRequirements() here to declare subsystem dependencies.
     turret = t;
-    degrees = d;
+   // degrees = d;
 
     addRequirements(t);
   }
@@ -33,7 +34,7 @@ public class RotateTurret extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    position = turret.getEncoderPosition();
+    //position = turret.getEncoderPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -50,8 +51,7 @@ public class RotateTurret extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    //Checks if the current position of the turret is where it should be (the starting postition plus the desired amount of degrees)
-    // TODO: See what in here is not working correctly and is preventing this method from ever returning true
-    return (turret.getEncoderPosition() >= (position + (degrees/360 * 2048)));
+    //Checks if the current position of the turret is where it should be or is close to where it should be 
+    return turret.isWithinAcceptableError(ACCEPTABLE_ERROR_DEGREES);
   }
 }

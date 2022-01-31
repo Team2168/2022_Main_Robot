@@ -178,6 +178,10 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  public boolean isWithinAcceptableError(double degrees) {
+    return turretMotor.getClosedLoopError() < degreesToEncoderTicks(degrees);
+  }
+
   /**
    * 
    * @return the turret position in degrees relative to the zero position sensor
