@@ -6,7 +6,7 @@ import org.team2168.utils.LinearInterpolator;
 
 public class OI {
 
-    public final F310 driverJoystick = new F310(Joysticks.DRIVER_JOYSTICK);
+    public final static F310 driverJoystick = new F310(Joysticks.DRIVER_JOYSTICK);
     public final F310 operatorJoystick = new F310(Joysticks.OPERATOR_JOYSTICK);
     public final F310 testJoystick = new F310(Joysticks.PID_TEST_JOYSTICK);
 
@@ -56,6 +56,14 @@ public class OI {
 
     public double getDriverJoystickY() {
         return driverJoystickInterpolator.interpolate(driverJoystick.getRightStickRaw_Y());
+    }
+
+    public double getLeftDriverJoystickX() {
+        return driverJoystickInterpolator.interpolate(driverJoystick.getLeftStickRaw_X());
+    }
+
+    public double getLeftDriverJoystickY() {
+        return driverJoystickInterpolator.interpolate(driverJoystick.getLeftStickRaw_Y());
     }
 
     public double getGunStyleWheel() {

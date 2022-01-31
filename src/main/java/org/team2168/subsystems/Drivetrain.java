@@ -19,11 +19,12 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 import org.team2168.Constants.CANDevices;
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Loggable {
     private WPI_TalonFX leftMotor1;
     private WPI_TalonFX leftMotor2;
     private WPI_TalonFX leftMotor3;
@@ -161,7 +162,7 @@ public class Drivetrain extends SubsystemBase {
      * 
      * @return Pose2d odometry pose
      */
-    @Log(name = "Robot Pose", rowIndex = 3, columnIndex = 0)
+    // @Log(name = "Robot Pose", rowIndex = 3, columnIndex = 0) //Pose2d is not a supported loggable type
     public Pose2d getPose() {
         return odometry.getPoseMeters();
     }

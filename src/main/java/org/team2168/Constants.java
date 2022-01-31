@@ -5,6 +5,7 @@
 package org.team2168;
 
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -28,10 +29,13 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
+        public final static int TALONFX_TURRET_MOTOR = 3;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
+        public static final int CLIMBER_MOTOR_1 = 18;
+        public static final int CLIMBER_MOTOR_2 = 19;
     }
 
     public static final class Drivetrain {
@@ -51,5 +55,19 @@ public final class Constants {
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
         public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7
     }
-}
 
+    public static final class PneumaticsDevices {
+        public static final int MONKEYBAR_EXTEND = 0;
+        public static final int MONKEYBAR_RETRACT = 1;
+        public static final int TEST_RETRACT = 14; 
+        public static final int TEST_EXTEND = 15;
+
+        public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
+    }
+
+    public static final class DIO {
+        public static final int MONKEYBAR_LIMIT_SWITCH = 0;
+    }
+    
+    public static final double LOOP_TIMESTEP_S = 0.02;
+}
