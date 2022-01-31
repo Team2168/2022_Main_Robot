@@ -12,8 +12,10 @@ public class SetTargetLocationSpeed extends CommandBase {
   /** Creates a new SetTargetLocationSpeed. */
 
   private Shooter shooter;
-  public double targetVelocity;
-  public double[] locationCoords; 
+  public static double targetVelocity;
+  public static double[] locationCoords; 
+  public static double x_targetVelocity;
+  public static double y_targetVelocity;
 
 
   public SetTargetLocationSpeed(double k_setPoint, double k_targetVelocity) {
@@ -22,20 +24,20 @@ public class SetTargetLocationSpeed extends CommandBase {
     k_targetVelocity = k_setPoint;
   }
 
-  public SetTargetLocationSpeed(double[] d_setPoint, double x_targetVelocity, double y_targetVelocity, double[] totalVelocity) {
+  public SetTargetLocationSpeed(double[] d_setPoint, double[] totalVelocity) {
     shooter = shooter.getInstance();
     addRequirements(shooter);
     locationCoords = d_setPoint;
-    x_targetVelocity = d_setPoint[0].getSpeed();
-    y_targetVelocity = d_setPoint[1].getSpeed();
+    x_targetVelocity = d_setPoint[0].getVelocity();
+    y_targetVelocity = d_setPoint[1].getVelocity();
     totalVelocity = {x_targetVelocity, y_targetVelocity}; 
   }
 
-  // Called when the command is initially scheduled.
+  // Called when the command is initially scheduled. 
   @Override
   public void initialize() {
     if(locationCoords != null){
-      shooter.setFiringLocation(targetVelocity); //new method created in shooter.java that doesn't work
+      shooter.setFiringLocation(targetVelocity, locationCoords); //new method created in shooter.java that doesn't work
     }
   }
 

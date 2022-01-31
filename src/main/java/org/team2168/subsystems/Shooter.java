@@ -15,8 +15,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
-import org.team2168.commands.DecreaseShooterSpeed;
-import org.team2168.commands.IncreaseShooterSpeed;
 import org.team2168.commands.SetTargetLocationSpeed;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
