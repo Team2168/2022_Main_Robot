@@ -32,8 +32,8 @@ public final class Constants {
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
-        public static final int SHOOTER_RIGHT_MOTOR; //no number assigned
-        public static final int SHOOTER_LEFT_MOTOR;
+        public static final int SHOOTER_RIGHT_MOTOR = 500; //PLACEHOLDER NUMBER
+        public static final int SHOOTER_LEFT_MOTOR = 501; //PLACEHOLDER NUMBER
         public final static int TALONFX_TURRET_MOTOR = 3;
     }
 
