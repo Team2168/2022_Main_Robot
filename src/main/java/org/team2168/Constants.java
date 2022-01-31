@@ -28,21 +28,27 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
+        public final static int TALONFX_TURRET_MOTOR = 3;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
         public static final int PIGEON_IMU = 17;
-         
-        public final static int TALONFX_TURRET_MOTOR = 3;
+        public static final int CLIMBER_MOTOR_1 = 18;
+        public static final int CLIMBER_MOTOR_2 = 19;
     }
 
     public static final class PneumaticsDevices {
+        public static final int MONKEYBAR_EXTEND = 0;
+        public static final int MONKEYBAR_RETRACT = 1;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
+
+    public static final class DIO {
+        public static final int MONKEYBAR_LIMIT_SWITCH = 0;
+    }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
 }
-

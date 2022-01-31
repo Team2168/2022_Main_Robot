@@ -10,6 +10,8 @@ import org.team2168.commands.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
@@ -32,10 +34,9 @@ public class RobotContainer {
   private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
-
-  // private final ExampleCommand m_autoCommand = new
-  // ExampleCommand(m_exampleSubsystem);
+  private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
   private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
@@ -52,7 +53,7 @@ public class RobotContainer {
     Logger.configureLoggingAndConfig(this, false);
 
     m_pixy.setDefaultCommand(m_findAllianceBall);
-
+    
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -67,8 +68,17 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
+    //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+
+    //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+
+    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
   }
 
   /**
