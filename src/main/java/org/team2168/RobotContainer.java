@@ -30,8 +30,8 @@ import io.github.oblarg.oblog.annotations.Config;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Pixy m_pixy = Pixy.getInstance();
+  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   private final Climber climber = Climber.getInstance();
@@ -39,9 +39,12 @@ public class RobotContainer {
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
   private final Limelight lime = Limelight.getInstance();
 
-  private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
-  private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
-  private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
+  // private final ExampleCommand m_autoCommand = new
+  // ExampleCommand(m_exampleSubsystem);
+
+  // private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
+  // private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
+  // private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
 
   OI oi = OI.getInstance();
 
@@ -53,8 +56,8 @@ public class RobotContainer {
   private RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
 
-    m_pixy.setDefaultCommand(m_findAllianceBall);
-    
+    // m_pixy.setDefaultCommand(m_findAllianceBall);
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -74,10 +77,15 @@ public class RobotContainer {
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+
+    oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
+    oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
+    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
   }
@@ -104,15 +112,5 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
-  }
-
-  @Config(rowIndex = 3, columnIndex = 0, width = 1, height = 1, tabName = "ExampleSubsystem")
-  private void retractExample(boolean foo) {
-    retractExampleSubsystem.schedule();
-  }
-
-  @Config(rowIndex = 3, columnIndex = 1, width = 1, height = 1, tabName = "ExampleSubsystem")
-  private void extendExample(boolean foo) {
-    extendExampleSubsystem.schedule();
   }
 }
