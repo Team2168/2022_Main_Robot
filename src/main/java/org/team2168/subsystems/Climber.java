@@ -41,7 +41,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
-  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise; // direction of output shaft rotation when looking at
+  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
                                                                                       // the motor face w/ shaft that causes the lift to go up
 
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
@@ -50,7 +50,8 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kP = 0.5;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
-  private static final double kF = 0.011; // original value 0.034
+  private static final double kF = 0.0;
+  private static final double kArbitraryFeedForward = 0.034;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
@@ -221,7 +222,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double speedInInchesPerSec) {
     climbMotor1.set(ControlMode.Velocity,
-        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY, DemandType.ArbitraryFeedForward, kF);
+        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
   /**
@@ -230,7 +231,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public void setPosition(double inches) {
     climbMotor1.set(ControlMode.MotionMagic, inchesToTicks(inches),
-        DemandType.ArbitraryFeedForward, kF);
+        DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
   /**
@@ -238,7 +239,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kF);
+    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
   @Override
