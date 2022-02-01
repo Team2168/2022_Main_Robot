@@ -6,8 +6,13 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.*;
-import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.pooper.PooperPoop;
+import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Pooper;
+
+
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
@@ -15,6 +20,7 @@ import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 
@@ -33,6 +39,7 @@ public class RobotContainer {
   private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final Pooper pooper = Pooper.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
@@ -69,6 +76,20 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
+    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    
+
+    JoystickButton hopperButton = oi.operatorJoystick.ButtonA();
+    JoystickButton pooperButton = oi.operatorJoystick.ButtonB();
+
+
+  
+
+    pooperButton
+    .whenHeld(new PooperPoop(pooper));
+
+    
+
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 

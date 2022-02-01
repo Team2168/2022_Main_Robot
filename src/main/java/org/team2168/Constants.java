@@ -25,6 +25,7 @@ public final class Constants {
     }
 
     public static final class CANDevices {
+
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
@@ -47,6 +48,13 @@ public final class Constants {
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
+    }
+
+
+    public static final class Pneumatics {
+
+        public static final int POOPER_DOUBLE_SOLENOID_FORWARDS = 1;
+        public static final int POOPER_DOUBLE_SOLENOID_BACKWARDS = 2;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
