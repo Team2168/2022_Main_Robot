@@ -184,12 +184,11 @@ public class Turret extends SubsystemBase implements Loggable {
   }
 
   @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2)
+  /**
+   * @return the current position error in degrees
+   */
   public double getControllerError() {
     return ticksToDegrees(turretMotor.getClosedLoopError());
-  }
-
-  public boolean isWithinAcceptableError(double degrees) {
-    return Math.abs(turretMotor.getClosedLoopError()) <= degreesToEncoderTicks(degrees);
   }
 
   /**
