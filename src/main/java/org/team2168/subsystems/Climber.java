@@ -36,7 +36,6 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
-  private static final double TICKS_PER_WHEEL_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -47,7 +46,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.5;
+  private static final double kP = 0.2;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
@@ -221,8 +220,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speedInInchesPerSec speed to run the lift at, positive up.
    */
   public void setSpeed(double speedInInchesPerSec) {
-    climbMotor1.set(ControlMode.Velocity,
-        inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+    climbMotor1.set(ControlMode.Velocity, inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
   }
 
   /**
