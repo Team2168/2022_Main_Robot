@@ -37,6 +37,7 @@ public class RobotContainer {
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  private final Limelight lime = Limelight.getInstance();
 
   private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
