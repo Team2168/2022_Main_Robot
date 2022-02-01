@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ReturnToZero extends CommandBase {
   /** Creates a new ReturnToZero. */
   Climber climber;
-  private static final double LIFT_DESCENT_VELOCITY = -3.0; // inches per second
+  private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
 
   public ReturnToZero(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,7 +28,7 @@ public class ReturnToZero extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(LIFT_DESCENT_VELOCITY);
+    climber.setSpeed(LIFT_DESCENT_VELOCITY_IPS);
   }
 
   // Called once the command ends or is interrupted.
