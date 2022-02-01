@@ -4,7 +4,10 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -70,6 +73,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final double DEGREES_PER_REV = 360.0;
     public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+
+    private double setPointHeading_sensorUnits;
 
     /**
      * Gets the singleton instance of the drivetrain
@@ -277,6 +282,18 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public double getRightEncoderRateRaw() {
         return rightMotor1.getSelectedSensorVelocity();
     }
+
+    public void setSetPointHeading(double speed, double setAngle) {
+        setPointHeading_sensorUnits = degreesToTicks(setAngle);
+
+        rightMotor1.set(ControlMode.PercentOutput, speed, DemandType.AuxPID, setPointHeading_sensorUnits);
+        rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
+        rightMotor3.follow(rightMotor1, FollowerType.PercentOutput);
+        leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor3.follow(rightMotor1, FollowerType.AuxOutput1);
+    }
+    
     /**
      * Gets left encoder velocity
      * 
@@ -296,6 +313,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     public double getRightEncoderRate() {
         return ticksToMeters(getRightEncoderRateRaw()) * 10.0;
+    }
+
+    private double degreesToTicks(double setpoint) {
+        return setpoint * PIGEON_UNITS_PER_DEGREE;
+    }
+
+    private double ticksToDegrees(double setpoint) {
+        return setpoint / PIGEON_UNITS_PER_DEGREE;
     }
 
     private double ticksToInches(double setpoint) {

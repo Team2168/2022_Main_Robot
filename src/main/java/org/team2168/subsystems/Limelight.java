@@ -8,6 +8,7 @@
 package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 //import edu.wpi.first.networktables.NetworkTableInstance;
@@ -20,10 +21,12 @@ public class Limelight extends SubsystemBase {
 
   private static Limelight instance;
   double[] limelightdata = new double[3];
+  double[] contourCorners = new double[8];
   NetworkTable networkTable;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
   NetworkTableEntry ta;
+  NetworkTableEntry tcornxy; // gives x and y coordinates for corners of contour
   NetworkTableEntry ledMode;
   NetworkTableEntry camMode;
   NetworkTableEntry camtran;
@@ -95,6 +98,23 @@ public class Limelight extends SubsystemBase {
    */
   public double getPositionY() {
     return ty.getDouble(0.0);
+  }
+
+  /**
+   * Returns the corners of target contour in a double array.
+   */
+  public double[] getCornerArray() {
+    return tcornxy.getDoubleArray(contourCorners);
+  }
+
+  /**
+   * Returns the horizontal average of all four corners of the target contour to find the center of the contour.
+   * 
+   */
+  public double getCornerAvgX() {
+    double cornerAvg = (getCornerArray()[0] + getCornerArray()[2] + getCornerArray()[4] + getCornerArray()[6]) / 4;
+    // System.out.println(cornerAvg);
+    return cornerAvg;
   }
 
   public void enableLimelight() {
