@@ -19,7 +19,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -31,7 +30,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static Turret instance = null;
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = 1.0;
+  private static final double GEAR_RATIO = (60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
   private static final double TICKS_PER_TURRET_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
   private static final double TICKS_PER_SECOND = TICKS_PER_TURRET_ROTATION;
@@ -39,10 +38,10 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
  
   //About 260/360 degrees
-  private static final int MAX_ROTATION_TICKS = 1480;
+  private static final int MAX_ROTATION_TICKS = (int) (1.5 * TICKS_PER_TURRET_ROTATION);
 
-  private static final double ACCELERATION = TICKS_PER_100_MS;  // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY = TICKS_PER_100_MS; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(5.0 * 360);  // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(2 * 360.0) ; // TODO: Change when mechanism is avaialble
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -51,7 +50,7 @@ public class Turret extends SubsystemBase implements Loggable {
   public static boolean kMotorInvert = false;
 
   //                                     P,   I,   D,   F,  I zone, and Peak output
-  static final Gains kGains = new Gains(1.25, 0.01, 0.9, 0.0, 0, 1.0);
+  static final Gains kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
@@ -82,6 +81,7 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setSensorPhase(kSensorPhase);
     turretMotor.setInverted(kMotorInvert);
     turretMotor.setNeutralMode(NeutralMode.Brake);
+    turretMotor.configNeutralDeadband(0.01);
 
     turretMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
@@ -137,19 +137,19 @@ public class Turret extends SubsystemBase implements Loggable {
 
   /**
    * convert a position in degrees to units the motor understands
-   * @param degrees 
-   * @return 
+   * @param degrees the absolute position (degrees)
+   * @return the position in ticks (F500 internal encoder)
    */
-  private double degreesToEncoderTicks(double degrees) {
+  private static double degreesToEncoderTicks(double degrees) {
     return (degrees / 360.0) * TICKS_PER_TURRET_ROTATION;
   }
 
   /**
    * Convert motor ticks to a mechanism position in degrees
-   * @param ticks 
-   * @return
+   * @param ticks the absolute position in f500 internal encoder ticks
+   * @return the absolute position (degrees)
    */
-  private double ticksToDegrees(double ticks) {
+  private static double ticksToDegrees(double ticks) {
     return (ticks / TICKS_PER_TURRET_ROTATION) * 360.0;
   }
 
@@ -158,12 +158,17 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param ticks in native motor controller units (ticks/100mS)
    * @return velocity in degrees/second
    */
-  private double ticksPer100msToDegreesPerSec(double ticks) {
+  private static double ticksPer100msToDegreesPerSec(double ticks) {
     return ticksToDegrees(ticks) * 10.0;
   }
   
-  public double degreesPerSecondToTicksPer100ms(double degrees) {
-    return (degrees/360.0 * TICKS_PER_TURRET_ROTATION * 10.0);
+  /**
+   * Converts a velocity to native sensor units.
+   * @param degrees the target velocity (degrees/s)
+   * @return the desired speed in ticks/100ms 
+   */
+  public static double degreesPerSecondToTicksPer100ms(double degrees) {
+    return degreesToEncoderTicks(degrees) / 10.0;
   }
 
   /**
@@ -178,8 +183,13 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2)
+  public double getControllerError() {
+    return turretMotor.getClosedLoopError();
+  }
+
   public boolean isWithinAcceptableError(double degrees) {
-    return turretMotor.getClosedLoopError() < degreesToEncoderTicks(degrees);
+    return Math.abs(turretMotor.getClosedLoopError()) <= degreesToEncoderTicks(degrees);
   }
 
   /**
