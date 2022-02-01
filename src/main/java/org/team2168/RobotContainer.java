@@ -11,6 +11,7 @@ import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
@@ -33,15 +34,22 @@ public class RobotContainer {
   // private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
+<<<<<<< HEAD
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
 
   // private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   // private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
   // private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
+=======
+  private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
+  private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
+  private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
+>>>>>>> origin/main
 
   OI oi = OI.getInstance();
 
@@ -53,8 +61,13 @@ public class RobotContainer {
   private RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
 
+<<<<<<< HEAD
     // m_pixy.setDefaultCommand(m_findAllianceBall);
 
+=======
+    m_pixy.setDefaultCommand(m_findAllianceBall);
+    
+>>>>>>> origin/main
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -74,6 +87,7 @@ public class RobotContainer {
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRighttStickRaw_Y));
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
@@ -81,6 +95,9 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+
+    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
   }
 
   /**
