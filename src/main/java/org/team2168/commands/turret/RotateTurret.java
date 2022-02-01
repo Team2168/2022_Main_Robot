@@ -67,7 +67,7 @@ public class RotateTurret extends CommandBase {
   public boolean isFinished() {
     //Checks if the current position of the turret is where it should be or is close to where it should be 
     double currentError = turret.getPositionDegrees() - targetPositionDegrees;
-    error = Util.runningAverage(currentError, error, 0.4);
+    error = Util.runningAverage(currentError, error, 0.85);
 
     return Math.abs(error) < acceptableErrorDegrees;
   }
