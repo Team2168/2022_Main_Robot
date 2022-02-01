@@ -47,8 +47,26 @@ public class Limelight extends SubsystemBase implements Loggable {
   private static boolean isLimelightEnabled;
 
   private static int desiredCamMode = 1;
-  private static int desiredLEDMode = 0;
+  private static LEDMode desiredLEDMode = LEDMode.PIPELINE;
   private static int desiredPipeline = 0;
+
+  //Camera Controls (Use Enums to prevent invalid inputs)
+  public enum LEDMode {
+    PIPELINE(0),    // Use LED mode set in pipeline
+    FORCE_OFF(1),   // Force LEDs off
+    FORCE_BLINK(2), // Force LEDs to blink
+    FORCE_ON(3);    // Force LEDs on
+
+    LEDMode(int value) {
+        this.val = value;
+    }
+
+    public int getCodeValue() {
+        return val;
+    }
+
+    private int val;
+  };
 
   private Limelight() {
       networkTable = NetworkTableInstance.getDefault().getTable("limelight");
@@ -122,7 +140,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   public void enableLimelight() {
     setCamMode(0);
     enableVisionProcessing(true);
-    setLedMode(0); // set to current pipeline setting
+    setLedMode(LEDMode.PIPELINE); // set to current pipeline setting
     setPipeline(PIPELINE_DRIVE_WITH_LIMELIGHT);
     isLimelightEnabled = true;
   }
@@ -144,7 +162,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   public void pauseLimelight() {
     setCamMode(1);
     enableVisionProcessing(false);
-    setLedMode(1); // force off
+    setLedMode(LEDMode.FORCE_OFF); // force off
     isLimelightEnabled = false;
 
   }
@@ -166,7 +184,7 @@ public class Limelight extends SubsystemBase implements Loggable {
    *                  <li>3 - force on</li>
    *                  </ul>
    */
-  public void setLedMode(int ledNumber) {
+  public void setLedMode(LEDMode ledNumber) {
     setLedMode(ledNumber);
     desiredLEDMode = ledNumber;
   }
@@ -222,7 +240,7 @@ public class Limelight extends SubsystemBase implements Loggable {
     limelightdata[2] = getTargetArea();
 
     // Sets the camera controls
-    ledMode.setNumber(desiredLEDMode);
+    ledMode.setNumber(desiredLEDMode.val);
     camMode.setNumber(desiredCamMode);
     pipeline.setNumber(desiredPipeline);
   }
