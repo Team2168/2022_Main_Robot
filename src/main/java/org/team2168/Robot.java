@@ -23,10 +23,10 @@ public class Robot extends TimedRobot {
 
 
   private Command autonomousCommand;
-  private Compressor compressor;
+  
 
   private RobotContainer robotContainer;
-  //private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
+  private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
 
   public Robot() {
     //set the default loop period
