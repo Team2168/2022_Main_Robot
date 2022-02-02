@@ -48,6 +48,7 @@ public class RobotContainer {
   private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
   private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
+  private final DriveHopper driveHopper = new DriveHopper(hopper, null);
 
   OI oi = OI.getInstance();
 
@@ -60,6 +61,7 @@ public class RobotContainer {
     Logger.configureLoggingAndConfig(this, false);
 
     m_pixy.setDefaultCommand(m_findAllianceBall);
+  
 
     // Configure the button bindings
     configureButtonBindings();
@@ -78,18 +80,8 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
     
 
-    JoystickButton hopperButton = oi.operatorJoystick.ButtonA();
+    
 
-
-    hopperButton
-    .whenPressed(new DriveHopper(hopper, () -> {
-      return 0.3;
-    } ));
-
-    hopperButton
-    .whenReleased(new DriveHopper(hopper, () -> {
-      return 0;
-    } ));
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
@@ -97,6 +89,8 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonB().whenPressed(new DriveHopper(hopper, null));
+    oi.operatorJoystick.ButtonB().whenReleased(new DriveHopper(hopper, null));
   }
 
   /**
