@@ -4,6 +4,9 @@
 
 package org.team2168.subsystems;
 
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,6 +18,7 @@ public class ColorSensor extends SubsystemBase {
     private static final int I2C_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
 
     byte[] data = new byte[3];
+    byte[] date = new byte[4];
 
     private boolean connected;
 
@@ -41,6 +45,12 @@ public class ColorSensor extends SubsystemBase {
     public byte[] readSensor() {
         i2c.readOnly(data, 3);
         return data;
+    }
+
+    public static long getCRC32Checksum(byte[] bytes) {
+        Checksum crc32 = new CRC32();
+        crc32.update(bytes, 4, bytes.length);
+        return crc32.getValue();
     }
 
     @Override

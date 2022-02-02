@@ -7,12 +7,13 @@ package org.team2168.commands.pooper;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Pooper;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class PoopOnColor extends CommandBase {
 
   /** Creates a new PoopOnColor. */
-  public PoopOnColor(ColorSensor colorSensor, Pooper pooper) {
+  public PoopOnColor(ColorSensor colorSensor, Pooper pooper, DriverStation ds) {
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(colorSensor);
@@ -20,7 +21,10 @@ public class PoopOnColor extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    DriverStation.getAlliance();
+    
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
