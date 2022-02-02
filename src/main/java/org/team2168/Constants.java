@@ -42,8 +42,8 @@ public final class Constants {
         public static final int MONKEYBAR_RETRACT = 1;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
-        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 1;
-        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 2;
+        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
+        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
