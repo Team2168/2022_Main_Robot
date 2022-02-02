@@ -21,8 +21,7 @@ public class DriveHopper extends CommandBase {
     this.hopper = hopper;
     this.speed = speed;
 
-    addRequirements(hopper);
-    
+    addRequirements(hopper); 
   }
 
   // Called when the command is initially scheduled.
