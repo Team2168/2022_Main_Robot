@@ -42,19 +42,14 @@ public final class Constants {
         public static final int MONKEYBAR_RETRACT = 1;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
+        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 1;
+        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 2;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
-    }
-
-
-    public static final class Pneumatics {
-
-        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 1;
-        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 2;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
