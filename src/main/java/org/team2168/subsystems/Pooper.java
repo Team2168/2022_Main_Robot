@@ -4,8 +4,7 @@
 
 package org.team2168.subsystems;
 
-import org.team2168.Constants;
-import org.team2168.Constants.Pneumatics;
+import org.team2168.Constants.PneumaticsDevices;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -25,9 +24,9 @@ public class Pooper extends SubsystemBase {
   }
 
   private Pooper() {
-    pooperSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 
-    Pneumatics.POOPER_DOUBLE_SOLENOID_FORWARDS, 
-    Pneumatics.POOPER_DOUBLE_SOLENOID_BACKWARDS);
+    pooperSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 
+    PneumaticsDevices.POOPER_DOUBLE_SOLENOID_EXTEND, 
+    PneumaticsDevices.POOPER_DOUBLE_SOLENOID_RETRACT);
   }
 
   
