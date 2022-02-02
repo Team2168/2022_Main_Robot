@@ -53,8 +53,8 @@ public final class Constants {
 
     public static final class Pneumatics {
 
-        public static final int POOPER_DOUBLE_SOLENOID_FORWARDS = 1;
-        public static final int POOPER_DOUBLE_SOLENOID_BACKWARDS = 2;
+        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 1;
+        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 2;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
