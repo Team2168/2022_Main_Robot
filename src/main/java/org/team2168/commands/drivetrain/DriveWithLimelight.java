@@ -13,8 +13,13 @@ public class DriveWithLimelight extends CommandBase {
   /** Creates a new DriveWithLimelight. */
   private Drivetrain dt = Drivetrain.getInstance();
   private Limelight lime = Limelight.getInstance();
+
+  private double limeTurnSpeed;
   
-  public DriveWithLimelight() {}
+  public DriveWithLimelight(double speed) {
+    addRequirements(lime);
+    limeTurnSpeed = speed;
+  }
 
   // Called when the command is initially scheduled.
   @Override
@@ -22,7 +27,11 @@ public class DriveWithLimelight extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double limeAngle = lime.getPositionX();
+
+    dt.setSetPointHeading(limeTurnSpeed, limeAngle);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
