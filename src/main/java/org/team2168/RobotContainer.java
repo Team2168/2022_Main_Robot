@@ -77,16 +77,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
-    
-
-    JoystickButton hopperButton = oi.operatorJoystick.ButtonA();
-    JoystickButton pooperButton = oi.operatorJoystick.ButtonB();
-
-
-  
-
-    pooperButton
-    .whenHeld(new PooperPoop(pooper));
 
     
 
@@ -97,6 +87,8 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonX().whenHeld(new PooperPoop(pooper));
+    oi.operatorJoystick.ButtonX().whenReleased(new PooperPoop(pooper));
   }
 
   /**
