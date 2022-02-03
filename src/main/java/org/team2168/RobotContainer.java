@@ -13,6 +13,7 @@ import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
+import org.team2168.commands.indexer;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -37,6 +38,7 @@ public class RobotContainer {
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  private final Indexer indexer = Indexer.getInstance();
 
   private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
@@ -74,6 +76,7 @@ public class RobotContainer {
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.operatorJoystick::getRightStickRaw_Y));
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
