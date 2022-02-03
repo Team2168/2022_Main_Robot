@@ -282,17 +282,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public double getRightEncoderRateRaw() {
         return rightMotor1.getSelectedSensorVelocity();
     }
-
-    public void setSetPointHeading(double speed, double setAngle) {
-        setPointHeading_sensorUnits = degreesToTicks(setAngle);
-
-        rightMotor1.set(ControlMode.PercentOutput, speed, DemandType.AuxPID, setPointHeading_sensorUnits);
-        rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
-        rightMotor3.follow(rightMotor1, FollowerType.PercentOutput);
-        leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
-        leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
-        leftMotor3.follow(rightMotor1, FollowerType.AuxOutput1);
-    }
     
     /**
      * Gets left encoder velocity

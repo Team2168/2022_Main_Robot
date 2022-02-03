@@ -15,10 +15,12 @@ public class DriveWithLimelight extends CommandBase {
   private Limelight lime = Limelight.getInstance();
 
   private double limeTurnSpeed;
+  private double limekP = 0.5;
+  private double errorToleranceAngle = 1.0; // in degrees
+  private double limeAngle;
   
-  public DriveWithLimelight(double speed) {
+  public DriveWithLimelight() {
     addRequirements(lime);
-    limeTurnSpeed = speed;
   }
 
   // Called when the command is initially scheduled.
@@ -28,18 +30,20 @@ public class DriveWithLimelight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double limeAngle = lime.getPositionX();
+    limeAngle = lime.getPositionX();
 
-    dt.setSetPointHeading(limeTurnSpeed, limeAngle);
+    dt.arcadeDrive(0, limeAngle/27 * limekP);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    dt.arcadeDrive(0.0, 0.0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (-errorToleranceAngle < limeAngle || limeAngle < errorToleranceAngle);
   }
 }
