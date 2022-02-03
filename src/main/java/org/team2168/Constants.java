@@ -35,6 +35,7 @@ public final class Constants {
         public static final int PIGEON_IMU = 17;
         public static final int SHOOTER_RIGHT_MOTOR = 4; //PLACEHOLDER NUMBER
         public static final int SHOOTER_LEFT_MOTOR = 5; //PLACEHOLDER NUMBER
+        public final static int TURRET_MOTOR = 12;
         public static final int CLIMBER_MOTOR_1 = 18;
         public static final int CLIMBER_MOTOR_2 = 19;
     }
