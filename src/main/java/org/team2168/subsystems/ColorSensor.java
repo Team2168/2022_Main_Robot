@@ -47,10 +47,8 @@ public class ColorSensor extends SubsystemBase {
         return data;
     }
 
-    public static long getCRC32Checksum(byte[] bytes) {
-        Checksum crc32 = new CRC32();
-        crc32.update(bytes, 4, bytes.length);
-        return crc32.getValue();
+    public static boolean validateSensor(byte[] data) {
+         return (data[1] ^ data[2] ^ data[3]) == data[4];
     }
 
     @Override
