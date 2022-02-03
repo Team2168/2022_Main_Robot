@@ -34,6 +34,10 @@ public class Hopper extends SubsystemBase implements Loggable {
   public static final double TICKS_PER_REV = 2048.0; 
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
 
+  public static final double GEAR_RATIO = 6.0;
+  public static final double ROLLER_CIRCUMFERENCE_INCHES = Math.PI;
+  public static final double DISTANCE_GEAR_RATIO = GEAR_RATIO / ROLLER_CIRCUMFERENCE_INCHES;
+
     public static Hopper getInstance() {
       if (instance == null);
         instance = new Hopper();
@@ -55,9 +59,16 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
   }
 
+  private static double inchesPerSecondToTicksPer100MS(double speed) {
+    speed = DISTANCE_GEAR_RATIO / 10;
+    return speed;
+  }
+
   public void driveHopper(double speed) {
     hopperMotor.set(ControlMode.Velocity, speed);
   }
+
+  
 
   @Override
   public void periodic() {

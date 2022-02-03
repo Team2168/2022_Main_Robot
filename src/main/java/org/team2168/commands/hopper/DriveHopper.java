@@ -13,11 +13,11 @@ import org.team2168.subsystems.Hopper;
 
 public class DriveHopper extends CommandBase {
   private Hopper hopper;
-  private DoubleSupplier speed;
+  private Double speed;
   /** Creates a new DriveHopperWithSetSpeed. */
  
 
-  public DriveHopper(Hopper hopper, DoubleSupplier speed) {
+  public DriveHopper(Hopper hopper, Double speed) {
     this.hopper = hopper;
     this.speed = speed;
 
@@ -31,7 +31,7 @@ public class DriveHopper extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hopper.driveHopper(speed.getAsDouble());
+    hopper.driveHopper(speed);
   }
 
   // Called once the command ends or is interrupted.

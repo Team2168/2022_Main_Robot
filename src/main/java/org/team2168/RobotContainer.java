@@ -19,7 +19,6 @@ import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 
@@ -89,8 +88,8 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonB().whenPressed(new DriveHopper(hopper, null));
-    oi.operatorJoystick.ButtonB().whenReleased(new DriveHopper(hopper, null));
+    oi.operatorJoystick.ButtonB().whenPressed(new DriveHopper(hopper, 3.0));
+    oi.operatorJoystick.ButtonB().whenReleased(new DriveHopper(hopper, 0.0));
   }
 
   /**
