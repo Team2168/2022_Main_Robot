@@ -2,21 +2,26 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.turret;
+package org.team2168.commands.climber;
 
-import org.team2168.subsystems.Turret;
+import java.util.function.DoubleSupplier;
+
+import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ZeroTurret extends CommandBase {
-  /** Creates a new ZeroTurret. */
-  private Turret turret;
+public class DriveClimberWithJoystick extends CommandBase {
 
-  public ZeroTurret(Turret t) {
+  private Climber climber;
+  private DoubleSupplier speed;
+
+  /** Creates a new DriverWithJoystick. */
+  public DriveClimberWithJoystick(Climber climber, DoubleSupplier s) {
     // Use addRequirements() here to declare subsystem dependencies.
-    turret = t;
+    addRequirements(climber);
 
-    addRequirements(t);
+    this.climber = climber;
+    speed = s;
   }
 
   // Called when the command is initially scheduled.
@@ -26,21 +31,18 @@ public class ZeroTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      turret.setVelocity(10.0);
+    climber.setPercentOutput(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.setVelocity(0);
-    if (!interrupted) {
-      turret.zeroEncoder();
-    }
+    climber.setSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.isTurretAtZero();
+    return false;
   }
 }
