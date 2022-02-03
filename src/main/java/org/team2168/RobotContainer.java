@@ -4,9 +4,11 @@
 
 package org.team2168;
 
+import java.io.IOException;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.auto.DebugPath;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.ReturnToZero;
 import org.team2168.commands.climber.SetPosition;
@@ -111,6 +113,7 @@ public class RobotContainer {
     autoChooser.addOption("Drive 1 Meter", drive1Meter);
     autoChooser.addOption("LShape", lShape);
     autoChooser.addOption("Squiggles", squiggles);
+    autoChooser.addOption("Debug auto", new DebugPath(drivetrain));
   }
 
   /**
