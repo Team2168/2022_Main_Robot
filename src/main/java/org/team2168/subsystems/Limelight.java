@@ -8,31 +8,28 @@
 package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-//import edu.wpi.first.networktables.NetworkTableInstance;
-//import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
-public class Limelight extends SubsystemBase {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+public class Limelight extends SubsystemBase implements Loggable {
 
   private static Limelight instance;
-  double[] limelightdata = new double[3];
-  double[] contourCorners = new double[8];
-  NetworkTable networkTable;
-  NetworkTableEntry tx;
-  NetworkTableEntry ty;
-  NetworkTableEntry ta;
-  NetworkTableEntry tcornxy; // gives x and y coordinates for corners of contour
-  NetworkTableEntry ledMode;
-  NetworkTableEntry camMode;
-  NetworkTableEntry camtran;
-  NetworkTableEntry pipeline;
+  private static double[] limelightdata = new double[3];
+  private static double[] contourCorners = new double[8];
+  private static NetworkTable networkTable;
+  private static NetworkTableEntry tx;
+  private static NetworkTableEntry ty;
+  private static NetworkTableEntry ta;
+  private static NetworkTableEntry tcornxy; // gives x and y coordinates for corners of contour
+  private static NetworkTableEntry ledMode;
+  private static NetworkTableEntry camMode;
+  private static NetworkTableEntry camtran;
+  private static NetworkTableEntry pipeline;
 
-  private boolean variablesInstantiated;
+  private static boolean variablesInstantiated = false;
 
   /*
    * Public so they can be used elsewhere; idk if this is good design but I need
@@ -47,14 +44,35 @@ public class Limelight extends SubsystemBase {
   public static final int PIPELINE_DRIVER_VIEW = 4;
   public static final int PIPELINE_DRIVE_WITH_LIMELIGHT = 9;
 
-  private boolean isLimelightEnabled;
+  private static boolean isLimelightEnabled;
 
-  /*
-   * private Limelight() { // set up limelight l imelight.setCamMode(0);
-   * limelight.enableVisionProcessing(true); limelight.setLedMode(1);
-   * limelight.setPipeline(PIPELINE_DRIVE_WITH_LIMELIGHT); isLimelightEnabled =
-   * false; }
-   */
+  private static int desiredCamMode = 1;
+  private static LEDMode desiredLEDMode = LEDMode.PIPELINE;
+  private static int desiredPipeline = 0;
+
+  //Camera Controls (Use Enums to prevent invalid inputs)
+  public enum LEDMode {
+    PIPELINE(0),    // Use LED mode set in pipeline
+    FORCE_OFF(1),   // Force LEDs off
+    FORCE_BLINK(2), // Force LEDs to blink
+    FORCE_ON(3);    // Force LEDs on
+
+    LEDMode(int value) {
+        this.val = value;
+    }
+
+    public int getCodeValue() {
+        return val;
+    }
+
+    private int val;
+  };
+
+  private Limelight() {
+      networkTable = NetworkTableInstance.getDefault().getTable("limelight");
+
+      instantiateLocalVariables();
+  }
 
   /**
    * @return an instance of the Intake Subsystem
@@ -87,6 +105,7 @@ public class Limelight extends SubsystemBase {
    * 
    * @return is a double from -27.0 to 27.0
    */
+  @Log (name = "Target X (deg)", rowIndex = 2, columnIndex = 0)
   public double getPositionX() {
     return tx.getDouble(0.0);
   }
@@ -96,6 +115,7 @@ public class Limelight extends SubsystemBase {
    * 
    * @return is a double from -20.5 to 20.5 degrees
    */
+  @Log (name = "Target Y (deg)", rowIndex = 2, columnIndex = 1)
   public double getPositionY() {
     return ty.getDouble(0.0);
   }
@@ -120,42 +140,35 @@ public class Limelight extends SubsystemBase {
   public void enableLimelight() {
     setCamMode(0);
     enableVisionProcessing(true);
-    setLedMode(0); // set to current pipeline setting
+    setLedMode(LEDMode.PIPELINE); // set to current pipeline setting
     setPipeline(PIPELINE_DRIVE_WITH_LIMELIGHT);
     isLimelightEnabled = true;
   }
 
   public void setPipeline(int pipelineNumber) {
-    if(pipelineNumber >= 0 && pipelineNumber <= 9)
-    {
-        if (this.connectionEstablished() && this.variablesInstantiated)
-        {
-            pipeline.setNumber(pipelineNumber);
-        }
-        else if (this.connectionEstablished() && !this.variablesInstantiated)
-        {
-            this.instantiateLocalVariables();
-            pipeline.setNumber(pipelineNumber);
-        }
-        // else
-        // {
-        //     System.out.println("Connection to Limelight not established. Check ethernet connectors.");
-        // }
-    }
+    pipeline.setNumber(pipelineNumber);
+    desiredPipeline = pipelineNumber;
   }
 
+  @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)
   public int getPipeline() {
-    return getPipeline();
+    if (this.connectionEstablished()) {
+      return pipeline.getNumber(-1).intValue();
+    } else {
+      return -1;
+    }
   }
 
   public void pauseLimelight() {
     setCamMode(1);
     enableVisionProcessing(false);
-    setLedMode(1); // force off
+    setLedMode(LEDMode.FORCE_OFF); // force off
     isLimelightEnabled = false;
 
   }
 
+
+  @Log (name = "Enabled?", rowIndex = 1, columnIndex = 0)
   public boolean isLimelightEnabled() {
     return isLimelightEnabled;
   }
@@ -171,18 +184,18 @@ public class Limelight extends SubsystemBase {
    *                  <li>3 - force on</li>
    *                  </ul>
    */
-  public void setLedMode(int ledNumber) {
+  public void setLedMode(LEDMode ledNumber) {
     setLedMode(ledNumber);
+    desiredLEDMode = ledNumber;
   }
 
+  @Log (name = "Connection?", rowIndex = 1, columnIndex = 1)
   private boolean connectionEstablished() {
     // return this.networkTable.containsKey("tx");
-    return !(this.networkTable.getEntry("tx") == null);
+    return !(networkTable.getEntry("tx") == null);
   }
 
   private void instantiateLocalVariables() {
-    SmartDashboard.putBoolean("IsLimeLightPresent", true);
-
     // Variables to get data from Limelight
     tx = networkTable.getEntry("tx");
     ty = networkTable.getEntry("ty");
@@ -193,13 +206,6 @@ public class Limelight extends SubsystemBase {
     ledMode = networkTable.getEntry("ledMode");
     camMode = networkTable.getEntry("camMode");
     pipeline = networkTable.getEntry("pipeline");
-
-    // Sets the camera controls
-    ledMode.setNumber(0);
-    camMode.setNumber(1);
-    pipeline.setNumber(0);
-
-    this.variablesInstantiated = true;
   }
 
   /**
@@ -222,39 +228,20 @@ public class Limelight extends SubsystemBase {
    *                      processing)</li>
    */
   private void setCamMode(int camModeNumber) {
-    if (camModeNumber >= 0 && camModeNumber <= 2) {
-      if (this.connectionEstablished() && this.variablesInstantiated) {
-        camMode.setNumber(camModeNumber);
-      } else if (this.connectionEstablished() && !this.variablesInstantiated) {
-        this.instantiateLocalVariables();
-        camMode.setNumber(camModeNumber);
-      }
-      // else
-      // {
-      // System.out.println("Connection to Limelight not established. Check ethernet
-      // connectors.");
-      // }
-    }
+    camMode.setNumber(camModeNumber);
+    desiredCamMode = camModeNumber;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (this.connectionEstablished() && this.variablesInstantiated) {
-      limelightdata[0] = getPositionX();
-      limelightdata[1] = getPositionY();
-      limelightdata[2] = getTargetArea();
-    } else if (this.connectionEstablished() && !this.variablesInstantiated) {
-      this.instantiateLocalVariables();
-      limelightdata[0] = getPositionX();
-      limelightdata[1] = getPositionY();
-      limelightdata[2] = getTargetArea();
-    }
-  }
+    limelightdata[0] = getPositionX();
+    limelightdata[1] = getPositionY();
+    limelightdata[2] = getTargetArea();
 
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    // setDefaultCommand(new UpdatePipeline());
+    // Sets the camera controls
+    ledMode.setNumber(desiredLEDMode.val);
+    camMode.setNumber(desiredCamMode);
+    pipeline.setNumber(desiredPipeline);
   }
 }

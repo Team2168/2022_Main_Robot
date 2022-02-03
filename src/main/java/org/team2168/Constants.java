@@ -31,10 +31,12 @@ public final class Constants {
         public final static int TALONFX_TURRET_MOTOR = 3;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
-        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
-        public static final int PIGEON_IMU = 17;
+        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13; 
+        public final static int TURRET_MOTOR = 12;
         public static final int CLIMBER_MOTOR_1 = 18;
         public static final int CLIMBER_MOTOR_2 = 19;
+
+        public static final int PIGEON_IMU = 17;
     }
 
     public static final class PneumaticsDevices {
