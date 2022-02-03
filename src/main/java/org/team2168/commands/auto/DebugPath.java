@@ -37,7 +37,7 @@ public class DebugPath extends CommandBase {
     this.drivetrain = drivetrain; 
 
     try {
-    var trajectory = PathUtil.getTrajectory("Drive1Meter");
+    var trajectory = PathUtil.getTrajectory("Drive3Meters");
     initialPose = trajectory.getInitialPose();
     
 
@@ -87,6 +87,11 @@ public class DebugPath extends CommandBase {
     SmartDashboard.putNumber("commanded velocity", vel);
     SmartDashboard.putNumber("commanded accelleration", accel);
     SmartDashboard.putNumber("commanded curvature", curvature);
+    //print values used to plot commanded vs actual velocity 
+    System.out.print(" Timelkjhgf, " +Timer.getFPGATimestamp());
+    System.out.print(", "+vel);
+    System.out.println(",   "+drivetrain.getLeftEncoderRate());
+
   }
 
   // Called once the command ends or is interrupted.

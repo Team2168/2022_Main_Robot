@@ -47,17 +47,17 @@ import io.github.oblarg.oblog.annotations.Log;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Pixy m_pixy = Pixy.getInstance();
+  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final Climber climber = Climber.getInstance();
-  private final Turret m_turret = Turret.getInstance();
-  private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  // private final Climber climber = Climber.getInstance();
+  // private final Turret m_turret = Turret.getInstance();
+  // private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
 
-  private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
-  private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
-  private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
+  // private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
+  // private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
+  // private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
 
   OI oi = OI.getInstance();
 
@@ -73,7 +73,7 @@ public class RobotContainer {
   private RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
 
-    m_pixy.setDefaultCommand(m_findAllianceBall);
+    // m_pixy.setDefaultCommand(m_findAllianceBall);
     
     // Configure the button bindings
     configureButtonBindings();
@@ -94,19 +94,20 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
     //Operator Controls
-    m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    // m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+    // climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
+    // oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    // oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    // oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    // oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
   }
 
   private void configureAutonomousRoutines() {
     var drive1Meter = PathUtil.getPathCommand("Drive1Meter", drivetrain, InitialPathState.DISCARDHEADING);
     var lShape = new SequentialCommandGroup();
     var squiggles = PathUtil.getPathCommand("Squiggles", drivetrain, InitialPathState.DISCARDHEADING);
+    var drive3Meters= PathUtil.getPathCommand("Drive3Meters", drivetrain, InitialPathState.DISCARDHEADING);
 
 
     autoChooser.setDefaultOption("Do nothing", new InstantCommand());
@@ -114,6 +115,7 @@ public class RobotContainer {
     autoChooser.addOption("LShape", lShape);
     autoChooser.addOption("Squiggles", squiggles);
     autoChooser.addOption("Debug auto", new DebugPath(drivetrain));
+    autoChooser.addOption("Drive 3 Meters", drive3Meters);
   }
 
   /**
@@ -149,12 +151,12 @@ public class RobotContainer {
 
   @Config(rowIndex = 3, columnIndex = 0, width = 1, height = 1, tabName = "ExampleSubsystem")
   private void retractExample(boolean foo) {
-    retractExampleSubsystem.schedule();
+    // retractExampleSubsystem.schedule();
   }
 
   @Config(rowIndex = 3, columnIndex = 1, width = 1, height = 1, tabName = "ExampleSubsystem")
   private void extendExample(boolean foo) {
-    extendExampleSubsystem.schedule();
+    // extendExampleSubsystem.schedule();
   }
 
   public boolean brakesEnabled() {
