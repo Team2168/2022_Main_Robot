@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ExtendLift extends CommandBase {
   /** Creates a new ExtendLift. */
   Climber climber;
-  private boolean isFullyExtended = false;
   private double liftAscentVelocity = 3.0; // inches per second
 
   public ExtendLift(Climber climber) {
