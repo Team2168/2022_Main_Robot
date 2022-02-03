@@ -15,14 +15,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
-import org.team2168.commands.SetTargetLocationSpeed;
+//import org.team2168.commands.shooter.SetTargetLocationSpeed;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-
-import org.team2168.commands.SetTargetLocationSpeed;
 
 public class Shooter extends SubsystemBase implements Loggable {
 
@@ -173,9 +171,14 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
-  public void setFiringLocation(double Speed, double[] set_Location) {
-    set_Location = SetTargetLocationSpeed.locationCoords;
-    Speed = SetTargetLocationSpeed.targetVelocity; 
+  /*public void setFiringLocation(double Speed, double[] set_Location) {
+    SetTargetLocationSpeed.locationCoords = set_Location;
+    SetTargetLocationSpeed.targetVelocity = Speed;
+  }*/
+
+  public void drive(double k_Speed){
+    setSpeed(k_Speed);
+    revs_per_minute_to_ticks_per_100ms(k_Speed);
   }
 
   public static Shooter getInstance(){

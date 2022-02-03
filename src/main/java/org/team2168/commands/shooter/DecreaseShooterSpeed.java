@@ -2,22 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands;
+/*package org.team2168.commands.shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.team2168.subsystems.Shooter;
 
-public class DriveShooterWithConstant extends CommandBase {
-  /** Creates a new DriveShooterWithConstant. */
-
-  private double speed;
+public class DecreaseShooterSpeed extends CommandBase {
+  // Creates a new DecreaseShooterSpeed. 
+  private double speed; 
   private Shooter shooter;
 
-  public DriveShooterWithConstant(double k_speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    shooter = shooter.getInstance();
+  public DecreaseShooterSpeed(double k_Speed, Shooter k_Shooter) {
+    k_Speed = speed;
+    k_Shooter = shooter;
     addRequirements(shooter);
-    speed = k_speed;
   }
 
   // Called when the command is initially scheduled.
@@ -26,8 +24,10 @@ public class DriveShooterWithConstant extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    shooter.setSpeed(speed);
+  public void execute() { 
+    speed = speed - 50; 
+    shooter._motorRight.set(speed);
+    shooter._motorLeft.set(speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +37,10 @@ public class DriveShooterWithConstant extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (speed <= 150) {
+      return true;
+    } else{
+      return false;
+    }
   }
-}
+} */
