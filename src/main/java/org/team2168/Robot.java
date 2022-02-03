@@ -32,8 +32,6 @@ public class Robot extends TimedRobot {
     super(Constants.LOOP_TIMESTEP_S);
   }
 
-  private NetworkTableEntry moveRobot;
-
   /**
    * This function is run when the robot is first started up and should be used
    * for any
@@ -45,11 +43,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     robotContainer = RobotContainer.getInstance();
-
-    var nt = NetworkTableInstance.getDefault();
-    var dtTable = nt.getTable("Drivetrain");
-    moveRobot = dtTable.getEntry("Kickable Robot?");
-    moveRobot.setBoolean(false);
     
     compressor.enableDigital();
   }
@@ -87,7 +80,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // Check periodically
-    if (moveRobot.getBoolean(false))
+    if (robotContainer.brakesEnabled())
       robotContainer.drivetrain.setMotorsCoast();
     else
       robotContainer.drivetrain.setMotorsBrake();
