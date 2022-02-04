@@ -13,7 +13,7 @@ import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
-import org.team2168.commands.indexer;
+import org.team2168.commands.indexer.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
