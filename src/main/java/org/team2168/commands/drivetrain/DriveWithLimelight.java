@@ -14,7 +14,6 @@ public class DriveWithLimelight extends CommandBase {
   private Drivetrain dt = Drivetrain.getInstance();
   private Limelight lime = Limelight.getInstance();
 
-  private double limeTurnSpeed;
   private double limekP = 0.5;
   private double errorToleranceAngle = 1.0; // in degrees
   private double limeAngle;
@@ -44,6 +43,6 @@ public class DriveWithLimelight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (-errorToleranceAngle < limeAngle || limeAngle < errorToleranceAngle);
+    return (-errorToleranceAngle <= limeAngle || limeAngle <= errorToleranceAngle);
   }
 }
