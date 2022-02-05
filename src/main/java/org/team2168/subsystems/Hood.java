@@ -188,9 +188,8 @@ public class Hood extends SubsystemBase {
    * @param degrees the amount of degrees/angles to move the lift to, positive up.
    */
   public void setPosition(double degrees) {
-    hoodMotor.set(ControlMode.MotionMagic, (TICKS_PER_REV * degrees / 360)//,
-        //DemandType.ArbitraryFeedForward, kArbitraryFeedForward
-        );
+    hoodMotor.set(ControlMode.MotionMagic, (TICKS_PER_REV * degrees / 360),
+        DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
   /**
