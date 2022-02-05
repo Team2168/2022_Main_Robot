@@ -27,7 +27,7 @@ public class IntakeRoller extends SubsystemBase {
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
     this.isIntakeRollerOn = isIntakeRollerOn;
-
+   
 
   }
 
@@ -47,20 +47,32 @@ public class IntakeRoller extends SubsystemBase {
 
   public void resetIntakeMotor(double speedTwo){
     intakeRollerOne.set(speedTwo);
-    intakeRollerOne.setVoltage(0);
+    intakeRollerOne.setVoltage(speedTwo);
   }
   
-  public intakeRollerOn(){
+  public boolean isIntakeRollerOn(){
+    if(isIntakeRollerOn == true){
+      intakeRollerOne.get();
+      return true;
+      }
+    else{
+      return false;
+    }
+
+
+      
+    
+  
     
   }
 
-  
   
   
 
   @Override
   public void periodic() {
 
+   
 
 
     

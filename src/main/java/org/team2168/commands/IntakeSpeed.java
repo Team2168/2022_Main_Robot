@@ -11,10 +11,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class IntakeSpeed extends CommandBase {
  
   private IntakeRoller iRoller;
-  
   public IntakeSpeed() {
     // Use addRequirements() here to declare subsystem dependencies.
-    iRoller = new IntakeRoller();
+    iRoller = new IntakeRoller(true);
 
 
     addRequirements(iRoller);
@@ -31,7 +30,9 @@ public class IntakeSpeed extends CommandBase {
   @Override
   public void execute() {
    setterIntakeSpeed(); 
+   iRoller.isIntakeRollerOn();
   }
+   
 
   // Called once the command ends or is interrupted.
   @Override

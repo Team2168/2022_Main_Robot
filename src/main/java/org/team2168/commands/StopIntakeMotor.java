@@ -13,7 +13,7 @@ public class StopIntakeMotor extends CommandBase {
   private final double resetIntakeValue = 0;
  
   public StopIntakeMotor() {
-stopIntakeMotorOne = new IntakeRoller();
+stopIntakeMotorOne = new IntakeRoller(false);
 addRequirements(stopIntakeMotorOne);
   }
 
