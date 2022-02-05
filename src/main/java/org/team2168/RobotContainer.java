@@ -31,6 +31,8 @@ import org.team2168.utils.PathUtil.InitialPathState;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
@@ -104,16 +106,31 @@ public class RobotContainer {
   }
 
   private void configureAutonomousRoutines() {
-    var drive1Meter = PathUtil.getPathCommand("Drive1Meter", drivetrain, InitialPathState.DISCARDHEADING);
-    var lShape = new SequentialCommandGroup();
-    var squiggles = PathUtil.getPathCommand("Squiggles", drivetrain, InitialPathState.DISCARDHEADING);
-    var drive3Meters= PathUtil.getPathCommand("Drive3Meters", drivetrain, InitialPathState.DISCARDHEADING);
-    var drive5MSquiggles=PathUtil.getPathCommand("5MSquiggles", drivetrain, InitialPathState.DISCARDHEADING);
+    var drive1Meter = PathUtil.getPathCommand("Drive1Meter", drivetrain);
+    var TWOBALL_TOP_TO_TERM = new SequentialCommandGroup(
+      // new ExtendIntake(intake),
+      new ParallelRaceGroup(
+              // new DriveIntake(intake, () -> 0.5)
+              new SequentialCommandGroup(
+                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
+                // new DriveShooter(shooter, () -> 0.5).withTimeout(3),
+                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_1", drivetrain)
+              )
+      )
+    );
+    var FOURBALL = new SequentialCommandGroup(
+      PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
+      PathUtil.getPathCommand("4BALL_1", drivetrain)
+    );
+    var squiggles = PathUtil.getPathCommand("Squiggles", drivetrain);
+    var drive3Meters= PathUtil.getPathCommand("Drive3Meters", drivetrain);
+    var drive5MSquiggles=PathUtil.getPathCommand("5MSquiggles", drivetrain);
 
 
     autoChooser.setDefaultOption("Do nothing", new InstantCommand());
     autoChooser.addOption("Drive 1 Meter", drive1Meter);
-    autoChooser.addOption("LShape", lShape);
+    autoChooser.addOption("2 Ball Top to Terminal", TWOBALL_TOP_TO_TERM);
+    autoChooser.addOption("4 ball", FOURBALL);
     autoChooser.addOption("Squiggles", squiggles);
     autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
     autoChooser.addOption("Drive 3 Meters", drive3Meters);

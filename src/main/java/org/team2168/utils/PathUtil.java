@@ -81,6 +81,7 @@ public class PathUtil {
             DriverStation.reportError("Cannot parse an empty path!  Aborting.", e.getStackTrace());
             return new InstantCommand();
         }
+        sequence.addCommands(new InstantCommand(() -> System.out.println("GYRO HEADING @ PATH START: " + drivetrain.getHeading())));
         sequence.addCommands(getRamseteCommand(trajectory, drivetrain).andThen(() -> drivetrain.tankDrive(0.0, 0.0)));
         return sequence;
     }
@@ -103,6 +104,10 @@ public class PathUtil {
             DriverStation.reportError(String.format(ERRORMESSAGE, pathName), e.getStackTrace());
             return new InstantCommand();
         }
+    }
+
+    public static Command getPathCommand(String pathName, Drivetrain drivetrain) {
+        return PathUtil.getPathCommand(pathName, drivetrain, InitialPathState.DISCARDHEADING);
     }
 
     /**

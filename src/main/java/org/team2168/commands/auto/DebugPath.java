@@ -14,8 +14,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -32,6 +30,7 @@ public class DebugPath extends CommandBase {
   double curvature;
   double time;
   String pathname;
+  StringBuilder out = new StringBuilder("time,expected velocity,actual velocity\n");
 
   /** Creates a new DebugPath. */
   public DebugPath(Drivetrain drivetrain, String pathname) {
@@ -86,20 +85,19 @@ public class DebugPath extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    final String ENTRY = "%f,%f,%f%n";
     SmartDashboard.putNumber("commanded velocity", vel);
     SmartDashboard.putNumber("commanded accelleration", accel);
     SmartDashboard.putNumber("commanded curvature", curvature);
     //print values used to plot commanded vs actual velocity 
-    System.out.print(" Timelkjhgf, " +Timer.getFPGATimestamp());
-    System.out.print(", "+vel);
-    System.out.println(",   "+drivetrain.getLeftEncoderRate());
-
+    out.append(String.format(ENTRY, time, vel, (drivetrain.getLeftEncoderRate() + drivetrain.getRightEncoderRate())/2.0));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     rCommand.end(interrupted);
+    System.out.println(out.toString());
   }
 
   // Returns true when the command should end.
