@@ -117,8 +117,8 @@ public class RobotContainer {
     autoChooser.addOption("Squiggles", squiggles);
     autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
     autoChooser.addOption("Drive 3 Meters", drive3Meters);
-    //Test Path
-    autoChooser.addOption("Drive 5 Squiggle", drive5MSquiggles);// Move 4.5 meters 
+    //Test Path that goes 2 meters to the right (y-axis) and 4.5 meters forward (x-axis)in a "U" shape"
+    autoChooser.addOption("Drive 5 Squiggle", drive5MSquiggles);
   }
 
   /**
