@@ -23,34 +23,32 @@ public class Hood extends SubsystemBase {
 
   static Hood instance = null;
 
-  private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1);
+  private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.HOOD_MOTOR);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
+  private static final double GEAR_RATIO = 73/1;
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
-  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation
-                                                                               // when looking at
+  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
 
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.2;
+  private static final double kP = 0.5;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.034;
+  private static final double kArbitraryFeedForward = 0.02;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = inchesToTicks(6.0) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(12.0) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
-  // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the
-  // motion magic graph
+  private static final double ACCELERATION_LIMIT = 5000; // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = 5000; // TODO: Change when mechanism is avaialble
+  // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -118,11 +116,15 @@ public class Hood extends SubsystemBase {
     return speed / TIME_UNITS_OF_VELOCITY;
   }
 
+  private static double angleToTicks(double degrees) {
+    return (degrees * 500 );
+  }
+
   /**
    * 
    * @return the leader motor position in native ticks
    */
-  private double getEncoderTicks() {
+  public double getEncoderTicks() {
     return hoodMotor.getSelectedSensorPosition(kPIDLoopIdx);
   }
 
@@ -183,11 +185,12 @@ public class Hood extends SubsystemBase {
   /**
    * Commands the lift to a specied position relative to the zero position.
    * 
-   * @param inches the position to move the lift to, positive up.
+   * @param degrees the amount of degrees/angles to move the lift to, positive up.
    */
-  public void setPosition(double inches) {
-    hoodMotor.set(ControlMode.MotionMagic, inchesToTicks(inches),
-        DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+  public void setPosition(double degrees) {
+    hoodMotor.set(ControlMode.MotionMagic, (TICKS_PER_REV * degrees / 360)//,
+        //DemandType.ArbitraryFeedForward, kArbitraryFeedForward
+        );
   }
 
   /**
