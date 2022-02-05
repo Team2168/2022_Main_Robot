@@ -74,8 +74,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
 
-    private double setPointHeading_sensorUnits;
-
     /**
      * Gets the singleton instance of the drivetrain
      * 
@@ -304,13 +302,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return ticksToMeters(getRightEncoderRateRaw()) * 10.0;
     }
 
-    private double degreesToTicks(double setpoint) {
-        return setpoint * PIGEON_UNITS_PER_DEGREE;
-    }
+    // private double degreesToTicks(double setpoint) {
+    //     return setpoint * PIGEON_UNITS_PER_DEGREE;
+    // }
 
-    private double ticksToDegrees(double setpoint) {
-        return setpoint / PIGEON_UNITS_PER_DEGREE;
-    }
+    // private double ticksToDegrees(double setpoint) {
+    //     return setpoint / PIGEON_UNITS_PER_DEGREE;
+    // }
 
     private double ticksToInches(double setpoint) {
         return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
