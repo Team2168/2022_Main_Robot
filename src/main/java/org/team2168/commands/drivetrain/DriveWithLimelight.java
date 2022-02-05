@@ -11,15 +11,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveWithLimelight extends CommandBase {
   /** Creates a new DriveWithLimelight. */
-  private Drivetrain dt = Drivetrain.getInstance();
-  private Limelight lime = Limelight.getInstance();
+  private Drivetrain dt;
+  private Limelight lime;
 
   private double limekP = 0.5;
   private double errorToleranceAngle = 1.0; // in degrees
   private double limeAngle;
   
-  public DriveWithLimelight() {
-    addRequirements(lime);
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
+    addRequirements(limelight);
+    lime = limelight;
+    dt = drivetrain;
   }
 
   // Called when the command is initially scheduled.
