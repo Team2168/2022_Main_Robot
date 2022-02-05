@@ -54,8 +54,14 @@ public class ColorSensor extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        if (connected) {
+       // isConnected();
+       // if (connected) {
             readSensor();
-        }
+       // }
+        System.out.print(" Color Sensor test ");
+       // System.out.print(connected);
+        System.out.print(" R:"+data[0]);
+        System.out.print(" G:"+data[1]);
+        System.out.print(" B:"+data[2]);
     }
 }

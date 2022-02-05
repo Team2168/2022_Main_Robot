@@ -37,7 +37,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Pixy m_pixy = Pixy.getInstance();
-
+  private final ColorSensor m_ColorSensor= ColorSensor.getInstance();
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   public final Pooper pooper = Pooper.getInstance();
   private final Turret m_turret = Turret.getInstance();
@@ -49,6 +49,7 @@ public class RobotContainer {
   private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
   private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
+ 
 
   OI oi = OI.getInstance();
 
@@ -60,10 +61,11 @@ public class RobotContainer {
   private RobotContainer() {
     Logger.configureLoggingAndConfig(this, false);
 
-    m_pixy.setDefaultCommand(m_findAllianceBall);
+   // m_pixy.setDefaultCommand(m_findAllianceBall);
 
     // Configure the button bindings
     configureButtonBindings();
+    m_ColorSensor.readSensor();
   }
 
   public static RobotContainer getInstance() {
@@ -84,11 +86,11 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
     //Operator Controls
-    m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonX().whenHeld(new PooperPoop(pooper));
-    oi.operatorJoystick.ButtonX().whenReleased(new PooperPoop(pooper));
+   // m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
+   // oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+   // oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+   // oi.operatorJoystick.ButtonX().whenHeld(new PooperPoop(pooper));
+   // oi.operatorJoystick.ButtonX().whenReleased(new PooperPoop(pooper));
   }
 
   /**
