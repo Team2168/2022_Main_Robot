@@ -96,7 +96,7 @@ public class Hood extends SubsystemBase {
 
   /**
    * 
-   * @return true when the lift is fully lowered
+   * @return true when the hood is fully lowered
    */
   @Log(name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isAtZeroPosition() {
@@ -116,10 +116,6 @@ public class Hood extends SubsystemBase {
     return speed / TIME_UNITS_OF_VELOCITY;
   }
 
-  private static double angleToTicks(double degrees) {
-    return (degrees * 500 );
-  }
-
   /**
    * 
    * @return the leader motor position in native ticks
@@ -130,7 +126,7 @@ public class Hood extends SubsystemBase {
 
   /**
    * Sets the internal sensors of Falcon 500 back to 0.
-   * Used when the lift is at a zero position.
+   * Used when the hood is at a zero position.
    */
   public void setEncoderPosZero() {
     hoodMotor.setSelectedSensorPosition(0.0);
@@ -138,7 +134,7 @@ public class Hood extends SubsystemBase {
 
   /**
    * 
-   * @param inches the lift position in inches
+   * @param inches the hood position in inches
    * @return position in F500 internal encoder ticks
    */
   private static double inchesToTicks(double inches) {
@@ -147,8 +143,8 @@ public class Hood extends SubsystemBase {
 
   /**
    * 
-   * @param ticks the lift position in F500 interal encoder ticks
-   * @return the lift position in inches
+   * @param ticks the hood position in F500 interal encoder ticks
+   * @return the hood position in inches
    */
   private static double ticksToInches(double ticks) {
     return (ticks / TICKS_PER_REV) / GEAR_RATIO * INCHES_PER_REV;
@@ -156,7 +152,7 @@ public class Hood extends SubsystemBase {
 
   /**
    * 
-   * @return current lift velocity (inches/second)
+   * @return current hood velocity (inches/second)
    */
   @Log(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3)
   public double getSpeedInchesPerSecond() {
@@ -165,7 +161,7 @@ public class Hood extends SubsystemBase {
 
   /**
    * 
-   * @return current lift position (inches), zero is fully lowered
+   * @return current hood position (inches), zero is fully lowered
    */
   @Log(name = "Position (In)", rowIndex = 3, columnIndex = 2)
   public double getPositionInches() {
@@ -174,18 +170,18 @@ public class Hood extends SubsystemBase {
 
   //
   /**
-   * Commands the lift at a specified velocity.
+   * Commands the hood at a specified velocity.
    * 
-   * @param speedInInchesPerSec speed to run the lift at, positive up.
+   * @param speedInInchesPerSec speed to run the hood at, positive up.
    */
   public void setSpeed(double speedInInchesPerSec) {
     hoodMotor.set(ControlMode.Velocity, inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
   }
 
   /**
-   * Commands the lift to a specied position relative to the zero position.
+   * Commands the hood to a specied position relative to the zero position.
    * 
-   * @param degrees the amount of degrees/angles to move the lift to, positive up.
+   * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
     hoodMotor.set(ControlMode.MotionMagic, (TICKS_PER_REV * degrees / 360),
