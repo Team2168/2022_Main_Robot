@@ -39,9 +39,9 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 1.8942; //0.64629;
-        public static final double kvVoltSecondsPerMeter = 2.0432;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.36961;
+        public static final double ksVolts = 1.9450; //1.8942; //0.64629;
+        public static final double kvVoltSecondsPerMeter = 1.9649; //2.0432;
+        public static final double kaVoltSecondsSquaredPerMeter = .54795;//0.36961;
         public static final double kPDriveVel = 2.8231; //2.8231;
 
         public static final double kTrackwidthMeters = 0.87;//fudged to approximately right. Actual = 0.65;

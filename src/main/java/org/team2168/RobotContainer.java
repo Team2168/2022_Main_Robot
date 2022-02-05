@@ -108,14 +108,17 @@ public class RobotContainer {
     var lShape = new SequentialCommandGroup();
     var squiggles = PathUtil.getPathCommand("Squiggles", drivetrain, InitialPathState.DISCARDHEADING);
     var drive3Meters= PathUtil.getPathCommand("Drive3Meters", drivetrain, InitialPathState.DISCARDHEADING);
+    var drive5MSquiggles=PathUtil.getPathCommand("5MSquiggles", drivetrain, InitialPathState.DISCARDHEADING);
 
 
     autoChooser.setDefaultOption("Do nothing", new InstantCommand());
     autoChooser.addOption("Drive 1 Meter", drive1Meter);
     autoChooser.addOption("LShape", lShape);
     autoChooser.addOption("Squiggles", squiggles);
-    autoChooser.addOption("Debug auto", new DebugPath(drivetrain));
+    autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
     autoChooser.addOption("Drive 3 Meters", drive3Meters);
+    //Test Path
+    autoChooser.addOption("Drive 5 Squiggle", drive5MSquiggles);// Move 4.5 meters 
   }
 
   /**

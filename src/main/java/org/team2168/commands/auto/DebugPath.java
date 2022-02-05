@@ -31,13 +31,15 @@ public class DebugPath extends CommandBase {
   double vel;
   double curvature;
   double time;
+  String pathname;
 
   /** Creates a new DebugPath. */
-  public DebugPath(Drivetrain drivetrain) {
+  public DebugPath(Drivetrain drivetrain, String pathname) {
     this.drivetrain = drivetrain; 
+    this.pathname = pathname;
 
     try {
-    var trajectory = PathUtil.getTrajectory("Drive3Meters");
+    var trajectory = PathUtil.getTrajectory(pathname);
     initialPose = trajectory.getInitialPose();
     
 
