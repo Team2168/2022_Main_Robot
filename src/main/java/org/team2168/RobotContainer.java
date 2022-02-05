@@ -74,6 +74,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+    oi.driverJoystick.ButtonA().whenHeld(new DriveWithLimelight(drivetrain, lime));
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
