@@ -27,6 +27,7 @@ public class Hood extends SubsystemBase implements Loggable {
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 73.0/1.0;
+  private static final double MAX_RAISED_POSITION_TICKS = 56000;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -42,8 +43,8 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = 5000; // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = 5000; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION_LIMIT = 10000; // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = 7500; // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
@@ -73,6 +74,12 @@ public class Hood extends SubsystemBase implements Loggable {
     hoodMotor.configMotionAcceleration(ACCELERATION_LIMIT);
     hoodMotor.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
     hoodMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
+
+    //Don't drive through ends of travel
+    hoodMotor.configForwardSoftLimitEnable(true);
+    hoodMotor.configForwardSoftLimitThreshold(MAX_RAISED_POSITION_TICKS);
+    hoodMotor.configReverseSoftLimitEnable(true);
+    hoodMotor.configReverseSoftLimitThreshold(0);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
