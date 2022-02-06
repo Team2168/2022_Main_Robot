@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
-import org.team2168.RobotContainer;
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
 
@@ -95,15 +94,12 @@ public class Hopper extends SubsystemBase implements Loggable {
 
 }
 
-    
-
-  private static double inchesPerSecondToTicksPer100ms(double speed) {
-    speed = DISTANCE_GEAR_RATIO / 10;
-    return speed;
+  public void driveHopper(double speed) {
+    hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void driveHopper(double speed) {
-    hopperMotor.set(ControlMode.Velocity, inchesPerSecondToTicksPer100ms(speed));
+  public void zeroEncoder() {
+    hopperMotor.setSelectedSensorPosition(0.0);
   }
 
  @Log (name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
@@ -114,12 +110,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
     public double getEncoderPosition() {
       return hopperMotor.getSelectedSensorPosition();
-  } 
-
-  @Log(name = "Hopper Speed (deg - s)", rowIndex = 1, columnIndex = 3)
-    public double getHopperSpeed() {
-      return inchesPerSecondToTicksPer100ms(hopperMotor.getSelectedSensorVelocity());
-    }
+  }
 
   @Override
   public void periodic() {
