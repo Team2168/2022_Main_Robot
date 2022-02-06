@@ -43,8 +43,8 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = 10000; // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = 7500; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION_LIMIT = 35000; // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = 30000; // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
