@@ -10,6 +10,7 @@ import java.util.function.DoubleFunction;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopper;
+import org.team2168.commands.hopper.ZeroHopper;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
 import org.team2168.commands.turret.*;
@@ -88,11 +89,12 @@ public class RobotContainer {
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+    // hopper.setDefaultCommand(new DriveHopper(hopper, oi.operatorJoystick::getLeftStickRaw_X));
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveHopper(hopper, 3.0));
-    oi.operatorJoystick.ButtonUpDPad().whenReleased(new DriveHopper(hopper, 0.0));
+    oi.operatorJoystick.ButtonUpDPad().whenHeld(new DriveHopper(hopper, 3.0));
+    oi.operatorJoystick.ButtonUpDPad().whenReleased(new ZeroHopper(hopper));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
@@ -124,5 +126,9 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
+
+        
   }
+
+
 }
