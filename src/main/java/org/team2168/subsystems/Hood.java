@@ -30,7 +30,7 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
-  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
+  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise; // direction of output shaft rotation when looking at
 
   // Gains
   private static final double kP = 0.5;
