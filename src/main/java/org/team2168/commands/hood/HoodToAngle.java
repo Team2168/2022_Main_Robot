@@ -14,11 +14,9 @@ public class HoodToAngle extends CommandBase {
   private double angle;
   public HoodToAngle(Hood h, double a) {
     hood = h;
-
     angle = a;
 
     addRequirements(h);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -33,7 +31,11 @@ public class HoodToAngle extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if(interrupted) {
+      hood.setPercentOutput(0.0);
+    }
+  }
 
   // Returns true when the command should end.
   @Override
