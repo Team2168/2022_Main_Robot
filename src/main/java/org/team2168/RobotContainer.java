@@ -10,7 +10,7 @@ import java.util.function.DoubleFunction;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopper;
-import org.team2168.commands.hopper.ZeroHopper;
+import org.team2168.commands.hopper.StopHopper;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
 import org.team2168.commands.turret.*;
@@ -94,7 +94,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, 0.3));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new ZeroHopper(hopper));
+    oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopHopper(hopper));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));

@@ -8,11 +8,11 @@ import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ZeroHopper extends CommandBase {
+public class StopHopper extends CommandBase {
   private Hopper hopper;
 
   /** Creates a new ZeroHopper. */
-  public ZeroHopper(Hopper hopper) {
+  public StopHopper(Hopper hopper) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.hopper = hopper;
 
