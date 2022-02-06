@@ -16,9 +16,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Hood extends SubsystemBase {
+public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
   static Hood instance = null;
