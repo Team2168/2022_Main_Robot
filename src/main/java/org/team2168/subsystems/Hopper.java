@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
+import org.team2168.commands.hopper.DriveHopper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -102,7 +103,7 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.setSelectedSensorPosition(0.0);
   }
 
- @Log (name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
+ @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
     public boolean isBallEnteringHopper() {
       return !hopperLineBreak.get();
   }
@@ -110,6 +111,12 @@ public class Hopper extends SubsystemBase implements Loggable {
   @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
     public double getEncoderPosition() {
       return hopperMotor.getSelectedSensorPosition();
+  }
+
+  public void ballEnteringHopper() {
+    if (isBallEnteringHopper()) {
+      driveHopper(0.0);
+    }
   }
 
   @Override
