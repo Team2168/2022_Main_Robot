@@ -91,7 +91,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonRightBumper().whenInactive(new HoodToAngle(hood, 0));
+    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
   }
 
   /**
