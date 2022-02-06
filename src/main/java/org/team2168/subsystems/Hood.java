@@ -7,6 +7,7 @@ package org.team2168.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -155,6 +156,22 @@ public class Hood extends SubsystemBase implements Loggable {
    */
   public void setPercentOutput(double speed) {
     hoodMotor.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+  }
+
+  /**
+   * Change all motors to their default mix of brake/coast modes.
+   * Should be used for normal match play.
+   */
+  public void setMotorBrake() {
+    hoodMotor.setNeutralMode(NeutralMode.Brake);
+  }
+
+  /**
+   * Change all the drivetrain motor controllers to coast mode.
+   * Useful for allowing robot to be manually pushed around the field.
+   */
+  public void setMotorCoast() {
+    hoodMotor.setNeutralMode(NeutralMode.Coast);
   }
 
   @Override
