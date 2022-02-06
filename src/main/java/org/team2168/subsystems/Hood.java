@@ -7,8 +7,6 @@ package org.team2168.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -27,16 +25,12 @@ public class Hood extends SubsystemBase implements Loggable {
   private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.HOOD_MOTOR);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = 73/1;
-  private static final double SPROCKET_RADIUS_INCHES = 0.6589;
-  private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
+  private static final double GEAR_RATIO = 73.0/1.0;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
   private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
-
-  private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
   private static final double kP = 0.5;
@@ -79,9 +73,6 @@ public class Hood extends SubsystemBase implements Loggable {
     hoodMotor.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
     hoodMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
-    hoodMotor.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-    hoodMotor.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
@@ -93,28 +84,6 @@ public class Hood extends SubsystemBase implements Loggable {
       instance = new Hood();
     }
     return instance;
-  }
-
-  /**
-   * 
-   * @return true when the hood is fully lowered
-   */
-  @Log(name = "At Zero", rowIndex = 3, columnIndex = 0)
-  public boolean isAtZeroPosition() {
-    return hoodMotor.isRevLimitSwitchClosed() == 1;
-  }
-
-  public boolean isAtUpperPosition() {
-    return hoodMotor.isFwdLimitSwitchClosed() == 1;
-  }
-
-  // methods that convert a velocity value from seconds to hundreds of milliseconds and back
-  private static double convertVelocitySecondstoHundredMs(double speed) {
-    return speed * TIME_UNITS_OF_VELOCITY;
-  }
-
-  private static double convertVelocityHundredMstoSeconds(double speed) {
-    return speed / TIME_UNITS_OF_VELOCITY;
   }
 
   /**
@@ -135,48 +104,20 @@ public class Hood extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @param inches the hood position in inches
-   * @return position in F500 internal encoder ticks
+   * @param ticks raw F500 motor position
+   * @return hood position in degrees relative to is lowered position (0.0)
    */
-  private static double inchesToTicks(double inches) {
-    return (inches / INCHES_PER_REV) * GEAR_RATIO * TICKS_PER_REV;
+  public double ticksToDegrees(double ticks) {
+    return (ticks / TICKS_PER_REV) / GEAR_RATIO * 360.0;
   }
 
   /**
    * 
-   * @param ticks the hood position in F500 interal encoder ticks
-   * @return the hood position in inches
+   * @param degrees the hood position in degrees relative to its lowered position (0.0)
+   * @return raw F500 motor position
    */
-  private static double ticksToInches(double ticks) {
-    return (ticks / TICKS_PER_REV) / GEAR_RATIO * INCHES_PER_REV;
-  }
-
-  /**
-   * 
-   * @return current hood velocity (inches/second)
-   */
-  @Log(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3)
-  public double getSpeedInchesPerSecond() {
-    return convertVelocityHundredMstoSeconds(ticksToInches(hoodMotor.getSelectedSensorVelocity()));
-  }
-
-  /**
-   * 
-   * @return current hood position (inches), zero is fully lowered
-   */
-  @Log(name = "Position (In)", rowIndex = 3, columnIndex = 2)
-  public double getPositionInches() {
-    return ticksToInches(hoodMotor.getSelectedSensorPosition());
-  }
-
-  //
-  /**
-   * Commands the hood at a specified velocity.
-   * 
-   * @param speedInInchesPerSec speed to run the hood at, positive up.
-   */
-  public void setSpeed(double speedInInchesPerSec) {
-    hoodMotor.set(ControlMode.Velocity, inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
+  public double degreesToTicks(double degrees) {
+    return (degrees / 360.0) * GEAR_RATIO * TICKS_PER_REV;
   }
 
   /**
@@ -185,8 +126,26 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    hoodMotor.set(ControlMode.MotionMagic, (TICKS_PER_REV * degrees / 360),
+    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+  }
+
+  /**
+   * 
+   * @return the hood posiiton in degrees relative to is lowered position (0.0)
+   */
+  @Log(name = "Position (deg)", rowIndex = 3, columnIndex = 0)
+  public double getPositionDegrees() {
+    return ticksToDegrees(getPositionTicks());
+  }
+
+  /**
+   * 
+   * @return the hood posiiton in raw f500 encoder ticks
+   */
+  @Log(name = "Position (ticks)", rowIndex = 3, columnIndex = 1)
+  public double getPositionTicks() {
+    return hoodMotor.getSelectedSensorPosition();
   }
 
   /**
