@@ -4,6 +4,8 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Hood;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -73,6 +75,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     robotContainer.drivetrain.setMotorsCoast();
+    Hood.getInstance().setMotorCoast();
   }
 
   @Override
@@ -85,6 +88,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Hood.getInstance().setMotorBrake();
     robotContainer.drivetrain.setMotorsBrake();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -101,6 +105,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
