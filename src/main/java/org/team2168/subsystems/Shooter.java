@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import org.team2168.Constants.CANDevices;
 //import org.team2168.commands.shooter.SetTargetLocationSpeed;
@@ -31,6 +32,8 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
+
+  public DifferentialDrive drive;
 
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
@@ -176,9 +179,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     SetTargetLocationSpeed.targetVelocity = Speed;
   }*/
 
-  public void drive(double k_Speed){
+  public void drive(double k_Speed, double k_Rotation){
     setSpeed(k_Speed);
-    revs_per_minute_to_ticks_per_100ms(k_Speed);
+    drive.arcadeDrive(k_Speed, k_Rotation);
   }
 
   public static Shooter getInstance(){

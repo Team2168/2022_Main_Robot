@@ -11,12 +11,14 @@ public class DriveShooterWithConstant extends CommandBase {
   /** Creates a new DriveShooterWithConstant. */
 
   private double speed;
+  private double rotation;
   private Shooter st;
 
-  public DriveShooterWithConstant(double k_speed, Shooter shooter) {
+  public DriveShooterWithConstant(double k_speed, double k_rotation, Shooter shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     st = shooter;
     speed = k_speed;
+    rotation = k_rotation;
     addRequirements(shooter);
   }
 
@@ -27,7 +29,7 @@ public class DriveShooterWithConstant extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    st.drive(speed);
+    st.drive(speed, rotation);
   }
 
   // Called once the command ends or is interrupted.
