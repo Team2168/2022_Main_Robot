@@ -38,6 +38,7 @@ public final class Constants {
         public final static int TURRET_MOTOR = 12;
         public static final int CLIMBER_MOTOR_1 = 18;
         public static final int CLIMBER_MOTOR_2 = 19;
+        public static final int HOOD_MOTOR = 11;
     }
 
     public static final class PneumaticsDevices {
