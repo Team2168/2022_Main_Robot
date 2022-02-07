@@ -130,6 +130,14 @@ public class Climber extends SubsystemBase implements Loggable {
     return instance;
   }
 
+  public static double getMaxHeightInches() {
+    return MAX_HEIGHT_INCHES;
+  }
+
+  public static double getMinHeightInches() {
+    return MIN_HEIGHT_INCHES;
+  }
+
   /**
    * 
    * @return true when the lift is fully lowered
