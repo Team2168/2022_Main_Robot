@@ -20,16 +20,9 @@ public class ClimbingSequence extends SequentialCommandGroup {
   Climber climb = Climber.getInstance();
   MonkeyBar monkey = MonkeyBar.getInstance();
   public ClimbingSequence() {
-    addCommands(new ExtendLift(climb), // climbing the mid bar
-    new WaitCommand(0.5), // gives driver some additional time to drive robot so that it presses against mid bar
-    new RetractLift(climb), // pulls robot upwards
-    new ExtendMonkeyBar(monkey), // pushes robot out towards next bar
-    new ExtendLift(climb), // climbing the high bar
-    new RetractMonkeyBar(monkey), // resets monkey bar (so it can push the robot out once again)
-    new RetractLift(climb),
-    new ExtendMonkeyBar(monkey),
-    new ExtendLift(climb), // climbing the transversal bar
-    new RetractMonkeyBar(monkey),
-    new RetractLift(climb));
+    addCommands(new ClimbAndWaitForMonkey(climb),
+    new ClimbWithMonkeyBars(climb, monkey),
+    new ClimbWithMonkeyBars(climb, monkey),
+    new ClimbWithMonkeyBars(climb, monkey));
   }
 }
