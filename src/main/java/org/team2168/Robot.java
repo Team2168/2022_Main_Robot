@@ -86,6 +86,10 @@ public class Robot extends TimedRobot {
       robotContainer.drivetrain.setMotorsCoast();
     else
       robotContainer.drivetrain.setMotorsBrake();
+    
+      // TODO we probably don't want to do this
+      if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
+        robotContainer.drivetrain.zeroHeading();
   }
 
   /**

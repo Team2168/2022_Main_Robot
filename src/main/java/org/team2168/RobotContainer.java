@@ -13,6 +13,7 @@ import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.ReturnToZero;
 import org.team2168.commands.climber.SetPosition;
 import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.commands.exampleSubsystem.ExtendExample;
 import org.team2168.commands.exampleSubsystem.RetractExample;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
@@ -28,6 +29,7 @@ import org.team2168.subsystems.Turret;
 import org.team2168.utils.PathUtil;
 import org.team2168.utils.PathUtil.InitialPathState;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -94,6 +96,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+
+    oi.testJoystick.ButtonStart().whenPressed(new ResetHeading(drivetrain));
 
     //Operator Controls
     // m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));

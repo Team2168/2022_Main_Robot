@@ -3,6 +3,7 @@ package org.team2168.utils;
 import java.io.IOException;
 
 import org.team2168.Constants;
+import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -70,11 +71,14 @@ public class PathUtil {
                     break;
                 case PRESERVEHEADING:
                     sequence.addCommands(
-                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true)));
+                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true))
+                    );
                     break;
                 case DISCARDHEADING:
                     sequence.addCommands(
-                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, false)));
+                            new ResetHeading(drivetrain),
+                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true))
+                    );
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
