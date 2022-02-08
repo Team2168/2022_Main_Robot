@@ -47,6 +47,7 @@ public class Indexer extends SubsystemBase {
 /**
  * 
  * @param speed should be set to between 1.0 and -1.0, depending on if you need it to intake or spit out a ball
+ * with 1.0 being to move towards the shooter, and -1.0 away from it.
  */
 
   public void drive(double speed) {
@@ -59,7 +60,7 @@ public class Indexer extends SubsystemBase {
  * 
  * @return boolean is meant to detect the presence of a ball in the indexer
  */
-  public boolean isBallEntering() {
+  public boolean isBallPresent() {
     return !detector.get();
   }
 
