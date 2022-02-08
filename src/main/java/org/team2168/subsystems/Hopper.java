@@ -13,10 +13,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
-import org.team2168.commands.hopper.DriveHopper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
@@ -45,9 +45,13 @@ public class Hopper extends SubsystemBase implements Loggable {
   public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
 
   public static final double GEAR_RATIO = 6.0;
-  public static final double ROLLER_CIRCUMFERENCE_INCHES = Math.PI;
-  public static final double DISTANCE_GEAR_RATIO = GEAR_RATIO / ROLLER_CIRCUMFERENCE_INCHES;
-
+  public static final double ROLLER_DIAMETER_INCHES = 1.0;
+  private static final double TIME_UNITS_OF_VELOCITY = 0.1;
+  public static final double ROLLER_CIRCUMFERENCE_INCHES = ROLLER_DIAMETER_INCHES * Math.PI;
+  public static final double DISTANCE_PER_TICK = ROLLER_CIRCUMFERENCE_INCHES / TICKS_PER_REV;
+  public static final double HOPPER_DISTANCE_GEAR_RATIO = GEAR_RATIO * DISTANCE_PER_TICK;
+  
+  
   //Gains
 
   
@@ -95,8 +99,25 @@ public class Hopper extends SubsystemBase implements Loggable {
 
 }
 
+// putting in ticks, getting inches
+
+
+  private static double ticksToInches(double ticks) {
+    return ((ticks / TICKS_PER_REV) * HOPPER_DISTANCE_GEAR_RATIO);
+  }
+
+  // putting in inches, getting ticks
+
+  private static double inchesToTicks(double inches) {
+    return ((inches / DISTANCE_PER_TICK) * HOPPER_DISTANCE_GEAR_RATIO);
+  }
+
   public void driveHopper(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void hopperVelocity(double InchesPerSecond) {
+    hopperMotor.set(ControlMode.Velocity, inchesToTicks(InchesPerSecond) *  TIME_UNITS_OF_VELOCITY);
   }
 
   public void zeroEncoder() {
@@ -135,8 +156,12 @@ public class Hopper extends SubsystemBase implements Loggable {
     m_hopperSim.update(Constants.LOOP_TIMESTEP_S);
 
     double sim_velocity_ticks_per_100ms = m_hopperSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_hopperSim.getAngularVelocityRPM())) * TIME_UNITS_OF_VELOCITY;
+    double sim_position = inchesToTicks(Units.metersToInches(m_hopperSim.getAngularVelocityRadPerSec()));
     m_hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
     m_hopperMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
+    m_hopperMotorSim.setIntegratedSensorRawPosition((int) sim_position);
+    m_hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
   }
 }
