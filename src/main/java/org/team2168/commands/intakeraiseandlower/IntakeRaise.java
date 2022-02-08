@@ -32,13 +32,12 @@ public class IntakeRaise extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.isIntakeRaised();
+    
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    intake.isIntakeRaised();
-    return false;
+    return intake.isIntakeRaised();
   }
 }

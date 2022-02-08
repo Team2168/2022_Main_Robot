@@ -4,7 +4,10 @@
 
 package org.team2168.subsystems;
 
+import org.team2168.Constants.PneumaticsDevices;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -12,8 +15,9 @@ public class IntakeRaiseAndLower extends SubsystemBase {
   /** Creates a new IntakeRaiseAndLower. */
   private DoubleSolenoid upAndDown;
   private static IntakeRaiseAndLower _instance = null;
-  public IntakeRaiseAndLower() {
-    upAndDown = new DoubleSolenoid(null, 3,4);
+  private IntakeRaiseAndLower() {
+    upAndDown = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticsDevices.INTAKE_DOUBLE_SOLENOID_RAISE, 
+    PneumaticsDevices.INTAKE_DOUBLE_SOLENOID_LOWER);
   }
 
   public static IntakeRaiseAndLower getInstance() {
