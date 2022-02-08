@@ -21,6 +21,13 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
+  public enum HoodPosition {
+    TEST,
+    TEST1,
+    TEST2,
+    TEST3
+  }
+
   static Hood instance = null;
 
   private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.HOOD_MOTOR);
@@ -149,7 +156,7 @@ public class Hood extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @return the hood posiiton in raw f500 encoder ticks
+   * @return the hood posititon in raw f500 encoder ticks
    */
   @Log(name = "Position (ticks)", rowIndex = 3, columnIndex = 1)
   public double getPositionTicks() {
