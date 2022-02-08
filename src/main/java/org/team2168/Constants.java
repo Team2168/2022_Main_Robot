@@ -44,7 +44,7 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = .54795;//from sysid_data20220204-205250.json
         public static final double kPDriveVel = 2.8207; //from sysid_data20220204-205250.json
 
-        public static final double kTrackwidthMeters = 0.87;//fudged to approximately right. Actual = 0.65;
+        public static final double kTrackwidthMeters = 0.65563;//fudged to 0.87. Actual = 0.65;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
