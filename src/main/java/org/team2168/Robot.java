@@ -4,6 +4,9 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Hood;
+
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,6 +25,12 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   private RobotContainer robotContainer;
+  private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
+
+  public Robot() {
+    //set the default loop period
+    super(Constants.LOOP_TIMESTEP_S);
+  }
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -34,6 +43,8 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     robotContainer = RobotContainer.getInstance();
+
+    compressor.enableDigital();
   }
 
   /**
@@ -64,6 +75,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     robotContainer.drivetrain.setMotorsCoast();
+    Hood.getInstance().setMotorCoast();
   }
 
   @Override
@@ -76,6 +88,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    Hood.getInstance().setMotorBrake();
     robotContainer.drivetrain.setMotorsBrake();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -92,6 +105,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
