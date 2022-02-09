@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
@@ -30,7 +32,7 @@ public class Robot extends TimedRobot {
   private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
 
   public Robot() {
-    //set the default loop period
+    // set the default loop period
     super(Constants.LOOP_TIMESTEP_S);
   }
 
@@ -45,7 +47,7 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     robotContainer = RobotContainer.getInstance();
-    
+
     compressor.enableDigital();
   }
 
@@ -86,10 +88,14 @@ public class Robot extends TimedRobot {
       robotContainer.drivetrain.setMotorsCoast();
     else
       robotContainer.drivetrain.setMotorsBrake();
-    
-      // TODO we probably don't want to do this
-      if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
-        robotContainer.drivetrain.zeroHeading();
+
+    // TODO we probably don't want to do this
+    if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
+      robotContainer.drivetrain.zeroHeading();
+
+    // TODO use shuffleboard here
+    SmartDashboard.putString("The Actual Auto we will be running",
+        robotContainer.getAutonomousCommand().getName());
   }
 
   /**

@@ -53,7 +53,7 @@ public final class Constants {
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
-        public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7
+        public static final double kRamseteZeta = 0.90; // worked for 1m/s 0.9; //stock 0.7
     }
 
     public static final class PneumaticsDevices {

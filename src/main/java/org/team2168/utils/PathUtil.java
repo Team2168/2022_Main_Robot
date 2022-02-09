@@ -76,7 +76,7 @@ public class PathUtil {
                     break;
                 case DISCARDHEADING:
                     sequence.addCommands(
-                            new ResetHeading(drivetrain),
+                            // new ResetHeading(drivetrain),
                             new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true))
                     );
                     break;

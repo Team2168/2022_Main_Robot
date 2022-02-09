@@ -9,6 +9,13 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.DebugPath;
+import org.team2168.commands.auto.DoNothing;
+import org.team2168.commands.auto.Drive1Meter;
+import org.team2168.commands.auto.Drive3Meters;
+import org.team2168.commands.auto.Drive5MSquiggles;
+import org.team2168.commands.auto.FourBall;
+import org.team2168.commands.auto.Squiggles;
+import org.team2168.commands.auto.TwoballTopToTerm;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.ReturnToZero;
 import org.team2168.commands.climber.SetPosition;
@@ -31,6 +38,7 @@ import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -110,36 +118,15 @@ public class RobotContainer {
   }
 
   private void configureAutonomousRoutines() {
-    var drive1Meter = PathUtil.getPathCommand("Drive1Meter", drivetrain);
-    var TWOBALL_TOP_TO_TERM = new SequentialCommandGroup(
-      // new ExtendIntake(intake),
-      new ParallelRaceGroup(
-              // new DriveIntake(intake, () -> 0.5)
-              new SequentialCommandGroup(
-                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
-                // new DriveShooter(shooter, () -> 0.5).withTimeout(3),
-                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_1", drivetrain)
-              )
-      )
-    );
-    var FOURBALL = new SequentialCommandGroup(
-      PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
-      PathUtil.getPathCommand("4BALL_1", drivetrain)
-    );
-    var squiggles = PathUtil.getPathCommand("Squiggles", drivetrain);
-    var drive3Meters= PathUtil.getPathCommand("Drive3Meters", drivetrain);
-    var drive5MSquiggles=PathUtil.getPathCommand("5MSquiggles", drivetrain);
-
-
-    autoChooser.setDefaultOption("Do nothing", new InstantCommand());
-    autoChooser.addOption("Drive 1 Meter", drive1Meter);
-    autoChooser.addOption("2 Ball Top to Terminal", TWOBALL_TOP_TO_TERM);
-    autoChooser.addOption("4 ball", FOURBALL);
-    autoChooser.addOption("Squiggles", squiggles);
+    autoChooser.setDefaultOption("Do nothing", new DoNothing());
+    autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
+    autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+    autoChooser.addOption("4 ball", new FourBall(drivetrain));
+    autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
     autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
-    autoChooser.addOption("Drive 3 Meters", drive3Meters);
+    autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
     //Test Path that goes 2 meters to the right (y-axis) and 4.5 meters forward (x-axis)in a "U" shape"
-    autoChooser.addOption("Drive 5 Squiggle", drive5MSquiggles);
+    autoChooser.addOption("Drive 5 Squiggle", new Drive5MSquiggles(drivetrain));
   }
 
   /**
