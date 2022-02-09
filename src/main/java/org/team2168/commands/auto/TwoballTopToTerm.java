@@ -6,6 +6,7 @@ package org.team2168.commands.auto;
 
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.utils.PathUtil;
+import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -22,7 +23,7 @@ public class TwoballTopToTerm extends SequentialCommandGroup {
               new SequentialCommandGroup(
                 PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
                 // new DriveShooter(shooter, () -> 0.5).withTimeout(3),
-                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_1", drivetrain)
+                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_1", drivetrain, InitialPathState.PRESERVEODOMETRY)
               )
       )
     );

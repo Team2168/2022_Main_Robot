@@ -6,6 +6,7 @@ package org.team2168.commands.auto;
 
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.utils.PathUtil;
+import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -16,7 +17,7 @@ public class FourBall extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
-      PathUtil.getPathCommand("4BALL_1", drivetrain)
+      PathUtil.getPathCommand("4BALL_1", drivetrain, InitialPathState.PRESERVEODOMETRY)
     );
   }
 }
