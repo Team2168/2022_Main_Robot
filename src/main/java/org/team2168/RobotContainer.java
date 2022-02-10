@@ -90,13 +90,13 @@ public class RobotContainer {
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
-    // hopper.setDefaultCommand(new DriveHopper(hopper, oi.operatorJoystick::getLeftStickRaw_X));
+   
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, 0.3));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopHopper(hopper));
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, 0.3));
+    // oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopHopper(hopper));
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, 20.0));
     oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopHopper(hopper));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));

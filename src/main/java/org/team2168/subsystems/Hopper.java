@@ -7,6 +7,7 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -36,6 +37,8 @@ public class Hopper extends SubsystemBase implements Loggable {
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
 
   private static final boolean ENABLE_CURRENT_LIMIT = true;
+  private static final int kPIDLoopIdx = 0;
+  private static final int kTimeoutMs = 30;
   private static final double CONTINUOUS_CURRENT_LIMIT = 40; // amps
   private static final double TRIGGER_THRESHOLD_LIMIT = 60; // amp
   private static final double TRIGGER_THRESHOLD_TIME = 0.2; // s
@@ -83,6 +86,7 @@ public class Hopper extends SubsystemBase implements Loggable {
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     hopperMotor.setInverted(hopperMotorInvert);
+    hopperMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.configNeutralDeadband(0.01);
 
@@ -90,17 +94,16 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
     m_hopperSim = new FlywheelSim(
-    LinearSystemId.identifyVelocitySystem(KV, KA),
-    DCMotor.getFalcon500(1),
-    GEAR_RATIO
-  );
+      LinearSystemId.identifyVelocitySystem(KV, KA),
+      DCMotor.getFalcon500(1),
+      GEAR_RATIO
+    );
 
     m_hopperMotorSim = hopperMotor.getSimCollection();
 
 }
 
 // putting in ticks, getting inches
-
 
   private static double ticksToInches(double ticks) {
     return ((ticks / TICKS_PER_REV) * HOPPER_DISTANCE_GEAR_RATIO);
@@ -109,14 +112,14 @@ public class Hopper extends SubsystemBase implements Loggable {
   // putting in inches, getting ticks
 
   private static double inchesToTicks(double inches) {
-    return ((inches / DISTANCE_PER_TICK) * HOPPER_DISTANCE_GEAR_RATIO);
+    return ((inches / DISTANCE_PER_TICK) / GEAR_RATIO * DISTANCE_PER_TICK);
   }
 
   public void driveHopper(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void hopperVelocity(double InchesPerSecond) {
+  public void driveHopperVelocity(double InchesPerSecond) {
     hopperMotor.set(ControlMode.Velocity, inchesToTicks(InchesPerSecond) *  TIME_UNITS_OF_VELOCITY);
   }
 
@@ -137,6 +140,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   public void ballEnteringHopper() {
     if (isBallEnteringHopper()) {
       driveHopper(0.0);
+      driveHopperVelocity(0.0);
     }
   }
 
@@ -155,14 +159,14 @@ public class Hopper extends SubsystemBase implements Loggable {
     m_hopperSim.setInput(m_hopperMotorSim.getMotorOutputLeadVoltage());
     m_hopperSim.update(Constants.LOOP_TIMESTEP_S);
 
-    double sim_velocity_ticks_per_100ms = m_hopperSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_hopperSim.getAngularVelocityRPM())) * TIME_UNITS_OF_VELOCITY;
-    double sim_position = inchesToTicks(Units.metersToInches(m_hopperSim.getAngularVelocityRadPerSec()));
-    m_hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    m_hopperMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
-    m_hopperMotorSim.setIntegratedSensorRawPosition((int) sim_position);
-    m_hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
+    // double sim_velocity_ticks_per_100ms = m_hopperSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    // m_hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    // m_hopperMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
 
+    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_hopperSim.getAngularVelocityRPM())) * TIME_UNITS_OF_VELOCITY;
+    m_hopperMotorSim.setIntegratedSensorRawPosition((int) sim_velocity_ticks_per_100_ms);
+    m_hopperMotorSim.setIntegratedSensorVelocity((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
+    
   }
 }
 

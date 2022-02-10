@@ -4,8 +4,6 @@
 
 package org.team2168.commands.hopper;
 
-import java.util.function.DoubleSupplier;
-
 import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -31,13 +29,13 @@ public class DriveHopperWithVelocity extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hopper.hopperVelocity(velocity);
+    hopper.driveHopperVelocity(velocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hopper.hopperVelocity(0.0);
+    hopper.driveHopperVelocity(0.0);
   }
 
   // Returns true when the command should end.
