@@ -6,8 +6,12 @@ package org.team2168;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
@@ -28,11 +32,9 @@ public class Robot extends TimedRobot {
   private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
 
   public Robot() {
-    //set the default loop period
+    // set the default loop period
     super(Constants.LOOP_TIMESTEP_S);
   }
-
-  private NetworkTableEntry moveRobot;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -46,11 +48,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     robotContainer = RobotContainer.getInstance();
 
-    var nt = NetworkTableInstance.getDefault();
-    var dtTable = nt.getTable("Drivetrain");
-    moveRobot = dtTable.getEntry("Kickable Robot?");
-    moveRobot.setBoolean(false);
-    
     compressor.enableDigital();
   }
 
@@ -87,10 +84,18 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
     // Check periodically
-    if (moveRobot.getBoolean(false))
+    if (robotContainer.brakesEnabled())
       robotContainer.drivetrain.setMotorsCoast();
     else
       robotContainer.drivetrain.setMotorsBrake();
+
+    // TODO we probably don't want to do this
+    if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
+      robotContainer.drivetrain.zeroHeading();
+
+    // TODO use shuffleboard here
+    SmartDashboard.putString("The Actual Auto we will be running",
+        robotContainer.getAutonomousCommand().getName());
   }
 
   /**

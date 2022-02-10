@@ -11,7 +11,12 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.PigeonIMUConfiguration;
+import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+
+import org.team2168.Constants;
+import org.team2168.Constants.CANDevices;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -21,8 +26,6 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
-
-import org.team2168.Constants.CANDevices;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
     private WPI_TalonFX leftMotor1;
@@ -145,6 +148,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.setInverted(rightInvert);
         rightMotor2.setInverted(InvertType.FollowMaster);
         rightMotor3.setInverted(InvertType.FollowMaster);
+
+        PigeonIMUConfiguration config = new PigeonIMUConfiguration();
+
+        pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 1);  // status frame in ms
 
         setMotorsBrake();
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
@@ -341,6 +348,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     public void arcadeDrive(double xSpeed, double zRotation) {
         drive.arcadeDrive(xSpeed, zRotation);
+        //print speed values to see when the robot barely moves 
+        //multiply value by the corresponding battery voltage to find kS
+        System.out.println(xSpeed);
     }
 
     /**
