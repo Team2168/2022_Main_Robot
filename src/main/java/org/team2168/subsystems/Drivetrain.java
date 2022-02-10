@@ -137,8 +137,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
         rightConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
 
-        leftConfig.neutralDeadband = NEUTRALDEADBAND;
-        rightConfig.neutralDeadband = NEUTRALDEADBAND;
+        // leftConfig.neutralDeadband = NEUTRALDEADBAND;
+        // rightConfig.neutralDeadband = NEUTRALDEADBAND;
 
         leftMotor1.configAllSettings(leftConfig);
         leftMotor2.configAllSettings(leftConfig);
@@ -147,11 +147,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor2.configAllSettings(rightConfig);
         rightMotor3.configAllSettings(rightConfig);
 
+        leftMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
+        leftMotor1.enableVoltageCompensation(true);
+        rightMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
+        rightMotor1.enableVoltageCompensation(true);
+
         leftMotor2.follow(leftMotor1);
         leftMotor3.follow(leftMotor1);
         rightMotor2.follow(rightMotor1);
         rightMotor3.follow(rightMotor1);
-
+        
         leftMotor1.setInverted(leftInvert);
         leftMotor2.setInverted(InvertType.FollowMaster);
         leftMotor3.setInverted(InvertType.FollowMaster);
@@ -384,15 +389,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         //TODO: Change to use voltage compensation built into the motor controllers?
-        double batteryVoltage = RobotController.getBatteryVoltage();
-        tankDrive(leftVolts / batteryVoltage, rightVolts / batteryVoltage);
+        // double batteryVoltage = RobotController.getBatteryVoltage();
+        tankDrive(leftVolts / Constants.Drivetrain.MAX_VOLTAGE, rightVolts / Constants.Drivetrain.MAX_VOLTAGE);
+
     }
 
     public void arcadeDrive(double xSpeed, double zRotation) {
         drive.arcadeDrive(xSpeed, zRotation);
         //print speed values to see when the robot barely moves 
         //multiply value by the corresponding battery voltage to find kS
-        System.out.println(xSpeed);
+        // System.out.println(xSpeed);
     }
 
     /**
