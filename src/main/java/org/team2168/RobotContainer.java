@@ -5,6 +5,7 @@
 package org.team2168;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
@@ -38,7 +39,17 @@ import org.team2168.subsystems.Turret;
 import org.team2168.utils.PathUtil;
 import org.team2168.utils.PathUtil.InitialPathState;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -46,6 +57,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
@@ -130,6 +142,7 @@ public class RobotContainer {
     autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
     autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
     autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+    autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
     //Test Path that goes 2 meters to the right (y-axis) and 4.5 meters forward (x-axis)in a "U" shape"
     // autoChooser.addOption("Drive 5 Squiggle", new Drive5MSquiggles(drivetrain));
   }
@@ -187,5 +200,75 @@ public class RobotContainer {
   @Config(name = "Kickable Robot?", width = 2)
   public void setBrakesEnabled(boolean enabled) {
     brakesEnabled = enabled;
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getExampleTrajectoryCommand() {
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(
+              Constants.Drivetrain.ksVolts,
+              Constants.Drivetrain.kvVoltSecondsPerMeter,
+              Constants.Drivetrain.kaVoltSecondsSquaredPerMeter),
+              Constants.Drivetrain.kDriveKinematics,
+            Constants.Drivetrain.MAX_VOLTAGE);
+
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+              Constants.Drivetrain.kMaxSpeedMetersPerSecond,
+              Constants.Drivetrain.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(Constants.Drivetrain.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
+
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory path1 =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            List.of(new Pose2d(0, 0, new Rotation2d(0)),
+                    new Pose2d(1, 0, new Rotation2d(0))),
+            config);
+
+    Trajectory path2 = 
+        TrajectoryGenerator.generateTrajectory(
+            // Start at the origin facing the +X direction
+            List.of(new Pose2d(0, 0, new Rotation2d(0)),
+                    new Pose2d(0, -5.67, new Rotation2d(Units.degreesToRadians(90.0)))),
+            config);
+
+    // Reset odometry to the starting pose of the trajectory.
+    drivetrain.resetOdometry(path1.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return makeRamsete(path1)
+      .andThen(() -> drivetrain.tankDriveVolts(0, 0))
+      .andThen(makeRamsete(path2))
+      .andThen(() -> drivetrain.tankDriveVolts(0, 0));
+  }
+
+  RamseteCommand makeRamsete(Trajectory path) {
+    return new RamseteCommand(
+          path,
+          drivetrain::getPose,
+          new RamseteController(Constants.Drivetrain.kRamseteB, Constants.Drivetrain.kRamseteZeta),
+          new SimpleMotorFeedforward(
+            Constants.Drivetrain.ksVolts,
+            Constants.Drivetrain.kvVoltSecondsPerMeter,
+            Constants.Drivetrain.kaVoltSecondsSquaredPerMeter),
+          Constants.Drivetrain.kDriveKinematics,
+          drivetrain::getWheelSpeeds,
+          new PIDController(Constants.Drivetrain.kPDriveVel, 0, 0),
+          new PIDController(Constants.Drivetrain.kPDriveVel, 0, 0),
+          // RamseteCommand passes volts to the callback
+          drivetrain::tankDriveVolts,
+          drivetrain);
   }
 }
