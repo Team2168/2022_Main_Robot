@@ -14,13 +14,16 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMUConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
+import com.kauailabs.navx.frc.AHRS;
 
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,13 +31,16 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
+    private static boolean USE_PIGEON_GYRO = false;
+    private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
+    private AHRS navx;
+
     private WPI_TalonFX leftMotor1;
     private WPI_TalonFX leftMotor2;
     private WPI_TalonFX leftMotor3;
     private WPI_TalonFX rightMotor1;
     private WPI_TalonFX rightMotor2;
     private WPI_TalonFX rightMotor3;
-    private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
 
     private DifferentialDrive drive;
     private DifferentialDriveOdometry odometry;
@@ -105,7 +111,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor3 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_3);
 
         // Instantiate gyro
-        pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
+        if(USE_PIGEON_GYRO) {
+            pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
+        } else {
+            navx = new AHRS(SPI.Port.kMXP);
+        }
 
         // Reset the configurations on the motor controllers
         leftMotor1.configFactoryDefault();
@@ -149,19 +159,31 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor2.setInverted(InvertType.FollowMaster);
         rightMotor3.setInverted(InvertType.FollowMaster);
 
-        PigeonIMUConfiguration config = new PigeonIMUConfiguration();
-
-        pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 1);  // status frame in ms
-
         setMotorsBrake();
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
-        odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
+
+        if(USE_PIGEON_GYRO) {
+            PigeonIMUConfiguration config = new PigeonIMUConfiguration();
+            pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 1);  // status frame in ms
+            odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
+        } else {
+            odometry = new DifferentialDriveOdometry(navx.getRotation2d());
+        }
+        
     }
 
     @Override
     public void periodic() {
+        Rotation2d rot;
+
+        if(USE_PIGEON_GYRO) {
+            rot = pidgey.getRotation2d();    
+        } else {
+            rot = navx.getRotation2d();
+        }
+
         // This method will be called once per scheduler run
-        odometry.update(pidgey.getRotation2d(), getLeftEncoderDistance(), getRightEncoderDistance());
+        odometry.update(rot, getLeftEncoderDistance(), getRightEncoderDistance());
     }
 
     /**
@@ -181,7 +203,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     @Log(name = "Gyro Heading", rowIndex = 2, columnIndex = 1)
     public double getHeading() {
-        return pidgey.getRotation2d().getDegrees();
+        if(USE_PIGEON_GYRO) {
+            return pidgey.getRotation2d().getDegrees();
+        } else {
+            return navx.getRotation2d().getDegrees();
+        }
     }
 
     /**
@@ -191,7 +217,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     @Log(name = "Turn velocity", rowIndex = 2, columnIndex = 0)
     public double getTurnRate() {
-        return -pidgey.getRate();
+        if(USE_PIGEON_GYRO) {
+            return -pidgey.getRate();
+        } else {
+            return -navx.getRate();
+        }
     }
 
     /**
@@ -255,7 +285,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * Zeroes gyro heading
      */
     public void zeroHeading() {
-        pidgey.reset();
+        if(USE_PIGEON_GYRO) {
+            pidgey.reset();
+        } else {
+            navx.reset();;
+        }
     }
 
     /**
@@ -273,10 +307,18 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * @param preserveHeading do we preserve the gyro heading?
      */
     public void resetOdometry(Pose2d pose, boolean preserveHeading) {
+        Rotation2d rot;
+
+        if(USE_PIGEON_GYRO) {
+            rot = pidgey.getRotation2d();
+        } else {
+            rot = navx.getRotation2d();
+        }
+
         resetEncoders();
         if (!preserveHeading)
             zeroHeading();
-        odometry.resetPosition(pose, pidgey.getRotation2d());
+        odometry.resetPosition(pose, rot);
     }
 
     /**
