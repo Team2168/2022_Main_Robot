@@ -15,6 +15,8 @@ import org.team2168.commands.auto.Drive3Meters;
 import org.team2168.commands.auto.Drive5MSquiggles;
 import org.team2168.commands.auto.FourBall;
 import org.team2168.commands.auto.Squiggles;
+import org.team2168.commands.auto.ThreeballTopToTerm;
+import org.team2168.commands.auto.TwoballMidToTerm;
 import org.team2168.commands.auto.TwoballTopToTerm;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.ReturnToZero;
@@ -37,6 +39,7 @@ import org.team2168.utils.PathUtil;
 import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -121,12 +124,14 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Do nothing", new DoNothing());
     autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
     autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+    autoChooser.addOption("2 Ball Mid to Terminal", new TwoballMidToTerm(drivetrain));
+    autoChooser.addOption("3 Ball Top to Terminal", new ThreeballTopToTerm(drivetrain));
     autoChooser.addOption("4 ball", new FourBall(drivetrain));
     autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
     autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
     autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
     //Test Path that goes 2 meters to the right (y-axis) and 4.5 meters forward (x-axis)in a "U" shape"
-    autoChooser.addOption("Drive 5 Squiggle", new Drive5MSquiggles(drivetrain));
+    // autoChooser.addOption("Drive 5 Squiggle", new Drive5MSquiggles(drivetrain));
   }
 
   /**
@@ -136,6 +141,11 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
+    var auto = autoChooser.getSelected();
+    if (auto == null) {
+      System.out.println("Selected path is null!");
+      return new DoNothing();
+    }
     return autoChooser.getSelected();
   }
 

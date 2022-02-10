@@ -44,7 +44,7 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = .54795;//from sysid_data20220204-205250.json
         public static final double kPDriveVel = 2.8207; //from sysid_data20220204-205250.json
 
-        public static final double kTrackwidthMeters = 0.65563;//fudged to 0.87. Actual = 0.65;
+        public static final double kTrackwidthMeters = 0.65563;//fudged to 0.87. Actual = 0.65563;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
@@ -53,7 +53,7 @@ public final class Constants {
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
-        public static final double kRamseteZeta = 0.90; // worked for 1m/s 0.9; //stock 0.7
+        public static final double kRamseteZeta = 0.85; // worked for 1m/s 0.9; //stock 0.7 worked straight @ 0.85
     }
 
     public static final class PneumaticsDevices {
