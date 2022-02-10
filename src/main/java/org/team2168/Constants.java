@@ -39,7 +39,7 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 1.9450; // caculated from the minimum speed vlaue required to move the robot
+        public static final double ksVolts = 0.6465; //1.9450; // caculated from the minimum speed vlaue required to move the robot
         public static final double kvVoltSecondsPerMeter = 1.9649; // from sysid_data20220204-205250.json
         public static final double kaVoltSecondsSquaredPerMeter = .54795;//from sysid_data20220204-205250.json
         public static final double kPDriveVel = 2.8207; //from sysid_data20220204-205250.json
@@ -48,12 +48,14 @@ public final class Constants {
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
-        public static final double kMaxSpeedMetersPerSecond = 3.0;
+        public static final double kMaxSpeedMetersPerSecond = 4.2;
         public static final double kMaxAccelerationMetersPerSecondSquared = 1.0;
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
-        public static final double kRamseteZeta = 0.9; // worked for 1m/s 0.9; //stock 0.7 worked straight @ 0.85
+        public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7 worked straight @ 0.85
+
+        public static final double MAX_VOLTAGE = 10.0;
     }
 
     public static final class PneumaticsDevices {
