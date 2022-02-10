@@ -11,11 +11,12 @@ import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.hood.HoodPositions.MoveToTestPos;
+import org.team2168.commands.hood.MoveHoodToPosition;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
+import org.team2168.subsystems.Hood.HoodPosition;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
@@ -81,20 +82,30 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
 
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    //oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    //oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
-    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+    //oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
 
     //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+ 
+    oi.operatorJoystick.ButtonX().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST));
+    oi.operatorJoystick.ButtonX().whenReleased(new HoodToAngle(hood, 0.0));
 
-    oi.operatorJoystick.ButtonX().whenPressed(new MoveToTestPos(hood));
+    oi.operatorJoystick.ButtonA().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST1));
+    oi.operatorJoystick.ButtonA().whenReleased(new HoodToAngle(hood, 0.0));
+
+    oi.operatorJoystick.ButtonB().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST2));
+    oi.operatorJoystick.ButtonB().whenReleased(new HoodToAngle(hood, 0.0));
+
+    oi.operatorJoystick.ButtonY().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST3));
+    oi.operatorJoystick.ButtonY().whenReleased(new HoodToAngle(hood, 0.0));
   }
 
   /**

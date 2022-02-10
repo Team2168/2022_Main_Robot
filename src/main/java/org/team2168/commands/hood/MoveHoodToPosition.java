@@ -4,6 +4,9 @@
 
 package org.team2168.commands.hood;
 
+import org.team2168.subsystems.Hood;
+import org.team2168.subsystems.Hood.HoodPosition;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -11,9 +14,28 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class MoveHoodToPosition extends SequentialCommandGroup {
   /** Creates a new MoveHoodToPosition. */
-  public MoveHoodToPosition() {
+  HoodPosition hp;
+  Hood h;
+  public MoveHoodToPosition(Hood hood, HoodPosition hoodPosition) {
+    h = hood;
+    hp = hoodPosition;
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+      if (hp == HoodPosition.TEST) {
+         addCommands(new HoodToAngle(h, 30));
+      }
+
+      if (hp == HoodPosition.TEST1) {
+         addCommands(new HoodToAngle(h, 45));
+      }
+
+      if (hp == HoodPosition.TEST2) {
+         addCommands(new HoodToAngle(h, 60));
+      }
+      
+      if (hp == HoodPosition.TEST3) {
+         addCommands(new HoodToAngle(h, 90));
+      }
+    
   }
 }
