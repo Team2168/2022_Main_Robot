@@ -166,9 +166,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         setMotorsBrake();
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
+        drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
         if(USE_PIGEON_GYRO) {
-            PigeonIMUConfiguration config = new PigeonIMUConfiguration();
             pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 1);  // status frame in ms
             odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
         } else {
@@ -414,6 +414,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor3.setNeutralMode(NeutralMode.Coast);
     }
 
+    public void setMotorsBrakeAutos() {
+        leftMotor1.setNeutralMode(NeutralMode.Brake);
+        leftMotor2.setNeutralMode(NeutralMode.Brake);
+        leftMotor3.setNeutralMode(NeutralMode.Brake);
+        rightMotor1.setNeutralMode(NeutralMode.Brake);
+        rightMotor2.setNeutralMode(NeutralMode.Brake);
+        rightMotor3.setNeutralMode(NeutralMode.Brake);
+    }
+    
     /**
      * Change all the drivetrain motor controllers to coast mode.
      * Useful for allowing robot to be manually pushed around the field.
