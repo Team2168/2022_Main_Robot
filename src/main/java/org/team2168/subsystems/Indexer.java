@@ -26,10 +26,11 @@ public class Indexer extends SubsystemBase {
   private final double CONTINUOUS_CURRENT_LIMIT = 20;
   private final double TRIGGER_THRESHOLD_LIMIT = 30;
   private final double TRIGGER_THRESHOLD_TIME = 0.02;
-  TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
+  TalonFXInvertType indexerInvert;
 
   private Indexer() {
     detector = new DigitalInput(CANDevices.INDEXER_MOTOR);
+    TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
     motor.setInverted(indexerInvert);
     indexerCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, 
       CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
