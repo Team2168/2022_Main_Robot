@@ -6,12 +6,15 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-<<<<<<< HEAD
+import com.ctre.phoenix.Util;
+
 import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.IntakeRoller.IntakeSpeed;
+import org.team2168.commands.IntakeRoller.StopIntakeMotor;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.IntakeRoller;
-=======
+import org.team2168.utils.F310;
 import org.team2168.commands.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
@@ -21,8 +24,8 @@ import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
 import org.team2168.subsystems.*;
->>>>>>> main
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
@@ -38,20 +41,21 @@ import io.github.oblarg.oblog.annotations.Config;
  */
 
 public class RobotContainer {
-<<<<<<< HEAD
+
   // The robot's subsystems an                           d commands are defined here...
  public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
-=======
+
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   // private final Pixy m_pixy = Pixy.getInstance();
 
->>>>>>> main
+  
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
   private final Hood hood = Hood.getInstance();
+  F310 controlBindigs = new F310(6);
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -74,8 +78,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-
-
+   controlBindigs.getPort();
     
   }
 
@@ -106,8 +109,8 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
-    oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed());
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopIntakeMotor());
   }
 
   /**

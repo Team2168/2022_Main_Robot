@@ -4,17 +4,13 @@
 
 package org.team2168.subsystems;
 
-import java.net.ConnectException;
-import java.sql.Connection;
-
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
 
-import edu.wpi.first.networktables.ConnectionInfo;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase {
@@ -22,12 +18,17 @@ public class IntakeRoller extends SubsystemBase {
   private static IntakeRoller instance; 
   private static TalonFXConfiguration intakeRollerOneConfig;
   private final boolean isIntakeRollerOn;
-
+ 
   public IntakeRoller(final boolean isIntakeRollerOn) {
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
     this.isIntakeRollerOn = isIntakeRollerOn;
-   
+    intakeRollerOneConfig.supplyCurrLimit.enable = true;
+    intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
+    intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 15;
+    intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
+    intakeRollerOne.configAllSettings(intakeRollerOneConfig);
+  
 
   }
 
@@ -42,12 +43,15 @@ public class IntakeRoller extends SubsystemBase {
 
   public void setRollerSpeed(double speed){
     intakeRollerOne.set(speed);
+    intakeRollerOne.set(TalonFXControlMode.PercentOutput, speed);
   }
 
 
   public void resetIntakeMotor(double speedTwo){
     intakeRollerOne.set(speedTwo);
     intakeRollerOne.setVoltage(speedTwo);
+    intakeRollerOne.set(TalonFXControlMode.PercentOutput, speedTwo);
+    
   }
   
   public boolean isIntakeRollerOn(){
@@ -56,19 +60,10 @@ public class IntakeRoller extends SubsystemBase {
       return true;
       }
     else{
+      intakeRollerOne.set(ControlMode.Disabled, 0);
       return false;
     }
-
-
-      
-    
-  
-    
-  }
-
-  
-  
-
+}
   @Override
   public void periodic() {
 
