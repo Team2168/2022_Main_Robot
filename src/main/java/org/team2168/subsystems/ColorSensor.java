@@ -12,15 +12,16 @@ import org.team2168.subsystems.Pooper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ColorSensor extends SubsystemBase {
-    private I2C i2c;
+    private SerialPort serialPort;
     private static ColorSensor instance = null;
     private static Pooper pooper;
 
-    private static final I2C.Port I2C_PORT = I2C.Port.kOnboard; // port on the roborio
-    private static final int I2C_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
+    private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
+    private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
 
     byte[] data = new byte[3];
     byte[] date = new byte[4];
@@ -28,7 +29,7 @@ public class ColorSensor extends SubsystemBase {
     private boolean connected;
 
     private ColorSensor() {
-        i2c = new I2C(I2C_PORT, I2C_ADDRESS);
+        serialPort = new SerialPort(1, SERIAL_PORT_PORT); //1 is a placeholder, uses the onboard i2c/serial port
     }
 
     /**
@@ -42,13 +43,14 @@ public class ColorSensor extends SubsystemBase {
         return instance;
     }
 
-    public boolean isConnected() {
-        connected = i2c.verifySensor(I2C_ADDRESS, 3, data);
-        return connected;
-    }
+    //There is no method that verifies a serial port
+    // public boolean isConnected() {
+    //     connected = i2c.verifySensor(I2C_ADDRESS, 3, data);
+    //     return connected;
+    // }
 
     public byte[] readSensor() {
-        i2c.readOnly(data, 3);
+        serialPort.write(data, 3);
         return data;
     }
 
