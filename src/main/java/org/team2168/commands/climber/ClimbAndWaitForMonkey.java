@@ -22,7 +22,7 @@ public class ClimbAndWaitForMonkey extends SequentialCommandGroup {
     climb = climber;
     addCommands(
       new SetPosition(climb, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
-      // command to check climber hook limit switch goes here
+      new CheckClimberHookAttached(climb),
       new SetPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
   }
 }
