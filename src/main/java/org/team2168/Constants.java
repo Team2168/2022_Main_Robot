@@ -40,8 +40,8 @@ public final class Constants {
     }
 
     public static final class PneumaticsDevices {
-        public static final int MONKEYBAR_EXTEND = 0;
-        public static final int MONKEYBAR_RETRACT = 1;
+        public static final int MONKEYBAR_EXTEND = 1;
+        public static final int MONKEYBAR_RETRACT = 0;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
 
