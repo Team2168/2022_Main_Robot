@@ -5,9 +5,11 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -52,13 +54,14 @@ public class Hopper extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1;
   public static final double ROLLER_CIRCUMFERENCE_INCHES = ROLLER_DIAMETER_INCHES * Math.PI;
   public static final double DISTANCE_PER_TICK = ROLLER_CIRCUMFERENCE_INCHES / TICKS_PER_REV;
+  public static final double INCHES_PER_REV = ROLLER_DIAMETER_INCHES / 2 * Math.PI;
   public static final double HOPPER_DISTANCE_GEAR_RATIO = GEAR_RATIO * DISTANCE_PER_TICK;
   
   
   //Gains
 
   
-  public static boolean hopperMotorInvert = false;
+  public static TalonFXInvertType hopperMotorInvert = TalonFXInvertType.Clockwise;
 
   //Simulation stuff
   
@@ -86,6 +89,7 @@ public class Hopper extends SubsystemBase implements Loggable {
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     hopperMotor.setInverted(hopperMotorInvert);
+    hopperMotor.setInverted(InvertType.OpposeMaster);
     hopperMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.configNeutralDeadband(0.01);
@@ -106,13 +110,13 @@ public class Hopper extends SubsystemBase implements Loggable {
 // putting in ticks, getting inches
 
   private static double ticksToInches(double ticks) {
-    return ((ticks / TICKS_PER_REV) * HOPPER_DISTANCE_GEAR_RATIO);
+    return ((ticks / TICKS_PER_REV) * GEAR_RATIO * INCHES_PER_REV);
   }
 
   // putting in inches, getting ticks
 
   private static double inchesToTicks(double inches) {
-    return ((inches / DISTANCE_PER_TICK) / GEAR_RATIO * DISTANCE_PER_TICK);
+    return ((inches / INCHES_PER_REV) / GEAR_RATIO * TICKS_PER_REV);
   }
 
   public void driveHopper(double speed) {

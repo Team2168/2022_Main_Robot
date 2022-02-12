@@ -30,12 +30,14 @@ public class DriveHopperWithVelocity extends CommandBase {
   @Override
   public void execute() {
     hopper.driveHopperVelocity(velocity);
+    System.out.println(hopper.getEncoderPosition());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    hopper.driveHopperVelocity(0.0);
+  hopper.driveHopperVelocity(0.0);
+  System.out.println("stopped");
   }
 
   // Returns true when the command should end.

@@ -23,7 +23,6 @@ import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -94,9 +93,9 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, 0.3));
-    // oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopHopper(hopper));
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, 20.0));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, 0.1));
+    oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopHopper(hopper));
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, 10.0));
     oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopHopper(hopper));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
