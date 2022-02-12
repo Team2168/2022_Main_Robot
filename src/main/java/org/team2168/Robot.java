@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
 
+import edu.wpi.first.wpilibj.SerialPort;
+
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to
@@ -26,6 +28,9 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
   private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
+
+  private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
+  private SerialPort serialPort = new SerialPort(9600, SERIAL_PORT_PORT);
 
   public Robot() {
     //set the default loop period
@@ -119,6 +124,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    System.out.println(serialPort.readString());
   }
 
   @Override
