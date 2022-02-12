@@ -2,45 +2,48 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.turret;
+package org.team2168.commands.climber;
 
-import org.team2168.subsystems.Turret;
+import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ZeroTurret extends CommandBase {
-  /** Creates a new ZeroTurret. */
-  private Turret turret;
+public class ReturnToZero extends CommandBase {
+  /** Creates a new ReturnToZero. */
+  Climber climber;
+  private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
 
-  public ZeroTurret(Turret t) {
+  public ReturnToZero(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    turret = t;
-
-    addRequirements(t);
+    addRequirements(climber);
+    this.climber = climber;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      turret.setVelocity(10.0);
+    climber.setSpeed(LIFT_DESCENT_VELOCITY_IPS);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.setVelocity(0);
     if (!interrupted) {
-      turret.zeroEncoder();
+      //Don't zero if we didn't get to the sensor
+      climber.setSpeed(0.0);
+      climber.setEncoderPosZero();
     }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return turret.isTurretAtZero();
+    return climber.isAtZeroPosition();
   }
 }
