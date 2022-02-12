@@ -30,6 +30,7 @@ public class DriveWithLimelight extends CommandBase {
     if (!lime.isLimelightEnabled()) {
       lime.enableLimelight();
     }
+    lime.setPipeline(lime.getDrivePipeline());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
