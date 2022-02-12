@@ -4,6 +4,7 @@
 
 package org.team2168.commands.climber;
 
+import org.team2168.Constants;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
 import org.team2168.commands.monkeybar.RetractMonkeyBar;
 import org.team2168.subsystems.Climber;
@@ -25,8 +26,10 @@ public class ClimbWithMonkeyBars extends SequentialCommandGroup {
     climb = climber;
     monkeyBar = monkey;
     addCommands(new ExtendMonkeyBar(monkeyBar),
-    new SetPosition(climber, Climber.getMaxHeightInches()),
+    // check if monkey bar hook limit switch is closed with command here
+    new SetPosition(climber, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
+    // check if climber hook limit switch is closed with command here
     new RetractMonkeyBar(monkeyBar),
-    new SetPosition(climber, Climber.getMinHeightInches()));
+    new SetPosition(climber, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
   }
 }
