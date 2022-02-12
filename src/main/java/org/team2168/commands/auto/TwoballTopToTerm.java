@@ -16,14 +16,15 @@ public class TwoballTopToTerm extends SequentialCommandGroup {
   public TwoballTopToTerm(Drivetrain drivetrain) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    Paths paths = Paths.getInstance();
     addCommands(
       // new ExtendIntake(intake),
       new ParallelRaceGroup(
               // new DriveIntake(intake, () -> 0.5)
               new SequentialCommandGroup(
-                PathUtil.getPathPlannerCommand("4BALL_0", drivetrain, InitialPathState.DISCARDHEADING),
+                PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, InitialPathState.DISCARDHEADING),
                 // new DriveShooter(shooter, () -> 0.5).withTimeout(3),
-                PathUtil.getPathPlannerCommand("2BALL_1", drivetrain, InitialPathState.PRESERVEODOMETRY)
+                PathUtil.getPathCommand(paths.path_2BALL_1, drivetrain, InitialPathState.PRESERVEODOMETRY)
               )
       )
     );

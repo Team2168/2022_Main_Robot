@@ -15,10 +15,11 @@ public class FourBall extends SequentialCommandGroup {
   public FourBall(Drivetrain drivetrain) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    Paths paths = Paths.getInstance();
     addCommands(
-      PathUtil.getPathPlannerCommand("4BALL_0", drivetrain, InitialPathState.DISCARDHEADING),
-      PathUtil.getPathPlannerCommand("4BALL_1", drivetrain, InitialPathState.PRESERVEODOMETRY),
-      PathUtil.getPathPlannerCommand("4BALL_2", drivetrain, InitialPathState.PRESERVEODOMETRY)
+      PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, InitialPathState.DISCARDHEADING),
+      PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain, InitialPathState.PRESERVEODOMETRY),
+      PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain, InitialPathState.PRESERVEODOMETRY)
     );
   }
 }

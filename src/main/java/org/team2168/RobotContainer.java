@@ -12,6 +12,8 @@ import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.Drive1Meter;
 import org.team2168.commands.auto.Drive3Meters;
 import org.team2168.commands.auto.FourBall;
+import org.team2168.commands.auto.MultipartNonZeroVel;
+import org.team2168.commands.auto.Paths;
 import org.team2168.commands.auto.TwoballTopToTerm;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.ResetHeading;
@@ -63,6 +65,7 @@ public class RobotContainer {
   @Log(name = "Auto Chooser", width = 2)
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private boolean brakesEnabled = true;
+  private Paths paths;
 
   private static RobotContainer instance = null;
 
@@ -70,6 +73,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   private RobotContainer() {
+    paths = Paths.getInstance();
     Logger.configureLoggingAndConfig(this, false);
 
     // m_pixy.setDefaultCommand(m_findAllianceBall);
@@ -112,6 +116,7 @@ public class RobotContainer {
     // debug autos
     autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
     autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+    autoChooser.addOption("multipart nonzero start/end velocity", new MultipartNonZeroVel(drivetrain));
     autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
     // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
     // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));

@@ -16,7 +16,7 @@ public class Drive1Meter extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      PathUtil.getPathPlannerCommand("Drive1Meters", drivetrain)
+      PathUtil.getPathPlannerCommand("Drive1Meter", drivetrain)
     );
   }
 }

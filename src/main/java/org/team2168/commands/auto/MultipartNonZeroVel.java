@@ -10,15 +10,15 @@ import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-// Driving some squiggles for debugging
-public class Squiggles extends SequentialCommandGroup {
-  /** Creates a new Squiggles. */
-  public Squiggles(Drivetrain drivetrain) {
+public class MultipartNonZeroVel extends SequentialCommandGroup {
+  /** Creates a new MultipartNonZeroVel. */
+  public MultipartNonZeroVel(Drivetrain drivetrain) {
+    Paths paths = Paths.getInstance();
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    Paths paths = Paths.getInstance();
     addCommands(
-      PathUtil.getPathCommand(paths.path_canweturn, drivetrain, InitialPathState.PRESERVEHEADING)
+      PathUtil.getPathCommand(paths.path_canweturn, drivetrain, InitialPathState.DISCARDHEADING),
+      PathUtil.getPathCommand(paths.path_wecanturn, drivetrain, InitialPathState.PRESERVEHEADING)
     );
   }
 }
