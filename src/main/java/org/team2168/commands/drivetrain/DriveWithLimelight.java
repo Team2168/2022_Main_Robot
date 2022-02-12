@@ -14,9 +14,14 @@ public class DriveWithLimelight extends CommandBase {
   private Drivetrain dt;
   private Limelight lime;
 
-  private double limekP = 0.5;
   private double errorToleranceAngle = 1.0; // in degrees
   private double limeAngle;
+  
+  //limelight gains
+  private double limelightkP = 0.25;
+  private double limelightkFeedForward = 0.1; // both completely arbitrary values
+
+  private double driveLimeTurnSpeed = ((limeAngle/lime.MAX_POSITIVE_ANGLE) * limelightkP) + limelightkFeedForward;
   
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
     addRequirements(limelight);
@@ -38,8 +43,8 @@ public class DriveWithLimelight extends CommandBase {
   public void execute() {
     limeAngle = lime.getPositionX();
 
-    dt.arcadeDrive(0, limeAngle/27 * limekP);
-    // System.out.println(limeAngle/27 * limekP);
+    dt.arcadeDrive(0, driveLimeTurnSpeed);
+    // System.out.println(driveLimeTurnSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -51,6 +56,11 @@ public class DriveWithLimelight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (-errorToleranceAngle <= limeAngle || limeAngle <= errorToleranceAngle);
+    if (limeAngle >= 0) {
+      return (limeAngle <= errorToleranceAngle);
+    }
+    else {
+      return (limeAngle >= -errorToleranceAngle);
+    }
   }
 }
