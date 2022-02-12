@@ -257,7 +257,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   @Log(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 4)
   public boolean isClimberHookAttached() {
-    return climbHooks.get();
+    return !climbHooks.get();
   }
 
   @Override
