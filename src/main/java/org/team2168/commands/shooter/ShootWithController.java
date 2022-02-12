@@ -16,9 +16,9 @@ public class ShootWithController extends CommandBase {
   private DoubleSupplier speed;
 
 
-  public ShootWithController(Shooter k_Shooter, DoubleSupplier k_Speed) {
+  public ShootWithController(Shooter k_Shooter, DoubleSupplier d) {
     Shooter = k_Shooter;
-    speed = k_Speed;
+    speed = d;
     addRequirements(k_Shooter);
   }
 

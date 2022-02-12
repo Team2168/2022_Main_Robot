@@ -13,10 +13,8 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 
 import org.team2168.Constants.CANDevices;
-//import org.team2168.commands.shooter.SetTargetLocationSpeed;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
@@ -25,15 +23,13 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Shooter extends SubsystemBase implements Loggable {
 
-  private double commanded_speed_rpm = 0.0;
+  private double commanded_speed_rpm = 0.0; //I don't know what this does
 
   @Log (rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   private double actual_speed_rpm = 0.0;
 
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
-
-  public DifferentialDrive drive;
 
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
@@ -48,7 +44,6 @@ public class Shooter extends SubsystemBase implements Loggable {
   private final double TRIGGER_THRESHOLD_TIME_SUPPLY = 0.2; //s
 
   private static Shooter _instance;
-
 
   public static final int kSlotIdx = 0;
 
@@ -174,17 +169,13 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
-  /*public void setFiringLocation(double Speed, double[] set_Location) {
-    SetTargetLocationSpeed.locationCoords = set_Location;
-    SetTargetLocationSpeed.targetVelocity = Speed;
-  }*/
-
-  public void setDrive(double k_Speed, double k_Rotation){
+  /*public void setDrive(double k_Speed, double k_Rotation){
     setSpeed(k_Speed);
     drive.arcadeDrive(k_Speed, k_Rotation);
-  }
+  }*/
 
   public void shoot(double d_Speed){
+    setSpeed(d_Speed);
     _motorRight.set(ControlMode.PercentOutput, d_Speed);
     _motorLeft.set(ControlMode.PercentOutput, d_Speed);
   }

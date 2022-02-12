@@ -6,9 +6,9 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-//import org.team2168.commands.SysIDCommand;
-//import org.team2168.commands.drivetrain.ArcadeDrive;
-//import org.team2168.subsystems.Drivetrain;
+import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Shooter;
 import org.team2168.commands.*;
 import org.team2168.commands.drivetrain.*;
@@ -18,6 +18,7 @@ import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
+import org.team2168.commands.shooter.ShootWithController;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -98,7 +99,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
 
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new ShootWithController(m_shooter, 15.0));
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new ShootWithController(m_shooter, () -> 15.0));
   }
 
   /**
