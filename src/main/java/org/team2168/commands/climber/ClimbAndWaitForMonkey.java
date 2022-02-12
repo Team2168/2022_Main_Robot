@@ -4,10 +4,10 @@
 
 package org.team2168.commands.climber;
 
+import org.team2168.Constants;
 import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,9 +21,8 @@ public class ClimbAndWaitForMonkey extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     climb = climber;
     addCommands(
-      new SetPosition(climb, Climber.getMaxHeightInches()),
-      new WaitCommand(0.3),
-      new SetPosition(climb, Climber.getMinHeightInches()),
-      new WaitCommand(0.2));
+      new SetPosition(climb, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
+      // command to check climber hook limit switch goes here
+      new SetPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
   }
 }
