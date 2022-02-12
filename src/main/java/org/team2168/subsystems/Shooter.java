@@ -179,9 +179,14 @@ public class Shooter extends SubsystemBase implements Loggable {
     SetTargetLocationSpeed.targetVelocity = Speed;
   }*/
 
-  public void drive(double k_Speed, double k_Rotation){
+  public void setDrive(double k_Speed, double k_Rotation){
     setSpeed(k_Speed);
     drive.arcadeDrive(k_Speed, k_Rotation);
+  }
+
+  public void shoot(double d_Speed){
+    _motorRight.set(ControlMode.PercentOutput, d_Speed);
+    _motorLeft.set(ControlMode.PercentOutput, d_Speed);
   }
 
   public static Shooter getInstance(){

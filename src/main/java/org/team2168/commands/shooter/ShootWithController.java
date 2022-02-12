@@ -4,22 +4,22 @@
 
 package org.team2168.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import java.util.function.DoubleSupplier;
 import org.team2168.subsystems.Shooter;
 
-public class DriveShooterWithConstant extends CommandBase {
-  /** Creates a new DriveShooterWithConstant. */
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-  private double speed;
-  private double rotation;
-  private Shooter st;
+public class ShootWithController extends CommandBase {
+  /** Creates a new ShootWithController. */
 
-  public DriveShooterWithConstant(double k_speed, double k_rotation, Shooter shooter) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    st = shooter;
-    speed = k_speed;
-    rotation = k_rotation;
-    addRequirements(shooter);
+  private Shooter Shooter;
+  private DoubleSupplier speed;
+
+
+  public ShootWithController(Shooter k_Shooter, DoubleSupplier k_Speed) {
+    Shooter = k_Shooter;
+    speed = k_Speed;
+    addRequirements(k_Shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -29,12 +29,14 @@ public class DriveShooterWithConstant extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    st.setDrive(speed, rotation);
+    Shooter.shoot(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    Shooter.shoot(0);
+  }
 
   // Returns true when the command should end.
   @Override

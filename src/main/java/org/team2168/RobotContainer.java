@@ -39,7 +39,7 @@ public class RobotContainer {
   // private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-  private final Shooter m_shooter = new Shooter();
+  private final Shooter m_shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
@@ -97,6 +97,8 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new ShootWithController(m_shooter, 15.0));
   }
 
   /**
