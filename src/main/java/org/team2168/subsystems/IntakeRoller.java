@@ -29,12 +29,10 @@ public class IntakeRoller extends SubsystemBase {
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
     intakeRollerOne.configAllSettings(intakeRollerOneConfig);
   
+  
 
   }
-
-
-
-  public static IntakeRoller getInstance(){
+ public static IntakeRoller getInstance(){
     if (instance == null){
       instance = new IntakeRoller(true);
     }
@@ -64,7 +62,7 @@ public boolean isIntakeRollerOn(){
   public void periodic() {
 
    
-
+  
 
     
   }
