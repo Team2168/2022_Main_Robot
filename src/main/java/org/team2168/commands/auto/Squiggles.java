@@ -17,8 +17,7 @@ public class Squiggles extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      // PathUtil.getPathCommand("Squiggles", drivetrain)
-      PathUtil.getPathPlannerCommand("canweturn", drivetrain, InitialPathState.PRESERVEHEADING, true)
+      PathUtil.getPathPlannerCommand("canweturn", drivetrain, InitialPathState.PRESERVEHEADING)
     );
   }
 }

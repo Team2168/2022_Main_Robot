@@ -8,13 +8,10 @@ import java.util.List;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.auto.DebugPath;
 import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.Drive1Meter;
 import org.team2168.commands.auto.Drive3Meters;
 import org.team2168.commands.auto.FourBall;
-import org.team2168.commands.auto.Squiggles;
-import org.team2168.commands.auto.ThreeballTopToTerm;
 import org.team2168.commands.auto.TwoballTopToTerm;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.ResetHeading;
@@ -108,16 +105,15 @@ public class RobotContainer {
 
   private void configureAutonomousRoutines() {
     autoChooser.setDefaultOption("Do nothing", new DoNothing());
-    autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
     autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-    autoChooser.addOption("3 Ball Top to Terminal", new ThreeballTopToTerm(drivetrain));
-    autoChooser.addOption("4 ball", new FourBall(drivetrain));
-    autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
-    autoChooser.addOption("Debug auto", new DebugPath(drivetrain, "Drive3Meters"));
+    autoChooser.addOption("4 Ball (ends at Terminal)", new FourBall(drivetrain));
+
+    // debug autos
+    autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
     autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
     autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
-    //Test Path that goes 2 meters to the right (y-axis) and 4.5 meters forward (x-axis)in a "U" shape"
-    // autoChooser.addOption("Drive 5 Squiggle", new Drive5MSquiggles(drivetrain));
+    // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
+    // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
   }
 
   /**
