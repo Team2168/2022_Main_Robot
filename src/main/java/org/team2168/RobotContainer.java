@@ -4,7 +4,6 @@
 
 package org.team2168;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.function.DoubleFunction;
 
@@ -13,52 +12,27 @@ import org.team2168.commands.auto.DebugPath;
 import org.team2168.commands.auto.DoNothing;
 import org.team2168.commands.auto.Drive1Meter;
 import org.team2168.commands.auto.Drive3Meters;
-import org.team2168.commands.auto.Drive5MSquiggles;
 import org.team2168.commands.auto.FourBall;
 import org.team2168.commands.auto.Squiggles;
 import org.team2168.commands.auto.ThreeballTopToTerm;
-import org.team2168.commands.auto.TwoballMidToTerm;
 import org.team2168.commands.auto.TwoballTopToTerm;
-import org.team2168.commands.climber.DriveClimberWithJoystick;
-import org.team2168.commands.climber.ReturnToZero;
-import org.team2168.commands.climber.SetPosition;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.ResetHeading;
-import org.team2168.commands.exampleSubsystem.ExtendExample;
-import org.team2168.commands.exampleSubsystem.RetractExample;
-import org.team2168.commands.monkeybar.ExtendMonkeyBar;
-import org.team2168.commands.monkeybar.RetractMonkeyBar;
-import org.team2168.commands.pixy.FindAllianceBall;
-import org.team2168.commands.turret.DriveTurretWithJoystick;
-import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.ExampleSubsystem;
-import org.team2168.subsystems.MonkeyBar;
-import org.team2168.subsystems.Pixy;
-import org.team2168.subsystems.Turret;
-import org.team2168.utils.PathUtil;
-import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -136,7 +110,6 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Do nothing", new DoNothing());
     autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
     autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-    autoChooser.addOption("2 Ball Mid to Terminal", new TwoballMidToTerm(drivetrain));
     autoChooser.addOption("3 Ball Top to Terminal", new ThreeballTopToTerm(drivetrain));
     autoChooser.addOption("4 ball", new FourBall(drivetrain));
     autoChooser.addOption("Squiggles", new Squiggles(drivetrain));

@@ -16,8 +16,9 @@ public class FourBall extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
-      PathUtil.getPathCommand("4BALL_1", drivetrain, InitialPathState.PRESERVEODOMETRY)
+      PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain, InitialPathState.DISCARDHEADING),
+      PathUtil.getPathCommand("3BALL_TOP_TO_TERM_1", drivetrain, InitialPathState.PRESERVEODOMETRY),
+      PathUtil.getPathCommand("2BALL_MID_TO_TERM_1", drivetrain, InitialPathState.PRESERVEODOMETRY)
     );
   }
 }
