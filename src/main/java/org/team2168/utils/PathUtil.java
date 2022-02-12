@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.pathplanner.lib.PathPlanner;
 
 import org.team2168.Constants;
-import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -77,7 +76,7 @@ public class PathUtil {
                     break;
                 case DISCARDHEADING:
                     sequence.addCommands(
-                            // new ResetHeading(drivetrain), // TODO reimpliment
+                            // new ResetHeading(drivetrain), // TODO reimpliment this once stuff works
                             new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true)));
                     break;
             }
