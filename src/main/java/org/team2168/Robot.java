@@ -102,6 +102,7 @@ public class Robot extends TimedRobot {
     robotContainer.drivetrain.setMotorsBrakeAutos();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    System.out.println("scheduling auto: " + autonomousCommand.getName());
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

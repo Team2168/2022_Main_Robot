@@ -56,8 +56,8 @@ public final class Constants {
         public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7 worked straight @ 0.85
 
         public static final double MAX_VOLTAGE = 10.0;
-        public static final double MAX_VELOCITY = 3.7;
-        public static final double MAX_ACCEL = 0.7;
+        public static final double MAX_VELOCITY = 4.8;  // 4.8 works on a crispy battery; 3.7 slow but steady
+        public static final double MAX_ACCEL = 1.10;  // 1.4 works on a crispy battery; 0.7 slow but steady
     }
 
     public static final class PneumaticsDevices {
