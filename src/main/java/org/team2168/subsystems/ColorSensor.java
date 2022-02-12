@@ -7,12 +7,17 @@ package org.team2168.subsystems;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+import org.team2168.subsystems.Pooper;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ColorSensor extends SubsystemBase {
     private I2C i2c;
     private static ColorSensor instance = null;
+    private static Pooper pooper;
 
     private static final I2C.Port I2C_PORT = I2C.Port.kOnboard; // port on the roborio
     private static final int I2C_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
@@ -49,6 +54,34 @@ public class ColorSensor extends SubsystemBase {
 
     public static boolean validateSensor(byte[] data) {
          return (data[1] ^ data[2] ^ data[3]) == data[4];
+    }
+
+    public static boolean Red = true; //when jio makes the normalization code, he will say wheter the ball color is true or false
+    public static boolean Blue = true; //im just setting it as true/false for testing purposes
+
+    public static void onRedTeam(boolean isTrue){
+        if (isTrue == true && Red == true){
+            pooper.absorb();
+            System.out.println("Red Team"); //testing purposes
+        }
+        else if (isTrue == false || Red == false){
+            pooper.excrete();
+        }
+    }
+
+    public static void onBlueTeam(boolean isTrue){
+        if (isTrue == true && Blue == true){
+            pooper.absorb();
+            System.out.println("Blue Team");
+        }
+        else if (isTrue == false || Blue == false){
+            pooper.excrete();
+        }
+    }
+
+    public void onStart(){
+        onBlueTeam(true);
+        onRedTeam(false);
     }
 
     @Override
