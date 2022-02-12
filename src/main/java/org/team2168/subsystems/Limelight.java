@@ -42,6 +42,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   public static final int PIPELINE_BACK_TRENCH_BLUE = 1;
   public static final int PIPELINE_BACK_TRENCH_RED = 3;
   public static final int PIPELINE_DRIVER_VIEW = 4;
+  public static final int PIPELINE_DEFAULT_DRIVE = 5;
   public static final int PIPELINE_DRIVE_WITH_LIMELIGHT = 9;
 
   private static boolean isLimelightEnabled;
@@ -72,6 +73,10 @@ public class Limelight extends SubsystemBase implements Loggable {
       networkTable = NetworkTableInstance.getDefault().getTable("limelight");
 
       instantiateLocalVariables();
+  }
+
+  public int getDrivePipeline() {
+    return PIPELINE_DEFAULT_DRIVE;
   }
 
   /**
