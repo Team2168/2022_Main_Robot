@@ -50,6 +50,7 @@ public final class Constants {
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
+        public static final int CLIMBER_HOOK_LIMIT_SWITCH = 7;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
