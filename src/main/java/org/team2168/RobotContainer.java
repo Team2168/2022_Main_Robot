@@ -28,6 +28,7 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import io.github.oblarg.oblog.Logger;
@@ -114,6 +115,7 @@ public class RobotContainer {
     autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
     // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
     // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
+    SmartDashboard.putData(autoChooser);
   }
 
   /**
