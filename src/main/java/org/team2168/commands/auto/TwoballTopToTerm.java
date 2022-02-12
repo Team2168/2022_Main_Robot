@@ -21,9 +21,9 @@ public class TwoballTopToTerm extends SequentialCommandGroup {
       new ParallelRaceGroup(
               // new DriveIntake(intake, () -> 0.5)
               new SequentialCommandGroup(
-                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_0", drivetrain),
+                PathUtil.getPathPlannerCommand("4BALL_0", drivetrain, InitialPathState.DISCARDHEADING, true),
                 // new DriveShooter(shooter, () -> 0.5).withTimeout(3),
-                PathUtil.getPathCommand("2BALL_TOP_TO_TERM_1", drivetrain, InitialPathState.PRESERVEODOMETRY)
+                PathUtil.getPathPlannerCommand("2BALL_1", drivetrain, InitialPathState.PRESERVEODOMETRY, true)
               )
       )
     );

@@ -2,6 +2,8 @@ package org.team2168.utils;
 
 import java.io.IOException;
 
+import com.pathplanner.lib.PathPlanner;
+
 import org.team2168.Constants;
 import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
@@ -108,6 +110,11 @@ public class PathUtil {
             DriverStation.reportError(String.format(ERRORMESSAGE, pathName), e.getStackTrace());
             return new InstantCommand();
         }
+    }
+
+    public static Command getPathPlannerCommand(String pathName, Drivetrain drivetrain, InitialPathState initialState, boolean reverse) {
+        var path = PathPlanner.loadPath(pathName, Constants.Drivetrain.MAX_VELOCITY, Constants.Drivetrain.MAX_ACCEL, reverse);
+        return getPathCommand(path, drivetrain, initialState);
     }
 
     public static Command getPathCommand(String pathName, Drivetrain drivetrain) {

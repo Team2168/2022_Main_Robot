@@ -56,6 +56,8 @@ public final class Constants {
         public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7 worked straight @ 0.85
 
         public static final double MAX_VOLTAGE = 10.0;
+        public static final double MAX_VELOCITY = 3.7;
+        public static final double MAX_ACCEL = 0.7;
     }
 
     public static final class PneumaticsDevices {
