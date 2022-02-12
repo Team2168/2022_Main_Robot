@@ -22,7 +22,6 @@ public class ClimbingSequence extends SequentialCommandGroup {
   public ClimbingSequence() {
     addCommands(new ClimbAndWaitForMonkey(climb),
     new ClimbWithMonkeyBars(climb, monkey),
-    new ClimbWithMonkeyBars(climb, monkey),
     new ClimbWithMonkeyBars(climb, monkey));
   }
 }
