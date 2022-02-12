@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
@@ -32,8 +33,10 @@ public class Climber extends SubsystemBase implements Loggable {
   private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1); //left motor when looking at the output shafts
   private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2); //right motor when looking at the output shafts
 
+  private static DigitalInput climbHooks = new DigitalInput(7);
+
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
+  private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 24.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.6589;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
 
@@ -246,6 +249,15 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   public void setPercentOutput(double speed) {
     climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+  }
+
+  /**
+   * 
+   * @return the value of the collective limit switches on the climber Hooks
+   */
+  @Log(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 4)
+  public boolean isClimberHookAttached() {
+    return climbHooks.get();
   }
 
   @Override
