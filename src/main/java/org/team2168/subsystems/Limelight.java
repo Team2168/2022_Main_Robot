@@ -51,6 +51,9 @@ public class Limelight extends SubsystemBase implements Loggable {
   private static LEDMode desiredLEDMode = LEDMode.PIPELINE;
   private static int desiredPipeline = 0;
 
+  public double MAX_POSITIVE_ANGLE = 27.0;
+  public double MIN_NEGATIVE_ANGLE = -27.0;
+
   //Camera Controls (Use Enums to prevent invalid inputs)
   public enum LEDMode {
     PIPELINE(0),    // Use LED mode set in pipeline
