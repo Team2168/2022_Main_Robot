@@ -33,8 +33,8 @@ public final class Constants {
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13; 
         public final static int TURRET_MOTOR = 12;
-        public static final int CLIMBER_MOTOR_1 = 18;
-        public static final int CLIMBER_MOTOR_2 = 19;
+        public static final int CLIMBER_MOTOR_1 = 16; // updated to reflect real robot
+        public static final int CLIMBER_MOTOR_2 = 3; // updated to reflect real robot
 
         public static final int PIGEON_IMU = 17;
     }
