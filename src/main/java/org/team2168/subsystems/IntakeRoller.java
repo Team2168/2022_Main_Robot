@@ -45,16 +45,13 @@ public class IntakeRoller extends SubsystemBase {
     intakeRollerOne.set(speed);
     intakeRollerOne.set(TalonFXControlMode.PercentOutput, speed);
   }
-
-
   public void resetIntakeMotor(double speedTwo){
     intakeRollerOne.set(speedTwo);
     intakeRollerOne.setVoltage(speedTwo);
     intakeRollerOne.set(TalonFXControlMode.PercentOutput, speedTwo);
     
   }
-  
-  public boolean isIntakeRollerOn(){
+public boolean isIntakeRollerOn(){
     if(isIntakeRollerOn == true){
       intakeRollerOne.get();
       return true;
@@ -63,8 +60,7 @@ public class IntakeRoller extends SubsystemBase {
       intakeRollerOne.set(ControlMode.Disabled, 0);
       return false;
     }
-}
-  @Override
+} @Override
   public void periodic() {
 
    
