@@ -28,13 +28,13 @@ public class PooperPoop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pooper.excrete();
+    pooper.forward();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pooper.absorb();
+    pooper.backwards();
   }
 
   // Returns true when the command should end.

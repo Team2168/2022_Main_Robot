@@ -31,12 +31,16 @@ public class Pooper extends SubsystemBase {
 
   
 
-  public void excrete() {
+  public void forward() {
     pooperSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
-  public void absorb() {
+  public void backwards() {
     pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public void normal() {
+    pooperSolenoid.set(DoubleSolenoid.Value.kOff);
   }
 
   /** Creates a new Pooper. */
