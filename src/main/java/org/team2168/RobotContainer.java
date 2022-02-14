@@ -11,7 +11,6 @@ import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.hood.MoveHoodToPosition;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.pixy.*;
@@ -91,20 +90,17 @@ public class RobotContainer {
 
     //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-
-    oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
  
-    oi.operatorJoystick.ButtonX().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST));
+    oi.operatorJoystick.ButtonX().whenHeld(new HoodToAngle(hood, HoodPosition.TEST.position_degrees));
     oi.operatorJoystick.ButtonX().whenReleased(new HoodToAngle(hood, 0.0));
 
-    oi.operatorJoystick.ButtonA().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST1));
+    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TEST1.position_degrees));
     oi.operatorJoystick.ButtonA().whenReleased(new HoodToAngle(hood, 0.0));
 
-    oi.operatorJoystick.ButtonB().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST2));
+    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST2.position_degrees));
     oi.operatorJoystick.ButtonB().whenReleased(new HoodToAngle(hood, 0.0));
 
-    oi.operatorJoystick.ButtonY().whenPressed(new MoveHoodToPosition(hood, HoodPosition.TEST3));
+    oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));
     oi.operatorJoystick.ButtonY().whenReleased(new HoodToAngle(hood, 0.0));
   }
 

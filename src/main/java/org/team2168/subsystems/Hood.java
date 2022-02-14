@@ -22,11 +22,17 @@ public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
   public enum HoodPosition {
-    TEST,
-    TEST1,
-    TEST2,
-    TEST3
+    TEST(30.0),
+    TEST1(45.0),
+    TEST2(60.0),
+    TEST3(90.0);
+
+    public final double position_degrees;
+    
+    private HoodPosition(double position_degrees) {
+        this.position_degrees = position_degrees;
   }
+}
 
   static Hood instance = null;
 
