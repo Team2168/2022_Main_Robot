@@ -21,13 +21,13 @@ public class ColorSensor extends SubsystemBase {
     private static Pooper pooper;
 
     private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
-    private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
+    //private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
 
     byte[] data = new byte[3];
-    byte[] date = new byte[4];
+   // byte[] date = new byte[4];
 
     private ColorSensor() {
-        serialPort = new SerialPort(1, SERIAL_PORT_PORT); //1 is a placeholder, uses the onboard i2c/serial port
+        serialPort = new SerialPort(9600, SERIAL_PORT_PORT); 
     }
 
     /**
@@ -42,8 +42,8 @@ public class ColorSensor extends SubsystemBase {
     }
 
     public byte[] readSensor() {
-        serialPort.write(data, 3);
-        return data;
+        return data=serialPort.read(3);
+        
     }
 
     public static boolean validateSensor(byte[] data) {
