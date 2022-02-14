@@ -65,7 +65,6 @@ public class RobotContainer {
   @Log(name = "Auto Chooser", width = 2)
   private SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private boolean brakesEnabled = true;
-  private Paths paths;
 
   private static RobotContainer instance = null;
 
@@ -73,7 +72,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   private RobotContainer() {
-    paths = Paths.getInstance();
+    Paths.getInstance();  // Create the instance so paths are generated soon after code execution begins, well before autos
     Logger.configureLoggingAndConfig(this, false);
 
     // m_pixy.setDefaultCommand(m_findAllianceBall);
