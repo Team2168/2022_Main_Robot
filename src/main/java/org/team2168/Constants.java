@@ -46,6 +46,8 @@ public final class Constants {
         public static final int MONKEYBAR_RETRACT = 1;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
+        public static final int INTAKE_RAISE = 13;
+        public static final int INTAKE_LOWER = 12;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
