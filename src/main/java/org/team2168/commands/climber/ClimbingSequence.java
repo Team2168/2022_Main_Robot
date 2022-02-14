@@ -20,8 +20,9 @@ public class ClimbingSequence extends SequentialCommandGroup {
   Climber climb = Climber.getInstance();
   MonkeyBar monkey = MonkeyBar.getInstance();
   public ClimbingSequence() {
-    addCommands(new HangOnMidBar(climb),
-    new ClimbWithMonkeyBars(climb, monkey),
-    new ClimbWithMonkeyBars(climb, monkey));
+    addCommands(
+      new HangOnMidBar(climb),
+      new ClimbWithMonkeyBars(climb, monkey),
+      new ClimbWithMonkeyBars(climb, monkey));
   }
 }
