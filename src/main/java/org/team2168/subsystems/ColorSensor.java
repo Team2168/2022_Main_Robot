@@ -42,8 +42,8 @@ public class ColorSensor extends SubsystemBase {
     }
 
     public byte[] readSensor() {
+        serialPort.write(new byte[] {0x12}, 1);// once we write to teensy we receive data from teensy
         return data=serialPort.read(3);
-        
     }
 
     public static boolean validateSensor(byte[] data) {
