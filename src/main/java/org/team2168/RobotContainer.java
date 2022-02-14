@@ -68,7 +68,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    m_ColorSensor.readSensor();
+    //m_ColorSensor.readSensor();
   }
 
   public static RobotContainer getInstance() {
