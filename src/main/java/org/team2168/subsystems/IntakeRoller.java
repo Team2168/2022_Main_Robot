@@ -5,6 +5,7 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -17,17 +18,22 @@ public class IntakeRoller extends SubsystemBase {
   private static WPI_TalonFX intakeRollerOne; 
   private static IntakeRoller instance; 
   private static TalonFXConfiguration intakeRollerOneConfig;
-  
- 
-  private IntakeRoller() {
-    intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
-    intakeRollerOneConfig = new TalonFXConfiguration();
-    
+  private SupplyCurrentLimitConfiguration talonFxConfigsTwo;
+
+   private IntakeRoller() {
+    intakeRollerOne.configFactoryDefault();
+
     intakeRollerOneConfig.supplyCurrLimit.enable = true;
     intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
     intakeRollerOne.configAllSettings(intakeRollerOneConfig);
+    
+    intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
+    intakeRollerOneConfig = new TalonFXConfiguration();
+
+    talonFxConfigsTwo = new SupplyCurrentLimitConfiguration(true, 20, 25, 1);
+  
  }
  public static IntakeRoller getInstance(){
     if (instance == null){
