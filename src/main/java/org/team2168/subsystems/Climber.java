@@ -33,7 +33,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1); //left motor when looking at the output shafts
   private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2); //right motor when looking at the output shafts
 
-  private static DigitalInput climbHooks = new DigitalInput(7);
+  private static DigitalInput climbHooks = new DigitalInput(Constants.DIO.CLIMBER_HOOK_LIMIT_SWITCH);
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 24.0);
@@ -53,7 +53,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.034;
+  private static final double kArbitraryFeedForward = 0.034; // 0.034
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
@@ -131,14 +131,6 @@ public class Climber extends SubsystemBase implements Loggable {
       instance = new Climber();
     }
     return instance;
-  }
-
-  public static double getMaxHeightInches() {
-    return MAX_HEIGHT_INCHES;
-  }
-
-  public static double getMinHeightInches() {
-    return MIN_HEIGHT_INCHES;
   }
 
   /**
