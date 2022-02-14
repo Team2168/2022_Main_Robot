@@ -12,14 +12,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ClimbAndWaitForMonkey extends SequentialCommandGroup {
+public class HangOnMidBar extends SequentialCommandGroup {
   /** Creates a new ClimbAndPassToMonkey. */
-  Climber climb;
 
-  public ClimbAndWaitForMonkey(Climber climber) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    climb = climber;
+/**
+ * This command allows the robot to hang onto and climb the mid rung.
+ */
+  public HangOnMidBar(Climber climb) {
     addCommands(
       new SetPosition(climb, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
       new CheckClimberHookAttached(climb),
