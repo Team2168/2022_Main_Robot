@@ -4,19 +4,16 @@
 
 package org.team2168.commands.indexer;
 
-import java.util.function.DoubleSupplier;
-
 import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class DriveUntilBall extends CommandBase {
-  /** Creates a new DriveUntilBall. */
   private Double indexerSpeed;
   private Indexer indexer;
-  public DriveUntilBall(Double speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    indexer = Indexer.getInstance();
+
+  public DriveUntilBall(Indexer indexer, Double speed) {
+    this.indexer = indexer;
     this.indexerSpeed = speed;
     addRequirements(indexer);
   }
@@ -28,7 +25,7 @@ public class DriveUntilBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      indexer.drive(indexerSpeed);
+    indexer.drive(indexerSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +37,6 @@ public class DriveUntilBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-  return indexer.isBallPresent();
+    return indexer.isBallPresent();
   }
 }
