@@ -16,8 +16,8 @@ public class IntakeRaiseAndLower extends SubsystemBase {
   private DoubleSolenoid upAndDown;
   private static IntakeRaiseAndLower _instance = null;
   private IntakeRaiseAndLower() {
-    upAndDown = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticsDevices.INTAKE_DOUBLE_SOLENOID_LOWER,
-                                   PneumaticsDevices.INTAKE_DOUBLE_SOLENOID_RAISE);
+    upAndDown = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticsDevices.INTAKE_LOWER,
+                                   PneumaticsDevices.INTAKE_RAISE);
   }
 
   public static IntakeRaiseAndLower getInstance() {
