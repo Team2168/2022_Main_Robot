@@ -17,8 +17,6 @@ public class ColorSensor extends SubsystemBase {
     byte[] data = new byte[3];
     byte[] date = new byte[4];
 
-    private boolean connected;
-
     private ColorSensor() {
         serialPort = new SerialPort(1, SERIAL_PORT_PORT); //1 is a placeholder, uses the onboard i2c/serial port
     }
@@ -33,12 +31,6 @@ public class ColorSensor extends SubsystemBase {
             instance = new ColorSensor();
         return instance;
     }
-
-    //There is no method that verifies a serial port
-    // public boolean isConnected() {
-    //     connected = i2c.verifySensor(I2C_ADDRESS, 3, data);
-    //     return connected;
-    // }
 
     public byte[] readSensor() {
         serialPort.write(data, 3);
