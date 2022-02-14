@@ -43,7 +43,7 @@ import io.github.oblarg.oblog.annotations.Config;
 public class RobotContainer {
 
   // The robot's subsystems an                           d commands are defined here...
- public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
+;
 
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -55,7 +55,7 @@ public class RobotContainer {
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
   private final Hood hood = Hood.getInstance();
-  F310 controlBindigs = new F310(6);
+  public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -78,7 +78,7 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-   controlBindigs.getPort();
+   
     
   }
 

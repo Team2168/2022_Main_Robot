@@ -12,28 +12,25 @@ public class StopIntakeMotor extends CommandBase {
   private IntakeRoller stopIntakeMotorOne;
   private final double resetIntakeValue = 0;
  
-  public StopIntakeMotor() {
-stopIntakeMotorOne = new IntakeRoller(false);
+  public StopIntakeMotor(IntakeRoller stopIntakeMotorOne) {
+stopIntakeMotorOne = IntakeRoller.getInstance();
 addRequirements(stopIntakeMotorOne);
   }
-
-  // Called when the command is initially scheduled.
- 
-  public void resetMotor(){
-   stopIntakeMotorOne.resetIntakeMotor(resetIntakeValue);
- }
-
+ // Called when the command is initially scheduled.
+  
   @Override 
-  public void initialize() {}
-
+  public void initialize() {
+  
+  }
   // Called every time the scheduler runs while the command is scheduled.
+  
   @Override
   public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    resetMotor();
+    stopIntakeMotorOne.resetIntakeMotor(resetIntakeValue);
   }
 
   // Returns true when the command should end.

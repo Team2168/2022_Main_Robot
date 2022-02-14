@@ -5,36 +5,34 @@
 package org.team2168.commands.IntakeRoller;
 
 import org.team2168.subsystems.IntakeRoller;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 public class IntakeSpeed extends CommandBase {
  
   private IntakeRoller iRoller;
-  public IntakeSpeed() {
+  
+  public IntakeSpeed(IntakeRoller iRoller) {
     // Use addRequirements() here to declare subsystem dependencies.
-    iRoller = new IntakeRoller(true);
-
-
+    iRoller = IntakeRoller.getInstance();
     addRequirements(iRoller);
   }
-
-  // Called when the command is initially scheduled.
-  public void setterIntakeSpeed(){
-    iRoller.setRollerSpeed(0.5);
-  }
   
-  public void initialize() {}
-
+  // Called when the command is initially scheduled.
+  
+  
+  public void initialize() {
+  
+  }
+ 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-   setterIntakeSpeed(); 
-   iRoller.isIntakeRollerOn();
+  
+   iRoller.setRollerSpeed(0.5);
+  
+   
   }
    
-
-  // Called once the command ends or is interrupted.
+   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     iRoller.resetIntakeMotor(0);

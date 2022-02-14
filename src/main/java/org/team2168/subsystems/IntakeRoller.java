@@ -17,24 +17,21 @@ public class IntakeRoller extends SubsystemBase {
   private static WPI_TalonFX intakeRollerOne; 
   private static IntakeRoller instance; 
   private static TalonFXConfiguration intakeRollerOneConfig;
-  private final boolean isIntakeRollerOn;
+  
  
-  public IntakeRoller(final boolean isIntakeRollerOn) {
+  private IntakeRoller() {
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
-    this.isIntakeRollerOn = isIntakeRollerOn;
+    
     intakeRollerOneConfig.supplyCurrLimit.enable = true;
     intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
-    intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 15;
+    intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
     intakeRollerOne.configAllSettings(intakeRollerOneConfig);
-  
-  
-
-  }
+ }
  public static IntakeRoller getInstance(){
     if (instance == null){
-      instance = new IntakeRoller(true);
+      instance = new IntakeRoller();
     }
     return instance; 
   }
@@ -42,28 +39,16 @@ public class IntakeRoller extends SubsystemBase {
   public void setRollerSpeed(double speed){
     intakeRollerOne.set(speed);
     intakeRollerOne.set(TalonFXControlMode.PercentOutput, speed);
+
+    
   }
   public void resetIntakeMotor(double speedTwo){
     intakeRollerOne.set(speedTwo);
     intakeRollerOne.setVoltage(speedTwo);
     intakeRollerOne.set(TalonFXControlMode.PercentOutput, speedTwo);
+    intakeRollerOne.set(ControlMode.Disabled, 0);
     
   }
-public boolean isIntakeRollerOn(){
-    if(isIntakeRollerOn == true){
-      intakeRollerOne.get();
-      return true;
-      }
-    else{
-      intakeRollerOne.set(ControlMode.Disabled, 0);
-      return false;
-    }
-} @Override
-  public void periodic() {
 
-   
   
-
-    
-  }
 }
