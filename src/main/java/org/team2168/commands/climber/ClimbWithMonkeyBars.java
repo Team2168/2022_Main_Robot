@@ -18,19 +18,20 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ClimbWithMonkeyBars extends SequentialCommandGroup {
   /** Creates a new ClimbWithMonkeyBars. */
-  Climber climb;
-  MonkeyBar monkey;
 
-  public ClimbWithMonkeyBars(Climber climber, MonkeyBar monkeyBar) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    climb = climber;
-    monkeyBar = monkey;
-    addCommands(new ExtendMonkeyBar(monkey),
-    new CheckMonkeyHookAttached(monkey),
-    new SetPosition(climb, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
-    new CheckClimberHookAttached(climb),
-    new RetractMonkeyBar(monkey),
-    new SetPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
+/**
+ * This command allows for the robot to climb from one rung
+ * to a higher one during the climbing sequence.
+ * 
+ * Should be used after robot initially climbs the mid bar.
+ */
+  public ClimbWithMonkeyBars(Climber climb, MonkeyBar monkey) {
+    addCommands(
+      new CheckMonkeyHookAttached(monkey),
+      new ExtendMonkeyBar(monkey),
+      new SetPosition(climb, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
+      new CheckClimberHookAttached(climb),
+      new RetractMonkeyBar(monkey),
+      new SetPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
   }
 }
