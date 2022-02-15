@@ -56,8 +56,9 @@ public final class Constants {
     public static final double LOOP_TIMESTEP_S = 0.02;
 
     public static final class LiftPositions {
-        public static final double LIFT_ABOVE_BAR_EXTENSION_INCHES = 28.0;
+        public static final double LIFT_ABOVE_BAR_EXTENSION_INCHES = 27.67;
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
-        public static final double LIFT_RETRACTION_INCHES = 0.5;            //lower position to engage into the monkey bars
+        public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
+                                                                            // currently need to lower past zero to take up backlash and in gears when under load    
     }
 }
