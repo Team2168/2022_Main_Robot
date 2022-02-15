@@ -22,8 +22,12 @@ public class ColorSensor extends SubsystemBase {
     //private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
     byte[] data = new byte[3];
    // byte[] date = new byte[4];
+   
+    
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT); 
+        
+
     }
 
 
