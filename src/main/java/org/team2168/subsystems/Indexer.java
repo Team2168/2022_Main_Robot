@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
-
+import org.team2168.Constants.DIO;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,7 +29,7 @@ public class Indexer extends SubsystemBase {
   TalonFXInvertType indexerInvert;
 
   private Indexer() {
-    detector = new DigitalInput(CANDevices.INDEXER_MOTOR);
+    detector = new DigitalInput(DIO.INDEXER_SENSOR);
     TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
     motor.setInverted(indexerInvert);
     indexerCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, 
@@ -52,9 +52,7 @@ public class Indexer extends SubsystemBase {
  */
 
   public void drive(double speed) {
-    motor.set(TalonFXControlMode.PercentOutput, (indexer_MOTOR_REVERSED ? -speed : speed)); {
-      speed = speed * -1;
-    }
+    motor.set(TalonFXControlMode.PercentOutput, (indexer_MOTOR_REVERSED ? -speed : speed));
   }
 
 /**
