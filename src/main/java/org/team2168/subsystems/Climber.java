@@ -53,7 +53,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.034;
+  private static final double kArbitraryFeedForward = 0.017;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
