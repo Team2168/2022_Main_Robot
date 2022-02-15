@@ -20,7 +20,7 @@ public class HangOnMidBar extends SequentialCommandGroup {
  */
   public HangOnMidBar(Climber climb) {
     addCommands(
-      new SetPosition(climb, Constants.LiftPositions.LIFT_EXTENSION_INCHES),
+      new SetPosition(climb, Constants.LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES),
       new CheckClimberHookAttached(climb),
       new SetPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
   }

@@ -56,7 +56,8 @@ public final class Constants {
     public static final double LOOP_TIMESTEP_S = 0.02;
 
     public static final class LiftPositions {
-        public static final double LIFT_EXTENSION_INCHES = 26.0; // as according to cadders
-        public static final double LIFT_RETRACTION_INCHES = 0.0; // according to cadders, the retracted position of the lift is just the zero position.
+        public static final double LIFT_ABOVE_BAR_EXTENSION_INCHES = 28.0;
+        public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
+        public static final double LIFT_RETRACTION_INCHES = 0.5;            //lower position to engage into the monkey bars
     }
 }
