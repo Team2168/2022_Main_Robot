@@ -107,39 +107,85 @@ public class Hopper extends SubsystemBase implements Loggable {
 
 }
 
-// putting in ticks, getting inches
+/**
+ * 
+ * @param ticks
+ * @return inches
+ */
 
   private static double ticksToInches(double ticks) {
     return ((ticks / TICKS_PER_REV) * GEAR_RATIO * INCHES_PER_REV);
   }
 
-  // putting in inches, getting ticks
+  /**
+   * 
+   * @param inches
+   * @return ticks
+   */
 
   private static double inchesToTicks(double inches) {
     return ((inches / INCHES_PER_REV) / GEAR_RATIO * TICKS_PER_REV);
   }
 
+  /**
+   * 
+   * @param speed
+   */
+
   public void driveHopper(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  /**
+   * 
+   * @param InchesPerSecond
+   */
   public void driveHopperVelocity(double InchesPerSecond) {
     hopperMotor.set(ControlMode.Velocity, inchesToTicks(InchesPerSecond) *  TIME_UNITS_OF_VELOCITY);
   }
 
+  /**
+   * @param Sensor position 
+   */
   public void zeroEncoder() {
     hopperMotor.setSelectedSensorPosition(0.0);
   }
 
+
+/**
+ * 
+ * @return If ball enters hopper
+ */
  @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
     public boolean isBallEnteringHopper() {
       return !hopperLineBreak.get();
   }
 
+  /**
+   * 
+   * @return Encoder position
+   */
   @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
     public double getEncoderPosition() {
       return hopperMotor.getSelectedSensorPosition();
   }
+
+  /**
+   * @return Hopper speed in Inches Per Second
+   */
+@Log(name = "Inches Per Second", rowIndex = 1, columnIndex = 3)
+  public double getHopperSpeed() {
+    return hopperMotor.getSelectedSensorVelocity();
+  }
+
+/**
+ * 
+ * @return Hopper wheel Rotations Per Minute
+ */
+@Log(name = "Rotations Per Minute", rowIndex = 1, columnIndex = 4)
+public double getHopperRPM() {
+  return (hopperMotor.getSelectedSensorVelocity() / 2048 * 600);
+}
 
   public void ballEnteringHopper() {
     if (isBallEnteringHopper()) {
