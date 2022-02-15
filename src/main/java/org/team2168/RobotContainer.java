@@ -6,29 +6,27 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import com.ctre.phoenix.Util;
-
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.IntakeRoller.IntakeSpeed;
 import org.team2168.commands.IntakeRoller.StopIntakeMotor;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
+import org.team2168.commands.climber.ReturnToZero;
+import org.team2168.commands.climber.SetPosition;
 import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.monkeybar.ExtendMonkeyBar;
+import org.team2168.commands.monkeybar.RetractMonkeyBar;
+import org.team2168.commands.turret.DriveTurretWithJoystick;
+import org.team2168.commands.turret.RotateTurret;
+import org.team2168.commands.turret.ZeroTurret;
+import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.IntakeRoller;
-import org.team2168.utils.F310;
-import org.team2168.commands.*;
-import org.team2168.commands.drivetrain.*;
-import org.team2168.commands.turret.*;
-import org.team2168.commands.exampleSubsystem.*;
-import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.monkeybar.*;
-import org.team2168.commands.climber.*;
-import org.team2168.commands.pixy.*;
-import org.team2168.subsystems.*;
+import org.team2168.subsystems.MonkeyBar;
+import org.team2168.subsystems.Turret;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
