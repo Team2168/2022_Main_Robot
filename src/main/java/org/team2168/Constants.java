@@ -31,7 +31,7 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
-        public static final int HOPPER_MOTOR = 11;
+        public static final int HOPPER_MOTOR = 7;
         public final static int TALONFX_TURRET_MOTOR = 3;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
@@ -57,7 +57,7 @@ public final class Constants {
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
-        public static final int HOPPER_LINE_BREAK = 1;
+        public static final int HOPPER_LINE_BREAK = 2;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;

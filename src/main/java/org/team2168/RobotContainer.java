@@ -11,7 +11,6 @@ import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopper;
 import org.team2168.commands.hopper.DriveHopperWithVelocity;
-import org.team2168.commands.hopper.StopHopper;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
 import org.team2168.commands.turret.*;
@@ -80,11 +79,6 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
-    
-
-    
-
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
@@ -95,10 +89,10 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, 0.1));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopHopper(hopper));
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, 10.0));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopHopper(hopper));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, ()-> 0.1));
+    oi.operatorJoystick.ButtonRightBumper().whenReleased(new DriveHopper(hopper, () -> 0));
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, () -> 10.0));
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithVelocity(hopper, () -> 0.0));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));

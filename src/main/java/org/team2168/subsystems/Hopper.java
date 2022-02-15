@@ -57,20 +57,17 @@ public class Hopper extends SubsystemBase implements Loggable {
   public static final double INCHES_PER_REV = ROLLER_DIAMETER_INCHES / 2 * Math.PI;
   public static final double HOPPER_DISTANCE_GEAR_RATIO = GEAR_RATIO * DISTANCE_PER_TICK;
   
-  
   //Gains
 
-  
   public static TalonFXInvertType hopperMotorInvert = TalonFXInvertType.Clockwise;
+  public static final double KV = 0.02;
+  public static final double KA = 0.002;
 
   //Simulation stuff
   
   private static TalonFXSimCollection m_hopperMotorSim;
   private static FlywheelSim m_hopperSim;
-  public static final double KV = 0.02;
-  public static final double KA = 0.002;
-
-
+ 
     public static Hopper getInstance() {
       if (instance == null);
         instance = new Hopper();
@@ -87,15 +84,16 @@ public class Hopper extends SubsystemBase implements Loggable {
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
-
+    
+    hopperMotor.configFactoryDefault();
+    hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
     hopperMotor.setInverted(hopperMotorInvert);
-    hopperMotor.setInverted(InvertType.OpposeMaster);
+    hopperMotor.setInverted(InvertType.InvertMotorOutput);
     hopperMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.configNeutralDeadband(0.01);
 
-    hopperMotor.configFactoryDefault();
-    hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
+    
 
     m_hopperSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
@@ -184,7 +182,7 @@ public class Hopper extends SubsystemBase implements Loggable {
  */
 @Log(name = "Rotations Per Minute", rowIndex = 1, columnIndex = 4)
 public double getHopperRPM() {
-  return (hopperMotor.getSelectedSensorVelocity() / 2048 * 600);
+  return (hopperMotor.getSelectedSensorVelocity() / TICKS_PER_REV * 600);
 }
 
   public void ballEnteringHopper() {

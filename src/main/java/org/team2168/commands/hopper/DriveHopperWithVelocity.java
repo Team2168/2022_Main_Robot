@@ -4,6 +4,8 @@
 
 package org.team2168.commands.hopper;
 
+import java.util.function.DoubleSupplier;
+
 import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -11,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveHopperWithVelocity extends CommandBase {
 
   private Hopper hopper;
-  private double velocity;
+  private DoubleSupplier velocity;
 
   /** Creates a new DriveHopperWithVelocity. */
-  public DriveHopperWithVelocity(Hopper hopper, double velocity) {
+  public DriveHopperWithVelocity(Hopper hopper, DoubleSupplier velocity) {
     this.hopper = hopper;
     this.velocity = velocity;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,7 +31,7 @@ public class DriveHopperWithVelocity extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hopper.driveHopperVelocity(velocity);
+    hopper.driveHopperVelocity(velocity.getAsDouble());
     System.out.println(hopper.getEncoderPosition());
   }
 
@@ -38,6 +40,7 @@ public class DriveHopperWithVelocity extends CommandBase {
   public void end(boolean interrupted) {
   hopper.driveHopperVelocity(0.0);
   System.out.println("stopped");
+  hopper.zeroEncoder();
   }
 
   // Returns true when the command should end.
