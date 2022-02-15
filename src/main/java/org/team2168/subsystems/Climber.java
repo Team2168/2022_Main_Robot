@@ -240,7 +240,11 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+    climbMotor1.set(ControlMode.PercentOutput, speed);
+  }
+
+  public double getArbitraryFeedforward() {
+    return kArbitraryFeedForward;
   }
 
   /**
