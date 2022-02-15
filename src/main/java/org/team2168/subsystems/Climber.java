@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -49,7 +50,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.2;
+  private static final double kP = 0.6;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
@@ -57,8 +58,8 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = inchesToTicks(6.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(12.0) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION_LIMIT = inchesToTicks(24.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(21.68) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
@@ -81,6 +82,8 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotor2.configFactoryDefault();
     climbMotor1.configNeutralDeadband(NEUTRAL_DEADBAND);
     climbMotor2.configNeutralDeadband(NEUTRAL_DEADBAND);
+    climbMotor1.setNeutralMode(NeutralMode.Brake);
+    climbMotor2.setNeutralMode(NeutralMode.Brake);
     
     climbMotor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     climbMotor1.setSensorPhase(kSensorPhase);
@@ -102,6 +105,9 @@ public class Climber extends SubsystemBase implements Loggable {
 
     climbMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
     climbMotor1.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+
+    // climbMotor1.configReverseSoftLimitThreshold(Util.min(Constants.LiftPositions.LIFT_RETRACTION_INCHES, 0.0));
+    // climbMotor1.configReverseSoftLimitEnable(true);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
