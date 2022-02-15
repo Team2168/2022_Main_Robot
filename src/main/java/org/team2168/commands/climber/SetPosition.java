@@ -33,7 +33,7 @@ public class SetPosition extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setPercentOutput(climber.getArbitraryFeedforward());
+    climber.setPercentOutput(0.0);
   }
 
   // Returns true when the command should end.

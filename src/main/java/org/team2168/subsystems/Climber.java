@@ -53,7 +53,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.034; // 0.034
+  private static final double kArbitraryFeedForward = 0.034;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
@@ -240,7 +240,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotor1.set(ControlMode.PercentOutput, speed);
+    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
   public double getArbitraryFeedforward() {
