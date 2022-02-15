@@ -4,6 +4,7 @@
 
 package org.team2168.subsystems;
 
+import java.util.Arrays;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
@@ -29,6 +30,7 @@ public class ColorSensor extends SubsystemBase {
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT); 
     }
+     
 
     /**
      * Constructor for ColorSensor subsystem
@@ -50,25 +52,45 @@ public class ColorSensor extends SubsystemBase {
          return (data[1] ^ data[2] ^ data[3]) == data[4];
     }
 
-    public static boolean Red = true; //when jio makes the normalization code, he will say wheter the ball color is true or false
-    public static boolean Blue = true; //im just setting it as true/false for testing purposes
+    
+
+    final byte compareRGB[] = {data[0]++,data[1]++,data[2]++};
+    final int finalRGB[];
+    public final int highestRGBValue;
+    public int rgbNormalizer(int highRGBValue){
+        Arrays.sort(compareRGB);
+        return compareRGB.length - 1 -> highestRGBValue;
+        }
+ public void divisor(){
+    
+ int finalRgbRed = (compareRGB[0]/highestRGBValue) * 255;
+ int finalRgbGreen = (compareRGB[1]/highestRGBValue) * 255;
+ int finalRgbBlue = (compareRGB[2]/highestRGBValue) * 255;
+  int finalRGB[] = {finalRgbRed, finalRgbGreen, finalRgbBlue};
+ }
+   
+
+        
+  
+    public static boolean red = true; //when jio makes the normalization code, he will say wheter the ball color is true or false
+    public static boolean blue = true; //im just setting it as true/false for testing purposes
 
     public static void onRedTeam(boolean isTrue){
-        if (isTrue == true && Red == true){
+        if (isTrue == true && red == true){
             pooper.absorb();
             System.out.println("Red Team"); //testing purposes
         }
-        else if (isTrue == false || Red == false){
+        else if (isTrue == false || red == false){
             pooper.excrete();
         }
     }
 
     public static void onBlueTeam(boolean isTrue){
-        if (isTrue == true && Blue == true){
+        if (isTrue == true && blue == true){
             pooper.absorb();
             System.out.println("Blue Team");
         }
-        else if (isTrue == false || Blue == false){
+        else if (isTrue == false || blue == false){
             pooper.excrete();
         }
     }
@@ -90,5 +112,6 @@ public class ColorSensor extends SubsystemBase {
         System.out.print(" R:"+data[0]);
         System.out.print(" G:"+data[1]);
         System.out.print(" B:"+data[2]);
+        rgbNormalizer(highestRGBValue);
     }
 }
