@@ -8,9 +8,12 @@ import org.team2168.Constants.PneumaticsDevices;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Pooper extends SubsystemBase {
+public class Pooper extends SubsystemBase implements Loggable {
 
   public static Pooper instance = null;
 
@@ -39,8 +42,37 @@ public class Pooper extends SubsystemBase {
     pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
-  public void normal() {
+  public void off() {
     pooperSolenoid.set(DoubleSolenoid.Value.kOff);
+  }
+
+  /**
+   * 
+   * @return is pooperSolenoid extended?
+   */
+  @Log(name = "extended?", rowIndex = 1, columnIndex = 1)
+  public boolean pooperExtended() {
+    return pooperSolenoid.get() == DoubleSolenoid.Value.kForward;
+  }
+
+
+/**
+ * 
+ * @return is pooperSolenoid retracted?
+ */
+  @Log(name = "retracted?", rowIndex = 1, columnIndex = 2)
+  public boolean pooperRetracted() {
+    return pooperSolenoid.get() == DoubleSolenoid.Value.kReverse;
+  }
+
+
+  /**
+   * 
+   * @return is pooperSolenoid off?
+   */
+  @Log(name = "off?", rowIndex = 1, columnIndex = 3)
+  public boolean pooperOff() {
+    return pooperSolenoid.get() == DoubleSolenoid.Value.kOff;
   }
 
   /** Creates a new Pooper. */
