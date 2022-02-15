@@ -56,7 +56,7 @@ public final class Constants {
     public static final double LOOP_TIMESTEP_S = 0.02;
 
     public static final class LiftPositions {
-        public static final double LIFT_EXTENSION_INCHES = 25.0; // as according to cadders
+        public static final double LIFT_EXTENSION_INCHES = 26.0; // as according to cadders
         public static final double LIFT_RETRACTION_INCHES = 0.0; // according to cadders, the retracted position of the lift is just the zero position.
     }
 }
