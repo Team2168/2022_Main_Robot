@@ -91,6 +91,15 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonX().whenHeld(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonX().whenReleased(new RetractMonkeyBar(monkeyBar));
+
+
+    //TEST JOYSTICK
+    oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
+
+    oi.testJoystick.ButtonB().whenPressed(new SetPosition(climber, Constants.LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
+    oi.testJoystick.ButtonY().whenPressed(new SetPosition(climber, Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
+    oi.testJoystick.ButtonX().whenPressed(new SetPosition(climber, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
   }
 
   /**
