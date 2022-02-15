@@ -18,12 +18,9 @@ import org.team2168.Constants.CANDevices;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Shooter extends SubsystemBase implements Loggable {
-
-  private double commanded_speed_rpm = 0.0; //I don't know what this does
 
   @Log (rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   private double actual_speed_rpm = 0.0;
