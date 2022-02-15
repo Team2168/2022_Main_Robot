@@ -31,7 +31,7 @@ public class DriveClimberWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setPercentOutput(speed.getAsDouble());
+    climber.setPercentOutput(0.3 * speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
