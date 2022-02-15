@@ -37,7 +37,7 @@ public class Climber extends SubsystemBase implements Loggable {
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 24.0);
-  private static final double SPROCKET_RADIUS_INCHES = 0.6589;
+  private static final double SPROCKET_RADIUS_INCHES = 0.716;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
 
   private static final int kPIDLoopIdx = 0;
@@ -53,7 +53,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.017;
+  private static final double kArbitraryFeedForward = 0.032;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
@@ -240,11 +240,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
-  }
-
-  public double getArbitraryFeedforward() {
-    return kArbitraryFeedForward;
+    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, 0.0);
   }
 
   /**
