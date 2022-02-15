@@ -17,16 +17,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
-  private final boolean indexer_MOTOR_REVERSED = false;
   private static DigitalInput detector;
   private static Indexer instance = null;
   private static WPI_TalonFX motor;
-  private SupplyCurrentLimitConfiguration indexerCurrentLimit;
-  private final boolean ENABLE_CURRENT_LIMIT = true;
-  private final double CONTINUOUS_CURRENT_LIMIT = 20;
-  private final double TRIGGER_THRESHOLD_LIMIT = 30;
-  private final double TRIGGER_THRESHOLD_TIME = 0.02;
-  TalonFXInvertType indexerInvert;
+  private static SupplyCurrentLimitConfiguration indexerCurrentLimit;
+  private static final boolean indexer_MOTOR_REVERSED = false;
+  private static final boolean ENABLE_CURRENT_LIMIT = true;
+  private static final double CONTINUOUS_CURRENT_LIMIT = 20;
+  private static final double TRIGGER_THRESHOLD_LIMIT = 30;
+  private static final double TRIGGER_THRESHOLD_TIME = 0.02;
+  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;;
 
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
@@ -35,7 +35,7 @@ public class Indexer extends SubsystemBase {
     indexerCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, 
       CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
-      motor.configSupplyCurrentLimit(indexerCurrentLimit);
+    motor.configSupplyCurrentLimit(indexerCurrentLimit);
   }
 
   public static Indexer getInstance() {
@@ -45,20 +45,19 @@ public class Indexer extends SubsystemBase {
     return instance;
   }
 
-/**
- * 
- * @param speed should be set to between 1.0 and -1.0, depending on if you need it to intake or spit out a ball
- * with 1.0 being to move towards the shooter, and -1.0 away from it.
- */
-
+  /**
+   * 
+   * @param speed should be set to between 1.0 and -1.0, depending on if you need it to intake or spit out a ball
+   * with 1.0 being to move towards the shooter, and -1.0 away from it.
+   */
   public void drive(double speed) {
     motor.set(TalonFXControlMode.PercentOutput, (indexer_MOTOR_REVERSED ? -speed : speed));
   }
 
-/**
- * 
- * @return boolean is meant to detect the presence of a ball in the indexer
- */
+  /**
+   * 
+   * @return boolean is meant to detect the presence of a ball in the indexer
+   */
   public boolean isBallPresent() {
     return !detector.get();
   }
@@ -66,6 +65,6 @@ public class Indexer extends SubsystemBase {
   
   @Override
   public void periodic() {
-//  This method will be called once per scheduler run
+    //  This method will be called once per scheduler run
   }
 }

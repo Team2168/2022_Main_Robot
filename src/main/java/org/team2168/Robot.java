@@ -22,18 +22,14 @@ import io.github.oblarg.oblog.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-
-
   private Command autonomousCommand;
-  
 
   private RobotContainer robotContainer;
   private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
 
   public Robot() {
     //set the default loop period
-   super(Constants.LOOP_TIMESTEP_S);
-
+    super(Constants.LOOP_TIMESTEP_S);
   }
 
   /**
@@ -46,10 +42,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    compressor.enableDigital();
     robotContainer = RobotContainer.getInstance();
 
-    
+    compressor.enableDigital();
   }
 
   /**
@@ -136,6 +131,4 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-
-  
 }

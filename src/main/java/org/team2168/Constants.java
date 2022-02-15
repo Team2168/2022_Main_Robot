@@ -57,6 +57,8 @@ public final class Constants {
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
+        public static final int INDEXER_SENSOR = 3;
+
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;

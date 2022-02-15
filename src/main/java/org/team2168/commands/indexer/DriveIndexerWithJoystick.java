@@ -15,8 +15,9 @@ public class DriveIndexerWithJoystick extends CommandBase {
   private Indexer indexer;
 
   private DoubleSupplier speed;
-  public DriveIndexerWithJoystick(Indexer indexer,DoubleSupplier speed) {
+  public DriveIndexerWithJoystick(Indexer indexer, DoubleSupplier speed) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.indexer = indexer;
     this.speed = speed;
     addRequirements(indexer);
   }
@@ -30,7 +31,6 @@ public class DriveIndexerWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     indexer.drive(speed.getAsDouble());
   }
 
