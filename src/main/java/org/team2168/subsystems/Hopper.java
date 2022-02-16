@@ -30,7 +30,14 @@ import io.github.oblarg.oblog.Loggable;
 
 public class Hopper extends SubsystemBase implements Loggable {
 
+  /**
+   * the hopper motor it moves the hopper
+   */
   private static WPI_TalonFX hopperMotor;
+  
+  /**
+   * the hopperLineBreak, its lets the driver know the ball is entering the hopper
+   */
   private DigitalInput hopperLineBreak;
   
 
@@ -65,7 +72,14 @@ public class Hopper extends SubsystemBase implements Loggable {
 
   //Simulation stuff
   
+  /**
+   * the hopper motor sim it simulates the hopper motor
+   */
   private static TalonFXSimCollection m_hopperMotorSim;
+
+  /**
+   * the actual hopper sim it simulates the hopper itself
+   */
   private static FlywheelSim m_hopperSim;
  
     public static Hopper getInstance() {
