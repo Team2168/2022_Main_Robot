@@ -20,6 +20,7 @@ public class ColorSensor extends SubsystemBase {
     private static Pooper pooper;
     private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
     //private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
+    
     byte[] data = new byte[3];
    // byte[] date = new byte[4];
    
@@ -51,21 +52,33 @@ public class ColorSensor extends SubsystemBase {
 
 
     
-
+     
     final byte compareRGB[] = {data[0]++,data[1]++,data[2]++};
-    final int finalRGB[];
-    public final int highestRGBValue;
-    public int rgbNormalizer(int highRGBValue){
+    static int finalRGB[];
+    public int highestRGBValue = compareRGB.length - 1;
+    public int rgbNormalizer(){
         Arrays.sort(compareRGB);
-        return compareRGB.length - 1 -> highestRGBValue;
+        return highestRGBValue;
+        
+        
+        
+
         }
- public void divisor(){
+ public int[] divisor(){
     
  int finalRgbRed = (compareRGB[0]/highestRGBValue) * 255;
  int finalRgbGreen = (compareRGB[1]/highestRGBValue) * 255;
  int finalRgbBlue = (compareRGB[2]/highestRGBValue) * 255;
   int finalRGB[] = {finalRgbRed, finalRgbGreen, finalRgbBlue};
+  for(int i=1; i < compareRGB.length; i++){
+      if(compareRGB[i] > highestRGBValue){
+          highestRGBValue = compareRGB[i];
+      }
+  }
+  return finalRGB;
+  
  }
+
    
 
         
@@ -111,6 +124,7 @@ public class ColorSensor extends SubsystemBase {
         System.out.print(" R:"+data[0]);
         System.out.print(" G:"+data[1]);
         System.out.print(" B:"+data[2]);
-        rgbNormalizer(highestRGBValue);
+        rgbNormalizer();
+        divisor();
     }
 }
