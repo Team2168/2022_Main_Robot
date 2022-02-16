@@ -15,8 +15,8 @@ public class IntakeSpeed extends CommandBase {
   public IntakeSpeed(IntakeRoller iRoller,double speedValueForIntakeSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     iRoller = IntakeRoller.getInstance();
-    addRequirements(iRoller);
     this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;
+    addRequirements(iRoller);
   }
   
   // Called when the command is initially scheduled.
