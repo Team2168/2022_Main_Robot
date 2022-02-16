@@ -20,7 +20,6 @@ import org.team2168.commands.turret.RotateTurret;
 import org.team2168.commands.turret.ZeroTurret;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.IntakeRoller;
 import org.team2168.subsystems.MonkeyBar;
 import org.team2168.subsystems.Turret;
@@ -52,7 +51,6 @@ public class RobotContainer {
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
-  private final Hood hood = Hood.getInstance();
   public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
