@@ -10,17 +10,18 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class StopIntakeMotor extends CommandBase {
   private IntakeRoller stopIntakeMotorOne;
-  private final double resetIntakeValue = 0;
+  private double resetIntakeValue;
  
-  public StopIntakeMotor(IntakeRoller stopIntakeMotorOne) {
+  public StopIntakeMotor(IntakeRoller stopIntakeMotorOne, double resetIntakeValue) {
 stopIntakeMotorOne = IntakeRoller.getInstance();
+this.resetIntakeValue = resetIntakeValue;
 addRequirements(stopIntakeMotorOne);
   }
  // Called when the command is initially scheduled.
   
   @Override 
   public void initialize() {
-  
+    
   }
   // Called every time the scheduler runs while the command is scheduled.
   

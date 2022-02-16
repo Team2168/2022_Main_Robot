@@ -9,25 +9,28 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class IntakeSpeed extends CommandBase {
  
   private IntakeRoller iRoller;
-  
-  public IntakeSpeed(IntakeRoller iRoller) {
+  private double speedValueForIntakeSpeed;
+  // speedValueForIntakeSpeeed sets the speed value between -1 and 1 for the talonFX spin amount to intake balls in using the force
+  // the spin
+  public IntakeSpeed(IntakeRoller iRoller,double speedValueForIntakeSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     iRoller = IntakeRoller.getInstance();
     addRequirements(iRoller);
+    this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;
   }
   
   // Called when the command is initially scheduled.
   
   
   public void initialize() {
-  
+    
   }
  
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
   
-   iRoller.setRollerSpeed(0.5);
+   iRoller.setRollerSpeed(speedValueForIntakeSpeed);
   
    
   }

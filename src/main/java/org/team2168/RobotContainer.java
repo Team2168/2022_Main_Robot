@@ -107,8 +107,8 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopIntakeMotor(intakeRoller));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopIntakeMotor(intakeRoller, 0));
   }
 
   /**
