@@ -19,20 +19,14 @@ public class IntakeSpeed extends CommandBase {
     addRequirements(iRoller);
   }
   
+  
   // Called when the command is initially scheduled.
   
-  
-  public void initialize() {
-    
-  }
- 
+  public void initialize() {}
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  
-   iRoller.setRollerSpeed(speedValueForIntakeSpeed);
-  
-   
+  iRoller.setRollerSpeed(speedValueForIntakeSpeed);
   }
    
    // Called once the command ends or is interrupted.

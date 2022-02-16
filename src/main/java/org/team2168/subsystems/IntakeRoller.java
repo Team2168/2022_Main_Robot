@@ -21,7 +21,6 @@ public class IntakeRoller extends SubsystemBase {
 
    private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
-
     intakeRollerOneConfig.supplyCurrLimit.enable = true;
     intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
@@ -30,9 +29,6 @@ public class IntakeRoller extends SubsystemBase {
     
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
-
-    
-  
  }
  public static IntakeRoller getInstance(){
     if (instance == null){
@@ -45,8 +41,7 @@ public class IntakeRoller extends SubsystemBase {
     intakeRollerOne.set(speed);
     intakeRollerOne.set(TalonFXControlMode.PercentOutput, speed);
 
-    
-  }
+    }
   public void resetIntakeMotor(double speedTwo){
     intakeRollerOne.set(speedTwo);
     intakeRollerOne.setVoltage(speedTwo);
