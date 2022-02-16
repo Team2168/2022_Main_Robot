@@ -30,6 +30,7 @@ public class Indexer extends SubsystemBase {
 
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
+    motor = new WPI_TalonFX(6);
     TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
     motor.setInverted(indexerInvert);
     indexerCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, 
