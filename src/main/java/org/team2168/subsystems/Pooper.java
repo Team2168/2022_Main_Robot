@@ -17,6 +17,9 @@ public class Pooper extends SubsystemBase implements Loggable {
 
   public static Pooper instance = null;
 
+  /**
+   * Pooper solenoid, it does the pooping
+   */
   private DoubleSolenoid pooperSolenoid;
 
   public static Pooper getInstance() {
@@ -33,15 +36,36 @@ public class Pooper extends SubsystemBase implements Loggable {
   }
 
   
-
+  /**
+   * Extends the pooperSolenoid forward
+   * 
+   * @param pooperSolenoid has to not be in the forward position
+   * 
+   * 
+   */
   public void forward() {
     pooperSolenoid.set(DoubleSolenoid.Value.kForward);
   }
 
+
+  /**
+   * Retracts the pooperSolenoid backwards
+   * 
+   * @param pooperSolenoid has to not be in the backwards position
+   * 
+   * 
+   */
   public void backwards() {
     pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
+  /**
+   * Moves the pooperSolenoid to a normal position
+   * 
+   * @param pooperSolenoid has to not be in the normal position
+   * 
+   * 
+   */
   public void off() {
     pooperSolenoid.set(DoubleSolenoid.Value.kOff);
   }
