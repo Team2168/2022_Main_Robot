@@ -29,7 +29,7 @@ public class IntakeRoller extends SubsystemBase {
     
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
-  
+   
  }
  public static IntakeRoller getInstance(){
     if (instance == null){
