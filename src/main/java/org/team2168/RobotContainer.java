@@ -7,19 +7,17 @@ package org.team2168;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.*;
-import org.team2168.commands.drivetrain.*;
-import org.team2168.commands.turret.*;
-import org.team2168.commands.exampleSubsystem.*;
-import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
-import org.team2168.commands.pixy.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
 import org.team2168.commands.indexer.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -36,6 +34,7 @@ public class RobotContainer {
   // private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  private final Shooter m_shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
@@ -81,7 +80,6 @@ public class RobotContainer {
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
-    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.operatorJoystick::getRightStickRaw_X));
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
@@ -95,6 +93,15 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+
+
+    //TEST JOYSTICK
+    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.operatorJoystick::getLeftStickRaw_X));
+    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+
+    oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
+    oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
   }
 
   /**
