@@ -6,24 +6,17 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Shooter;
 import org.team2168.commands.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.turret.*;
-import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
-import org.team2168.commands.pixy.*;
-import org.team2168.commands.shooter.ShootWithController;
+import org.team2168.commands.shooter.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -99,7 +92,11 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
 
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new ShootWithController(m_shooter, () -> 15.0));
+    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+
+    oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
+    oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
   }
 
   /**
