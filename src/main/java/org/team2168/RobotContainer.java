@@ -96,7 +96,7 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
-    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.operatorJoystick::getLeftStickRaw_X));
+    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
     oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
 
     oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
