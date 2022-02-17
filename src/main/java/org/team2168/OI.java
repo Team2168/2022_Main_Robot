@@ -15,6 +15,7 @@ public class OI {
     private LinearInterpolator gunStyleYInterpolator;
     private static OI instance = null;
     
+    
     private double[][] driverJoystickInterpolation = {
         {-1.00, -1.00},
         {-0.05,  0.00},  //set neutral deadband to 5%
