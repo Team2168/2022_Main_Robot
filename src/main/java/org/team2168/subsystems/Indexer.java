@@ -22,7 +22,6 @@ public class Indexer extends SubsystemBase {
   private static Indexer instance = null;
   private static WPI_TalonFX motor;
   private static SupplyCurrentLimitConfiguration indexerCurrentLimit;
-  private static final boolean indexer_MOTOR_REVERSED = false;
   private static final boolean ENABLE_CURRENT_LIMIT = true;
   private static final double CONTINUOUS_CURRENT_LIMIT = 20;
   private static final double TRIGGER_THRESHOLD_LIMIT = 30;
@@ -54,7 +53,7 @@ public class Indexer extends SubsystemBase {
    * with 1.0 being to move towards the shooter, and -1.0 away from it.
    */
   public void drive(double speed) {
-    motor.set(TalonFXControlMode.PercentOutput, (indexer_MOTOR_REVERSED ? -speed : speed));
+    motor.set(TalonFXControlMode.PercentOutput, speed);
   }
 
   /**
