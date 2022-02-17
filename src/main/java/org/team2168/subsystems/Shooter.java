@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
+import org.team2168.utils.Util;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
@@ -163,8 +164,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
-    _motorRight.set(ControlMode.PercentOutput, d_Speed);
-    _motorLeft.set(ControlMode.PercentOutput, d_Speed);
+    _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
 
   public static Shooter getInstance(){
