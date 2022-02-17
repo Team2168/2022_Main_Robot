@@ -29,6 +29,7 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
         public static final int CLIMBER_MOTOR_RIGHT = 3;
+        public static final int INDEXER_MOTOR = 9;
         public static final int SHOOTER_LEFT_MOTOR = 10;
         public static final int SHOOTER_RIGHT_MOTOR = 11;
         public static final int HOOD_MOTOR = 12;
@@ -54,6 +55,7 @@ public final class Constants {
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
+        public static final int INDEXER_SENSOR = 2;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
