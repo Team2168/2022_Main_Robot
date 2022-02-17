@@ -22,7 +22,6 @@ public final class Constants {
         public static final int BUTTON_BOX_2 = 3;
         public static final int DRIVER_OPERATOR_E_BACKUP = 4;
         public static final int PID_TEST_JOYSTICK = 5;
-    
     }
 
     public static final class CANDevices {
@@ -57,10 +56,7 @@ public final class Constants {
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
         public static final int INDEXER_SENSOR = 3;
-
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;
 }
-
-
