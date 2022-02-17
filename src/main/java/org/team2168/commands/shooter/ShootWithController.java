@@ -12,14 +12,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ShootWithController extends CommandBase {
   /** Creates a new ShootWithController. */
 
-  private Shooter Shooter;
+  private Shooter shooter;
   private DoubleSupplier speed;
 
-
-  public ShootWithController(Shooter k_Shooter, DoubleSupplier d) {
-    Shooter = k_Shooter;
+  public ShootWithController(Shooter k_shooter, DoubleSupplier d) {
+    shooter = k_shooter;
     speed = d;
-    addRequirements(k_Shooter);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -29,13 +28,13 @@ public class ShootWithController extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Shooter.shoot(speed.getAsDouble());
+    shooter.shoot(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Shooter.shoot(0);
+    shooter.shoot(0);
   }
 
   // Returns true when the command should end.
