@@ -4,26 +4,22 @@
 
 package org.team2168.subsystems;
 
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
-
-import org.team2168.subsystems.Pooper;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ColorSensor extends SubsystemBase {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
-    private static Pooper pooper;
 
     private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
     //private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder, depends on what we give the teensy slave
 
-    byte[] data = new byte[3];
+
+    int[] data = new int[3];  // {r, g, b}
+    byte[] rawdata = new byte[3];
    // byte[] date = new byte[4];
 
     private ColorSensor() {
@@ -43,39 +39,32 @@ public class ColorSensor extends SubsystemBase {
 
     public byte[] readSensor() {
         serialPort.write(new byte[] {0x12}, 1);// once we write to teensy we receive data from teensy
-        return data=serialPort.read(3);
+        byte[] serialOutput = serialPort.read(3);
+        for (int i = 0; i < serialOutput.length; i++)
+            data[i] = Byte.toUnsignedInt(serialOutput[i]);  // Value on teensy will be unsigned int; byte is signed 2^7
+        return rawdata = serialOutput;
     }
 
-    public static boolean validateSensor(byte[] data) {
-         return (data[1] ^ data[2] ^ data[3]) == data[4];
+    // public static boolean validateSensor(byte[] data) {
+    //      return (data[0] ^ data[1] ^ data[2]) == data[3];  // TODO; indexOutOfRange
+    // }
+
+    public Alliance getColor() {
+        double total = getRed() + getGreen() + getBlue();
+        double[] percentages = {(double) getRed()/total, (double) getGreen()/total, (double) getBlue()/total};
+        System.out.println("Percentages: " + percentages);
+
+        if (percentages[0] > 0.75)
+            return Alliance.Red;
+        if (percentages[1] > 0.4)
+            if (percentages[2] > 0.2)
+                return Alliance.Blue;
+        return Alliance.Invalid;
+        
     }
 
-    public static boolean Red = true; //when jio makes the normalization code, he will say wheter the ball color is true or false
-    public static boolean Blue = true; //im just setting it as true/false for testing purposes
-
-    public static void onRedTeam(boolean isTrue){
-        if (isTrue == true && Red == true){
-            pooper.absorb();
-            System.out.println("Red Team"); //testing purposes
-        }
-        else if (isTrue == false || Red == false){
-            pooper.excrete();
-        }
-    }
-
-    public static void onBlueTeam(boolean isTrue){
-        if (isTrue == true && Blue == true){
-            pooper.absorb();
-            System.out.println("Blue Team");
-        }
-        else if (isTrue == false || Blue == false){
-            pooper.excrete();
-        }
-    }
-
-    public void onStart(){
-        onBlueTeam(true);
-        onRedTeam(false);
+    public boolean isTeamColor() {
+        return DriverStation.getAlliance() == getColor();
     }
 
     @Override
@@ -85,10 +74,37 @@ public class ColorSensor extends SubsystemBase {
        // if (connected) {
             readSensor();
        // }
-        System.out.print(" Color Sensor test ");
        // System.out.print(connected);
-        System.out.print(" R:"+data[0]);
-        System.out.print(" G:"+data[1]);
-        System.out.print(" B:"+data[2]);
+       SmartDashboard.putNumber("R", getRed());
+       SmartDashboard.putNumber("G", getGreen());
+       SmartDashboard.putNumber("B", getBlue());
+       SmartDashboard.putString("Computed output", getColor().toString());
+       System.out.print(" R:"+getRed());
+       System.out.print(" G:"+getGreen());
+       System.out.print(" B:"+getBlue());
+    }
+
+    public int getRed() {
+        try {
+            return data[0];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return 0;
+        }
+    }
+
+    public int getGreen() {
+        try {
+            return data[1];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return 0;
+        }
+    }
+
+    public int getBlue() {
+        try {
+            return data[2];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return 0;
+        }
     }
 }
