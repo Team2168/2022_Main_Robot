@@ -17,6 +17,7 @@ public class PooperPoop extends CommandBase {
 
 
   public PooperPoop(Pooper pooper) {
+    this.pooper = pooper;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(pooper);
   }

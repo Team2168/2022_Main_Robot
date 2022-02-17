@@ -30,9 +30,9 @@ public class Pooper extends SubsystemBase implements Loggable {
   }
 
   private Pooper() {
-    pooperSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 
-    PneumaticsDevices.POOPER_DOUBLE_SOLENOID_EXTEND, 
-    PneumaticsDevices.POOPER_DOUBLE_SOLENOID_RETRACT);
+    pooperSolenoid = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE, 
+      PneumaticsDevices.POOPER_DOUBLE_SOLENOID_EXTEND, 
+      PneumaticsDevices.POOPER_DOUBLE_SOLENOID_RETRACT);
   }
 
   
@@ -47,6 +47,7 @@ public class Pooper extends SubsystemBase implements Loggable {
   /**
    * Retracts the pooperSolenoid backwards
    */
+  
   public void backwards() {
     pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
@@ -54,6 +55,7 @@ public class Pooper extends SubsystemBase implements Loggable {
   /**
    * Moves the pooperSolenoid to a normal position
    */
+  
   public void off() {
     pooperSolenoid.set(DoubleSolenoid.Value.kOff);
   }
