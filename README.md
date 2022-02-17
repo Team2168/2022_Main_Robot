@@ -55,6 +55,9 @@
   * 1x Double Solenoid to eject ball
 * Pixy / Color-sensor  
   Determines if the ball in the hopper area matches our alliance color.
+  
+  Wiring map:
+  ![map 4 0](https://user-images.githubusercontent.com/74201229/154380512-f5c37b95-9532-4c1f-9e23-c7d836b86b82.png)
 
   * Pixy2 / color-sensor for ball color detection
 * Climber - `Aiden`  
