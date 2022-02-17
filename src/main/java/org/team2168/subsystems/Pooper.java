@@ -38,10 +38,6 @@ public class Pooper extends SubsystemBase implements Loggable {
   
   /**
    * Extends the pooperSolenoid forward
-   * 
-   * @param pooperSolenoid has to not be in the forward position
-   * 
-   * 
    */
   public void forward() {
     pooperSolenoid.set(DoubleSolenoid.Value.kForward);
@@ -50,10 +46,6 @@ public class Pooper extends SubsystemBase implements Loggable {
 
   /**
    * Retracts the pooperSolenoid backwards
-   * 
-   * @param pooperSolenoid has to not be in the backwards position
-   * 
-   * 
    */
   public void backwards() {
     pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
@@ -61,10 +53,6 @@ public class Pooper extends SubsystemBase implements Loggable {
 
   /**
    * Moves the pooperSolenoid to a normal position
-   * 
-   * @param pooperSolenoid has to not be in the normal position
-   * 
-   * 
    */
   public void off() {
     pooperSolenoid.set(DoubleSolenoid.Value.kOff);
@@ -72,7 +60,7 @@ public class Pooper extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @return is pooperSolenoid extended?
+   * @return true when pooper is extened
    */
   @Log(name = "extended?", rowIndex = 1, columnIndex = 1)
   public boolean pooperExtended() {
@@ -82,7 +70,7 @@ public class Pooper extends SubsystemBase implements Loggable {
 
 /**
  * 
- * @return is pooperSolenoid retracted?
+ * @return true when pooper is retracted
  */
   @Log(name = "retracted?", rowIndex = 1, columnIndex = 2)
   public boolean pooperRetracted() {
@@ -92,7 +80,7 @@ public class Pooper extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @return is pooperSolenoid off?
+   * @return true when pooper is off
    */
   @Log(name = "off?", rowIndex = 1, columnIndex = 3)
   public boolean pooperOff() {
