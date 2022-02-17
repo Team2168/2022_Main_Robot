@@ -28,17 +28,17 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
-        public final static int TALONFX_TURRET_MOTOR = 3;
-        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
-        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
-        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
+        public static final int CLIMBER_MOTOR_LEFT = 3;
+        public static final int SHOOTER_LEFT_MOTOR = 10;
+        public static final int SHOOTER_RIGHT_MOTOR = 11;
+        public static final int HOOD_MOTOR = 12;
+        public final static int TURRET_MOTOR = 13;
+        public static final int CLIMBER_MOTOR_RIGHT = 16;
+        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 17;
+        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 18;
+        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 19;
+
         public static final int PIGEON_IMU = 17;
-        public static final int SHOOTER_RIGHT_MOTOR = 4; //PLACEHOLDER NUMBER
-        public static final int SHOOTER_LEFT_MOTOR = 5; //PLACEHOLDER NUMBER
-        public final static int TURRET_MOTOR = 12;
-        public static final int CLIMBER_MOTOR_1 = 18;
-        public static final int CLIMBER_MOTOR_2 = 19;
-        public static final int HOOD_MOTOR = 11;
     }
 
     public static final class PneumaticsDevices {
