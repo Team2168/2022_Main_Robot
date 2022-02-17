@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
@@ -21,10 +20,6 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Shooter extends SubsystemBase implements Loggable {
-
-  @Log (rowIndex = 0, columnIndex = 0, width = 1, height = 1)
-  private double actual_speed_rpm = 0.0;
-
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
 
@@ -59,12 +54,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   public static final double max_velocity = 8000.0; //TODO set (measured ~18,000 units/1000ms at full stick)
 
   /** Invert Directions for Left and Right */
-  TalonFXInvertType _motorOneInvert = TalonFXInvertType.CounterClockwise;
-  TalonFXInvertType _motorTwoInvert = TalonFXInvertType.Clockwise;
-
-  /** Config Objects for motor controllers */
-  TalonFXConfiguration _leftConfig = new TalonFXConfiguration();
-  TalonFXConfiguration _rightConfig = new TalonFXConfiguration();
+  TalonFXInvertType _motorOneInvert = TalonFXInvertType.Clockwise;
+  TalonFXInvertType _motorTwoInvert = TalonFXInvertType.CounterClockwise;
 
   private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
@@ -129,47 +120,46 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   }
 
-    /**
-     * Sets the closed loop shooter speed.
-     * 
-     * @param setPoint speed in RPM
-     */
-    public void setSpeed(double setPoint)
-    {
-        setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
-        _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
-    }
+  /**
+   * Sets the closed loop shooter speed.
+   * 
+   * @param setPoint speed in RPM
+   */
+  public void setSpeed(double setPoint)
+  {
+      setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
+      _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+  }
 
 
-    /**
-     * Convert speed in motor units per 100ms to RPM
-     * 
-     * @param ticks speed (ticks/100ms) to convert to RPM
-     */
-    private double ticks_per_100ms_to_revs_per_minute(double ticks) {
-      //TODO: Verify conversion is correct
-      return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
-    }
+  /**
+   * Convert speed in motor units per 100ms to RPM
+   * 
+   * @param ticks speed (ticks/100ms) to convert to RPM
+   */
+  private double ticks_per_100ms_to_revs_per_minute(double ticks) {
+    //TODO: Verify conversion is correct
+    return ticks * SECS_PER_MIN / (GEAR_RATIO * TICKS_PER_100MS);
+  }
 
-    /**
-     * Converts RPM to sensor ticks per 100ms
-     * 
-     * @param revs speed (RPM) to convert to ticks/100ms
-     */
+  /**
+   * Converts RPM to sensor ticks per 100ms
+   * 
+   * @param revs speed (RPM) to convert to ticks/100ms
+   */
   private double revs_per_minute_to_ticks_per_100ms(double revs) {
     return ((revs / 60.0 ) * 0.1) * GEAR_RATIO * TICKS_PER_REV;
     // return (revs / SECS_PER_MIN) * GEAR_RATIO * TICKS_PER_100MS;
   }
 
-  public double getVelocity()
-  {
+  /**
+   * 
+   * @return shooter speed in RPM
+   */
+  @Log (name = "Speed (RPM)", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
+  public double getVelocity() {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
-
-  /*public void setDrive(double k_Speed, double k_Rotation){
-    setSpeed(k_Speed);
-    drive.arcadeDrive(k_Speed, k_Rotation);
-  }*/
 
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
