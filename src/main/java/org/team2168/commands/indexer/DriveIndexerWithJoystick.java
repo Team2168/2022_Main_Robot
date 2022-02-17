@@ -13,10 +13,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveIndexerWithJoystick extends CommandBase {
   /** Creates a new DriveIndexerWithJoystick. */
   private Indexer indexer;
-
   private DoubleSupplier speed;
+
+
   public DriveIndexerWithJoystick(Indexer indexer, DoubleSupplier speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.indexer = indexer;
     this.speed = speed;
     addRequirements(indexer);
