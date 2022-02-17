@@ -6,12 +6,6 @@ package org.team2168.subsystems;
 
 import java.util.Arrays;
 
-
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
-import org.team2168.subsystems.Pooper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ColorSensor extends SubsystemBase {
@@ -27,9 +21,7 @@ public class ColorSensor extends SubsystemBase {
     
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT); 
-        
-
-    }
+       }
 
 
     /**
@@ -44,12 +36,12 @@ public class ColorSensor extends SubsystemBase {
     }
     public byte[] readSensor() {
         serialPort.write(new byte[] {0x12}, 1);// once we write to teensy we receive data from teensy
-        return data=serialPort.read(3);
+        return data = serialPort.read(3);
     }
     public static boolean validateSensor(byte[] data) {
          return (data[1] ^ data[2] ^ data[3]) == data[4];
     }
-
+   
 
     
      
@@ -59,11 +51,7 @@ public class ColorSensor extends SubsystemBase {
     public int rgbNormalizer(){
         Arrays.sort(compareRGB);
         return highestRGBValue;
-        
-        
-        
-
-        }
+         }
  public int[] divisor(){
     
  int finalRgbRed = (compareRGB[0]/highestRGBValue) * 255;
@@ -77,20 +65,25 @@ public class ColorSensor extends SubsystemBase {
   }
   return finalRGB;
   
- }
-
-   
-
-        
   
-    public static boolean red = true; //when jio makes the normalization code, he will say wheter the ball color is true or false
-    public static boolean blue = true; //im just setting it as true/false for testing purposes
-
-
-    public static boolean Red = true; //when jio makes the normalization code, he will say wheter the ball color is true or false
-    public static boolean Blue = true; //im just setting it as true/false for testing purposes
+ }
+      
+    public static boolean red; 
+    public static boolean blue; 
+ 
+    public static void determineColor(){
+        if(finalRGB[0] >= finalRGB[2]){
+            red = true;
+            blue = false;
+        }
+        else {
+            blue = true;
+            red = false;
+        }
+    }
 
     public static void onRedTeam(boolean isTrue){
+        determineColor();
         if (isTrue == true && red == true){
             pooper.absorb();
             System.out.println("Red Team"); //testing purposes
@@ -100,6 +93,7 @@ public class ColorSensor extends SubsystemBase {
         }
     }
     public static void onBlueTeam(boolean isTrue){
+        determineColor();
         if (isTrue == true && blue == true){
             pooper.absorb();
             System.out.println("Blue Team");
