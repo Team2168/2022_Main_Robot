@@ -4,6 +4,7 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -30,13 +31,14 @@ public class Indexer extends SubsystemBase {
 
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
-    motor = new WPI_TalonFX(6);
-    TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
+    motor = new WPI_TalonFX(CANDevices.INDEXER_MOTOR);
+
+    motor.configFactoryDefault();
     motor.setInverted(indexerInvert);
     indexerCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, 
       CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
-
     motor.configSupplyCurrentLimit(indexerCurrentLimit);
+    motor.setNeutralMode(NeutralMode.Brake);
   }
 
   public static Indexer getInstance() {
