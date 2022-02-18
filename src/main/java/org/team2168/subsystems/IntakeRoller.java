@@ -15,17 +15,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase {
   private static WPI_TalonFX intakeRollerOne; 
-  private static IntakeRoller instance; 
+  private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig;
-  
-
-   private IntakeRoller() {
+ 
+  private IntakeRoller() {
     intakeRollerOne.configFactoryDefault(1);
     intakeRollerOneConfig.supplyCurrLimit.enable = true;
     intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
     intakeRollerOne.configAllSettings(intakeRollerOneConfig);
+    
     
     intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
     intakeRollerOneConfig = new TalonFXConfiguration();
