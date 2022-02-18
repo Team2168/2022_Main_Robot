@@ -35,7 +35,7 @@
   or the raised position (within our frame perimeter).
 
   * 1x Double Solenoid
-* Indexer - `Conor`  
+* Indexer - `Conor`
   Moves the balls through the superstructure, rollers above the hopper blocker that cause ball motion into the shooter.
 
   * 1x TalonFX
@@ -45,18 +45,14 @@
 
   * 1x TalonFX
   * 1x Digital Input for ball detection (IR sensor)
-* Hopper blocker - `Conor`  
-  Prevents the ball from moving into the indexer to aid in alignment for pooper.
-
-  * 1x Double Solenoid
 * Pooper - `Ted`  
   Spits balls out of the robot that don't match our alliance color.
 
   * 1x Double Solenoid to eject ball
-* Pixy / Color-sensor  
+* Color-sensor  
   Determines if the ball in the hopper area matches our alliance color.
 
-  * Pixy2 / color-sensor for ball color detection
+  * color-sensor for ball color detection
 * Climber - `Aiden`  
   Linear lift that can raise/lower to perform the climb.
 

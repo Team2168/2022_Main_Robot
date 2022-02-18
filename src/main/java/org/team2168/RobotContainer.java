@@ -7,19 +7,19 @@ package org.team2168;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.*;
-import org.team2168.commands.drivetrain.*;
-import org.team2168.commands.turret.*;
-import org.team2168.commands.exampleSubsystem.*;
-import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
-import org.team2168.commands.pixy.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
+import org.team2168.commands.indexer.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 import org.team2168.subsystems.Hood.HoodPosition;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -36,9 +36,12 @@ public class RobotContainer {
   // private final Pixy m_pixy = Pixy.getInstance();
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final Pooper pooper = Pooper.getInstance();
+  private final Shooter m_shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
@@ -74,30 +77,46 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
+    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    
+
+
+    
+
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+    
 
-    //oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    //oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-
+    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
-    //oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
-    //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
- 
     oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
 
     oi.operatorJoystick.ButtonX().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
 
     oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
 
-    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));
+    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));  
+
+    //TEST JOYSTICK
+    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
+    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+
+    oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
+    oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
   }
 
   /**
