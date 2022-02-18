@@ -13,7 +13,7 @@ public class StopIntakeMotor extends CommandBase {
   private double resetIntakeValue;
  
   public StopIntakeMotor(IntakeRoller stopIntakeMotorOne, double resetIntakeValue) {
-stopIntakeMotorOne = IntakeRoller.getInstance();
+this.stopIntakeMotorOne = stopIntakeMotorOne;
 this.resetIntakeValue = resetIntakeValue;
 addRequirements(stopIntakeMotorOne);
   }
@@ -29,7 +29,7 @@ addRequirements(stopIntakeMotorOne);
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    stopIntakeMotorOne.resetIntakeMotor(resetIntakeValue);
+    stopIntakeMotorOne.setRollerSpeed(resetIntakeValue);
   }
 
   // Returns true when the command should end.

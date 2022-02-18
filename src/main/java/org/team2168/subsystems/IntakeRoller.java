@@ -4,9 +4,6 @@
 
 package org.team2168.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.WPI_MotorSafetyImplem;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -15,24 +12,18 @@ import org.team2168.Constants.CANDevices;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase {
-  private static WPI_TalonFX intakeRollerOne; 
+  private static WPI_TalonFX intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
-  private static TalonFXConfiguration intakeRollerOneConfig;
+  private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
  
   private IntakeRoller() {
-    intakeRollerOne.configFactoryDefault(1);
+    intakeRollerOne.configFactoryDefault();
     intakeRollerOneConfig.supplyCurrLimit.enable = true;
     intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
     intakeRollerOne.configAllSettings(intakeRollerOneConfig);
-    
-    
-    intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR);
-    intakeRollerOneConfig = new TalonFXConfiguration();
-   
-   
- }
+    }
  public static IntakeRoller getInstance(){
     if (instance == null){
       instance = new IntakeRoller();
@@ -42,16 +33,10 @@ public class IntakeRoller extends SubsystemBase {
 
   public void setRollerSpeed(double speed){
     intakeRollerOne.set(speed);
-    intakeRollerOne.set(TalonFXControlMode.PercentOutput, speed);
+   
 
     }
-  public void resetIntakeMotor(double speedTwo){
-    intakeRollerOne.set(speedTwo);
-    intakeRollerOne.setVoltage(speedTwo);
-    intakeRollerOne.set(TalonFXControlMode.PercentOutput, speedTwo);
-    intakeRollerOne.set(ControlMode.Disabled, 0);
-    
-  }
+ 
 
   
 }

@@ -14,7 +14,7 @@ public class IntakeSpeed extends CommandBase {
   // the spin
   public IntakeSpeed(IntakeRoller iRoller, double speedValueForIntakeSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    iRoller = IntakeRoller.getInstance();
+    this.iRoller = iRoller;
     this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;
     addRequirements(iRoller);
   }
@@ -32,7 +32,7 @@ public class IntakeSpeed extends CommandBase {
    // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    iRoller.resetIntakeMotor(0);
+    iRoller.setRollerSpeed(0.0);
   }
 
   // Returns true when the command should end.
