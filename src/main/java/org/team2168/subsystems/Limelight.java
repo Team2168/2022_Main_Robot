@@ -193,7 +193,7 @@ public class Limelight extends SubsystemBase implements Loggable {
    *                  </ul>
    */
   public void setLedMode(LEDMode ledNumber) {
-    setLedMode(ledNumber);
+    // setLedMode(ledNumber);
     desiredLEDMode = ledNumber;
   }
 
