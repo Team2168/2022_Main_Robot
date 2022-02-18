@@ -21,12 +21,15 @@ public class DriveWithLimelight extends CommandBase {
   private double limelightkP = 0.25;
   private double limelightkFeedForward = 0.1; // both completely arbitrary values
 
-  private double driveLimeTurnSpeed = ((limeAngle/lime.MAX_POSITIVE_ANGLE) * limelightkP) + limelightkFeedForward;
+  private double driveLimeTurnSpeed;
   
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
     addRequirements(limelight);
     lime = limelight;
     dt = drivetrain;
+
+    limeAngle = lime.getPositionX();
+    driveLimeTurnSpeed = ((limeAngle/lime.MAX_POSITIVE_ANGLE) * limelightkP) + limelightkFeedForward;
   }
 
   // Called when the command is initially scheduled.
@@ -41,8 +44,6 @@ public class DriveWithLimelight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limeAngle = lime.getPositionX();
-
     dt.arcadeDrive(0, driveLimeTurnSpeed);
     // System.out.println(driveLimeTurnSpeed);
   }
