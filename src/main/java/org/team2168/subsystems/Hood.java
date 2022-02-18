@@ -22,9 +22,9 @@ public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
   public enum HoodPosition {
-    TEST(10.0),
-    TEST1(45.0),
-    TEST2(60.0),
+    BACK_OF_TARMAC(10.0),
+    WHITE_LINE(45.0),
+    TERMINAL(60.0),
     TEST3(89.0);
 
     public final double position_degrees;
@@ -56,8 +56,8 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = 13125; // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = 30000; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION_LIMIT = ticksToDegrees(13125); // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = ticksToDegrees(30000); // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
@@ -84,8 +84,8 @@ public class Hood extends SubsystemBase implements Loggable {
     hoodMotor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
     hoodMotor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
     hoodMotor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
-    hoodMotor.configMotionAcceleration(ACCELERATION_LIMIT);
-    hoodMotor.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
+    hoodMotor.configMotionAcceleration(degreesToTicks(ACCELERATION_LIMIT));
+    hoodMotor.configMotionCruiseVelocity(degreesToTicks(CRUISE_VELOCITY_LIMIT));
     hoodMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
     //Don't drive through ends of travel
@@ -128,7 +128,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param ticks raw F500 motor position
    * @return hood position in degrees relative to is lowered position (0.0)
    */
-  public double ticksToDegrees(double ticks) {
+  public static double ticksToDegrees(double ticks) {
     return (ticks / TICKS_PER_REV) / GEAR_RATIO * 360.0;
   }
 

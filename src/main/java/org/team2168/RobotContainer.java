@@ -91,17 +91,13 @@ public class RobotContainer {
     //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
  
-    oi.operatorJoystick.ButtonX().whenHeld(new HoodToAngle(hood, HoodPosition.TEST.position_degrees));
-    oi.operatorJoystick.ButtonX().whenReleased(new HoodToAngle(hood, 0.0));
+    oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
 
-    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TEST1.position_degrees));
-    oi.operatorJoystick.ButtonA().whenReleased(new HoodToAngle(hood, 0.0));
+    oi.operatorJoystick.ButtonX().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
 
-    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST2.position_degrees));
-    oi.operatorJoystick.ButtonB().whenReleased(new HoodToAngle(hood, 0.0));
+    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
 
-    oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));
-    oi.operatorJoystick.ButtonY().whenReleased(new HoodToAngle(hood, 0.0));
+    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));
   }
 
   /**
