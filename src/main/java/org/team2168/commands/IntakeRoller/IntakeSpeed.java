@@ -12,7 +12,7 @@ public class IntakeSpeed extends CommandBase {
   private double speedValueForIntakeSpeed;
   // speedValueForIntakeSpeeed sets the speed value between -1 and 1 for the talonFX spin amount to intake balls in using the force
   // the spin
-  public IntakeSpeed(IntakeRoller iRoller,double speedValueForIntakeSpeed) {
+  public IntakeSpeed(IntakeRoller iRoller, double speedValueForIntakeSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     iRoller = IntakeRoller.getInstance();
     this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;

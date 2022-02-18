@@ -38,7 +38,7 @@ public final class Constants {
         public static final int HOOD_MOTOR = 11;
 
         public static final int PIGEON_IMU = 17;
-        public static final int INTAKE_MOTOR = 4;
+        public static final int INTAKE_MOTOR = 15;
         ;
     }
 
