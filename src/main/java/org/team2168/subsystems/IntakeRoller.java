@@ -20,7 +20,7 @@ public class IntakeRoller extends SubsystemBase {
   
 
    private IntakeRoller() {
-    intakeRollerOne.configFactoryDefault();
+    intakeRollerOne.configFactoryDefault(1);
     intakeRollerOneConfig.supplyCurrLimit.enable = true;
     intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
     intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
