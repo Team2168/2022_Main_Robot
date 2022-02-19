@@ -14,6 +14,11 @@ public class ShootWithController extends CommandBase {
 
   private Shooter shooter;
   private DoubleSupplier speed;
+  /**
+   * @param k_shooter this is where you plug in your shooter, 
+   * @param d this is the speed DoubleSupplier you can plug in it 
+   * @return it sets the Shooter and the speed by using parameters
+   */
 
   public ShootWithController(Shooter k_shooter, DoubleSupplier d) {
     shooter = k_shooter;

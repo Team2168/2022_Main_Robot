@@ -125,6 +125,8 @@ public class Shooter extends SubsystemBase implements Loggable {
    * Sets the closed loop shooter speed.
    * 
    * @param setPoint speed in RPM
+   * 
+   * @return it sets the speed in Ticks per 100ms
    */
   public void setSpeed(double setPoint)
   {
@@ -162,10 +164,21 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
+/**
+ * @param d_Speed The parameter which is being passed in by the ShootWithController comamnd
+ * 
+ * @return It sets the speed of the shooter and then sets the motor to shoot with the speed in mind
+ */
+
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
+
+  /**
+   * 
+   * @return makes an instance
+   */
 
   public static Shooter getInstance(){
     if (_instance == null){
