@@ -111,6 +111,8 @@ public class RobotContainer {
 
     oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
+
+    oi.testJoystick.ButtonX().whenPressed(new DriveUntilBall(indexer, 100.0));
   }
 
   /**
