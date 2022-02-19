@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ColorSensor extends SubsystemBase {
@@ -62,15 +63,16 @@ public class ColorSensor extends SubsystemBase {
      */
     public byte[] readSensor() {
         serialPort.reset();
-        
+        serialPort.write(new byte[] { 0x12 }, 1);
 
-        short counter = 0;
+        var previousWrite = Timer.getFPGATimestamp();
         while (serialPort.getBytesReceived() < 3) {
-            counter++;
-            if (counter == Short.MAX_VALUE) {
-                serialPort.reset();
+            var currentTimestamp = Timer.getFPGATimestamp();
+            if ((currentTimestamp - previousWrite) > 1.0) {  // Write once a second
                 serialPort.write(new byte[] { 0x12 }, 1);
+                previousWrite = currentTimestamp;
             }
+
         }
 
         byte[] serialOutput = serialPort.read(3);
@@ -106,9 +108,9 @@ public class ColorSensor extends SubsystemBase {
             SmartDashboard.putString("Computed output", getColor().toString());
 
 
-        System.out.println(
-            String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
-        );
+        // System.out.println(
+        //     String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
+        // );
 
     }
 
