@@ -44,7 +44,6 @@ void loop(void)
      byte value=HWSERIAL.read();
      
      if(value==0x12){
-       //Serial.println("got value request!  Writing to rio.");
        HWSERIAL.write(buff,3);
      }
     }
@@ -52,15 +51,4 @@ void loop(void)
     //else Serial.println("ERROR: TCS34725 NOT FOUND !!!");
    // Wire1.onRequest(requestEvent);
        
-}
-
-// this function is registered as an event, see setup()
-void requestEvent(){
-  uint8_t buff[3];
-  buff[0]= r;
-  buff[1]= g;
-  buff[2]= b;
-//  HWSERIAL.write(buff,3);
-          Serial.println("sending");
-
 }
