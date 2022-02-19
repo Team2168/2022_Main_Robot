@@ -14,7 +14,6 @@ public class BumpHoodAngleUp extends CommandBase {
 
   public BumpHoodAngleUp(Hood h) {
     hood = h;
-    addRequirements(h);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

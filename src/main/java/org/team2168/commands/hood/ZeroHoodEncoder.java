@@ -14,7 +14,6 @@ public class ZeroHoodEncoder extends CommandBase {
 
   public ZeroHoodEncoder(Hood h) {
     hood = h;
-    addRequirements(h);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

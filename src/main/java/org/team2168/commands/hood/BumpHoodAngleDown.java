@@ -13,7 +13,6 @@ public class BumpHoodAngleDown extends CommandBase {
   private Hood hood;
   public BumpHoodAngleDown(Hood h) {
     hood = h;
-    addRequirements(h);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

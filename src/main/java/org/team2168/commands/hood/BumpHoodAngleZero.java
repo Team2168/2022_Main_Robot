@@ -13,7 +13,6 @@ public class BumpHoodAngleZero extends CommandBase {
   public Hood hood;
   public BumpHoodAngleZero(Hood h) {
     hood = h;
-    addRequirements(h);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
