@@ -4,6 +4,8 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
@@ -15,14 +17,34 @@ public class IntakeRoller extends SubsystemBase {
   private static WPI_TalonFX intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
- 
+
+  private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
+  
+  private static int intakeTimeoutMs = 30;
+  private static double peakOutput = 1.0;
+  private SupplyCurrentLimitConfiguration talonCurrentLimit;
+  private final boolean ENABLE_CURRENT_LIMIT = true;
+  private final double CONTINUOUS_CURRENT_LIMIT = 20.0;
+  private final double TRIGGER_THRESHOLD_LIMIT = 25;
+  private final double TRIGGER_THRESHOLD_TIME = 0.2;
+
+
+  
+
   private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
-    intakeRollerOneConfig.supplyCurrLimit.enable = true;
-    intakeRollerOneConfig.supplyCurrLimit.currentLimit = 20;
-    intakeRollerOneConfig.supplyCurrLimit.triggerThresholdCurrent = 25;
-    intakeRollerOneConfig.supplyCurrLimit.triggerThresholdTime = 1;
+    intakeRollerOne.setInverted(intakeInvert);
+
+    intakeRollerOne.configNominalOutputForward(0,intakeTimeoutMs);
+    intakeRollerOne.configNominalOutputReverse(peakOutput, intakeTimeoutMs);
+
     intakeRollerOne.configAllSettings(intakeRollerOneConfig);
+
+    talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, CONTINUOUS_CURRENT_LIMIT,
+    TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
+
+    intakeRollerOne.configSupplyCurrentLimit(talonCurrentLimit);
+
     }
  public static IntakeRoller getInstance(){
     if (instance == null){
