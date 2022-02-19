@@ -12,9 +12,9 @@ public class DriveUntilBall extends CommandBase {
   private Double indexerSpeed;
   private Indexer indexer;
 
-  public DriveUntilBall(Indexer indexer, Double speed) {
+  public DriveUntilBall(Indexer indexer, Double speed_rpm) {
     this.indexer = indexer;
-    this.indexerSpeed = speed;
+    this.indexerSpeed = speed_rpm;
     addRequirements(indexer);
   }
 
@@ -25,13 +25,13 @@ public class DriveUntilBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexer.drive(indexerSpeed);
+    indexer.driveVelocity(indexer.revs_1min_to_ticks_100ms(indexerSpeed));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.drive(0.0);
+    indexer.driveVelocity(0.0);
   }
 
   // Returns true when the command should end.
