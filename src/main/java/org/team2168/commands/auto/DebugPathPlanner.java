@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
-public class DebugPath extends CommandBase {
+public class DebugPathPlanner extends CommandBase {
   Drivetrain drivetrain;
   RamseteCommand rCommand;
   double initialTimestep;
@@ -33,12 +33,12 @@ public class DebugPath extends CommandBase {
   StringBuilder out = new StringBuilder("time,expected velocity,actual velocity\n");
 
   /** Creates a new DebugPath. */
-  public DebugPath(Drivetrain drivetrain, String pathname) {
+  public DebugPathPlanner(Drivetrain drivetrain, String pathname) {
     this.drivetrain = drivetrain; 
     this.pathname = pathname;
 
     try {
-    var trajectory = PathUtil.getTrajectory(pathname);
+    var trajectory = PathUtil.getPathPlannerTrajectory(pathname, true);
     initialPose = trajectory.getInitialPose();
     
 

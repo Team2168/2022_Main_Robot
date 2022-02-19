@@ -4,13 +4,8 @@
 
 package org.team2168;
 
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -104,9 +99,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    robotContainer.drivetrain.setMotorsBrake();
+    robotContainer.drivetrain.setMotorsBrakeAutos();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    System.out.println("scheduling auto: " + autonomousCommand.getName());
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

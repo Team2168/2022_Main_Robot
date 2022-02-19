@@ -6,6 +6,7 @@ package org.team2168.commands.auto;
 
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.utils.PathUtil;
+import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -15,8 +16,9 @@ public class Squiggles extends SequentialCommandGroup {
   public Squiggles(Drivetrain drivetrain) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
+    Paths paths = Paths.getInstance();
     addCommands(
-      PathUtil.getPathCommand("Squiggles", drivetrain)
+      PathUtil.getPathCommand(paths.path_canweturn, drivetrain, InitialPathState.PRESERVEHEADING)
     );
   }
 }

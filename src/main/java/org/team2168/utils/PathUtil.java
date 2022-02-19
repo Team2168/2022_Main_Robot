@@ -2,8 +2,9 @@ package org.team2168.utils;
 
 import java.io.IOException;
 
+import com.pathplanner.lib.PathPlanner;
+
 import org.team2168.Constants;
-import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -71,23 +72,54 @@ public class PathUtil {
                     break;
                 case PRESERVEHEADING:
                     sequence.addCommands(
-                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true))
-                    );
+                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true)));
                     break;
                 case DISCARDHEADING:
                     sequence.addCommands(
-                            // new ResetHeading(drivetrain),
-                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true))
-                    );
+                            // new ResetHeading(drivetrain), // TODO reimpliment this once stuff works
+                            new InstantCommand(() -> drivetrain.resetOdometry(initialPose, true)));
                     break;
             }
         } catch (IndexOutOfBoundsException e) {
-            DriverStation.reportError("Cannot parse an empty path!  Aborting.", e.getStackTrace());
+            DriverStation.reportError("Cannot parse an empty path!  Falling back to no path.", e.getStackTrace());
             return new InstantCommand();
         }
-        sequence.addCommands(new InstantCommand(() -> System.out.println("GYRO HEADING @ PATH START: " + drivetrain.getHeading())));
+        sequence.addCommands(
+                new InstantCommand(() -> System.out.println("GYRO HEADING @ PATH START: " + drivetrain.getHeading())));
         sequence.addCommands(getRamseteCommand(trajectory, drivetrain).andThen(() -> drivetrain.tankDrive(0.0, 0.0)));
         return sequence;
+    }
+
+    public static Command getPathPlannerCommand(String pathName, Drivetrain drivetrain, InitialPathState initialState,
+            boolean reverse) {
+        try {
+            var path = getPathPlannerTrajectory(pathName, reverse);
+            return getPathCommand(path, drivetrain, initialState);
+        } catch (IOException e) {
+            final String ERRORMESSAGE = "Failed to read path %s!  Doing nothing instead of crashing.";
+            DriverStation.reportError(String.format(ERRORMESSAGE, pathName), e.getStackTrace());
+            return new InstantCommand();
+
+        }
+    }
+
+    public static Command getPathPlannerCommand(String pathName, Drivetrain drivetrain, InitialPathState initialState) {
+        return PathUtil.getPathPlannerCommand(pathName, drivetrain, initialState, true); // we will usually be driving backwards
+    }
+
+    public static Command getPathPlannerCommand(String pathName, Drivetrain drivetrain) {
+        return PathUtil.getPathPlannerCommand(pathName, drivetrain, InitialPathState.DISCARDHEADING, true);
+    }
+
+    public static Trajectory getPathPlannerTrajectory(String pathName, boolean reverse) throws IOException {
+        var path = PathPlanner.loadPath(pathName, Constants.Drivetrain.MAX_VELOCITY, Constants.Drivetrain.MAX_ACCEL, reverse);
+        if (path == null) {
+            // PathPlanner doesn't throw an error if it can't load a path; instead it fails
+            // silently and returns null which is bad
+            final String error = "PathPlanner could not parse path %s!";
+            throw new IOException(String.format(error, pathName));
+        }
+        return path;
     }
 
     /**
@@ -100,9 +132,9 @@ public class PathUtil {
      * @param initialState
      * @return path command
      */
-    public static Command getPathCommand(String pathName, Drivetrain drivetrain, InitialPathState initialState) {
+    public static Command getPathWeaverCommand(String pathName, Drivetrain drivetrain, InitialPathState initialState) {
         try {
-            return PathUtil.getPathCommand(getTrajectory(pathName), drivetrain, initialState);
+            return PathUtil.getPathCommand(getPathWeaverTrajectory(pathName), drivetrain, initialState);
         } catch (IOException e) {
             final String ERRORMESSAGE = "Failed to read path %s!  Doing nothing instead of crashing.";
             DriverStation.reportError(String.format(ERRORMESSAGE, pathName), e.getStackTrace());
@@ -110,8 +142,8 @@ public class PathUtil {
         }
     }
 
-    public static Command getPathCommand(String pathName, Drivetrain drivetrain) {
-        return PathUtil.getPathCommand(pathName, drivetrain, InitialPathState.DISCARDHEADING);
+    public static Command getPathWeaverCommand(String pathName, Drivetrain drivetrain) {
+        return PathUtil.getPathWeaverCommand(pathName, drivetrain, InitialPathState.DISCARDHEADING);
     }
 
     /**
@@ -127,7 +159,7 @@ public class PathUtil {
      * @throws IOException if path file does not exist
      * @return Computed trajectory
      */
-    public static Trajectory getTrajectory(String pathName) throws IOException {
+    public static Trajectory getPathWeaverTrajectory(String pathName) throws IOException {
         final String PATHSDIR = "paths/%s.wpilib.json"; // directory of path jsons from within deploy directory
         var trajectoryFSPath = Filesystem.getDeployDirectory().toPath().resolve(String.format(PATHSDIR, pathName));
 
