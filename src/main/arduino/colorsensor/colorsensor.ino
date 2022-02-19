@@ -44,7 +44,8 @@ void loop(void)
      byte value=HWSERIAL.read();
      
      if(value==0x12){
-     HWSERIAL.write(buff,3);
+       //Serial.println("got value request!  Writing to rio.");
+       HWSERIAL.write(buff,3);
      }
     }
     //requestEvent();
@@ -59,7 +60,7 @@ void requestEvent(){
   buff[0]= r;
   buff[1]= g;
   buff[2]= b;
-  HWSERIAL.write(buff,3);
+//  HWSERIAL.write(buff,3);
           Serial.println("sending");
 
 }
