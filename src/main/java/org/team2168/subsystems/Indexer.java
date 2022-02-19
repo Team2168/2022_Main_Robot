@@ -26,7 +26,13 @@ public class Indexer extends SubsystemBase {
   private static final double CONTINUOUS_CURRENT_LIMIT = 20;
   private static final double TRIGGER_THRESHOLD_LIMIT = 30;
   private static final double TRIGGER_THRESHOLD_TIME = 0.02;
-  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;;
+  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
+
+  private static final double TICKS_PER_REV = 2048.0;
+  private static final double TIME_UNITS_VELOCITY_SECS = 0.1;
+  private static final double GEAR_RATIO = 2.25/1.0;
+  private static final double INCHES_PER_REV = 4.72496;
+  private static final double MIN_IN_100_MS = 60.0/0.1;
 
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
@@ -47,6 +53,14 @@ public class Indexer extends SubsystemBase {
     return instance;
   }
 
+  public double inchesToTicks(double inches) {
+    return (inches/INCHES_PER_REV) * TICKS_PER_REV * GEAR_RATIO;
+  }
+
+  public static double getTimeVelocityUnits() {
+    return TIME_UNITS_VELOCITY_SECS;
+  }
+
   /**
    * 
    * @param speed should be set to between 1.0 and -1.0, depending on if you need it to intake or spit out a ball
@@ -54,6 +68,18 @@ public class Indexer extends SubsystemBase {
    */
   public void drive(double speed) {
     motor.set(TalonFXControlMode.PercentOutput, speed);
+  }
+
+  public void driveVelocity(double speedRPM) {
+    motor.set(TalonFXControlMode.Velocity, revs_1min_to_ticks_100ms(speedRPM));
+  }
+
+  public double ticks_100ms_to_revs_1min(double ticks) {
+    return (ticks/TICKS_PER_REV) * MIN_IN_100_MS * GEAR_RATIO;
+  }
+
+  public double revs_1min_to_ticks_100ms(double rotations) {
+    return (rotations/MIN_IN_100_MS) * (TICKS_PER_REV/GEAR_RATIO);
   }
 
   /**
