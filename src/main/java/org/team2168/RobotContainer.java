@@ -100,12 +100,12 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
     oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
-
     oi.operatorJoystick.ButtonX().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
-
     oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
-
     oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));  
+
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new BumpHoodAngleDown(hood));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new BumpHoodAngleUp(hood));
 
     //TEST JOYSTICK
     indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
