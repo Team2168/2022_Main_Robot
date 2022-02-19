@@ -10,6 +10,7 @@ import org.team2168.commands.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.*;
+import org.team2168.commands.hoodAndShooter.hoodAndShooter;
 import org.team2168.commands.indexer.*;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.*;
@@ -91,21 +92,19 @@ public class RobotContainer {
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
     
 
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
-    oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
-    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
-    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
+    //oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    //oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+
+    //oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
+    //oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
+    //oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+
+    //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
     oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
-
     oi.operatorJoystick.ButtonX().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
-
-    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
-
-    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.TEST3.position_degrees));  
+    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));  
 
     //TEST JOYSTICK
     indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
@@ -117,6 +116,10 @@ public class RobotContainer {
 
     oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
+
+    oi.testJoystick.ButtonUpDPad().whenPressed(new hoodAndShooter(m_shooter, hood, HoodPosition.BACK_OF_TARMAC));
+    oi.testJoystick.ButtonRightDPad().whenPressed(new hoodAndShooter(m_shooter, hood, HoodPosition.WHITE_LINE));
+    oi.testJoystick.ButtonDownDPad().whenPressed(new hoodAndShooter(m_shooter, hood, HoodPosition.TERMINAL));
   }
 
   /**
