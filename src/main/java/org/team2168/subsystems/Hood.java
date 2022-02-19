@@ -39,7 +39,7 @@ public class Hood extends SubsystemBase implements Loggable {
   private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.HOOD_MOTOR);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = 73.0/1.0;
+  private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
   private static double degreeAdjustment = 0.0;
 
