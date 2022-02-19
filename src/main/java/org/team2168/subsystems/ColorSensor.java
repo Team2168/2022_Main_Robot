@@ -6,6 +6,7 @@ package org.team2168.subsystems;
 
 import java.util.Arrays;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ColorSensor extends SubsystemBase {
@@ -71,6 +72,10 @@ public class ColorSensor extends SubsystemBase {
     public static boolean red; 
     public static boolean blue; 
  
+    /**
+     * 
+     * @return color of the ball
+     */
     public static void determineColor(){
         if(finalRGB[0] >= finalRGB[2]){
             red = true;
@@ -85,21 +90,21 @@ public class ColorSensor extends SubsystemBase {
     public static void onRedTeam(boolean isTrue){
         determineColor();
         if (isTrue == true && red == true){
-            pooper.absorb();
+            pooper.retract();
             System.out.println("Red Team"); //testing purposes
         }
         else if (isTrue == false || red == false){
-            pooper.excrete();
+            pooper.extend();
         }
     }
     public static void onBlueTeam(boolean isTrue){
         determineColor();
         if (isTrue == true && blue == true){
-            pooper.absorb();
+            pooper.retract();
             System.out.println("Blue Team");
         }
         else if (isTrue == false || blue == false){
-            pooper.excrete();
+            pooper.extend();
         }
     }
     public void onStart(){
@@ -121,4 +126,7 @@ public class ColorSensor extends SubsystemBase {
         rgbNormalizer();
         divisor();
     }
+
+    
+    
 }

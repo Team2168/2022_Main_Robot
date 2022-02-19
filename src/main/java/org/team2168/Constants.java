@@ -50,8 +50,6 @@ public final class Constants {
         public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
-        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
-        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
         public static final int INTAKE_RAISE = 13;
         public static final int INTAKE_LOWER = 12;
 
@@ -60,8 +58,6 @@ public final class Constants {
 
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
-    }
-
         public static final int INDEXER_SENSOR = 2;
     }
     
