@@ -68,7 +68,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
     public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
     public static final double GEAR_RATIO = (50.0 / 10.0) * (40.0 / 22.0);
-    public static final double WHEEL_DIAMETER = 6.0; // inches TODO this is 4 on the real robot
+    public static final double WHEEL_DIAMETER = 4.0;
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
     public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
     public static final double DEGREES_PER_REV = 360.0;

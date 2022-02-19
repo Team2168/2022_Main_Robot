@@ -26,14 +26,14 @@ public final class Constants {
     }
 
     public static final class CANDevices {
-        public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
-        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
-        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 17;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 18;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 19;
         public final static int TALONFX_TURRET_MOTOR = 3;
-        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
-        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
-        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13;
-        public static final int PIGEON_IMU = 17;
+        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 00;
+        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 01;
+        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 02;
+        public static final int PIGEON_IMU = 20;
         public static final int CLIMBER_MOTOR_1 = 18;
         public static final int CLIMBER_MOTOR_2 = 19;
     }
