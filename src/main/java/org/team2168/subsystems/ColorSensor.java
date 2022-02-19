@@ -4,8 +4,6 @@
 
 package org.team2168.subsystems;
 
-import java.util.concurrent.CountDownLatch;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,28 +15,28 @@ public class ColorSensor extends SubsystemBase {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
 
-    private Thread valueUpdateThread;
+    private Thread valueUpdateThread = new Thread(
+            () -> {
+                while (true) {
+                    this.readSensor();
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        DriverStation.reportError("valueUpdateThread interrupted during sleep", e.getStackTrace());
+                    }
+                }
+            });
 
     private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
     // private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder,
     // depends on what we give the teensy slave
 
-    volatile int[] data = new int[3]; // {r, g, b}
-    // byte[] date = new byte[4];
+    private volatile int[] data = new int[3]; // {r, g, b}
 
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT);
         serialPort.setReadBufferSize(3);
         serialPort.setWriteBufferSize(1);
-        valueUpdateThread = new Thread(() -> {
-            while (true) {
-                try {
-                    this.readSensor();
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                }
-            }
-        });
         valueUpdateThread.start();
     }
 
@@ -59,16 +57,15 @@ public class ColorSensor extends SubsystemBase {
      * This will block until it recieves values, so be careful with where you use
      * it.
      * 
-     * @return bytes from teensy
      */
-    public byte[] readSensor() {
+    public void readSensor() {
         serialPort.reset();
         serialPort.write(new byte[] { 0x12 }, 1);
 
         var previousWrite = Timer.getFPGATimestamp();
         while (serialPort.getBytesReceived() < 3) {
             var currentTimestamp = Timer.getFPGATimestamp();
-            if ((currentTimestamp - previousWrite) > 0.1) {  // Write once a second
+            if ((currentTimestamp - previousWrite) > 0.1) { // Write once a second
                 serialPort.write(new byte[] { 0x12 }, 1);
                 previousWrite = currentTimestamp;
             }
@@ -80,12 +77,7 @@ public class ColorSensor extends SubsystemBase {
         // convert values to integers
         for (int i = 0; i < serialOutput.length; i++)
             data[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
-        return serialOutput;
     }
-
-    // public static boolean validateSensor(byte[] data) {
-    // return (data[0] ^ data[1] ^ data[2]) == data[3]; // TODO; indexOutOfRange
-    // }
 
     public Alliance getColor() {
         if (getRed() > getBlue())
@@ -102,15 +94,14 @@ public class ColorSensor extends SubsystemBase {
     public void periodic() {
         // This method will be called once per scheduler run
 
-            SmartDashboard.putNumber("R", getRed());
-            SmartDashboard.putNumber("G", getGreen());
-            SmartDashboard.putNumber("B", getBlue());
-            SmartDashboard.putString("Computed output", getColor().toString());
+        SmartDashboard.putNumber("R", getRed());
+        SmartDashboard.putNumber("G", getGreen());
+        SmartDashboard.putNumber("B", getBlue());
+        SmartDashboard.putString("Computed output", getColor().toString());
 
-
-        System.out.println(
-            String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
-        );
+        // System.out.println(
+        // String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
+        // );
 
     }
 
@@ -118,6 +109,8 @@ public class ColorSensor extends SubsystemBase {
         try {
             return data[0];
         } catch (ArrayIndexOutOfBoundsException e) {
+            DriverStation.reportError("Error while getting colorsensor red value!  Index out of range",
+                    e.getStackTrace());
             return 0;
         }
     }
@@ -126,6 +119,8 @@ public class ColorSensor extends SubsystemBase {
         try {
             return data[1];
         } catch (ArrayIndexOutOfBoundsException e) {
+            DriverStation.reportError("Error while getting colorsensor green value!  Index out of range",
+                    e.getStackTrace());
             return 0;
         }
     }
@@ -134,7 +129,13 @@ public class ColorSensor extends SubsystemBase {
         try {
             return data[2];
         } catch (ArrayIndexOutOfBoundsException e) {
+            DriverStation.reportError("Error while getting colorsensor blue value!  Index out of range",
+                    e.getStackTrace());
             return 0;
         }
+    }
+
+    public int[] getData() {
+        return data;
     }
 }
