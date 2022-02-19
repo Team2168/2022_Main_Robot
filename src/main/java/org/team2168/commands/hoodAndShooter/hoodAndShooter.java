@@ -32,21 +32,21 @@ public class hoodAndShooter extends ParallelCommandGroup {
     if (hoodPosition == HoodPosition.BACK_OF_TARMAC) {
       addCommands(
         new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees),
-        new SetSpeed(shooter, 200.0) //TODO: change the rpm when able to test
+        new SetSpeed(shooter, 2000.0) //TODO: change the rpm when able to test
       );
     }
 
     if (hoodPosition == HoodPosition.WHITE_LINE) {
       addCommands(
         new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees),
-        new SetSpeed(shooter, 300.00) //TODO: change the rpm when able to test
+        new SetSpeed(shooter, 2500.00) //TODO: change the rpm when able to test
       );
     }
 
     if (hoodPosition == HoodPosition.TERMINAL) {
       addCommands(
         new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees),
-        new SetSpeed(shooter, 400.00) //TODO: change the rpm when able to test
+        new SetSpeed(shooter, 2700.00) //TODO: change the rpm when able to test
       );
     }
   }
