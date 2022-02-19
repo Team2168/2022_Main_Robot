@@ -9,15 +9,10 @@ import org.team2168.subsystems.Pooper;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class PooperPoop extends CommandBase {
-  /** Creates a new PooperPoop. */
-
   private Pooper pooper;
  
-
-
-
   public PooperPoop(Pooper pooper) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.pooper = pooper;
     addRequirements(pooper);
   }
 
@@ -28,18 +23,17 @@ public class PooperPoop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pooper.excrete();
+    pooper.extend();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    pooper.absorb();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return pooper.isExtended();
   }
 }
