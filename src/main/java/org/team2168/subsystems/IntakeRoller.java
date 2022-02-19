@@ -33,7 +33,7 @@ public class IntakeRoller extends SubsystemBase {
 
   private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
-    intakeRollerOne.setInverted(intakeInvert);
+     intakeRollerOne.setInverted(intakeInvert);
 
     intakeRollerOne.configNominalOutputForward(0,intakeTimeoutMs);
     intakeRollerOne.configNominalOutputReverse(peakOutput, intakeTimeoutMs);
