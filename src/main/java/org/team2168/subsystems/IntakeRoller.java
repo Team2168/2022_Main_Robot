@@ -4,6 +4,7 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -14,6 +15,7 @@ import org.team2168.Constants.CANDevices;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeRoller extends SubsystemBase {
+
   private static WPI_TalonFX intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
@@ -27,6 +29,12 @@ public class IntakeRoller extends SubsystemBase {
   private final double CONTINUOUS_CURRENT_LIMIT = 20.0;
   private final double TRIGGER_THRESHOLD_LIMIT = 25;
   private final double TRIGGER_THRESHOLD_TIME = 0.2;
+  private final double minuteInHundredMs = 600.0;
+
+  private final double TICKS_PER_REV = 2048;
+  private final double GEAR_RATIO = (2.82/1.0);
+
+
 
 
   
@@ -38,13 +46,14 @@ public class IntakeRoller extends SubsystemBase {
     intakeRollerOne.configNominalOutputForward(0,intakeTimeoutMs);
     intakeRollerOne.configNominalOutputReverse(peakOutput, intakeTimeoutMs);
 
-    intakeRollerOne.configAllSettings(intakeRollerOneConfig);
-
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT, CONTINUOUS_CURRENT_LIMIT,
     TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     intakeRollerOne.configSupplyCurrentLimit(talonCurrentLimit);
+    intakeRollerOneConfig.supplyCurrLimit = talonCurrentLimit;
 
+    intakeRollerOne.configAllSettings(intakeRollerOneConfig);
+    
     }
  public static IntakeRoller getInstance(){
     if (instance == null){
@@ -57,6 +66,14 @@ public class IntakeRoller extends SubsystemBase {
     intakeRollerOne.set(speed);
    
 
+    }
+
+    public void setRollerSpeedVelocity(double speedRPM){
+      intakeRollerOne.set(ControlMode.Velocity, RpmToTicksPerOneHundredMS(speedRPM));
+    }
+
+    public double RpmToTicksPerOneHundredMS(double speedRPM){
+   return (speedRPM/minuteInHundredMs) * (TICKS_PER_REV/GEAR_RATIO);
     }
  
 

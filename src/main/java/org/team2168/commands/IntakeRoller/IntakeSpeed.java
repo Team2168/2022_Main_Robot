@@ -26,13 +26,15 @@ public class IntakeSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  iRoller.setRollerSpeed(speedValueForIntakeSpeed);
+
+  iRoller.setRollerSpeedVelocity(speedValueForIntakeSpeed);
+  
   }
    
    // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    iRoller.setRollerSpeed(0.0);
+    iRoller.setRollerSpeedVelocity(0.0);
   }
 
   // Returns true when the command should end.

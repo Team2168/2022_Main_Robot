@@ -8,7 +8,6 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.IntakeRoller.IntakeSpeed;
-import org.team2168.commands.IntakeRoller.StopIntakeMotor;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.ReturnToZero;
 import org.team2168.commands.climber.SetPosition;
@@ -106,9 +105,10 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
     oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new StopIntakeMotor(intakeRoller, 0.0));
+    oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
+
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new StopIntakeMotor(intakeRoller, 0.0));
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
   }
 
   /**
