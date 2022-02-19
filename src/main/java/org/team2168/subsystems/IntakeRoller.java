@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants.CANDevices;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class IntakeRoller extends SubsystemBase {
 
@@ -20,7 +21,7 @@ public class IntakeRoller extends SubsystemBase {
   private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
 
-  private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
+  private static TalonFXInvertType intakeInvert = TalonFXInvertType.CounterClockwise;
   
   private static int intakeTimeoutMs = 30;
   private static double peakOutput = 1.0;
@@ -34,12 +35,7 @@ public class IntakeRoller extends SubsystemBase {
   private final double TICKS_PER_REV = 2048;
   private final double GEAR_RATIO = (2.82/1.0);
 
-
-
-
-  
-
-  private IntakeRoller() {
+ private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
      intakeRollerOne.setInverted(intakeInvert);
 
@@ -75,7 +71,14 @@ public class IntakeRoller extends SubsystemBase {
     public double RpmToTicksPerOneHundredMS(double speedRPM){
    return (speedRPM/minuteInHundredMs) * (TICKS_PER_REV/GEAR_RATIO);
     }
- 
 
+   @Log(name = "speed (rotations per minute)", rowIndex = 3, columnIndex = 1)
+    public double getSpeedRPM(){
+      return ticksPerOneHundredMsToRotationsPerMinute(intakeRollerOne.getSelectedSensorVelocity());
+    }
+
+    public double ticksPerOneHundredMsToRotationsPerMinute(double ticksPerHundredMs){
+    return ticksPerHundredMs * (GEAR_RATIO/TICKS_PER_REV) * minuteInHundredMs;
+    }
   
 }
