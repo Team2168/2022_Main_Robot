@@ -17,7 +17,6 @@ public class BumpShooterSpeedDown extends CommandBase {
   */
   public BumpShooterSpeedDown(Shooter s) {
     shooter = s;
-    addRequirements(s);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
