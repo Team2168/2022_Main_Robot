@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ColorSensor extends SubsystemBase {
     private SerialPort serialPort;
@@ -74,7 +75,7 @@ public class ColorSensor extends SubsystemBase {
  
     /**
      * 
-     * @return color of the ball
+     * @return Returns the color of the ball it detects and sets it to blue or red
      */
     public static void determineColor(){
         if(finalRGB[0] >= finalRGB[2]){
@@ -87,6 +88,12 @@ public class ColorSensor extends SubsystemBase {
         }
     }
 
+    /**
+     * 
+     * @param isTrue determines if we are on the redTeam or not
+     * @return if we are on the RedTeam and if a red ball is detected then the pooper won't drop out the ball, if either of those things are false, then it will poop it out
+     */
+
     public static void onRedTeam(boolean isTrue){
         determineColor();
         if (isTrue == true && red == true){
@@ -97,6 +104,13 @@ public class ColorSensor extends SubsystemBase {
             pooper.extend();
         }
     }
+
+    /**
+     * 
+     * @param isTrue determines if we are on theg blueTeam or not
+     * @return if we are on the BlueTeam and if a red ball is detected then the pooper won't drop out the ball, if either of those are false then the ball will be pooped out
+     */
+
     public static void onBlueTeam(boolean isTrue){
         determineColor();
         if (isTrue == true && blue == true){
@@ -107,10 +121,17 @@ public class ColorSensor extends SubsystemBase {
             pooper.extend();
         }
     }
+
+    /**
+     * @return gets the alliance and then does the onBlueTeam(); and onRedTeam(); methods with the return inputed in
+     */
+
     public void onStart(){
-        onBlueTeam(true);
+        DriverStation.getAlliance(); //THIS CODE ISN'T DONE YET  
+        onBlueTeam(true); //this is just put as "true" for testing purposes
         onRedTeam(false);
     }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run

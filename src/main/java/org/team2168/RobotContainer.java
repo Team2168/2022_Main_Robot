@@ -16,6 +16,8 @@ import org.team2168.commands.pooper.*;
 import org.team2168.commands.shooter.*;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
+import org.team2168.commands.pixy.*;
+import org.team2168.commands.exampleSubsystem.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import io.github.oblarg.oblog.Logger;
@@ -79,11 +81,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
-<<<<<<< HEAD
-=======
     
 
->>>>>>> origin/main
 
     
 
@@ -99,18 +98,12 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
-<<<<<<< HEAD
-
     //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
 
-=======
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
->>>>>>> origin/main
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
-    
 
 
     //TEST JOYSTICK
