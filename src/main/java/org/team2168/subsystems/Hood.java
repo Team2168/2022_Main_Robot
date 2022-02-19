@@ -39,8 +39,9 @@ public class Hood extends SubsystemBase implements Loggable {
   private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.HOOD_MOTOR);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = 73.0/1.0;
+  private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
+  private static double degreeAdjustment = 0.0;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -107,6 +108,23 @@ public class Hood extends SubsystemBase implements Loggable {
     return instance;
   }
 
+  public void incrementDegrees() {
+    degreeAdjustment += 5.0;
+  }
+
+  public void decrementDegrees() {
+    degreeAdjustment -= 5.0;
+  }
+
+  public void zeroDegrees() {
+    degreeAdjustment = 0.0;
+  }
+
+  @Log(name = "degree adjustment", rowIndex = 2, columnIndex = 3)
+  public double getDegreeAdjustment() {
+    return degreeAdjustment;
+  }
+
   /**
    * 
    * @return the leader motor position in native ticks
@@ -147,7 +165,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees),
+    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees + degreeAdjustment),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
