@@ -68,7 +68,7 @@ public class ColorSensor extends SubsystemBase {
         var previousWrite = Timer.getFPGATimestamp();
         while (serialPort.getBytesReceived() < 3) {
             var currentTimestamp = Timer.getFPGATimestamp();
-            if ((currentTimestamp - previousWrite) > 1.0) {  // Write once a second
+            if ((currentTimestamp - previousWrite) > 0.1) {  // Write once a second
                 serialPort.write(new byte[] { 0x12 }, 1);
                 previousWrite = currentTimestamp;
             }
@@ -108,9 +108,9 @@ public class ColorSensor extends SubsystemBase {
             SmartDashboard.putString("Computed output", getColor().toString());
 
 
-        // System.out.println(
-        //     String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
-        // );
+        System.out.println(
+            String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
+        );
 
     }
 
