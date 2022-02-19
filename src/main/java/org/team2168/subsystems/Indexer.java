@@ -15,6 +15,7 @@ import org.team2168.Constants.DIO;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
@@ -80,6 +81,11 @@ public class Indexer extends SubsystemBase {
 
   public double revs_1min_to_ticks_100ms(double rotations) {
     return (rotations/MIN_IN_100_MS) * (TICKS_PER_REV/GEAR_RATIO);
+  }
+
+  @Log(name = "Speed (RPM)", rowIndex = 3, columnIndex = 1)
+  public double getSpeedRotationsPerMinute() {
+    return ticks_100ms_to_revs_1min(motor.getSelectedSensorVelocity());
   }
 
   /**
