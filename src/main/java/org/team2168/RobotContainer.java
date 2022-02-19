@@ -100,6 +100,7 @@ public class RobotContainer {
     oi.testJoystick.ButtonB().whenPressed(new SetPosition(climber, Constants.LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
     oi.testJoystick.ButtonY().whenPressed(new SetPosition(climber, Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
     oi.testJoystick.ButtonX().whenPressed(new SetPosition(climber, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
+    oi.testJoystick.ButtonA().whenPressed(new ReturnToZero(climber));
   }
 
   /**
