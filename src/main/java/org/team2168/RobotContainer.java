@@ -16,9 +16,15 @@ import org.team2168.subsystems.Hopper;
 import org.team2168.commands.turret.*;
 import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.*;
 import org.team2168.commands.climber.*;
-import org.team2168.commands.pixy.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
+import org.team2168.commands.indexer.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,9 +46,12 @@ public class RobotContainer {
 
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   public final Hopper hopper = Hopper.getInstance();
+  public final Pooper pooper = Pooper.getInstance();
+  private final Shooter m_shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
@@ -79,6 +88,12 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
+    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    
+
+
+    
+
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
@@ -97,12 +112,23 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
-
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+    
+
+
+    //TEST JOYSTICK
+    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
+    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+
+    oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
+    oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
   }
 
   /**
@@ -130,6 +156,4 @@ public class RobotContainer {
 
         
   }
-
-
 }

@@ -26,20 +26,19 @@ public final class Constants {
 
     public static final class CANDevices {
 
-        // TODO - HOPPER MOTOR and HOPPER LINE BREAK have random numbers so I can build code, do not keep them the same please.
-
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 2;
-        public static final int HOPPER_MOTOR = 7;
-        public final static int TALONFX_TURRET_MOTOR = 3;
-        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 15;
-        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 14;
-        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 13; 
-        public final static int TURRET_MOTOR = 12;
-        public static final int CLIMBER_MOTOR_1 = 18;
-        public static final int CLIMBER_MOTOR_2 = 19;
-        public static final int HOOD_MOTOR = 11;
+        public static final int CLIMBER_MOTOR_RIGHT = 3;
+        public static final int INDEXER_MOTOR = 9;
+        public static final int SHOOTER_LEFT_MOTOR = 10;
+        public static final int SHOOTER_RIGHT_MOTOR = 11;
+        public static final int HOOD_MOTOR = 12;
+        public final static int TURRET_MOTOR = 13;
+        public static final int CLIMBER_MOTOR_LEFT = 16;
+        public static final int DRIVETRAIN_LEFT_MOTOR_1 = 17;
+        public static final int DRIVETRAIN_LEFT_MOTOR_2 = 18;
+        public static final int DRIVETRAIN_LEFT_MOTOR_3 = 19;
 
         public static final int PIGEON_IMU = 17;
     }
@@ -49,6 +48,8 @@ public final class Constants {
         public static final int MONKEYBAR_RETRACT = 1;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
+        public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
+        public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
         public static final int INTAKE_RAISE = 13;
         public static final int INTAKE_LOWER = 12;
 
@@ -58,6 +59,7 @@ public final class Constants {
     public static final class DIO {
         public static final int MONKEYBAR_LIMIT_SWITCH = 0;
         public static final int HOPPER_LINE_BREAK = 2;
+        public static final int INDEXER_SENSOR = 2;
     }
     
     public static final double LOOP_TIMESTEP_S = 0.02;

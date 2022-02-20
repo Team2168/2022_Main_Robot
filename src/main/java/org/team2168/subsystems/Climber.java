@@ -29,8 +29,8 @@ public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
   /** Creates a new Climber. */
-  private static WPI_TalonFX climbMotor1 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_1); //left motor when looking at the output shafts
-  private static WPI_TalonFX climbMotor2 = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_2); //right motor when looking at the output shafts
+  private static WPI_TalonFX climbMotorLeft = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
+  private static WPI_TalonFX climbMotorRight = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
@@ -74,42 +74,42 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double MAX_HEIGHT_INCHES = 40.0;
   
   private Climber() {
-    climbMotor1.configFactoryDefault();
-    climbMotor2.configFactoryDefault();
-    climbMotor1.configNeutralDeadband(NEUTRAL_DEADBAND);
-    climbMotor2.configNeutralDeadband(NEUTRAL_DEADBAND);
+    climbMotorLeft.configFactoryDefault();
+    climbMotorRight.configFactoryDefault();
+    climbMotorLeft.configNeutralDeadband(NEUTRAL_DEADBAND);
+    climbMotorRight.configNeutralDeadband(NEUTRAL_DEADBAND);
     
-    climbMotor1.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
-    climbMotor1.setSensorPhase(kSensorPhase);
-    climbMotor1.setInverted(kMotorInvert);
+    climbMotorLeft.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
+    climbMotorLeft.setSensorPhase(kSensorPhase);
+    climbMotorLeft.setInverted(kMotorInvert);
 
-    climbMotor1.configNominalOutputForward(0, kTimeoutMs);
-    climbMotor1.configNominalOutputReverse(0, kTimeoutMs);
-    climbMotor1.configPeakOutputForward(kPeakOutput, kTimeoutMs);
-    climbMotor1.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
+    climbMotorLeft.configNominalOutputForward(0, kTimeoutMs);
+    climbMotorLeft.configNominalOutputReverse(0, kTimeoutMs);
+    climbMotorLeft.configPeakOutputForward(kPeakOutput, kTimeoutMs);
+    climbMotorLeft.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
     
-    climbMotor1.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
-    climbMotor1.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
-    climbMotor1.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
-    climbMotor1.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
-    climbMotor1.configMotionAcceleration(ACCELERATION_LIMIT);
-    climbMotor1.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
+    climbMotorLeft.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
+    climbMotorLeft.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
+    climbMotorLeft.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
+    climbMotorLeft.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
+    climbMotorLeft.configMotionAcceleration(ACCELERATION_LIMIT);
+    climbMotorLeft.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
     // climbMotor1.configMotionSCurveStrength(S_CURVE_STRENGTH);
-    climbMotor1.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
+    climbMotorLeft.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
-    climbMotor1.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
-    climbMotor1.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    climbMotorLeft.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    climbMotorLeft.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
-    climbMotor1.configSupplyCurrentLimit(talonCurrentLimit);
-    climbMotor2.configSupplyCurrentLimit(talonCurrentLimit);
+    climbMotorLeft.configSupplyCurrentLimit(talonCurrentLimit);
+    climbMotorRight.configSupplyCurrentLimit(talonCurrentLimit);
 
     // Tells second climber motor to do the same outputs as the first climber motor,
     // and at the same time.
-    climbMotor2.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_1);
-    climbMotor2.setInverted(InvertType.OpposeMaster);
+    climbMotorRight.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_LEFT);
+    climbMotorRight.setInverted(InvertType.OpposeMaster);
 
     m_climberSim = new ElevatorSim(
         DCMotor.getFalcon500(2),
@@ -120,7 +120,7 @@ public class Climber extends SubsystemBase implements Loggable {
         Units.inchesToMeters(MAX_HEIGHT_INCHES)
     );
 
-    m_climberMotorSim = climbMotor1.getSimCollection();
+    m_climberMotorSim = climbMotorLeft.getSimCollection();
   }
 
   public static Climber getInstance() {
@@ -136,11 +136,11 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isAtZeroPosition() {
-    return climbMotor1.isRevLimitSwitchClosed() == 1;
+    return climbMotorLeft.isRevLimitSwitchClosed() == 1;
   }
 
   public boolean isAtUpperPosition() {
-    return climbMotor1.isFwdLimitSwitchClosed() == 1;
+    return climbMotorLeft.isFwdLimitSwitchClosed() == 1;
   }
 
   // methods that convert a velocity value from seconds to hundreds of
@@ -158,7 +158,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @return the leader motor position in native ticks
    */
   private double getEncoderTicksMotor1() {
-    return climbMotor1.getSelectedSensorPosition(kPIDLoopIdx);
+    return climbMotorLeft.getSelectedSensorPosition(kPIDLoopIdx);
   }
 
   /**
@@ -166,7 +166,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @return the follower position in native ticks
    */
   private double getEncoderTicksMotor2() {
-    return climbMotor2.getSelectedSensorPosition(kPIDLoopIdx);
+    return climbMotorRight.getSelectedSensorPosition(kPIDLoopIdx);
   }
 
   /**
@@ -174,8 +174,8 @@ public class Climber extends SubsystemBase implements Loggable {
    * Used when the lift is at a zero position.
    */
   public void setEncoderPosZero() {
-    climbMotor1.setSelectedSensorPosition(0.0);
-    climbMotor2.setSelectedSensorPosition(0.0);
+    climbMotorLeft.setSelectedSensorPosition(0.0);
+    climbMotorRight.setSelectedSensorPosition(0.0);
   }
 
   /**
@@ -202,7 +202,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   @Log(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3)
   public double getSpeedInchesPerSecond() {
-    return convertVelocityHundredMstoSeconds(ticksToInches(climbMotor1.getSelectedSensorVelocity()));
+    return convertVelocityHundredMstoSeconds(ticksToInches(climbMotorLeft.getSelectedSensorVelocity()));
   }
 
   /**
@@ -211,7 +211,7 @@ public class Climber extends SubsystemBase implements Loggable {
    */
   @Log(name = "Position (In)", rowIndex = 3, columnIndex = 2)
   public double getPositionInches() {
-    return ticksToInches(climbMotor1.getSelectedSensorPosition());
+    return ticksToInches(climbMotorLeft.getSelectedSensorPosition());
   }
 
   // 
@@ -220,7 +220,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speedInInchesPerSec speed to run the lift at, positive up.
    */
   public void setSpeed(double speedInInchesPerSec) {
-    climbMotor1.set(ControlMode.Velocity, inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
+    climbMotorLeft.set(ControlMode.Velocity, inchesToTicks(speedInInchesPerSec) * TIME_UNITS_OF_VELOCITY);
   }
 
   /**
@@ -228,7 +228,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param inches the position to move the lift to, positive up.
    */
   public void setPosition(double inches) {
-    climbMotor1.set(ControlMode.MotionMagic, inchesToTicks(inches),
+    climbMotorLeft.set(ControlMode.MotionMagic, inchesToTicks(inches),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
@@ -237,7 +237,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotor1.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+    climbMotorLeft.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
   @Override
