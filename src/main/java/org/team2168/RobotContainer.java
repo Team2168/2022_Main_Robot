@@ -121,12 +121,16 @@ public class RobotContainer {
     //oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
     //oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
-    oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
-
     oi.testJoystick.ButtonA().whenHeld(new BackOfTarmac(hood, m_shooter));
     oi.testJoystick.ButtonB().whenHeld(new WhiteLine(hood, m_shooter));
     oi.testJoystick.ButtonY().whenHeld(new Terminal(hood, m_shooter));
+
+    oi.testJoystick.ButtonRightBumper().whenPressed(new BumpShooterSpeedUp(m_shooter));
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpShooterSpeedDown(m_shooter));
+    oi.testJoystick.ButtonUpDPad().whenPressed(new BumpShooterSpeedZero(m_shooter));
+
+    //oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    //oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
   }
 
   /**
