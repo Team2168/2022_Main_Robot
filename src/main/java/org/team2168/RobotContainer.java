@@ -9,7 +9,6 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.hopper.DriveHopper;
 import org.team2168.commands.hopper.DriveHopperWithVelocity;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
@@ -104,8 +103,6 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new DriveHopper(hopper, ()-> 0.1));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new DriveHopper(hopper, () -> 0));
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, () -> 10.0));
     oi.operatorJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithVelocity(hopper, () -> 0.0));
 
