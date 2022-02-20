@@ -31,7 +31,7 @@ public final class Constants {
         public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 19;
         public static final int CLIMBER_MOTOR_RIGHT = 3;
         public static final int INDEXER_MOTOR = 6;
-        public static final int INATKE_MOTOR = 15;
+        public static final int INTAKE_MOTOR = 15;
         public static final int HOPPER_MOTOR = 5;
         public static final int SHOOTER_LEFT_MOTOR = 7;
         public static final int SHOOTER_RIGHT_MOTOR = 8;
