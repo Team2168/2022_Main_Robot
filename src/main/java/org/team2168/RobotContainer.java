@@ -9,6 +9,7 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.hopper.DriveHopperWithVelocity;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
@@ -103,8 +104,8 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithVelocity(hopper, () -> 10.0));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithVelocity(hopper, () -> 0.0));
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithPercentOutput(hopper, () -> 0.2));
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithPercentOutput(hopper, () -> 0.0));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
@@ -112,7 +113,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+    // oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
     
 
 

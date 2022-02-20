@@ -66,7 +66,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   
   //Gains
 
-  public static TalonFXInvertType hopperMotorInvert = TalonFXInvertType.Clockwise;
+  public static TalonFXInvertType hopperMotorInvert = TalonFXInvertType.CounterClockwise;
   public static final double KV = 0.02;
   public static final double KA = 0.002;
 
@@ -101,13 +101,12 @@ public class Hopper extends SubsystemBase implements Loggable {
     
     hopperMotor.configFactoryDefault();
     hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
-    hopperMotor.setInverted(hopperMotorInvert);
-    hopperMotor.setInverted(InvertType.InvertMotorOutput);
+    
     hopperMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.configNeutralDeadband(0.01);
 
-    
+    hopperMotor.setInverted(hopperMotorInvert);
 
     m_hopperSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
