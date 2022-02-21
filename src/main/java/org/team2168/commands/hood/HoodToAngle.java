@@ -2,21 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.climber;
+package org.team2168.commands.hood;
 
-import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.Hood;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ExtendLift extends CommandBase {
-  /** Creates a new ExtendLift. */
-  Climber climber;
-  private double liftAscentVelocity = 3.0; // inches per second
+public class HoodToAngle extends CommandBase {
+  /** Creates a new HoodToAngle. */
+  private Hood hood;
+  private double angle;
+  public HoodToAngle(Hood h, double a) {
+    hood = h;
+    angle = a;
 
-  public ExtendLift(Climber climber) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-    this.climber = climber;
+    addRequirements(h);
   }
 
   // Called when the command is initially scheduled.
@@ -26,18 +26,20 @@ public class ExtendLift extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(liftAscentVelocity);
+    hood.setPosition(angle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setSpeed(0.0);
+    if(interrupted) {
+      hood.setPercentOutput(0.0);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.isAtUpperPosition();
+    return false;
   }
 }
