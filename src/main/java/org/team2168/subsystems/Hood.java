@@ -204,7 +204,7 @@ public class Hood extends SubsystemBase implements Loggable {
     //                                  degrees to ticks to ticks per 100ms
     hoodMotor.set(ControlMode.Velocity, degreesToTicks(degrees) / 100);
   }
-
+  @Log(name = "At Zero (Limit Switch)", rowIndex = 1, columnIndex = 1)
   public boolean atZero() {
     return (hoodMotor.isRevLimitSwitchClosed() == 1);
   }
