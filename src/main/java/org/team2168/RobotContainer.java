@@ -11,6 +11,8 @@ import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.*;
 import org.team2168.commands.indexer.*;
+import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.*;
 import org.team2168.commands.shooter.*;
@@ -42,6 +44,7 @@ public class RobotContainer {
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
+  private final IntakeRaiseAndLower intakeRAndL = IntakeRaiseAndLower.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -108,6 +111,8 @@ public class RobotContainer {
     oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
     oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
     oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
+    oi.testJoystick.ButtonX().whenPressed(new IntakeLower(intakeRAndL));
+    oi.testJoystick.ButtonX().whenReleased(new IntakeRaise(intakeRAndL));
 
     oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
