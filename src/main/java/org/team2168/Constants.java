@@ -39,10 +39,10 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 0.6465; //1.9450; // caculated from the minimum speed vlaue required to move the robot
-        public static final double kvVoltSecondsPerMeter = 1.9649; // from sysid_data20220204-205250.json
-        public static final double kaVoltSecondsSquaredPerMeter = .54795;//from sysid_data20220204-205250.json
-        public static final double kPDriveVel = 2.8207; //from sysid_data20220204-205250.json
+        public static final double ksVolts = 0.65923;
+        public static final double kvVoltSecondsPerMeter = 1.9899;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.4609;
+        public static final double kPDriveVel = 2.807; // @1.5 m/s max error
 
         public static final double kTrackwidthMeters = 0.65563;//fudged to 0.87. Actual = 0.65563;
         public static final DifferentialDriveKinematics kDriveKinematics =

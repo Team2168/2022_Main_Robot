@@ -3,9 +3,9 @@
   "encoder type": "Built-in",
   "encoding": false,
   "gearing denominator": 1.0,
-  "gearing numerator": 9.090909,
+  "gearing numerator": 6.0,
   "gyro": "Pigeon",
-  "gyro ctor": "17",
+  "gyro ctor": "20",
   "is drivetrain": true,
   "motor controllers": [
     "TalonFX",
@@ -19,9 +19,9 @@
     1
   ],
   "primary motor ports": [
-    14,
-    15,
-    13
+    0,
+    1,
+    2
   ],
   "primary motors inverted": [
     false,
@@ -34,9 +34,9 @@
     3
   ],
   "secondary motor ports": [
-    1,
-    0,
-    2
+    17,
+    18,
+    19
   ],
   "secondary motors inverted": [
     true,
