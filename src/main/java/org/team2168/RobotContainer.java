@@ -13,7 +13,6 @@ import org.team2168.commands.hood.*;
 import org.team2168.commands.hoodAndShooter.BackOfTarmac;
 import org.team2168.commands.hoodAndShooter.Terminal;
 import org.team2168.commands.hoodAndShooter.WhiteLine;
-import org.team2168.commands.hoodAndShooter.hoodAndShooter;
 import org.team2168.commands.indexer.*;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.*;
@@ -100,25 +99,20 @@ public class RobotContainer {
     //oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     //oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
     //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
+    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber)); 
 
-    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
-    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
-    oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
-    oi.operatorJoystick.ButtonX().whenPressed(new HoodToZero(hood));  
-
+    
+    oi.operatorJoystick.ButtonX().whenHeld(new HoodToZero(hood));
+    
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new BumpHoodAngleDown(hood));
     oi.operatorJoystick.ButtonRightBumper().whenPressed(new BumpHoodAngleUp(hood));
     oi.operatorJoystick.ButtonUpDPad().whenPressed(new BumpHoodAngleZero(hood));
-
 
     //TEST JOYSTICK
     indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
     oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
 
     oi.testJoystick.ButtonX().whenPressed(new SetSpeed(m_shooter, 0.0));
-    //oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
-    //oi.testJoystick.ButtonY().whenPressed(new SetSpeed(m_shooter, 2168.0));
 
     oi.testJoystick.ButtonA().whenHeld(new BackOfTarmac(hood, m_shooter));
     oi.testJoystick.ButtonB().whenHeld(new WhiteLine(hood, m_shooter));
