@@ -9,6 +9,7 @@ import org.team2168.commands.shooter.SetSpeed;
 import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Hood.HoodPosition;
+import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
@@ -28,7 +29,7 @@ public class Terminal extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees),
-      new SetSpeed(shooter, 2500.0)
+      new SetSpeed(shooter, ShooterRPM.TEST3.rpm)
     );
   }
 }
