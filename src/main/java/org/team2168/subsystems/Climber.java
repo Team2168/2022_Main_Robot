@@ -37,7 +37,7 @@ public class Climber extends SubsystemBase implements Loggable {
   private static DigitalInput climbHooks = new DigitalInput(Constants.DIO.CLIMBER_HOOK_LIMIT_SWITCH);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 24.0);
+  private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
   private static final double SPROCKET_RADIUS_INCHES = 0.716;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
 
