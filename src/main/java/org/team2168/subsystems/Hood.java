@@ -195,6 +195,19 @@ public class Hood extends SubsystemBase implements Loggable {
   public void setPercentOutput(double speed) {
     hoodMotor.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
+  
+  /**
+   * 
+   * @param degrees degrees per second 
+   */
+  public void setVelocity(double degrees) {
+    //                                  degrees to ticks to ticks per 100ms
+    hoodMotor.set(ControlMode.Velocity, degreesToTicks(degrees) / 100);
+  }
+
+  public boolean atZero() {
+    return (hoodMotor.isRevLimitSwitchClosed() == 1);
+  }
 
   /**
    * Change all motors to their default mix of brake/coast modes.

@@ -8,11 +8,12 @@ import org.team2168.subsystems.Hood;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ZeroHoodEncoder extends CommandBase {
-  /** Creates a new ZeroEncoder. */
+public class HoodToZero extends CommandBase {
+  /** Creates a new HoodToZero. */
   private Hood hood;
+  private double descentSpeed = -5.0;
 
-  public ZeroHoodEncoder(Hood h) {
+  public HoodToZero(Hood h) {
     hood = h;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -24,16 +25,21 @@ public class ZeroHoodEncoder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hood.setEncoderPosZero();
+    hood.setVelocity(descentSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if (!interrupted) {
+      hood.setVelocity(0.0);
+      hood.setEncoderPosZero();
+    }
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return hood.atZero();
   }
 }
