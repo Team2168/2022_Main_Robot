@@ -21,7 +21,7 @@ public class IntakeRoller extends SubsystemBase {
   private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
 
-  private static TalonFXInvertType intakeInvert = TalonFXInvertType.CounterClockwise;
+  private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
   
   private static int intakeTimeoutMs = 30;
   private static double peakOutput = 1.0;
