@@ -16,12 +16,16 @@ import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.hood.BumpHoodAngleZero;
 import org.team2168.commands.hood.HoodToAngle;
+<<<<<<< HEAD
 import org.team2168.commands.hoodAndShooter.BackOfTarmac;
 import org.team2168.commands.hoodAndShooter.Terminal;
 import org.team2168.commands.hoodAndShooter.WhiteLine;
 import org.team2168.commands.indexer.DriveIndexerWithJoystick;
+=======
+>>>>>>> main
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
+import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
 import org.team2168.commands.monkeybar.RetractMonkeyBar;
 import org.team2168.commands.pooper.PooperPoop;
@@ -154,8 +158,9 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonUpDPad().whenPressed(new BumpHoodAngleZero(hood));
 
     //TEST JOYSTICK
-    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
+    indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
     oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+  
 
     oi.testJoystick.ButtonX().whenPressed(new SetSpeed(m_shooter, 0.0));
 
