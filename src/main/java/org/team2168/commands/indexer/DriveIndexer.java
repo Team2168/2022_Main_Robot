@@ -4,6 +4,8 @@
 
 package org.team2168.commands.indexer;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import java.util.function.DoubleSupplier;
 
 import org.team2168.subsystems.Indexer;

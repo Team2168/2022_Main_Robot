@@ -8,7 +8,7 @@ import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetSpeed extends CommandBase {
+public class SetShooterSpeed extends CommandBase {
   Shooter shooter;
   double target_speed;
 
@@ -17,7 +17,7 @@ public class SetSpeed extends CommandBase {
    * @param s the shooter instance
    * @param speed_rpm target speed in RPMs
    */
-  public SetSpeed(Shooter s, double speed_rpm) {
+  public SetShooterSpeed(Shooter s, double speed_rpm) {
     shooter = s;
     target_speed = speed_rpm;
     addRequirements(shooter);
@@ -35,7 +35,10 @@ public class SetSpeed extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    shooter.setVelocityAdjustment(0.0);
+    shooter.setSpeed(0.0);
+  }
 
   // Returns true when the command should end.
   @Override
