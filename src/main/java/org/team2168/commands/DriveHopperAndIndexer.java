@@ -4,6 +4,8 @@
 
 package org.team2168.commands;
 
+import java.util.function.DoubleSupplier;
+
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.subsystems.Hopper;
@@ -17,19 +19,23 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 public class DriveHopperAndIndexer extends ParallelCommandGroup {
   /** Creates a new DriveHopperAndIndexer. */
 
+  private DoubleSupplier speed;
+
   /**
-   * Drives both hopper and indexer at 20% speed
+   * Drives both hopper and indexer at speed set in RobotContainer
    * 
    * @param h
    * @param i
    */
-  public DriveHopperAndIndexer(Hopper h, Indexer i) {
+  public DriveHopperAndIndexer(Hopper h, Indexer i, DoubleSupplier s) {
+
+      speed = s;
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new DriveHopperWithPercentOutput(h, () -> 0.2),
-      new DriveIndexer(i, () -> 0.2)
+      new DriveHopperWithPercentOutput(h, speed),
+      new DriveIndexer(i, speed)
     );
   }
 }
