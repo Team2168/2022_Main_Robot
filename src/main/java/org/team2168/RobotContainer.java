@@ -16,13 +16,9 @@ import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.hood.BumpHoodAngleZero;
 import org.team2168.commands.hood.HoodToAngle;
-<<<<<<< HEAD
 import org.team2168.commands.hoodAndShooter.BackOfTarmac;
 import org.team2168.commands.hoodAndShooter.Terminal;
 import org.team2168.commands.hoodAndShooter.WhiteLine;
-import org.team2168.commands.indexer.DriveIndexerWithJoystick;
-=======
->>>>>>> main
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.indexer.DriveIndexer;
