@@ -12,13 +12,13 @@ import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveIndexerWithJoystick extends CommandBase {
+public class DriveIndexer extends CommandBase {
   /** Creates a new DriveIndexerWithJoystick. */
   private Indexer indexer;
   private DoubleSupplier speed;
 
 
-  public DriveIndexerWithJoystick(Indexer indexer, DoubleSupplier speed) {
+  public DriveIndexer(Indexer indexer, DoubleSupplier speed) {
     this.indexer = indexer;
     this.speed = speed;
     addRequirements(indexer);

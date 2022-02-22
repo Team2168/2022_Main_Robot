@@ -20,7 +20,6 @@ public class SysIDCommand extends CommandBase {
     private Consumer<Double> mechanismSetter;
     private Supplier<DriveTrainSysIdData> driveTrainGetter;
     private Supplier<MechanismSysIdData> mechanismGetter;
-
     private double startTime;
     private String data;
 
