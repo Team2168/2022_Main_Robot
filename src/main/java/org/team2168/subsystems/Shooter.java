@@ -125,7 +125,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
-    _motorRight.config_kF(kPIDLoopIdx, 0.52*1023.0/11205.0, kTimeoutMs);
+    _motorRight.config_kF(kPIDLoopIdx, 0.5*1023.0/6600.0, kTimeoutMs);
+    // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
     _motorRight.config_kP(kPIDLoopIdx, 1.0, kTimeoutMs);
     _motorRight.config_kI(kPIDLoopIdx, 0.0005, kTimeoutMs);
     _motorRight.config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);

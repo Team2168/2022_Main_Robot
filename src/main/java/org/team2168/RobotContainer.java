@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import io.github.oblarg.oblog.Logger;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.hoodAndShooter.WhiteLine;
 import org.team2168.commands.turret.DriveTurretWithJoystick;
 import org.team2168.subsystems.*;
 
@@ -73,8 +74,9 @@ public class RobotContainer {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
     //Operator Controls
-    turret.setDefaultCommand(new DriveTurretWithJoystick(turret, oi.operatorJoystick::getLeftStickRaw_X));
-    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+
+    //Test joystick
+    oi.testJoystick.ButtonA().whenPressed(new WhiteLine(hood, shooter));
   }
 
   /**
