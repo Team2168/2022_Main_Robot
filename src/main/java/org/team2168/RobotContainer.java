@@ -13,7 +13,7 @@ import org.team2168.commands.climber.ReturnToZero;
 import org.team2168.commands.climber.SetPosition;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.indexer.DriveIndexerWithJoystick;
+import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
 import org.team2168.commands.monkeybar.RetractMonkeyBar;
 import org.team2168.commands.pooper.PooperPoop;
@@ -133,8 +133,9 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
-    indexer.setDefaultCommand(new DriveIndexerWithJoystick(indexer, oi.testJoystick::getLeftStickRaw_X));
+    indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
     oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+  
 
     oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
     oi.testJoystick.ButtonB().whenPressed(new SetSpeed(m_shooter, 216.8));
