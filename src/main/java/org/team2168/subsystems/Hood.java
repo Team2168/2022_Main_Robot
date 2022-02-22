@@ -22,6 +22,7 @@ public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
   public enum HoodPosition {
+    //Auto Pos
     BACK_OF_TARMAC(10.0),
     WHITE_LINE(45.0),
     TERMINAL(60.0),
@@ -202,8 +203,9 @@ public class Hood extends SubsystemBase implements Loggable {
    */
   public void setVelocity(double degrees) {
     //                                  degrees to ticks to ticks per 100ms
-    hoodMotor.set(ControlMode.Velocity, degreesToTicks(degrees) / 100);
+    hoodMotor.set(ControlMode.Velocity, degreesToTicks(degrees) / 10);
   }
+
   @Log(name = "At Zero (Limit Switch)", rowIndex = 1, columnIndex = 1)
   public boolean atZero() {
     return (hoodMotor.isRevLimitSwitchClosed() == 1);
@@ -227,6 +229,9 @@ public class Hood extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
+    if (atZero()) {
+      setEncoderPosZero();
+    }
     // This method will be called once per scheduler run
   }
 }
