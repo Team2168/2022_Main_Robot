@@ -5,7 +5,7 @@
 package org.team2168.commands.hoodAndShooter;
 
 import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.shooter.SetSpeed;
+import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Hood.HoodPosition;
@@ -28,7 +28,7 @@ public class WhiteLine extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees),
-      new SetSpeed(shooter, ShooterRPM.TEST1.rpm)
+      new SetShooterSpeed(shooter, ShooterRPM.TEST1.rpm)
     );
   }
 }

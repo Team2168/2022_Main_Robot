@@ -18,13 +18,13 @@ public class BumpHoodAngleDown extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    hood.decrementDegrees();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    hood.decrementDegrees();
+  }
 
   // Called once the command ends or is interrupted.
   @Override

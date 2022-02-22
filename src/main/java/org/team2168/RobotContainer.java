@@ -29,7 +29,7 @@ import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.BumpShooterSpeedZero;
-import org.team2168.commands.shooter.SetSpeed;
+import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shooter.ShootWithController;
 import org.team2168.commands.turret.DriveTurretWithJoystick;
 import org.team2168.commands.turret.RotateTurret;
@@ -128,21 +128,11 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
 
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
-
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
-    oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
     
 
     oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
@@ -158,11 +148,11 @@ public class RobotContainer {
     oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
   
 
-    oi.testJoystick.ButtonX().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonX().whenPressed(new SetShooterSpeed(m_shooter, 0.0));
 
-    oi.testJoystick.ButtonA().whenHeld(new BackOfTarmac(hood, m_shooter));
-    oi.testJoystick.ButtonB().whenHeld(new WhiteLine(hood, m_shooter));
-    oi.testJoystick.ButtonY().whenHeld(new Terminal(hood, m_shooter));
+    oi.testJoystick.ButtonA().whenPressed(new BackOfTarmac(hood, m_shooter));
+    oi.testJoystick.ButtonB().whenPressed(new WhiteLine(hood, m_shooter));
+    oi.testJoystick.ButtonY().whenPressed(new Terminal(hood, m_shooter));
 
     oi.testJoystick.ButtonRightBumper().whenPressed(new BumpShooterSpeedUp(m_shooter));
     oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpShooterSpeedDown(m_shooter));
@@ -175,10 +165,6 @@ public class RobotContainer {
     oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
 
-    oi.testJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
-    oi.testJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
-    oi.testJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
   }
 
   /**

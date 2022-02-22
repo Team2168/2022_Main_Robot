@@ -73,11 +73,10 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  private static final double GEAR_RATIO = 18.0/24.0;  // motor pulley/shooter wheel pulley
+  private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
   private static double velocityAdjustment = 0.0;
 
-  private double setPointVelocity_sensorUnits;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -141,20 +140,28 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
+      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
 
+  public void setVelocityAdjustment(double adjustment) {
+    velocityAdjustment = adjustment;
+  }
+
+  public void adjustVelocity(double delta) {
+    setVelocityAdjustment(velocityAdjustment + delta);
+  }
+
   public void incrementSpeed() {
-    velocityAdjustment += 50.0;
+    adjustVelocity(50.0);
   }
 
   public void decrementSpeed() {
-    velocityAdjustment -= 50.0;
+    adjustVelocity(-50.0);
   }
 
   public void zeroSpeed() {
-    velocityAdjustment = 0.0;
+    setVelocityAdjustment(0.0);
   }
 
 
