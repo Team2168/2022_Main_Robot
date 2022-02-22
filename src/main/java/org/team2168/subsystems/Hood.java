@@ -24,8 +24,8 @@ public class Hood extends SubsystemBase implements Loggable {
   public enum HoodPosition {
     //Auto Pos
     BACK_OF_TARMAC(10.0),
-    WHITE_LINE(45.0),
-    TERMINAL(60.0),
+    WHITE_LINE(15.0),
+    TERMINAL(20.0),
     TEST3(89.0);
 
     public final double position_degrees;

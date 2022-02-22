@@ -167,7 +167,7 @@ public class RobotContainer {
     oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpShooterSpeedDown(m_shooter));
     oi.testJoystick.ButtonUpDPad().whenPressed(new BumpShooterSpeedZero(m_shooter));
 
-    oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    //oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
     oi.testJoystick.ButtonX().whenPressed(new IntakeLower(intakeRAndL));
     oi.testJoystick.ButtonX().whenReleased(new IntakeRaise(intakeRAndL));
 
