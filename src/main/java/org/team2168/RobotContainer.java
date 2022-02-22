@@ -6,19 +6,44 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.*;
-import org.team2168.commands.climber.*;
-import org.team2168.commands.drivetrain.*;
-import org.team2168.commands.hood.*;
+import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.IntakeRoller.IntakeSpeed;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
+import org.team2168.commands.climber.ReturnToZero;
+import org.team2168.commands.climber.SetPosition;
+import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.hood.BumpHoodAngleDown;
+import org.team2168.commands.hood.BumpHoodAngleUp;
+import org.team2168.commands.hood.BumpHoodAngleZero;
+import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.hoodAndShooter.BackOfTarmac;
 import org.team2168.commands.hoodAndShooter.Terminal;
 import org.team2168.commands.hoodAndShooter.WhiteLine;
-import org.team2168.commands.indexer.*;
-import org.team2168.commands.monkeybar.*;
-import org.team2168.commands.pooper.*;
-import org.team2168.commands.shooter.*;
-import org.team2168.commands.turret.*;
-import org.team2168.subsystems.*;
+import org.team2168.commands.indexer.DriveIndexerWithJoystick;
+import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.intakeraiseandlower.IntakeRaise;
+import org.team2168.commands.monkeybar.ExtendMonkeyBar;
+import org.team2168.commands.monkeybar.RetractMonkeyBar;
+import org.team2168.commands.pooper.PooperPoop;
+import org.team2168.commands.pooper.PooperUnpoop;
+import org.team2168.commands.shooter.BumpShooterSpeedDown;
+import org.team2168.commands.shooter.BumpShooterSpeedUp;
+import org.team2168.commands.shooter.BumpShooterSpeedZero;
+import org.team2168.commands.shooter.SetSpeed;
+import org.team2168.commands.shooter.ShootWithController;
+import org.team2168.commands.turret.DriveTurretWithJoystick;
+import org.team2168.commands.turret.RotateTurret;
+import org.team2168.commands.turret.ZeroTurret;
+import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Hood;
+import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.IntakeRaiseAndLower;
+import org.team2168.subsystems.IntakeRoller;
+import org.team2168.subsystems.MonkeyBar;
+import org.team2168.subsystems.Pooper;
+import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Turret;
 import org.team2168.subsystems.Hood.HoodPosition;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,19 +58,27 @@ import io.github.oblarg.oblog.Logger;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
+
+  // The robot's subsystems an                           d commands are defined here...
+;
+
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   // private final Pixy m_pixy = Pixy.getInstance();
 
+  
   public final Drivetrain drivetrain = Drivetrain.getInstance();
   public final Pooper pooper = Pooper.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
+  private final IntakeRaiseAndLower intakeRAndL = IntakeRaiseAndLower.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -68,6 +101,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+   
+    
   }
 
   public static RobotContainer getInstance() {
@@ -93,13 +128,22 @@ public class RobotContainer {
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
 
-    //oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    //oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    //oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
-    //oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
-    //oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
-    //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber)); 
+    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
+    oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
+    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
+
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
+    oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
+
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
+    oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
+    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+    
 
     oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
     oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
@@ -123,8 +167,17 @@ public class RobotContainer {
     oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpShooterSpeedDown(m_shooter));
     oi.testJoystick.ButtonUpDPad().whenPressed(new BumpShooterSpeedZero(m_shooter));
 
-    //oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
-    //oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
+    oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonX().whenPressed(new IntakeLower(intakeRAndL));
+    oi.testJoystick.ButtonX().whenReleased(new IntakeRaise(intakeRAndL));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
+
+    oi.testJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
+    oi.testJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
+    oi.testJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
   }
 
   /**
