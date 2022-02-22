@@ -143,8 +143,6 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithPercentOutput(hopper, () -> 0.2));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithPercentOutput(hopper, () -> 0.0));
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));

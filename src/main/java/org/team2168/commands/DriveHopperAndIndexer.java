@@ -17,25 +17,21 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveHopperAndIndexer extends ParallelCommandGroup {
-  /** Creates a new DriveHopperAndIndexer. */
-
-  private DoubleSupplier speed;
 
   /**
    * Drives both hopper and indexer at speed set in RobotContainer
    * 
-   * @param h
-   * @param i
+   * @param hopper Hopper subsystem
+   * @param indexer Indexer subsystem
+   * @param speed Doublesupplier for speed value
    */
-  public DriveHopperAndIndexer(Hopper h, Indexer i, DoubleSupplier s) {
-
-      speed = s;
+  public DriveHopperAndIndexer(Hopper hopper, Indexer indexer, DoubleSupplier speed) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new DriveHopperWithPercentOutput(h, speed),
-      new DriveIndexer(i, speed)
+      new DriveHopperWithPercentOutput(hopper, speed),
+      new DriveIndexer(indexer, speed)
     );
   }
 }
