@@ -6,13 +6,13 @@ package org.team2168.commands.IntakeRoller;
 
 import org.team2168.subsystems.IntakeRoller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-public class SetIntakeSpeed extends CommandBase {
+public class DriveIntakeToSpeed extends CommandBase {
  
   private IntakeRoller iRoller;
   private double speedValueForIntakeSpeed;
   // speedValueForIntakeSpeeed sets the speed value between -1 and 1 for the talonFX spin amount to intake balls in using the force
   // the spin
-  public SetIntakeSpeed(IntakeRoller iRoller, double speedValueForIntakeSpeed) {
+  public DriveIntakeToSpeed(IntakeRoller iRoller, double speedValueForIntakeSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.iRoller = iRoller;
     this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;

@@ -2,25 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.shooter;
+package org.team2168.commands.turret;
 
-import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Turret;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetShooterSpeed extends CommandBase {
-  Shooter shooter;
-  double target_speed;
+public class DriveTurretToZero extends CommandBase {
+  /** Creates a new ZeroTurret. */
+  private Turret turret;
 
-  /**
-   * 
-   * @param s the shooter instance
-   * @param speed_rpm target speed in RPMs
-   */
-  public SetShooterSpeed(Shooter s, double speed_rpm) {
-    shooter = s;
-    target_speed = speed_rpm;
-    addRequirements(shooter);
+  public DriveTurretToZero(Turret t) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    turret = t;
+
+    addRequirements(t);
   }
 
   // Called when the command is initially scheduled.
@@ -30,19 +26,21 @@ public class SetShooterSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setSpeed(target_speed);
+      turret.setVelocity(10.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.setVelocityAdjustment(0.0);
-    shooter.setSpeed(0.0);
+    turret.setVelocity(0);
+    if (!interrupted) {
+      turret.zeroEncoder();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return turret.isTurretAtZero();
   }
 }

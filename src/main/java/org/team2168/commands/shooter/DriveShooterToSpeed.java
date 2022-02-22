@@ -4,20 +4,22 @@
 
 package org.team2168.commands.shooter;
 
-import java.util.function.DoubleSupplier;
 import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ShootWithController extends CommandBase {
-  /** Creates a new ShootWithController. */
+public class DriveShooterToSpeed extends CommandBase {
+  Shooter shooter;
+  double target_speed;
 
-  private Shooter shooter;
-  private DoubleSupplier speed;
-
-  public ShootWithController(Shooter k_shooter, DoubleSupplier d) {
-    shooter = k_shooter;
-    speed = d;
+  /**
+   * 
+   * @param s the shooter instance
+   * @param speed_rpm target speed in RPMs
+   */
+  public DriveShooterToSpeed(Shooter s, double speed_rpm) {
+    shooter = s;
+    target_speed = speed_rpm;
     addRequirements(shooter);
   }
 
@@ -28,13 +30,14 @@ public class ShootWithController extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.shoot(speed.getAsDouble());
+    shooter.setSpeed(target_speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.shoot(0);
+    shooter.setVelocityAdjustment(0.0);
+    shooter.setSpeed(0.0);
   }
 
   // Returns true when the command should end.

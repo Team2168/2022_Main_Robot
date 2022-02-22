@@ -2,18 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.pooper;
+package org.team2168.commands.hood;
 
-import org.team2168.subsystems.Pooper;
+import org.team2168.subsystems.Hood;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class PooperPoop extends CommandBase {
-  private Pooper pooper;
- 
-  public PooperPoop(Pooper pooper) {
-    this.pooper = pooper;
-    addRequirements(pooper);
+public class DriveHoodToAngle extends CommandBase {
+  /** Creates a new HoodToAngle. */
+  private Hood hood;
+  private double angle;
+  public DriveHoodToAngle(Hood h, double a) {
+    hood = h;
+    angle = a;
+
+    addRequirements(h);
   }
 
   // Called when the command is initially scheduled.
@@ -23,17 +26,21 @@ public class PooperPoop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    pooper.extend();
+    hood.setPosition(angle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if(interrupted) {
+      hood.setPercentOutput(0.0);
+    }
+    hood.zeroDegrees();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return pooper.isExtended();
+    return false;
   }
 }

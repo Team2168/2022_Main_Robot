@@ -2,26 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.climber;
+package org.team2168.commands.shooter;
 
 import java.util.function.DoubleSupplier;
-
-import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveClimber extends CommandBase {
+public class DriveShooterWithJoystick extends CommandBase {
+  /** Creates a new ShootWithController. */
 
-  private Climber climber;
+  private Shooter shooter;
   private DoubleSupplier speed;
 
-  /** Creates a new DriverWithJoystick. */
-  public DriveClimber(Climber climber, DoubleSupplier s) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-
-    this.climber = climber;
-    speed = s;
+  public DriveShooterWithJoystick(Shooter k_shooter, DoubleSupplier d) {
+    shooter = k_shooter;
+    speed = d;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -31,13 +28,13 @@ public class DriveClimber extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setPercentOutput(speed.getAsDouble());
+    shooter.shoot(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setSpeed(0.0);
+    shooter.shoot(0);
   }
 
   // Returns true when the command should end.

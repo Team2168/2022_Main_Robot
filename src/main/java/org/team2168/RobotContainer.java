@@ -8,16 +8,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import io.github.oblarg.oblog.Logger;
 import org.team2168.commands.DriveHopperAndIndexer;
-import org.team2168.commands.LowerAndRunIntake;
+import org.team2168.commands.ExtendAndRunIntake;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.StowEverything;
-import org.team2168.commands.climber.DriveClimber;
+import org.team2168.commands.climber.DriveClimberWithJoystick;
 import org.team2168.commands.climber.DriveClimberToZero;
 import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.ShootingPositions.FenderHigh;
-import org.team2168.commands.ShootingPositions.FenderLow;
-import org.team2168.commands.ShootingPositions.Launchpad;
-import org.team2168.commands.ShootingPositions.TarmacLine;
+import org.team2168.commands.ShootingPositions.FenderHighShooterPos;
+import org.team2168.commands.ShootingPositions.FenderLowShooterPos;
+import org.team2168.commands.ShootingPositions.LaunchpadShooterPos;
+import org.team2168.commands.ShootingPositions.TarmacLineShooterPos;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
@@ -98,10 +98,10 @@ public class RobotContainer {
     
     //Operator Controls
     //// main button cluster
-    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
-    oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter));
-    oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
-    oi.operatorJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
+    oi.operatorJoystick.ButtonA().whenPressed(new FenderLowShooterPos(hood, shooter));
+    oi.operatorJoystick.ButtonB().whenPressed(new TarmacLineShooterPos(hood, shooter));
+    oi.operatorJoystick.ButtonX().whenPressed(new LaunchpadShooterPos(hood, shooter));
+    oi.operatorJoystick.ButtonY().whenPressed(new FenderHighShooterPos(hood, shooter));
 
     //// start and back
     oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
@@ -113,11 +113,11 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
 
     //// sticks
-    climber.setDefaultCommand(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller))
+            .whenPressed(new ExtendAndRunIntake(intakeRaiseAndLower, intakeRoller))
             .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller));
     oi.operatorJoystick.ButtonRightBumper()
             .whenPressed(

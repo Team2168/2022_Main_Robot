@@ -9,7 +9,7 @@ import org.team2168.utils.Util;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RotateTurret extends CommandBase {
+public class DriveTurretToPositionDegrees extends CommandBase {
   /** Creates a new RotateTurret. */
   private Turret turret;
   private double targetPositionDegrees;
@@ -23,7 +23,7 @@ public class RotateTurret extends CommandBase {
    * @param targetPosition the desired absolute position of the turret (degrees)
    */
 
-  public RotateTurret(Turret t, double targetPosition) {
+  public DriveTurretToPositionDegrees(Turret t, double targetPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
     turret = t;
     targetPositionDegrees = targetPosition;
@@ -37,7 +37,7 @@ public class RotateTurret extends CommandBase {
    * @param targetPosition the desired absolute position of the turret (degrees)
    * @param acceptableError how close to the target posotion do we need to be to finish the command (degrees)
    */
-  public RotateTurret(Turret t, double targetPosition, double acceptableError) {
+  public DriveTurretToPositionDegrees(Turret t, double targetPosition, double acceptableError) {
     // Use addRequirements() here to declare subsystem dependencies.
     acceptableErrorDegrees = acceptableError;
     addRequirements(t);

@@ -8,14 +8,13 @@ import org.team2168.subsystems.IntakeRaiseAndLower;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class IntakeLower extends CommandBase {
+public class RetractIntake extends CommandBase {
   private IntakeRaiseAndLower intake;
-  /** Creates a new IntakeLower. */
-  public IntakeLower(IntakeRaiseAndLower intake) {
-    // Use addRequirements() here to declare subsystem dependencies.
+
+  /** Creates a new IntakeRaise. */
+  public RetractIntake(IntakeRaiseAndLower intake) {
     this.intake = intake;
     addRequirements(intake);
-  
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +24,7 @@ public class IntakeLower extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.lower();
+    intake.raise();
   }
 
   // Called once the command ends or is interrupted.
@@ -36,6 +35,6 @@ public class IntakeLower extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intake.isIntakeLowered();
+    return intake.isIntakeRaised();
   }
 }
