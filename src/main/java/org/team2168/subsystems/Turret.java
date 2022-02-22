@@ -63,8 +63,8 @@ public class Turret extends SubsystemBase implements Loggable {
   public static final double KV = 0.05;
   public static final double KA= 0.002;
 
-  private static FlywheelSim m_turretSim;
-  private static TalonFXSimCollection m_turretMotorSim;
+  private static FlywheelSim turretSim;
+  private static TalonFXSimCollection turretMotorSim;
 
   private Turret() {
     turretMotor = new WPI_TalonFX(Constants.CANDevices.TURRET_MOTOR);
@@ -94,12 +94,12 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
 
     //Setup simulation
-    m_turretSim = new FlywheelSim(
+    turretSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
       DCMotor.getFalcon500(1),
       GEAR_RATIO
     );
-    m_turretMotorSim = turretMotor.getSimCollection();
+    turretMotorSim = turretMotor.getSimCollection();
     
   }
 
@@ -230,16 +230,16 @@ public class Turret extends SubsystemBase implements Loggable {
   @Override
   public void simulationPeriodic() {
     // Affect motor outputs by main system battery voltage dip 
-    m_turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+    turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
 
     // Pass motor output voltage to physics sim
-    m_turretSim.setInput(m_turretMotorSim.getMotorOutputLeadVoltage());
-    m_turretSim.update(Constants.LOOP_TIMESTEP_S);
+    turretSim.setInput(turretMotorSim.getMotorOutputLeadVoltage());
+    turretSim.update(Constants.LOOP_TIMESTEP_S);
 
     // Update motor sensor states based on physics model
-    double sim_velocity_ticks_per_100ms = m_turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    m_turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    m_turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + 
+    double sim_velocity_ticks_per_100ms = turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() +
       Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
 
   }

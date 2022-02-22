@@ -67,8 +67,8 @@ public class Climber extends SubsystemBase implements Loggable {
 
   //Simulation objects
   // Characterization
-  private static ElevatorSim m_climberSim;
-  private static TalonFXSimCollection m_climberMotorSim;
+  private static ElevatorSim climberSim;
+  private static TalonFXSimCollection climberMotorSim;
   private static final double CARRIAGE_MASS_KG = 4.5;
   private static final double MIN_HEIGHT_INCHES = 0.0;
   private static final double MAX_HEIGHT_INCHES = 40.0;
@@ -111,7 +111,7 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotorRight.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_LEFT);
     climbMotorRight.setInverted(InvertType.OpposeMaster);
 
-    m_climberSim = new ElevatorSim(
+    climberSim = new ElevatorSim(
         DCMotor.getFalcon500(2),
         GEAR_RATIO,
         CARRIAGE_MASS_KG,
@@ -120,7 +120,7 @@ public class Climber extends SubsystemBase implements Loggable {
         Units.inchesToMeters(MAX_HEIGHT_INCHES)
     );
 
-    m_climberMotorSim = climbMotorLeft.getSimCollection();
+    climberMotorSim = climbMotorLeft.getSimCollection();
   }
 
   public static Climber getInstance() {
@@ -248,24 +248,24 @@ public class Climber extends SubsystemBase implements Loggable {
   @Override
   public void simulationPeriodic() {
     // Affect motor outputs by main system battery voltage dip 
-    m_climberMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+    climberMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
 
     // Pass motor output voltage to physics sim
-    m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
-    m_climberSim.update(Constants.LOOP_TIMESTEP_S);
+    climberSim.setInput(climberMotorSim.getMotorOutputLeadVoltage());
+    climberSim.update(Constants.LOOP_TIMESTEP_S);
 
-    // System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
+    // System.out.println("Climber pos: " + climberSim.getPositionMeters());
 
     // Update motor sensor states based on physics model
-    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_climberSim.getVelocityMetersPerSecond())) * TIME_UNITS_OF_VELOCITY;
-    double sim_position = inchesToTicks(Units.metersToInches(m_climberSim.getPositionMeters()));
-    m_climberMotorSim.setIntegratedSensorRawPosition((int) sim_position);
-    m_climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
+    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(climberSim.getVelocityMetersPerSecond())) * TIME_UNITS_OF_VELOCITY;
+    double sim_position = inchesToTicks(Units.metersToInches(climberSim.getPositionMeters()));
+    climberMotorSim.setIntegratedSensorRawPosition((int) sim_position);
+    climberMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100_ms);
 
     // Set simulated limit switch positions from simulation methods
-    // m_climberMotorSim.setLimitRev(m_climberSim.hasHitLowerLimit());
-    // m_climberMotorSim.setLimitFwd(m_climberSim.hasHitUpperLimit());
-    // m_climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
-    // m_climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
+    // climberMotorSim.setLimitRev(climberSim.hasHitLowerLimit());
+    // climberMotorSim.setLimitFwd(climberSim.hasHitUpperLimit());
+    // climberMotorSim.setLimitRev(sim_position <= MIN_HEIGHT_INCHES + 0.1);
+    // climberMotorSim.setLimitFwd(sim_position >= MAX_HEIGHT_INCHES - 0.1);
   }
 }
