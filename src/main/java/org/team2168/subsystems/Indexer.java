@@ -15,19 +15,22 @@ import org.team2168.Constants.DIO;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class Indexer extends SubsystemBase {
+public class Indexer extends SubsystemBase implements Loggable {
   /** Creates a new Indexer. */
   private static DigitalInput detector;
-  private static Indexer instance = null;
   private static WPI_TalonFX motor;
+
   private static SupplyCurrentLimitConfiguration indexerCurrentLimit;
   private static final boolean ENABLE_CURRENT_LIMIT = true;
   private static final double CONTINUOUS_CURRENT_LIMIT = 20;
   private static final double TRIGGER_THRESHOLD_LIMIT = 30;
   private static final double TRIGGER_THRESHOLD_TIME = 0.02;
-  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;;
-
+  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.Clockwise;
+  
+  private static Indexer instance = null;
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
     motor = new WPI_TalonFX(CANDevices.INDEXER_MOTOR);
@@ -41,9 +44,8 @@ public class Indexer extends SubsystemBase {
   }
 
   public static Indexer getInstance() {
-    if (instance == null) {
+    if (instance == null)
       instance = new Indexer();
-    }
     return instance;
   }
 
@@ -60,6 +62,7 @@ public class Indexer extends SubsystemBase {
    * 
    * @return boolean is meant to detect the presence of a ball in the indexer
    */
+  @Log(name = "Is ball present?")
   public boolean isBallPresent() {
     return !detector.get();
   }
