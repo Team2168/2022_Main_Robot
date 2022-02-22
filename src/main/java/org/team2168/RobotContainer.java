@@ -104,7 +104,6 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
     oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
     oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
-    oi.operatorJoystick.ButtonX().whenPressed(new HoodToZero(hood));
 
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new BumpHoodAngleDown(hood));
     oi.operatorJoystick.ButtonRightBumper().whenPressed(new BumpHoodAngleUp(hood));
