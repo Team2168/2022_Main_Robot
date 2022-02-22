@@ -261,6 +261,9 @@ public class Climber extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (isAtZeroPosition()) {
+      setEncoderPosZero();
+    }
   }
 
   @Override
