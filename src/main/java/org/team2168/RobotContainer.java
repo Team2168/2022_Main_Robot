@@ -6,6 +6,26 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
+
+import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
+import org.team2168.commands.hopper.DriveHopperWithVelocity;
+import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Hopper;
+import org.team2168.commands.turret.*;
+import org.team2168.commands.exampleSubsystem.*;
+import org.team2168.commands.hood.HoodToAngle;
+import org.team2168.commands.*;
+import org.team2168.commands.climber.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
+import org.team2168.commands.indexer.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.turret.*;
+import org.team2168.subsystems.*;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.IntakeRoller.IntakeSpeed;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
@@ -60,6 +80,7 @@ public class RobotContainer {
 
   
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final Hopper hopper = Hopper.getInstance();
   public final Pooper pooper = Pooper.getInstance();
   private final Shooter m_shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
@@ -72,6 +93,7 @@ public class RobotContainer {
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
+
 
   // private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
   // private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
@@ -117,9 +139,11 @@ public class RobotContainer {
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+   
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
@@ -132,7 +156,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
     oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+    // oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
     
 
 
@@ -178,5 +202,7 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
+
+        
   }
 }
