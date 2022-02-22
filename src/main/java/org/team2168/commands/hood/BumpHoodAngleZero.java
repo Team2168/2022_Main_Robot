@@ -8,15 +8,12 @@ import org.team2168.subsystems.Hood;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class HoodToAngle extends CommandBase {
-  /** Creates a new HoodToAngle. */
-  private Hood hood;
-  private double angle;
-  public HoodToAngle(Hood h, double a) {
+public class BumpHoodAngleZero extends CommandBase {
+  /** Creates a new BumpHoodAngleZero. */
+  public Hood hood;
+  public BumpHoodAngleZero(Hood h) {
     hood = h;
-    angle = a;
-
-    addRequirements(h);
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -26,21 +23,16 @@ public class HoodToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hood.setPosition(angle);
+    hood.zeroDegrees();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    if(interrupted) {
-      hood.setPercentOutput(0.0);
-    }
-    hood.zeroDegrees();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

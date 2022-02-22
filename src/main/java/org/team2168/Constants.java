@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    
-    public static final double LOOP_TIMESTEP_S = 0.02;
     public static final class Joysticks {
         public static final int DRIVER_JOYSTICK = 0;
         public static final int OPERATOR_JOYSTICK = 1;
@@ -72,4 +70,5 @@ public final class Constants {
         public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
     }
+    public static final double LOOP_TIMESTEP_S = 0.02;
 }

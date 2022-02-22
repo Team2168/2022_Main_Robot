@@ -21,21 +21,36 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
+  public enum HoodPosition {
+    //Auto Pos
+    BACK_OF_TARMAC(10.0),
+    WHITE_LINE(15.0),
+    TERMINAL(20.0),
+    TEST3(89.0);
+
+    public final double position_degrees;
+    
+    private HoodPosition(double position_degrees) {
+        this.position_degrees = position_degrees;
+  }
+}
+
   static Hood instance = null;
 
   private static WPI_TalonFX hoodMotor = new WPI_TalonFX(Constants.CANDevices.HOOD_MOTOR);
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = 73.0/1.0;
+  private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
+  private static double degreeAdjustment = 0.0;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
-  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.CounterClockwise; // direction of output shaft rotation when looking at
+  private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
 
   // Gains
-  private static final double kP = 0.5;
+  private static final double kP = 0.075;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
@@ -43,8 +58,8 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = 35000; // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = 30000; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION_LIMIT = ticksToDegrees(13125); // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = ticksToDegrees(30000); // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
@@ -71,8 +86,8 @@ public class Hood extends SubsystemBase implements Loggable {
     hoodMotor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
     hoodMotor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
     hoodMotor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
-    hoodMotor.configMotionAcceleration(ACCELERATION_LIMIT);
-    hoodMotor.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
+    hoodMotor.configMotionAcceleration(degreesToTicks(ACCELERATION_LIMIT));
+    hoodMotor.configMotionCruiseVelocity(degreesToTicks(CRUISE_VELOCITY_LIMIT));
     hoodMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
     //Don't drive through ends of travel
@@ -92,6 +107,23 @@ public class Hood extends SubsystemBase implements Loggable {
       instance = new Hood();
     }
     return instance;
+  }
+
+  public void incrementDegrees() {
+    degreeAdjustment += 5.0;
+  }
+
+  public void decrementDegrees() {
+    degreeAdjustment -= 5.0;
+  }
+
+  public void zeroDegrees() {
+    degreeAdjustment = 0.0;
+  }
+
+  @Log(name = "degree adjustment", rowIndex = 2, columnIndex = 3)
+  public double getDegreeAdjustment() {
+    return degreeAdjustment;
   }
 
   /**
@@ -115,7 +147,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param ticks raw F500 motor position
    * @return hood position in degrees relative to is lowered position (0.0)
    */
-  public double ticksToDegrees(double ticks) {
+  public static double ticksToDegrees(double ticks) {
     return (ticks / TICKS_PER_REV) / GEAR_RATIO * 360.0;
   }
 
@@ -134,7 +166,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees),
+    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees + degreeAdjustment),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
@@ -149,7 +181,7 @@ public class Hood extends SubsystemBase implements Loggable {
 
   /**
    * 
-   * @return the hood posiiton in raw f500 encoder ticks
+   * @return the hood posititon in raw f500 encoder ticks
    */
   @Log(name = "Position (ticks)", rowIndex = 3, columnIndex = 1)
   public double getPositionTicks() {
@@ -163,6 +195,20 @@ public class Hood extends SubsystemBase implements Loggable {
    */
   public void setPercentOutput(double speed) {
     hoodMotor.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+  }
+  
+  /**
+   * 
+   * @param degrees degrees per second 
+   */
+  public void setVelocity(double degrees) {
+    //                                  degrees to ticks to ticks per 100ms
+    hoodMotor.set(ControlMode.Velocity, degreesToTicks(degrees) / 10);
+  }
+
+  @Log(name = "At Zero (Limit Switch)", rowIndex = 1, columnIndex = 1)
+  public boolean atZero() {
+    return (hoodMotor.isRevLimitSwitchClosed() == 1);
   }
 
   /**
@@ -183,6 +229,9 @@ public class Hood extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
+    if (atZero()) {
+      setEncoderPosZero();
+    }
     // This method will be called once per scheduler run
   }
 }
