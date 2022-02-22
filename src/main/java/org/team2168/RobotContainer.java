@@ -7,10 +7,21 @@ package org.team2168;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import io.github.oblarg.oblog.Logger;
-import org.team2168.commands.climber.DriveClimberWithJoystick;
+import org.team2168.commands.DriveHopperAndIndexer;
+import org.team2168.commands.LowerAndRunIntake;
+import org.team2168.commands.RetractAndStopIntake;
+import org.team2168.commands.StowEverything;
+import org.team2168.commands.climber.DriveClimber;
+import org.team2168.commands.climber.DriveClimberToZero;
 import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.hoodAndShooter.WhiteLine;
-import org.team2168.commands.turret.DriveTurretWithJoystick;
+import org.team2168.commands.ShootingPositions.FenderHigh;
+import org.team2168.commands.ShootingPositions.FenderLow;
+import org.team2168.commands.ShootingPositions.Launchpad;
+import org.team2168.commands.ShootingPositions.TarmacLine;
+import org.team2168.commands.indexer.DriveIndexer;
+import org.team2168.commands.indexer.DriveIndexerUntilBall;
+import org.team2168.commands.shooter.BumpShooterSpeedDown;
+import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.subsystems.*;
 
 /**
@@ -68,15 +79,57 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
-
     //Driver Controls
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
+    //// Green button
+//    oi.driverJoystick.ButtonLeftStick()
+//            .whenPressed(new DriveWithLimelight(drivetrain))
+//            .whenReleased(new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0));
+
+    //// Black button
+//    oi.driverJoystick.ButtonRightBumper().whenPressed(new AutoClimbFullSend());
+
+    //// Red button
+
+
+    oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood));
+
+    
     //Operator Controls
+    //// main button cluster
+    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
+    oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter));
+    oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
+    oi.operatorJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
+
+    //// start and back
+    oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
+    oi.operatorJoystick.ButtonBack().whenPressed(new BumpShooterSpeedDown(shooter));
+
+    //// dpad
+//    oi.operatorJoystick.ButtonUpDPad().whenPressed(new ManuallyStageBall(indexer)); // TODO implement manual staging
+    oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
+    oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
+
+    //// sticks
+    climber.setDefaultCommand(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+
+    //// Trigger cluster
+    oi.operatorJoystick.ButtonLeftBumper()
+            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller))
+            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller));
+    oi.operatorJoystick.ButtonRightBumper()
+            .whenPressed(
+                    new DriveHopperAndIndexer(
+                            hopper, indexer,
+                            Constants.MotorSpeeds.HOPPER_SPEED,
+                            Constants.MotorSpeeds.INDEXER_SPEED))
+            .whenReleased(new DriveHopperAndIndexer(hopper, indexer, 0.0, 0.0));
+
 
     //Test joystick
-    oi.testJoystick.ButtonA().whenPressed(new WhiteLine(hood, shooter));
+
   }
 
   /**

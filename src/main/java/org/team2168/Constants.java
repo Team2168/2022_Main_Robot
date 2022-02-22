@@ -63,5 +63,12 @@ public final class Constants {
         public static final int HOPPER_LINE_BREAK = 2;
         public static final int INDEXER_SENSOR = 3;
     }
+
+    public static final class MotorSpeeds {
+        // Default speeds to input into commands
+        public static final double INDEXER_SPEED = 0.3;
+        public static final double HOPPER_SPEED = 0.2;
+        public static final double INTAKE_SPEED = 0.5;
+    }
     public static final double LOOP_TIMESTEP_S = 0.02;
 }

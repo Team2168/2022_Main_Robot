@@ -4,46 +4,45 @@
 
 package org.team2168.commands.climber;
 
+import java.util.function.DoubleSupplier;
+
 import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ReturnToZero extends CommandBase {
-  /** Creates a new ReturnToZero. */
-  Climber climber;
-  private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
+public class DriveClimber extends CommandBase {
 
-  public ReturnToZero(Climber climber) {
+  private Climber climber;
+  private DoubleSupplier speed;
+
+  /** Creates a new DriverWithJoystick. */
+  public DriveClimber(Climber climber, DoubleSupplier s) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
+
     this.climber = climber;
+    speed = s;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(LIFT_DESCENT_VELOCITY_IPS);
+    climber.setPercentOutput(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted) {
-      //Don't zero if we didn't get to the sensor
-      climber.setSpeed(0.0);
-      climber.setEncoderPosZero();
-    }
+    climber.setSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.isAtZeroPosition();
+    return false;
   }
 }
