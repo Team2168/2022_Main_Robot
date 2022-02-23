@@ -2,6 +2,10 @@
 
 This is arduino code for the color sensor.
 
+Wiring map:
+![map 4 0](https://user-images.githubusercontent.com/74201229/155244337-c20f173f-a93a-4156-8f16-831797d96b06.png)
+
+
 ## Installation
 
 ### Install the Arduino IDE
