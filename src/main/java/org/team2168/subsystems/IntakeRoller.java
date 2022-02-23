@@ -7,7 +7,6 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
@@ -20,9 +19,9 @@ public class IntakeRoller extends SubsystemBase {
 
   private static WPI_TalonFX intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
-  private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
+ 
 
-  private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
+  private static TalonFXInvertType intakeInvert = TalonFXInvertType.CounterClockwise;
 
   private static final double kP = 1.0;
   private static final double kI = 0.0;
@@ -57,9 +56,9 @@ public class IntakeRoller extends SubsystemBase {
     TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     intakeRollerOne.configSupplyCurrentLimit(talonCurrentLimit);
-    intakeRollerOneConfig.supplyCurrLimit = talonCurrentLimit;
 
-    intakeRollerOne.configAllSettings(intakeRollerOneConfig);
+
+    // intakeRollerOne.configAllSettings(intakeRollerOneConfig);
     
     }
  public static IntakeRoller getInstance(){
@@ -69,11 +68,11 @@ public class IntakeRoller extends SubsystemBase {
     return instance; 
   }
 
-   public void setRollerSpeed(double speed){
-     intakeRollerOne.set(speed);
+  //  public void setRollerSpeed(double speed){
+  //    intakeRollerOne.set(speed);
    
 
-     }
+  //    }
 
     public void setRollerSpeedVelocity(double speedRPM){
       speedRPMFunction = RpmToTicksPerOneHundredMS(speedRPM);
