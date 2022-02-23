@@ -4,6 +4,7 @@
 
 package org.team2168.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -24,8 +25,8 @@ public class Hood extends SubsystemBase implements Loggable {
   public enum HoodPosition {
     //Auto Pos
     FENDER_LOW(10.0),
-    FENDER_HIGH(15.0),
-    TARMAC_LINE(20.0),
+    FENDER_HIGH(10.0),
+    TARMAC_LINE(23.0),
     LAUNCHPAD(30.0),
     ZERO(0.0);
 
@@ -62,6 +63,9 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double ACCELERATION_LIMIT = ticksToDegrees(13125); // TODO: Change when mechanism is avaialble
   private static final double CRUISE_VELOCITY_LIMIT = ticksToDegrees(30000); // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
+
+  public static final double MAX_ANGLE = 30.0;
+  public static final double MIN_ANGLE = 0.0;
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -111,11 +115,11 @@ public class Hood extends SubsystemBase implements Loggable {
   }
 
   public void incrementDegrees() {
-    degreeAdjustment += 5.0;
+    degreeAdjustment += 1.0;
   }
 
   public void decrementDegrees() {
-    degreeAdjustment -= 5.0;
+    degreeAdjustment -= 1.0;
   }
 
   public void zeroDegrees() {
@@ -167,7 +171,8 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees + degreeAdjustment),
+    var demand = MathUtil.clamp(degrees + degreeAdjustment, MIN_ANGLE, MAX_ANGLE);
+    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(demand),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 

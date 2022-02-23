@@ -24,15 +24,14 @@ public class DriveHopperAndIndexer extends ParallelCommandGroup {
    * 
    * @param hopper Hopper subsystem
    * @param indexer Indexer subsystem
-   * @param speed Doublesupplier for speed value
    */
-  public DriveHopperAndIndexer(Hopper hopper, Indexer indexer, double hopperSpeed, double indexerSpeed) {
+  public DriveHopperAndIndexer(Hopper hopper, Indexer indexer) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new DriveHopperWithPercentOutput(hopper, () -> hopperSpeed),
-      new DriveIndexer(indexer, () -> indexerSpeed)
+      new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+      new DriveIndexer(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED)
     );
   }
 }

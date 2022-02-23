@@ -18,6 +18,8 @@ import org.team2168.commands.ShootingPositions.FenderHigh;
 import org.team2168.commands.ShootingPositions.FenderLow;
 import org.team2168.commands.ShootingPositions.Launchpad;
 import org.team2168.commands.ShootingPositions.TarmacLine;
+import org.team2168.commands.hood.BumpHoodAngleDown;
+import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
@@ -95,7 +97,7 @@ public class RobotContainer {
 
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood));
 
-    
+
     //Operator Controls
     //// main button cluster
     oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
@@ -111,21 +113,19 @@ public class RobotContainer {
 //    oi.operatorJoystick.ButtonUpDPad().whenPressed(new ManuallyStageBall(indexer)); // TODO implement manual staging
     oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
     oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
+    oi.operatorJoystick.ButtonLeftDPad().whenPressed(new BumpHoodAngleDown(hood));
+    oi.operatorJoystick.ButtonRightDPad().whenPressed(new BumpHoodAngleUp(hood));
 
     //// sticks
     climber.setDefaultCommand(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller))
-            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller));
+            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer))
+            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
     oi.operatorJoystick.ButtonRightBumper()
-            .whenPressed(
-                    new DriveHopperAndIndexer(
-                            hopper, indexer,
-                            Constants.MotorSpeeds.HOPPER_SPEED,
-                            Constants.MotorSpeeds.INDEXER_SPEED))
-            .whenReleased(new DriveHopperAndIndexer(hopper, indexer, 0.0, 0.0));
+            .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whenReleased(new DriveHopperAndIndexer(hopper, indexer));
 
 
     //Test joystick
