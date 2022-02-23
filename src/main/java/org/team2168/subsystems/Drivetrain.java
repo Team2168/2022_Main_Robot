@@ -4,10 +4,7 @@
 
 package org.team2168.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -301,14 +298,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public double getRightEncoderRate() {
         return ticksToMeters(getRightEncoderRateRaw()) * 10.0;
     }
-
-    // private double degreesToTicks(double setpoint) {
-    //     return setpoint * PIGEON_UNITS_PER_DEGREE;
-    // }
-
-    // private double ticksToDegrees(double setpoint) {
-    //     return setpoint / PIGEON_UNITS_PER_DEGREE;
-    // }
 
     private double ticksToInches(double setpoint) {
         return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
