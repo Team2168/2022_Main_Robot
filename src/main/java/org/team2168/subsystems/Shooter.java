@@ -145,14 +145,15 @@ public class Shooter extends SubsystemBase implements Loggable {
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
 
+  //bumps up
   public void incrementSpeed() {
     velocityAdjustment += 50.0;
   }
-
+  //bumps down
   public void decrementSpeed() {
     velocityAdjustment -= 50.0;
   }
-
+  //sets bump amount to zero
   public void zeroSpeed() {
     velocityAdjustment = 0.0;
   }
@@ -187,6 +188,10 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
+  /**
+   * Sets the shooter at a speed
+   * @param d_Speed the speed for the shooter to run at, from 0.0 to 1.0
+   */
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded

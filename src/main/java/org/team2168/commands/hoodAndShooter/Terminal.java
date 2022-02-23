@@ -21,6 +21,11 @@ public class Terminal extends ParallelCommandGroup {
   private Hood hood;
   private Shooter shooter;
 
+  /**
+   * Sets the hood and shooter to a predefined angle and rpm, respectively
+   * @param h the hood instance 
+   * @param s the shooter instance
+   */
   public Terminal(Hood h, Shooter s) {
     hood = h;
     shooter = s;

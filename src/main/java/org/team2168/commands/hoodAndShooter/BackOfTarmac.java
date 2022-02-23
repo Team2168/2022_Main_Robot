@@ -20,6 +20,12 @@ public class BackOfTarmac extends ParallelCommandGroup {
   /** Creates a new BackOfTarmac. */
   private Hood hood;
   private Shooter shooter;
+
+  /**
+   * Sets the hood and shooter to a predefined angle and rpm, respectively
+   * @param h the hood instance 
+   * @param s the shooter instance
+   */
   public BackOfTarmac(Hood h, Shooter s) {
     hood = h;
     shooter = s;
