@@ -6,25 +6,24 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
+
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.pooper.PooperPoop;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Pooper;
-
-
-import org.team2168.commands.turret.*;
-import org.team2168.commands.exampleSubsystem.*;
-import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.climber.*;
-import org.team2168.commands.pixy.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
+import org.team2168.commands.hoodAndShooter.*;
+import org.team2168.commands.indexer.*;
+import org.team2168.commands.intakeroller.*;
+import org.team2168.commands.intakeraiseandlower.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
+import org.team2168.subsystems.Hood.HoodPosition;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import io.github.oblarg.oblog.Logger;
-import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -35,24 +34,36 @@ import io.github.oblarg.oblog.annotations.Config;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
+
+  // The robot's subsystems an                           d commands are defined here...
+;
+
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Pixy m_pixy = Pixy.getInstance();
-  private final ColorSensor m_ColorSensor= ColorSensor.getInstance();
+  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // private final Pixy m_pixy = Pixy.getInstance();
+
+  
   public final Drivetrain drivetrain = Drivetrain.getInstance();
+  public final Hopper hopper = Hopper.getInstance();
   public final Pooper pooper = Pooper.getInstance();
+  private final Shooter m_shooter = Shooter.getInstance();
+  private final Climber climber = Climber.getInstance();
   private final Turret m_turret = Turret.getInstance();
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
+  private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
+  private final IntakeRaiseAndLower intakeRAndL = IntakeRaiseAndLower.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
 
-  private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
-  private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
-  private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
- 
+
+  // private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
+  // private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
+  // private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
 
   OI oi = OI.getInstance();
 
@@ -68,7 +79,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    //m_ColorSensor.readSensor();
+   
+    
   }
 
   public static RobotContainer getInstance() {
@@ -82,6 +94,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getDriverJoystickX, oi::getDriverJoystickY));
+    
+
 
     
 
@@ -90,20 +104,55 @@ public class RobotContainer {
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    //climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+   
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
+    oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
 
-    //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
+    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+    // oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
+
+
+    oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
+    oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
+    oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
+
+    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new BumpHoodAngleDown(hood));
+    oi.operatorJoystick.ButtonRightBumper().whenPressed(new BumpHoodAngleUp(hood));
+    oi.operatorJoystick.ButtonUpDPad().whenPressed(new BumpHoodAngleZero(hood));
+
+    //TEST JOYSTICK
+    indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
+    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+  
+
+    oi.testJoystick.ButtonX().whenPressed(new SetShooterSpeed(m_shooter, 0.0));
+
+    oi.testJoystick.ButtonA().whenPressed(new BackOfTarmac(hood, m_shooter));
+    oi.testJoystick.ButtonB().whenPressed(new WhiteLine(hood, m_shooter));
+    oi.testJoystick.ButtonY().whenPressed(new Terminal(hood, m_shooter));
+
+    oi.testJoystick.ButtonRightBumper().whenPressed(new BumpShooterSpeedUp(m_shooter));
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpShooterSpeedDown(m_shooter));
+    oi.testJoystick.ButtonUpDPad().whenPressed(new BumpShooterSpeedZero(m_shooter));
+
+    //oi.testJoystick.ButtonA().whenPressed(new SetSpeed(m_shooter, 0.0));
+    oi.testJoystick.ButtonX().whenPressed(new IntakeLower(intakeRAndL));
+    oi.testJoystick.ButtonX().whenReleased(new IntakeRaise(intakeRAndL));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
+
   }
 
   /**
@@ -128,5 +177,7 @@ public class RobotContainer {
               degToRadians.apply(drivetrain.getHeading()),
               degToRadians.apply(drivetrain.getTurnRate()));
         }); // Drivetrain characterization
+
+        
   }
 }
