@@ -12,6 +12,7 @@ public class SetPosition extends CommandBase {
   /** Creates a new SetPosition. */
   Climber climber;
   double inches;
+  double acceptableErrorInches = 0.5;
 
   public SetPosition(Climber climber, double inch) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -39,6 +40,7 @@ public class SetPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.getPositionInches() == inches;
+    return (climber.getPositionInches() <= (inches + acceptableErrorInches) ||
+     climber.getPositionInches() >= (inches - acceptableErrorInches));
   }
 }
