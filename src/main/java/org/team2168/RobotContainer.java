@@ -149,9 +149,9 @@ public class RobotContainer {
     oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
 
-    oi.testJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
+    oi.testJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 2000.0));
     oi.testJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -2000.0));
     oi.testJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
   }
 

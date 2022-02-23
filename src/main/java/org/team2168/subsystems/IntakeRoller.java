@@ -17,6 +17,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class IntakeRoller extends SubsystemBase {
 
+
   private static WPI_TalonFX intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
@@ -28,12 +29,13 @@ public class IntakeRoller extends SubsystemBase {
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
   private final double CONTINUOUS_CURRENT_LIMIT = 20.0;
-  private final double TRIGGER_THRESHOLD_LIMIT = 25;
+  private final double TRIGGER_THRESHOLD_LIMIT = 25.0;
   private final double TRIGGER_THRESHOLD_TIME = 0.2;
+  
   private final double minuteInHundredMs = 600.0;
-
-  private final double TICKS_PER_REV = 2048;
-  private final double GEAR_RATIO = (2.82/1.0);
+  private final double TICKS_PER_REV = 2048.0;
+  private final double GEAR_RATIO = 2.82/1.0;
+  private double speedRPMFunction;
 
  private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
@@ -65,11 +67,12 @@ public class IntakeRoller extends SubsystemBase {
     }
 
     public void setRollerSpeedVelocity(double speedRPM){
-      intakeRollerOne.set(ControlMode.Velocity, RpmToTicksPerOneHundredMS(speedRPM));
+      speedRPMFunction = RpmToTicksPerOneHundredMS(speedRPM);
+      intakeRollerOne.set(ControlMode.Velocity, speedRPMFunction);
     }
 
     public double RpmToTicksPerOneHundredMS(double speedRPM){
-   return (speedRPM/minuteInHundredMs) * (TICKS_PER_REV/GEAR_RATIO);
+   return (speedRPM / minuteInHundredMs) * TICKS_PER_REV * GEAR_RATIO;
     }
 
    @Log(name = "speed (rotations per minute)", rowIndex = 3, columnIndex = 1)
@@ -78,7 +81,7 @@ public class IntakeRoller extends SubsystemBase {
     }
 
     public double ticksPerOneHundredMsToRotationsPerMinute(double ticksPerHundredMs){
-    return ticksPerHundredMs * (GEAR_RATIO/TICKS_PER_REV) * minuteInHundredMs;
+    return ((ticksPerHundredMs * minuteInHundredMs) / TICKS_PER_REV) / GEAR_RATIO ;
     }
   
 }

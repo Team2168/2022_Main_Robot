@@ -27,7 +27,7 @@ public class IntakeSpeed extends CommandBase {
   @Override
   public void execute() {
 
-  iRoller.setRollerSpeed(speedValueForIntakeSpeed);
+  iRoller.setRollerSpeedVelocity(speedValueForIntakeSpeed);
   
   }
    
@@ -35,7 +35,7 @@ public class IntakeSpeed extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     
- iRoller.setRollerSpeed(0.0);
+ iRoller.setRollerSpeedVelocity(0.0);
   }
 
   // Returns true when the command should end.
