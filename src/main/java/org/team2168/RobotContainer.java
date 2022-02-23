@@ -6,26 +6,14 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-
+import org.team2168.commands.DriveHopperAndIndexer;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.hopper.DriveHopperWithVelocity;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
-import org.team2168.commands.turret.*;
-import org.team2168.commands.exampleSubsystem.*;
 import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.*;
-import org.team2168.commands.climber.*;
-import org.team2168.commands.drivetrain.*;
-import org.team2168.commands.hood.*;
-import org.team2168.commands.indexer.*;
-import org.team2168.commands.monkeybar.*;
-import org.team2168.commands.pooper.*;
-import org.team2168.commands.shooter.*;
-import org.team2168.commands.turret.*;
-import org.team2168.subsystems.*;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.IntakeRoller.IntakeSpeed;
 import org.team2168.commands.climber.DriveClimberWithJoystick;
@@ -143,8 +131,7 @@ public class RobotContainer {
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithPercentOutput(hopper, () -> 0.2));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithPercentOutput(hopper, () -> 0.0));
+    
 
     oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
     oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
@@ -173,13 +160,23 @@ public class RobotContainer {
     oi.testJoystick.ButtonX().whenPressed(new IntakeLower(intakeRAndL));
     oi.testJoystick.ButtonX().whenReleased(new IntakeRaise(intakeRAndL));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
-    oi.testJoystick.ButtonLeftBumper().whenReleased(new PooperUnpoop(pooper));
-
+    oi.testJoystick.ButtonDownDPad().whenPressed(new PooperPoop(pooper));
+    oi.testJoystick.ButtonDownDPad().whenReleased(new PooperUnpoop(pooper));
+    
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new DriveHopperWithPercentOutput(hopper, () -> 0.2));
+    oi.testJoystick.ButtonLeftBumper().whenReleased(new DriveHopperWithPercentOutput(hopper, () -> 0.0));
+    
     oi.testJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
     oi.testJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
-    oi.testJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
+
+    oi.testJoystick.ButtonRightDPad().whenPressed(new DriveHopperAndIndexer(hopper, indexer, () -> 0.2));
+    oi.testJoystick.ButtonRightDPad().whenReleased(new DriveHopperAndIndexer(hopper, indexer, () -> 0.0));
+
+    oi.testJoystick.ButtonLeftDPad().whenPressed(new DriveHopperWithVelocity(hopper, () -> 20.0));
+    oi.testJoystick.ButtonLeftDPad().whenReleased(new DriveHopperWithVelocity(hopper, () -> 0.0));
+   
+    // oi.testJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
+    // oi.testJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
   }
 
   /**

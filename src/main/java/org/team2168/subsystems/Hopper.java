@@ -69,6 +69,10 @@ public class Hopper extends SubsystemBase implements Loggable {
   public static TalonFXInvertType hopperMotorInvert = TalonFXInvertType.CounterClockwise;
   public static final double KV = 0.02;
   public static final double KA = 0.002;
+  public static final double KP = 1.0;
+  public static final double KI = 0.0;
+  public static final double KD = 0.0;
+  public static final double KF = 0.0;
 
   //Simulation stuff
   
@@ -105,6 +109,11 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.configNeutralDeadband(0.01);
+    hopperMotor.config_kP(kPIDLoopIdx, KP, kTimeoutMs);
+    hopperMotor.config_kI(kPIDLoopIdx, KI, kTimeoutMs);
+    hopperMotor.config_kD(kPIDLoopIdx, KD, kTimeoutMs);
+    hopperMotor.config_kF(kPIDLoopIdx, KF, kTimeoutMs);
+
 
     hopperMotor.setInverted(hopperMotorInvert);
 
