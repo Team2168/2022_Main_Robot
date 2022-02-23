@@ -65,11 +65,11 @@ public class Indexer extends SubsystemBase {
     return instance;
   }
 
-  public double inchesToTicks(double inches) {
+  private double inchesToTicks(double inches) {
     return (inches/INCHES_PER_REV) * TICKS_PER_REV * GEAR_RATIO;
   }
 
-  public static double getTimeVelocityUnits() {
+  private static double getTimeVelocityUnits() {
     return TIME_UNITS_VELOCITY_SECS;
   }
 
@@ -82,15 +82,19 @@ public class Indexer extends SubsystemBase {
     motor.set(TalonFXControlMode.PercentOutput, speed);
   }
 
+  /**
+   * Commands indexer to velocity Control Mode, then drives the indexer at a set velocity.
+   * @param speedRPM the speed in RPM the indexer motor is set to.
+   */
   public void driveVelocity(double speedRPM) {
     motor.set(TalonFXControlMode.Velocity, revs_1min_to_ticks_100ms(speedRPM));
   }
 
-  public double ticks_100ms_to_revs_1min(double ticks) {
+  private double ticks_100ms_to_revs_1min(double ticks) {
     return (ticks/TICKS_PER_REV) * MIN_IN_100_MS * GEAR_RATIO;
   }
 
-  public double revs_1min_to_ticks_100ms(double rotations) {
+  private double revs_1min_to_ticks_100ms(double rotations) {
     return (rotations/MIN_IN_100_MS) * (TICKS_PER_REV/GEAR_RATIO);
   }
 
