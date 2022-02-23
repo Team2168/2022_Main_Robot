@@ -25,7 +25,7 @@ public class DriveUntilBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexer.driveVelocity(indexer.revs_1min_to_ticks_100ms(indexerSpeed));
+    indexer.driveVelocity(indexerSpeed);
   }
 
   // Called once the command ends or is interrupted.
