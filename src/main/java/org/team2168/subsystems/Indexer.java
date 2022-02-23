@@ -68,11 +68,7 @@ public class Indexer extends SubsystemBase {
   private double inchesToTicks(double inches) {
     return (inches/INCHES_PER_REV) * TICKS_PER_REV * GEAR_RATIO;
   }
-
-  private static double getTimeVelocityUnits() {
-    return TIME_UNITS_VELOCITY_SECS;
-  }
-
+  
   /**
    * 
    * @param speed should be set to between 1.0 and -1.0, depending on if you need it to intake or spit out a ball
