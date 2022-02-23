@@ -23,6 +23,11 @@ public class IntakeRoller extends SubsystemBase {
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
 
   private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
+
+  private static final double kP = 1.0;
+  private static final double kI = 0.0;
+  private static final double kD = 0.0;
+  private static final double kF = 0.0;
   
   private static int intakeTimeoutMs = 30;
   private static double peakOutput = 1.0;
@@ -39,6 +44,10 @@ public class IntakeRoller extends SubsystemBase {
 
  private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
+    intakeRollerOne.config_kP(0, kP);
+    intakeRollerOne.config_kI(0, kI);
+    intakeRollerOne.config_kF(0, kF);
+    intakeRollerOne.config_kD(0, kD);
      intakeRollerOne.setInverted(intakeInvert);
 
     intakeRollerOne.configNominalOutputForward(0,intakeTimeoutMs);
@@ -60,11 +69,11 @@ public class IntakeRoller extends SubsystemBase {
     return instance; 
   }
 
-  // public void setRollerSpeed(double speed){
-  //   intakeRollerOne.set(speed);
+   public void setRollerSpeed(double speed){
+     intakeRollerOne.set(speed);
    
 
-  //   }
+     }
 
     public void setRollerSpeedVelocity(double speedRPM){
       speedRPMFunction = RpmToTicksPerOneHundredMS(speedRPM);
