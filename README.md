@@ -57,6 +57,10 @@
   Determines if the ball in the hopper area matches our alliance color.
 
   * Pixy2 / color-sensor for ball color detection
+  
+  Wiring map:
+  ![map 4 0](https://user-images.githubusercontent.com/74201229/155244337-c20f173f-a93a-4156-8f16-831797d96b06.png)  
+
 * Climber - `Aiden`  
   Linear lift that can raise/lower to perform the climb.
 
