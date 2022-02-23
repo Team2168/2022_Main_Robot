@@ -68,7 +68,7 @@ public final class Constants {
         // Default speeds to input into commands
         public static final double INDEXER_SPEED = 0.3;
         public static final double HOPPER_SPEED = 0.2;
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double INTAKE_SPEED = 0.75;
     }
     public static final double LOOP_TIMESTEP_S = 0.02;
 }

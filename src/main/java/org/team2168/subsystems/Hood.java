@@ -24,9 +24,9 @@ public class Hood extends SubsystemBase implements Loggable {
 
   public enum HoodPosition {
     //Auto Pos
-    FENDER_LOW(10.0),
-    FENDER_HIGH(10.0),
-    TARMAC_LINE(23.0),
+    FENDER_LOW(6.0),
+    FENDER_HIGH(6.0),
+    TARMAC_LINE(22.0),
     LAUNCHPAD(30.0),
     ZERO(0.0);
 
