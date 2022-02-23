@@ -36,7 +36,7 @@ public class Indexer extends SubsystemBase {
   private static final double MIN_IN_100_MS = 60.0/0.1;
 
   //Gains for Velocity
-  private final double kP = 0.0;
+  private final double kP = 1.0;
   private final double kI = 0.0;
   private final double kD = 0.0;
   private final double kF = 0.0;
