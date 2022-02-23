@@ -35,6 +35,12 @@ public class Indexer extends SubsystemBase {
   private static final double INCHES_PER_REV = 4.72496;
   private static final double MIN_IN_100_MS = 60.0/0.1;
 
+  //Gains for Velocity
+  private final double kP = 0.0;
+  private final double kI = 0.0;
+  private final double kD = 0.0;
+  private final double kF = 0.0;
+
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
     motor = new WPI_TalonFX(CANDevices.INDEXER_MOTOR);
@@ -45,6 +51,11 @@ public class Indexer extends SubsystemBase {
       CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
     motor.configSupplyCurrentLimit(indexerCurrentLimit);
     motor.setNeutralMode(NeutralMode.Brake);
+
+    motor.config_kP(0, kP);
+    motor.config_kI(0, kI);
+    motor.config_kD(0, kD);
+    motor.config_kF(0, kF);
   }
 
   public static Indexer getInstance() {
