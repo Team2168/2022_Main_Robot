@@ -41,6 +41,7 @@ public class HoodToAngle extends CommandBase {
     if(interrupted) {
       hood.setPercentOutput(0.0);
     }
+    hood.zeroDegrees();
   }
 
   // Returns true when the command should end.

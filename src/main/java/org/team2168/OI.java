@@ -44,8 +44,6 @@ public class OI {
         {+1.00, +1.00}  
     };
 
-
-
     private OI() {
         driverJoystickInterpolator = new LinearInterpolator(driverJoystickInterpolation);
         gunStyleXInterpolator = new LinearInterpolator(gunStyleXInterpolation);

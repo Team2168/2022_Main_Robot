@@ -2,44 +2,42 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.indexer;
-
-import edu.wpi.first.wpilibj2.command.CommandBase;
+package org.team2168.commands.hopper;
 
 import java.util.function.DoubleSupplier;
 
-import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveIndexer extends CommandBase {
-  /** Creates a new DriveIndexerWithJoystick. */
-  private Indexer indexer;
-  private DoubleSupplier speed;
+public class DriveHopperWithVelocity extends CommandBase {
 
+  private Hopper hopper;
+  private DoubleSupplier velocity;
 
-  public DriveIndexer(Indexer indexer, DoubleSupplier speed) {
-    this.indexer = indexer;
-    this.speed = speed;
-    addRequirements(indexer);
+  /** Creates a new DriveHopperWithVelocity. */
+  public DriveHopperWithVelocity(Hopper hopper, DoubleSupplier velocity) {
+    this.hopper = hopper;
+    this.velocity = velocity;
+    // Use addRequirements() here to declare subsystem dependencies.
+
+    addRequirements(hopper);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-   
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexer.drive(speed.getAsDouble());
+    hopper.driveHopperVelocity(velocity.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.drive(0.0);
+  hopper.driveHopper(0.0);
   }
 
   // Returns true when the command should end.
