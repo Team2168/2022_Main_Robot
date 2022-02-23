@@ -6,12 +6,13 @@ package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 
-public class ColorSensor extends SubsystemBase {
+public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
 
@@ -79,6 +80,7 @@ public class ColorSensor extends SubsystemBase {
             data[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
     }
 
+    @Log(name = "Color Sensor Alliance")
     public Alliance getColor() {
         if (getRed() > getBlue())
             return Alliance.Red;
@@ -93,11 +95,6 @@ public class ColorSensor extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-
-        SmartDashboard.putNumber("R", getRed());
-        SmartDashboard.putNumber("G", getGreen());
-        SmartDashboard.putNumber("B", getBlue());
-        SmartDashboard.putString("Computed output", getColor().toString());
 
         // System.out.println(
         // String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
