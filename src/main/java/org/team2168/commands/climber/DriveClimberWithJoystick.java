@@ -32,6 +32,7 @@ public class DriveClimberWithJoystick extends CommandBase {
   @Override
   public void execute() {
     climber.setPercentOutput(0.3 * speed.getAsDouble());
+    System.out.println(0.3 * speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

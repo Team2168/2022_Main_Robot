@@ -12,7 +12,7 @@ public class SetPosition extends CommandBase {
   /** Creates a new SetPosition. */
   Climber climber;
   double inches;
-  double acceptableErrorInches = 0.5;
+  double acceptableErrorInches = 0.1;
 
   public SetPosition(Climber climber, double inch) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,13 +34,14 @@ public class SetPosition extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setPercentOutput(0.0);
+    // climber.setPercentOutput(0.0);
+    // allows the position controller to maintain position
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (climber.getPositionInches() <= (inches + acceptableErrorInches) ||
-     climber.getPositionInches() >= (inches - acceptableErrorInches));
+    return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
+     climber.getPositionInches() > (inches - acceptableErrorInches));
   }
 }
