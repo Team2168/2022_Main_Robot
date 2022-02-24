@@ -24,9 +24,9 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
     FENDER_LOW(900.0),
-    FENDER_HIGH(1350.0),
-    TARMAC_LINE(1450.0),
-    LAUNCHPAD(1850.0);
+    FENDER_HIGH(1500.0),
+    TARMAC_LINE(1650.0),
+    LAUNCHPAD(1985.0);
 
     public final double rpm;
     private ShooterRPM(double rpm) {
