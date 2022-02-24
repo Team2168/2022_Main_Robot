@@ -1,4 +1,4 @@
-package org.team2168.commands.ShootingPositions;
+package org.team2168.commands.shootingpositions;
 
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
