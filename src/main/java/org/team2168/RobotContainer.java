@@ -17,6 +17,7 @@ import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.shootingpositions.*;
 import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
+import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
@@ -123,12 +124,17 @@ public class RobotContainer {
             .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
     oi.operatorJoystick.ButtonRightBumper()
             .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
-            .whenReleased(new DriveHopperAndIndexer(hopper, indexer));
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
 
     //Test joystick
 
     oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(shooter, oi.testJoystick::getRightStickRaw_Y));
+    oi.testJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
+    oi.testJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter));
+    oi.testJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
+    oi.testJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
 
   }
 
