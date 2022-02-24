@@ -24,6 +24,7 @@ import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
+import org.team2168.commands.shooter.ShootWithController;
 import org.team2168.subsystems.*;
 
 /**
@@ -117,7 +118,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightDPad().whenPressed(new BumpHoodAngleUp(hood));
 
     //// sticks
-    climber.setDefaultCommand(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    oi.operatorJoystick.ButtonLeftStick().whenPressed(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
@@ -129,6 +130,8 @@ public class RobotContainer {
 
 
     //Test joystick
+
+    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(shooter, oi.testJoystick::getRightStickRaw_Y));
 
   }
 
