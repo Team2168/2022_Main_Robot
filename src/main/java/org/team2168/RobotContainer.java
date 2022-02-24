@@ -149,7 +149,7 @@ public class RobotContainer {
 
     //Operator Controls
     m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
+    // climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
    
 
     oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
@@ -163,11 +163,16 @@ public class RobotContainer {
 
     //TEST JOYSTICK
     indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
-    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+    // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+    oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimberWithJoystick(climber, oi.testJoystick::getRightStickRaw_Y));
 
-    oi.testJoystick.ButtonA().whenPressed(new SetPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
+    oi.testJoystick.ButtonY().whenPressed(new SetPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
     oi.testJoystick.ButtonB().whenPressed(new SetPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
-    oi.testJoystick.ButtonX().whenPressed(new SetPosition(climber, 0.0));
+    oi.testJoystick.ButtonA().whenPressed(new SetPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
+
+    oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonStart().whenPressed(new ReturnToZero(climber));
 
   }
 
