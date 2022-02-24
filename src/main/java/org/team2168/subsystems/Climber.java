@@ -50,14 +50,14 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.6;
+  private static final double kP = 0.3;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
   private static final double kArbitraryFeedForward = 0.032;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
-  private static final double NEUTRAL_DEADBAND = 0.01;
+  private static final double NEUTRAL_DEADBAND = 0.001;
   private static final double ACCELERATION_LIMIT = inchesToTicks(24.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
   private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(21.68) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
