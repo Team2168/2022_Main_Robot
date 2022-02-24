@@ -6,17 +6,17 @@ package org.team2168.commands.IntakeRoller;
 
 import org.team2168.subsystems.IntakeRoller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-public class DriveIntakeToSpeed extends CommandBase {
+public class DriveIntakeWithPercentOutput extends CommandBase {
  
-  private IntakeRoller iRoller;
-  private double speedValueForIntakeSpeed;
-  // speedValueForIntakeSpeeed sets the speed value between -1 and 1 for the talonFX spin amount to intake balls in using the force
+  private IntakeRoller intakeRoller;
+  private double speed;
+  // speedValueForIntakeSpeed sets the speed value between -1 and 1 for the talonFX spin amount to intake balls in using the force
   // the spin
-  public DriveIntakeToSpeed(IntakeRoller iRoller, double speedValueForIntakeSpeed) {
+  public DriveIntakeWithPercentOutput(IntakeRoller intakeRoller, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.iRoller = iRoller;
-    this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;
-    addRequirements(iRoller);
+    this.intakeRoller = intakeRoller;
+    this.speed = speed;
+    addRequirements(intakeRoller);
   }
   
   
@@ -26,16 +26,13 @@ public class DriveIntakeToSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-  iRoller.setRollerSpeed(speedValueForIntakeSpeed);
-  
+      intakeRoller.setRollerSpeed(speed);
   }
    
    // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
- iRoller.setRollerSpeed(0.0);
+      intakeRoller.setRollerSpeed(0.0);
   }
 
   // Returns true when the command should end.

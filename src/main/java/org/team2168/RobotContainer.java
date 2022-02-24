@@ -11,14 +11,13 @@ import org.team2168.commands.DriveHopperAndIndexer;
 import org.team2168.commands.ExtendAndRunIntake;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.StowEverything;
-import org.team2168.commands.climber.DriveClimberWithJoystick;
+import org.team2168.commands.climber.DriveClimberWithPercentOutput;
 import org.team2168.commands.climber.DriveClimberToZero;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.ShootingPositions.FenderHighShooterPos;
 import org.team2168.commands.ShootingPositions.FenderLowShooterPos;
 import org.team2168.commands.ShootingPositions.LaunchpadShooterPos;
 import org.team2168.commands.ShootingPositions.TarmacLineShooterPos;
-import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
@@ -113,7 +112,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
 
     //// sticks
-    climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    climber.setDefaultCommand(new DriveClimberWithPercentOutput(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()

@@ -4,11 +4,8 @@
 
 package org.team2168.commands;
 
-import java.util.function.DoubleSupplier;
-
-import org.team2168.Constants;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
-import org.team2168.commands.indexer.DriveIndexer;
+import org.team2168.commands.indexer.DriveIndexerWithPercentOutput;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 
@@ -32,7 +29,7 @@ public class DriveHopperAndIndexer extends ParallelCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new DriveHopperWithPercentOutput(hopper, () -> hopperSpeed),
-      new DriveIndexer(indexer, () -> indexerSpeed)
+      new DriveIndexerWithPercentOutput(indexer, () -> indexerSpeed)
     );
   }
 }

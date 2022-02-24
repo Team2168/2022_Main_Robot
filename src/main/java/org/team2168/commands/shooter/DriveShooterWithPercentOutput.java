@@ -2,25 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.turret;
+package org.team2168.commands.shooter;
 
 import java.util.function.DoubleSupplier;
-
-import org.team2168.subsystems.Turret;
+import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveTurretWithJoystick extends CommandBase {
-  /** Creates a new DriveTurret. */
-  private Turret turret;
+public class DriveShooterWithPercentOutput extends CommandBase {
+  /** Creates a new ShootWithController. */
+
+  private Shooter shooter;
   private DoubleSupplier speed;
 
-  public DriveTurretWithJoystick(Turret t, DoubleSupplier s) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    turret = t;
-    speed = s;
-
-    addRequirements(t);
+  public DriveShooterWithPercentOutput(Shooter shooter, DoubleSupplier speed) {
+    this.shooter = shooter;
+    this.speed = speed;
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -30,13 +28,13 @@ public class DriveTurretWithJoystick extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turret.drive(speed.getAsDouble());
+    shooter.shoot(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.drive(0.0);
+    shooter.shoot(0);
   }
 
   // Returns true when the command should end.
