@@ -1,20 +1,17 @@
 #include <i2c_t3.h>
+#include <math.h>
 #include "TCS34725/TCS34725.h"
 #include <fstream>
 #define HWSERIAL Serial1
 TCS34725 tcs;
-uint8_t buff[3];
-//uint8_t r_norm,g_norm,b_norm;
-uint8_t r=0;
-uint8_t g=0;
-uint8_t b=0;
+
+uint8_t buff[4]; // {r, g, b, checksum}
 
 void setup(void)
 {
     Serial.begin(9600);
     HWSERIAL.begin(9600);
     Wire.begin();//comm with sensor. teensy master
-   // Wire1.begin(2);//comm with rio. teensy slave
     
     if (!tcs.attach(Wire))
         Serial.println("ERROR: TCS34725 NOT FOUND !!!");
@@ -26,29 +23,22 @@ void loop(void)
 {
     if (tcs.available()) // if current measurement has done
     {
-        TCS34725::Color color = tcs.color();
-        //Serial.print("Color Temp : "); Serial.println(tcs.colorTemperature());
-        //Serial.print("Lux        : "); Serial.println(tcs.lux());
-        Serial.print("R: "); Serial.print(color.r); Serial.print("     ");
-        Serial.print("G: "); Serial.print(color.g); Serial.print("     ");
-        Serial.print("B: "); Serial.print(color.b); Serial.print("     ");
-        Serial.println();
-        //r=color.r;
-        //g=color.g;
-        //b=color.b;
-        buff[0]=color.r;
-        buff[1]=color.g;
-        buff[2]=color.b;
+          TCS34725::Color color = tcs.color();
+          Serial.print("R: "); Serial.print(color.r); Serial.print("     ");
+          Serial.print("G: "); Serial.print(color.g); Serial.print("     ");
+          Serial.print("B: "); Serial.print(color.b); Serial.print("     ");
+          Serial.println();
+  
+          buff[0] = round(color.r);  // convert float to int
+          buff[1] = round(color.g);
+          buff[2] = round(color.b);
+          buff[3] = buff[0] ^ buff[1] ^ buff[2];
+      
+          if(HWSERIAL.available())
+          {
+                Serial.println("writing to serial!"); 
+                HWSERIAL.write(buff,4);
+                delay(20); // Write to bus every 20ms
+          }
     }
-    if(HWSERIAL.available()){
-     byte value=HWSERIAL.read();
-     
-     if(value==0x12){
-       HWSERIAL.write(buff,3);
-     }
-    }
-    //requestEvent();
-    //else Serial.println("ERROR: TCS34725 NOT FOUND !!!");
-   // Wire1.onRequest(requestEvent);
-       
 }

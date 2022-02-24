@@ -56,6 +56,7 @@ public class RobotContainer {
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
   private final IntakeRaiseAndLower intakeRAndL = IntakeRaiseAndLower.getInstance();
+  private final ColorSensor colorSensor = ColorSensor.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);

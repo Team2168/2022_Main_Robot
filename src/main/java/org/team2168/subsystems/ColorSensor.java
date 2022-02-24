@@ -32,12 +32,12 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     // private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder,
     // depends on what we give the teensy slave
 
-    private volatile int[] data = new int[3]; // {r, g, b}
+    private volatile int[] data = new int[4]; // {r, g, b}
 
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT);
-        serialPort.setReadBufferSize(3);
-        serialPort.setWriteBufferSize(1);
+        serialPort.setReadBufferSize(4);
+        serialPort.setWriteBufferSize(0);
         valueUpdateThread.start();
     }
 
@@ -61,26 +61,30 @@ public class ColorSensor extends SubsystemBase implements Loggable {
      */
     public void readSensor() {
         serialPort.reset();
-        serialPort.write(new byte[] { 0x12 }, 1);
+        byte[] serialOutput = null;
 
-        var previousWrite = Timer.getFPGATimestamp();
-        while (serialPort.getBytesReceived() < 3) {
-            var currentTimestamp = Timer.getFPGATimestamp();
-            if ((currentTimestamp - previousWrite) > 0.1) { // Write once a second
-                serialPort.write(new byte[] { 0x12 }, 1);
-                previousWrite = currentTimestamp;
+        System.out.println("trying to read serial!");
+        short counter = 0;
+        while (serialOutput == null) {
+            if (serialPort.getBytesReceived() >= 4) {
+                serialOutput = serialPort.read(4);
+                if ((serialOutput[0] ^ serialOutput[1] ^ serialOutput[2]) != serialOutput[3]) {
+                    System.out.println("Received garbled data from teensy!");
+                    serialOutput = null;
+                }
             }
-
+                if (counter%100 == 0)
+                    System.out.println("Stalling while trying to read data.  Is teensy connected?");
+                counter++;
         }
-
-        byte[] serialOutput = serialPort.read(3);
+        System.out.println("successfully read from serial!");
 
         // convert values to integers
         for (int i = 0; i < serialOutput.length; i++)
             data[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
     }
 
-    @Log(name = "Color Sensor Alliance")
+    @Log(name = "Color Sensor Alliance", methodName = "toString")
     public Alliance getColor() {
         if (getRed() > getBlue())
             return Alliance.Red;
@@ -88,6 +92,7 @@ public class ColorSensor extends SubsystemBase implements Loggable {
             return Alliance.Blue;
     }
 
+    @Log
     public boolean isTeamColor() {
         return DriverStation.getAlliance() == getColor();
     }
@@ -96,9 +101,9 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     public void periodic() {
         // This method will be called once per scheduler run
 
-        // System.out.println(
-        // String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
-        // );
+         System.out.println(
+         String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
+         );
 
     }
 
