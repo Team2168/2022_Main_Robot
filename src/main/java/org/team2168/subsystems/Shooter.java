@@ -204,6 +204,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
 
+
+public double gerError() {
+  return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
+}
+
   public static Shooter getInstance(){
     if (_instance == null){
       _instance = new Shooter();
