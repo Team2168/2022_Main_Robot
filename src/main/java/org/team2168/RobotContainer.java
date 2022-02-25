@@ -77,6 +77,10 @@ public class RobotContainer {
 
     // m_pixy.setDefaultCommand(m_findAllianceBall);
 
+    if (Constants.IS_PRACTICEBOT)
+      System.out.println("FOUND PRACTICE BOT JUMPER -- CONFIGURING WITH PBOT GAINS");
+    else
+      System.out.println("DID NOT FIND PRACTICE BOT JUMPER -- USING COMPETITION BOT GAINS");
     // Configure the button bindings
     configureButtonBindings();
    
@@ -114,11 +118,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
     oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
     oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
 
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
     oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
     // oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
 

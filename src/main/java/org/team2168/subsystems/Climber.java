@@ -46,10 +46,16 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.2;
-  private static final double kI = 0.0;
-  private static final double kD = 0.0;
-  private static final double kF = 0.0;
+  private static final double kP_COMPBOT = 0.2;
+  private static final double kI_COMPBOT = 0.0;
+  private static final double kD_COMPBOT = 0.0;
+  private static final double kF_COMPBOT = 0.0;
+
+  private static final double kP_PBOT = 0.2;
+  private static final double kI_PBOT = 0.0;
+  private static final double kD_PBOT = 0.0;
+  private static final double kF_PBOT = 0.0;
+
   private static final double kArbitraryFeedForward = 0.034;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
@@ -87,11 +93,20 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotorLeft.configNominalOutputReverse(0, kTimeoutMs);
     climbMotorLeft.configPeakOutputForward(kPeakOutput, kTimeoutMs);
     climbMotorLeft.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
-    
-    climbMotorLeft.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
-    climbMotorLeft.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
-    climbMotorLeft.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
-    climbMotorLeft.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
+
+    if(Constants.IS_PRACTICEBOT) {
+      climbMotorLeft.config_kF(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
+      climbMotorLeft.config_kP(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
+      climbMotorLeft.config_kI(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
+      climbMotorLeft.config_kD(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
+    } else {
+      climbMotorLeft.config_kF(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
+      climbMotorLeft.config_kP(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
+      climbMotorLeft.config_kI(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
+      climbMotorLeft.config_kD(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
+    }
+
+
     climbMotorLeft.configMotionAcceleration(ACCELERATION_LIMIT);
     climbMotorLeft.configMotionCruiseVelocity(CRUISE_VELOCITY_LIMIT);
     // climbMotor1.configMotionSCurveStrength(S_CURVE_STRENGTH);

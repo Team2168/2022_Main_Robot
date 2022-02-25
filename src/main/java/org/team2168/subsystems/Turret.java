@@ -50,7 +50,8 @@ public class Turret extends SubsystemBase implements Loggable {
   public static boolean kMotorInvert = false;
 
   //                                     P,   I,   D,   F,  I zone, and Peak output
-  static final Gains kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains Gains_COMPBOT = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+  static final Gains Gains_PBOT = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
@@ -85,10 +86,17 @@ public class Turret extends SubsystemBase implements Loggable {
 
     turretMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
-    turretMotor.config_kF(kPIDLoopIdx, kGains.kF, kTimeoutMs);
-    turretMotor.config_kP(kPIDLoopIdx, kGains.kP, kTimeoutMs);
-    turretMotor.config_kI(kPIDLoopIdx, kGains.kI, kTimeoutMs);
-    turretMotor.config_kD(kPIDLoopIdx, kGains.kD, kTimeoutMs);
+    if (Constants.IS_PRACTICEBOT) {
+      turretMotor.config_kF(kPIDLoopIdx, Gains_PBOT.kF, kTimeoutMs);
+      turretMotor.config_kP(kPIDLoopIdx, Gains_PBOT.kP, kTimeoutMs);
+      turretMotor.config_kI(kPIDLoopIdx, Gains_PBOT.kI, kTimeoutMs);
+      turretMotor.config_kD(kPIDLoopIdx, Gains_PBOT.kD, kTimeoutMs);
+    } else {
+      turretMotor.config_kF(kPIDLoopIdx, Gains_COMPBOT.kF, kTimeoutMs);
+      turretMotor.config_kP(kPIDLoopIdx, Gains_COMPBOT.kP, kTimeoutMs);
+      turretMotor.config_kI(kPIDLoopIdx, Gains_COMPBOT.kI, kTimeoutMs);
+      turretMotor.config_kD(kPIDLoopIdx, Gains_COMPBOT.kD, kTimeoutMs);
+    }
 
     turretMotor.configMotionAcceleration(ACCELERATION);
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
