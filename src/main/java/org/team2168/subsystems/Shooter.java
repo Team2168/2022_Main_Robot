@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.utils.Util;
 
@@ -77,6 +78,27 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double SECS_PER_MIN = 60.0;
   private static double velocityAdjustment = 0.0;
 
+  public static final double kF;
+  public static final double kP;
+  public static final double kI;
+  public static final double kD;
+  public static final double INTEGRAL_ZONE;
+  static {
+    if (Constants.IS_COMPBOT) {
+      kF = 0.52*1023.0/11205.0;
+      kP = 1.0;
+      kI = 0.0005;
+      kD = 0.0;
+      INTEGRAL_ZONE = 300.0;
+    } else {
+      kF = 0.52*1023.0/11205.0;
+      kP = 1.0;
+      kI = 0.0005;
+      kD = 0.0;
+      INTEGRAL_ZONE = 300.0;
+    }
+  }
+
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -125,11 +147,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
-    _motorRight.config_kF(kPIDLoopIdx, 0.52*1023.0/11205.0, kTimeoutMs);
-    _motorRight.config_kP(kPIDLoopIdx, 1.0, kTimeoutMs);
-    _motorRight.config_kI(kPIDLoopIdx, 0.0005, kTimeoutMs);
-    _motorRight.config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
-    _motorRight.config_IntegralZone(kPIDLoopIdx, 300, kTimeoutMs);
+    _motorRight.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
+    _motorRight.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
+    _motorRight.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
+    _motorRight.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
+    _motorRight.config_IntegralZone(kPIDLoopIdx, INTEGRAL_ZONE, kTimeoutMs);
 
   }
 
