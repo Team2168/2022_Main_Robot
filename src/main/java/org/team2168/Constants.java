@@ -45,8 +45,8 @@ public final class Constants {
     }
 
     public static final class PneumaticsDevices {
-        public static final int MONKEYBAR_EXTEND = 0;
-        public static final int MONKEYBAR_RETRACT = 1;
+        public static final int MONKEYBAR_EXTEND = 1;
+        public static final int MONKEYBAR_RETRACT = 0;
         public static final int TEST_RETRACT = 14; 
         public static final int TEST_EXTEND = 15;
         public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
@@ -70,5 +70,13 @@ public final class Constants {
         public static final double HOPPER_SPEED = 0.2;
         public static final double INTAKE_SPEED = 0.75;
     }
+    
+    public static final class LiftPositions {
+        public static final double LIFT_ABOVE_BAR_EXTENSION_INCHES = 27.67;
+        public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
+        public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
+                                                                            // currently need to lower past zero to take up backlash and in gears when under load    
+    }
+    
     public static final double LOOP_TIMESTEP_S = 0.02;
 }

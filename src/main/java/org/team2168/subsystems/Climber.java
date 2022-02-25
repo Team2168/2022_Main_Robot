@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
@@ -32,30 +34,32 @@ public class Climber extends SubsystemBase implements Loggable {
   private static WPI_TalonFX climbMotorLeft = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
   private static WPI_TalonFX climbMotorRight = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
 
+  private static DigitalInput climbHooks = new DigitalInput(Constants.DIO.CLIMBER_HOOK_LIMIT_SWITCH);
+
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
-  private static final double SPROCKET_RADIUS_INCHES = 0.6589;
+  private static final double SPROCKET_RADIUS_INCHES = 0.716;
   private static final double INCHES_PER_REV = SPROCKET_RADIUS_INCHES * 2 * Math.PI;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
   private static boolean kSensorPhase = false;
   private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
-                                                                                      // the motor face w/ shaft that causes the lift to go up
+                                                                               // the motor face w/ shaft that causes the lift to go up
 
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.2;
+  private static final double kP = 0.3;
   private static final double kI = 0.0;
   private static final double kD = 0.0;
   private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.034;
+  private static final double kArbitraryFeedForward = 0.032;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
-  private static final double NEUTRAL_DEADBAND = 0.01;
-  private static final double ACCELERATION_LIMIT = inchesToTicks(6.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(12.0) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
+  private static final double NEUTRAL_DEADBAND = 0.001;
+  private static final double ACCELERATION_LIMIT = inchesToTicks(24.0) * TIME_UNITS_OF_VELOCITY;     // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY_LIMIT = inchesToTicks(21.68) * TIME_UNITS_OF_VELOCITY; // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
   // Current limit configuration
@@ -78,6 +82,8 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotorRight.configFactoryDefault();
     climbMotorLeft.configNeutralDeadband(NEUTRAL_DEADBAND);
     climbMotorRight.configNeutralDeadband(NEUTRAL_DEADBAND);
+    climbMotorLeft.setNeutralMode(NeutralMode.Brake);
+    climbMotorRight.setNeutralMode(NeutralMode.Brake);
     
     climbMotorLeft.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     climbMotorLeft.setSensorPhase(kSensorPhase);
@@ -99,6 +105,9 @@ public class Climber extends SubsystemBase implements Loggable {
 
     climbMotorLeft.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
     climbMotorLeft.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+
+    // climbMotor1.configReverseSoftLimitThreshold(Util.min(Constants.LiftPositions.LIFT_RETRACTION_INCHES, 0.0));
+    // climbMotor1.configReverseSoftLimitEnable(true);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
@@ -237,12 +246,24 @@ public class Climber extends SubsystemBase implements Loggable {
    * @param speed percentage of bus voltage to output 1.0 to -1.0
    */
   public void setPercentOutput(double speed) {
-    climbMotorLeft.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
+    climbMotorLeft.set(ControlMode.PercentOutput, speed, DemandType.ArbitraryFeedForward, 0.0);
+  }
+
+  /**
+   * 
+   * @return the value of the collective limit switches on the climber Hooks
+   */
+  @Log(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 4)
+  public boolean isClimberHookAttached() {
+    return !climbHooks.get();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (isAtZeroPosition()) {
+      setEncoderPosZero();
+    }
   }
 
   @Override

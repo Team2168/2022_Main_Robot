@@ -4,26 +4,24 @@
 
 package org.team2168;
 
+import java.util.function.DoubleFunction;
+import org.team2168.Constants.LiftPositions;
+import org.team2168.commands.*;
+import org.team2168.commands.climber.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
+import org.team2168.commands.indexer.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.shootingpositions.*;
+import org.team2168.commands.hopper.*;
+import org.team2168.commands.turret.*;
+import org.team2168.subsystems.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import io.github.oblarg.oblog.Logger;
-import org.team2168.commands.DriveHopperAndIndexer;
-import org.team2168.commands.LowerAndRunIntake;
-import org.team2168.commands.RetractAndStopIntake;
-import org.team2168.commands.StowEverything;
-import org.team2168.commands.climber.DriveClimber;
-import org.team2168.commands.climber.DriveClimberToZero;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.hood.BumpHoodAngleDown;
-import org.team2168.commands.hood.BumpHoodAngleUp;
-import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
-import org.team2168.commands.indexer.DriveIndexer;
-import org.team2168.commands.indexer.DriveIndexerUntilBall;
-import org.team2168.commands.shooter.BumpShooterSpeedDown;
-import org.team2168.commands.shooter.BumpShooterSpeedUp;
-import org.team2168.commands.shooter.ShootWithController;
-import org.team2168.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -137,6 +135,18 @@ public class RobotContainer {
     oi.testJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
     oi.testJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
 
+    //TEST JOYSTICK
+    indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
+    // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+    oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
+
+    oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
+    oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
+    oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
+
+    oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
   }
 
   /**

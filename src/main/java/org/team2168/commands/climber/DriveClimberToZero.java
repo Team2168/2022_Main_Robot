@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveClimberToZero extends CommandBase {
   /** Creates a new ReturnToZero. */
   Climber climber;
-  private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
+  // private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
+  private static final double LIFT_DESCENT_PERCENT_OUTPUT = -0.05;
 
   public DriveClimberToZero(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -28,7 +29,7 @@ public class DriveClimberToZero extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(LIFT_DESCENT_VELOCITY_IPS);
+    climber.setPercentOutput(LIFT_DESCENT_PERCENT_OUTPUT);
   }
 
   // Called once the command ends or is interrupted.
@@ -36,7 +37,7 @@ public class DriveClimberToZero extends CommandBase {
   public void end(boolean interrupted) {
     if (!interrupted) {
       //Don't zero if we didn't get to the sensor
-      climber.setSpeed(0.0);
+      climber.setPercentOutput(0.0);
       climber.setEncoderPosZero();
     }
   }

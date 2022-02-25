@@ -12,6 +12,7 @@ public class DriveClimberToPosition extends CommandBase {
   /** Creates a new SetPosition. */
   Climber climber;
   double inches;
+  double acceptableErrorInches = 0.1;
 
   public DriveClimberToPosition(Climber climber, double inch) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -32,11 +33,15 @@ public class DriveClimberToPosition extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // climber.setPercentOutput(0.0);
+    // allows the position controller to maintain position
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
+     climber.getPositionInches() > (inches - acceptableErrorInches));
   }
 }
