@@ -21,6 +21,20 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Shooter extends SubsystemBase implements Loggable {
+
+  public enum ShooterRPM {
+    FENDER_LOW(1100.0),
+    FENDER_HIGH(1500.0),
+    TARMAC_LINE(1650.0),
+    LAUNCHPAD(2085.0),
+    WALL_SHOT(2750.0);
+
+    public final double rpm;
+    private ShooterRPM(double rpm) {
+      this.rpm = rpm;
+    }
+  }
+
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
 
@@ -60,11 +74,10 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   private static final double TICKS_PER_REV = 2048.0; //one event per edge on each quadrature channel
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-  private static final double GEAR_RATIO = 18.0/24.0;  // motor pulley/shooter wheel pulley
+  private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
+  private static double velocityAdjustment = 0.0;
 
-
-  private double setPointVelocity_sensorUnits;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -113,11 +126,13 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
-    _motorRight.config_kF(kPIDLoopIdx, 0.52*1023.0/11205.0, kTimeoutMs);
-    _motorRight.config_kP(kPIDLoopIdx, 1.0, kTimeoutMs);
-    _motorRight.config_kI(kPIDLoopIdx, 0.0005, kTimeoutMs);
+    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
+    // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
+    _motorRight.config_kP(kPIDLoopIdx, 0.25, kTimeoutMs);
+    _motorRight.config_kI(kPIDLoopIdx, 0.0025, kTimeoutMs);
     _motorRight.config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
     _motorRight.config_IntegralZone(kPIDLoopIdx, 300, kTimeoutMs);
+    // _motorRight.configMaxIntegralAccumulator(kPIDLoopIdx, iaccum, kTimeoutMs)
 
   }
 
@@ -130,8 +145,28 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
+      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+  }
+
+  public void setVelocityAdjustment(double adjustment) {
+    velocityAdjustment = adjustment;
+  }
+
+  public void adjustVelocity(double delta) {
+    setVelocityAdjustment(velocityAdjustment + delta);
+  }
+
+  public void incrementSpeed() {
+    adjustVelocity(50.0);
+  }
+
+  public void decrementSpeed() {
+    adjustVelocity(-50.0);
+  }
+
+  public void zeroSpeed() {
+    setVelocityAdjustment(0.0);
   }
 
 
