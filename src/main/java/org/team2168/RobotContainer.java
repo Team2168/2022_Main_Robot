@@ -110,7 +110,8 @@ public class RobotContainer {
     //// dpad
 //    oi.operatorJoystick.ButtonUpDPad().whenPressed(new ManuallyStageBall(indexer)); // TODO implement manual staging
     oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
-    oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
+    oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED));
+    // oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
     oi.operatorJoystick.ButtonLeftDPad().whenPressed(new BumpHoodAngleDown(hood));
     oi.operatorJoystick.ButtonRightDPad().whenPressed(new BumpHoodAngleUp(hood));
 
@@ -125,15 +126,6 @@ public class RobotContainer {
             .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
-
-
-    //Test joystick
-
-    oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(shooter, oi.testJoystick::getRightStickRaw_Y));
-    oi.testJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
-    oi.testJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter));
-    oi.testJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
-    oi.testJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
 
     //TEST JOYSTICK
     indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
