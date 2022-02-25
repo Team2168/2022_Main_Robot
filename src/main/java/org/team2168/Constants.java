@@ -67,8 +67,8 @@ public final class Constants {
     public static final class MotorSpeeds {
         // Default speeds to input into commands
         public static final double INDEXER_SPEED = 0.3;
-        public static final double HOPPER_SPEED = 0.2;
-        public static final double INTAKE_SPEED = 0.75;
+        public static final double HOPPER_SPEED = 0.3;
+        public static final double INTAKE_SPEED = 0.5;
     }
     
     public static final class LiftPositions {
@@ -77,6 +77,6 @@ public final class Constants {
         public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
     }
-    
+
     public static final double LOOP_TIMESTEP_S = 0.02;
 }
