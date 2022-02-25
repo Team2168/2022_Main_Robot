@@ -23,10 +23,11 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    FENDER_LOW(900.0),
+    FENDER_LOW(1100.0),
     FENDER_HIGH(1500.0),
     TARMAC_LINE(1650.0),
-    LAUNCHPAD(1985.0);
+    LAUNCHPAD(2085.0),
+    WALL_SHOT(2750.0);
 
     public final double rpm;
     private ShooterRPM(double rpm) {

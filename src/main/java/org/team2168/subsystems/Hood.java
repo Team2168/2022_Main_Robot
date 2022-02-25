@@ -24,10 +24,11 @@ public class Hood extends SubsystemBase implements Loggable {
 
   public enum HoodPosition {
     //Auto Pos
-    FENDER_LOW(6.0),
-    FENDER_HIGH(6.0),
-    TARMAC_LINE(22.0),
-    LAUNCHPAD(30.0),
+    FENDER_LOW(9.0),
+    FENDER_HIGH(5.0),
+    TARMAC_LINE(20.0),
+    LAUNCHPAD(28.0),
+    WALL_SHOT(37.0),
     ZERO(0.0);
 
     public final double position_degrees;
@@ -64,7 +65,7 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double CRUISE_VELOCITY_LIMIT = ticksToDegrees(30000); // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
 
-  public static final double MAX_ANGLE = 30.0;
+  public static final double MAX_ANGLE = 40.0;
   public static final double MIN_ANGLE = 0.0;
 
   // Current limit configuration
