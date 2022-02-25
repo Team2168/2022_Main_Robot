@@ -26,14 +26,12 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 
-import static org.team2168.Constants.*;
-
 public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
   /** Creates a new Climber. */
-  private static WPI_TalonFX climbMotorLeft = new WPI_TalonFX(CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
-  private static WPI_TalonFX climbMotorRight = new WPI_TalonFX(CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
+  private static WPI_TalonFX climbMotorLeft = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
+  private static WPI_TalonFX climbMotorRight = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (40.0 / 10.0) * (40.0 / 14.0) * (24.0 / 18.0);
@@ -124,7 +122,7 @@ public class Climber extends SubsystemBase implements Loggable {
 
     // Tells second climber motor to do the same outputs as the first climber motor,
     // and at the same time.
-    climbMotorRight.set(ControlMode.Follower, CANDevices.CLIMBER_MOTOR_LEFT);
+    climbMotorRight.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_LEFT);
     climbMotorRight.setInverted(InvertType.OpposeMaster);
 
     m_climberSim = new ElevatorSim(
@@ -268,7 +266,7 @@ public class Climber extends SubsystemBase implements Loggable {
 
     // Pass motor output voltage to physics sim
     m_climberSim.setInput(m_climberMotorSim.getMotorOutputLeadVoltage());
-    m_climberSim.update(LOOP_TIMESTEP_S);
+    m_climberSim.update(Constants.LOOP_TIMESTEP_S);
 
     // System.out.println("Climber pos: " + m_climberSim.getPositionMeters());
 
