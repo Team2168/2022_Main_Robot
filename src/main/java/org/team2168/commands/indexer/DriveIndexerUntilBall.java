@@ -8,14 +8,21 @@ import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveUntilBall extends CommandBase {
-  private Double indexerSpeed;
+import java.util.function.DoubleSupplier;
+
+public class DriveIndexerUntilBall extends CommandBase {
+  private double indexerSpeed;
   private Indexer indexer;
 
-  public DriveUntilBall(Indexer indexer, Double speed) {
+  public DriveIndexerUntilBall(Indexer indexer, DoubleSupplier speed) {
     this.indexer = indexer;
-    this.indexerSpeed = speed;
+    this.indexerSpeed = speed.getAsDouble();
     addRequirements(indexer);
+  }
+
+  public DriveIndexerUntilBall(Indexer indexer, double speed) {
+    this.indexer = indexer;
+    indexerSpeed = speed;
   }
 
   // Called when the command is initially scheduled.

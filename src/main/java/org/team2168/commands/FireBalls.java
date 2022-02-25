@@ -4,8 +4,8 @@
 
 package org.team2168.commands;
 
-import org.team2168.commands.indexer.DriveUntilBall;
-import org.team2168.commands.indexer.DriveUntilNoBall;
+import org.team2168.commands.indexer.DriveIndexerUntilBall;
+import org.team2168.commands.indexer.DriveIndexerUntilNoBall;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Shooter;
@@ -30,8 +30,8 @@ public class FireBalls extends SequentialCommandGroup {
 
     addCommands(
       new WaitForShooterAtSpeed(shooter),
-      new DriveUntilNoBall(indexer, indexerSpeed),
-      new DriveUntilBall(indexer, indexerSpeed)
+      new DriveIndexerUntilNoBall(indexer, indexerSpeed),
+      new DriveIndexerUntilBall(indexer, indexerSpeed)
     );
   }
 }

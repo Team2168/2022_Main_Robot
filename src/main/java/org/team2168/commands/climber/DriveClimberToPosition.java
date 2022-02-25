@@ -8,42 +8,40 @@ import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ReturnToZero extends CommandBase {
-  /** Creates a new ReturnToZero. */
+public class DriveClimberToPosition extends CommandBase {
+  /** Creates a new SetPosition. */
   Climber climber;
-  private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
+  double inches;
+  double acceptableErrorInches = 0.1;
 
-  public ReturnToZero(Climber climber) {
+  public DriveClimberToPosition(Climber climber, double inch) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
     this.climber = climber;
+    inches = inch;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(LIFT_DESCENT_VELOCITY_IPS);
+    climber.setPosition(inches);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted) {
-      //Don't zero if we didn't get to the sensor
-      climber.setSpeed(0.0);
-      climber.setEncoderPosZero();
-    }
+    // climber.setPercentOutput(0.0);
+    // allows the position controller to maintain position
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.isAtZeroPosition();
+    return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
+     climber.getPositionInches() > (inches - acceptableErrorInches));
   }
 }

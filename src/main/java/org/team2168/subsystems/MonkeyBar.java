@@ -51,7 +51,7 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
    */
   @Log(name="Hook engaged?")
   public boolean isHookEngaged() {
-    return limitSwitch.get();
+    return !limitSwitch.get();
   }
 
   /**

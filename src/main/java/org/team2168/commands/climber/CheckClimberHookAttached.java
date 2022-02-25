@@ -2,22 +2,18 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.indexer;
+package org.team2168.commands.climber;
 
-import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveUntilNoBall extends CommandBase {
-  /** Creates a new DriveUntilNoBall. */
-  private Indexer indexer;
-  private double indexerSpeed;
-
-  public DriveUntilNoBall(Indexer indexer, double speed) {
-    this.indexer = indexer;
-    indexerSpeed = speed;
-
-    addRequirements(indexer);
+public class CheckClimberHookAttached extends CommandBase {
+  /** Creates a new CheckClimberHookAttached. */
+  Climber climb;
+  public CheckClimberHookAttached(Climber climber) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    climb = climber;
   }
 
   // Called when the command is initially scheduled.
@@ -26,9 +22,7 @@ public class DriveUntilNoBall extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    indexer.drive(indexerSpeed);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -37,7 +31,6 @@ public class DriveUntilNoBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //Waits until there is no ball
-    return !indexer.isBallPresent();
+    return climb.isClimberHookAttached();
   }
 }

@@ -23,10 +23,11 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    TEST(700.0),
-    TEST1(750.0),
-    TEST2(800.0),
-    TEST3(850.0);
+    FENDER_LOW(1100.0),
+    FENDER_HIGH(1500.0),
+    TARMAC_LINE(1650.0),
+    LAUNCHPAD(2085.0),
+    WALL_SHOT(2750.0);
 
     public final double rpm;
     private ShooterRPM(double rpm) {
@@ -125,11 +126,13 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
-    _motorRight.config_kF(kPIDLoopIdx, 0.52*1023.0/11205.0, kTimeoutMs);
-    _motorRight.config_kP(kPIDLoopIdx, 1.0, kTimeoutMs);
-    _motorRight.config_kI(kPIDLoopIdx, 0.0005, kTimeoutMs);
+    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
+    // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
+    _motorRight.config_kP(kPIDLoopIdx, 0.25, kTimeoutMs);
+    _motorRight.config_kI(kPIDLoopIdx, 0.0025, kTimeoutMs);
     _motorRight.config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
     _motorRight.config_IntegralZone(kPIDLoopIdx, 300, kTimeoutMs);
+    // _motorRight.configMaxIntegralAccumulator(kPIDLoopIdx, iaccum, kTimeoutMs)
 
   }
 
