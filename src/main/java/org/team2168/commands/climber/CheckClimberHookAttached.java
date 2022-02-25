@@ -8,16 +8,12 @@ import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetPosition extends CommandBase {
-  /** Creates a new SetPosition. */
-  Climber climber;
-  double inches;
-
-  public SetPosition(Climber climber, double inch) {
+public class CheckClimberHookAttached extends CommandBase {
+  /** Creates a new CheckClimberHookAttached. */
+  Climber climb;
+  public CheckClimberHookAttached(Climber climber) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-    this.climber = climber;
-    inches = inch;
+    climb = climber;
   }
 
   // Called when the command is initially scheduled.
@@ -26,9 +22,7 @@ public class SetPosition extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    climber.setPosition(inches);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -37,6 +31,6 @@ public class SetPosition extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return climb.isClimberHookAttached();
   }
 }

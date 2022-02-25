@@ -5,7 +5,6 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -75,15 +74,15 @@ public class Hopper extends SubsystemBase implements Loggable {
   /**
    * the hopper motor sim it simulates the hopper motor
    */
-  private static TalonFXSimCollection m_hopperMotorSim;
+  private static TalonFXSimCollection hopperMotorSim;
 
   /**
    * the actual hopper sim it simulates the hopper itself
    */
-  private static FlywheelSim m_hopperSim;
+  private static FlywheelSim hopperSim;
  
     public static Hopper getInstance() {
-      if (instance == null);
+      if (instance == null)
         instance = new Hopper();
       return instance; 
     }
@@ -108,13 +107,13 @@ public class Hopper extends SubsystemBase implements Loggable {
 
     hopperMotor.setInverted(hopperMotorInvert);
 
-    m_hopperSim = new FlywheelSim(
+    hopperSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
       DCMotor.getFalcon500(1),
       GEAR_RATIO
     );
 
-    m_hopperMotorSim = hopperMotor.getSimCollection();
+    hopperMotorSim = hopperMotor.getSimCollection();
 
 }
 
@@ -215,18 +214,18 @@ public double getHopperRPM() {
 
   public void simulationPeriodic() {
 
-    m_hopperMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+    hopperMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
     
-    m_hopperSim.setInput(m_hopperMotorSim.getMotorOutputLeadVoltage());
-    m_hopperSim.update(Constants.LOOP_TIMESTEP_S);
+    hopperSim.setInput(hopperMotorSim.getMotorOutputLeadVoltage());
+    hopperSim.update(Constants.LOOP_TIMESTEP_S);
 
-    // double sim_velocity_ticks_per_100ms = m_hopperSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    // m_hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    // m_hopperMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
+    // double sim_velocity_ticks_per_100ms = hopperSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    // hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    // hopperMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
 
-    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(m_hopperSim.getAngularVelocityRPM())) * TIME_UNITS_OF_VELOCITY;
-    m_hopperMotorSim.setIntegratedSensorRawPosition((int) sim_velocity_ticks_per_100_ms);
-    m_hopperMotorSim.setIntegratedSensorVelocity((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
+    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(hopperSim.getAngularVelocityRPM())) * TIME_UNITS_OF_VELOCITY;
+    hopperMotorSim.setIntegratedSensorRawPosition((int) sim_velocity_ticks_per_100_ms);
+    hopperMotorSim.setIntegratedSensorVelocity((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
     
   }
 }
