@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
-import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.utils.Util;
 
@@ -78,19 +77,6 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double SECS_PER_MIN = 60.0;
   private static double velocityAdjustment = 0.0;
 
-  // Gains
-  public static final double kF_COMPBOT = 0.52*1023.0/11205.0;
-  public static final double kP_COMPBOT = 1.0;
-  public static final double kI_COMPBOT = 0.0005;
-  public static final double kD_COMPBOT = 0.0;
-  public static final double INTEGRAL_ZONE_COMPBOT = 300.0;
-
-  public static final double kF_PBOT = 0.52*1023.0/11205.0;
-  public static final double kP_PBOT = 1.0;
-  public static final double kI_PBOT = 0.0005;
-  public static final double kD_PBOT = 0.0;
-  public static final double INTEGRAL_ZONE_PBOT = 300.0;
-
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -139,19 +125,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
-    if (Constants.IS_PRACTICEBOT) {
-      _motorRight.config_kF(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
-      _motorRight.config_kP(kPIDLoopIdx, kP_PBOT, kTimeoutMs);
-      _motorRight.config_kI(kPIDLoopIdx, kI_PBOT, kTimeoutMs);
-      _motorRight.config_kD(kPIDLoopIdx, kD_PBOT, kTimeoutMs);
-      _motorRight.config_IntegralZone(kPIDLoopIdx, INTEGRAL_ZONE_PBOT, kTimeoutMs);
-    } else {
-      _motorRight.config_kF(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
-      _motorRight.config_kP(kPIDLoopIdx, kP_COMPBOT, kTimeoutMs);
-      _motorRight.config_kI(kPIDLoopIdx, kI_COMPBOT, kTimeoutMs);
-      _motorRight.config_kD(kPIDLoopIdx, kD_COMPBOT, kTimeoutMs);
-      _motorRight.config_IntegralZone(kPIDLoopIdx, INTEGRAL_ZONE_COMPBOT, kTimeoutMs);
-    }
+    _motorRight.config_kF(kPIDLoopIdx, 0.52*1023.0/11205.0, kTimeoutMs);
+    _motorRight.config_kP(kPIDLoopIdx, 1.0, kTimeoutMs);
+    _motorRight.config_kI(kPIDLoopIdx, 0.0005, kTimeoutMs);
+    _motorRight.config_kD(kPIDLoopIdx, 0.0, kTimeoutMs);
+    _motorRight.config_IntegralZone(kPIDLoopIdx, 300, kTimeoutMs);
 
   }
 

@@ -4,7 +4,6 @@
 
 package org.team2168;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
@@ -63,9 +62,6 @@ public final class Constants {
         public static final int CLIMBER_HOOK_LIMIT_SWITCH = 1;
         public static final int HOPPER_LINE_BREAK = 2;
         public static final int INDEXER_SENSOR = 3;
-        public static final int PRACTICEBOT_JUMPER = 10;
     }
     public static final double LOOP_TIMESTEP_S = 0.02;
-
-    public static final boolean IS_PRACTICEBOT = new DigitalInput(DIO.PRACTICEBOT_JUMPER).get();
 }

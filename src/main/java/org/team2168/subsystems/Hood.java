@@ -50,16 +50,10 @@ public class Hood extends SubsystemBase implements Loggable {
   private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
 
   // Gains
-  private static final double kP_COMPBOT = 0.075;
-  private static final double kI_COMPBOT = 0.0;
-  private static final double kD_COMPBOT = 0.0;
-  private static final double kF_COMPBOT = 0.0;
-
-  private static final double kP_PBOT = 0.075;
-  private static final double kI_PBOT = 0.0;
-  private static final double kD_PBOT = 0.0;
-  private static final double kF_PBOT = 0.0;
-
+  private static final double kP = 0.075;
+  private static final double kI = 0.0;
+  private static final double kD = 0.0;
+  private static final double kF = 0.0;
   private static final double kArbitraryFeedForward = 0.02;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;
@@ -88,18 +82,10 @@ public class Hood extends SubsystemBase implements Loggable {
     hoodMotor.configPeakOutputForward(kPeakOutput, kTimeoutMs);
     hoodMotor.configPeakOutputReverse(-kPeakOutput, kTimeoutMs);
 
-    if (Constants.IS_PRACTICEBOT) {
-      hoodMotor.config_kF(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
-      hoodMotor.config_kP(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
-      hoodMotor.config_kI(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
-      hoodMotor.config_kD(kPIDLoopIdx, kF_PBOT, kTimeoutMs);
-    } else {
-      hoodMotor.config_kF(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
-      hoodMotor.config_kP(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
-      hoodMotor.config_kI(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
-      hoodMotor.config_kD(kPIDLoopIdx, kF_COMPBOT, kTimeoutMs);
-    }
-
+    hoodMotor.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
+    hoodMotor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
+    hoodMotor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
+    hoodMotor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
     hoodMotor.configMotionAcceleration(degreesToTicks(ACCELERATION_LIMIT));
     hoodMotor.configMotionCruiseVelocity(degreesToTicks(CRUISE_VELOCITY_LIMIT));
     hoodMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
