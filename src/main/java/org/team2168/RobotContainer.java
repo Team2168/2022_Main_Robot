@@ -46,7 +46,7 @@ public class RobotContainer {
   public final Pooper pooper = Pooper.getInstance();
   private final Shooter shooter = Shooter.getInstance();
   private final Climber climber = Climber.getInstance();
-  private final Turret turret = Turret.getInstance();
+  // private final Turret turret = Turret.getInstance(); // motor not powered for time being
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
   public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
   private final Indexer indexer = Indexer.getInstance();
@@ -103,6 +103,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
     oi.operatorJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
+    oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter));
 
     //// start and back
     oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
