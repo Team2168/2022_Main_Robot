@@ -8,21 +8,21 @@ import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class WaitForShootAtSpeed extends CommandBase {
+public class WaitForShooterAtSpeed extends CommandBase {
   /** Creates a new WaitForShootAtSpeed. */
   private Shooter shooter;
-  private double errorTolerance;
-  private double loopsToSettle = 10;
+  private double errorTolerance; //Allowable range of error
+  private double loopsToSettle = 10; //The amount of loops the shooter speed needs to be within allowable error for
   private int withinThresholdLoops = 0;
-  private final double DEFAULT_ERROR_TOLERANCE = 100;
+  private final double DEFAULT_ERROR_TOLERANCE = 100; //in rpm
   
-  public WaitForShootAtSpeed(Shooter shooter, double errorTolerance) {
+  public WaitForShooterAtSpeed(Shooter shooter, double errorTolerance) {
+    // Doesn't require the shooter to keep the shooter being run by other commands
     this.shooter = shooter;
     this.errorTolerance = errorTolerance;
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
-  public WaitForShootAtSpeed(Shooter shooter) {
+  public WaitForShooterAtSpeed(Shooter shooter) {
     this.shooter = shooter;
     errorTolerance = DEFAULT_ERROR_TOLERANCE;
   }
@@ -34,6 +34,7 @@ public class WaitForShootAtSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /* Checks if error is within threshold*/ 
     if (Math.abs(shooter.gerError()) < errorTolerance) {
       ++withinThresholdLoops;
     }
@@ -49,6 +50,7 @@ public class WaitForShootAtSpeed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    /* Shooter must stay within allowable error for 10 loops for it to be at speed*/
     return withinThresholdLoops > loopsToSettle;
   }
 }

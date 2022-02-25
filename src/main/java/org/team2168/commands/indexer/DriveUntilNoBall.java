@@ -18,7 +18,6 @@ public class DriveUntilNoBall extends CommandBase {
     indexerSpeed = speed;
 
     addRequirements(indexer);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -38,6 +37,7 @@ public class DriveUntilNoBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    //Waits until there is no ball
     return !indexer.isBallPresent();
   }
 }
