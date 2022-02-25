@@ -162,3 +162,7 @@ bin/
 *-window.json
 simgui*.json
 sysid.json
+
+# Intellij Idea
+.idea/
+>>>>>>> main

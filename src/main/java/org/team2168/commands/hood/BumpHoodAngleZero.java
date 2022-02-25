@@ -2,48 +2,37 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.climber;
+package org.team2168.commands.hood;
 
-import org.team2168.subsystems.Climber;
+import org.team2168.subsystems.Hood;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ReturnToZero extends CommandBase {
-  /** Creates a new ReturnToZero. */
-  Climber climber;
-  private static final double LIFT_DESCENT_VELOCITY = -3.0; // inches per second
-
-  public ReturnToZero(Climber climber) {
+public class BumpHoodAngleZero extends CommandBase {
+  /** Creates a new BumpHoodAngleZero. */
+  public Hood hood;
+  public BumpHoodAngleZero(Hood h) {
+    hood = h;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-    this.climber = climber;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(LIFT_DESCENT_VELOCITY);
+    hood.zeroDegrees();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    if (!interrupted) {
-      //Don't zero if we didn't get to the sensor
-      climber.setSpeed(0.0);
-      climber.setEncoderPosZero();
-    }
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.isAtZeroPosition();
+    return true;
   }
 }

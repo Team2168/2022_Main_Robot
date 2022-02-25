@@ -30,7 +30,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static Turret instance = null;
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = 1.0;
+  private static final double GEAR_RATIO = (60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
   private static final double TICKS_PER_TURRET_ROTATION = TICKS_PER_REV * GEAR_RATIO;
 
   private static final double TICKS_PER_SECOND = TICKS_PER_TURRET_ROTATION;
@@ -38,10 +38,10 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
  
   //About 260/360 degrees
-  private static final int MAX_ROTATION_TICKS = 1480;
+  private static final int MAX_ROTATION_TICKS = (int) (1.5 * TICKS_PER_TURRET_ROTATION);
 
-  private static final double ACCELERATION = TICKS_PER_100_MS;  // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY = TICKS_PER_100_MS; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(5.0 * 360);  // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(2 * 360.0) ; // TODO: Change when mechanism is avaialble
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -50,7 +50,7 @@ public class Turret extends SubsystemBase implements Loggable {
   public static boolean kMotorInvert = false;
 
   //                                     P,   I,   D,   F,  I zone, and Peak output
-  static final Gains kGains = new Gains(0.5, 0.0, 1.0, 0.0, 0, 1.0);
+  static final Gains kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
@@ -63,11 +63,11 @@ public class Turret extends SubsystemBase implements Loggable {
   public static final double KV = 0.05;
   public static final double KA= 0.002;
 
-  private static FlywheelSim m_turretSim;
-  private static TalonFXSimCollection m_turretMotorSim;
+  private static FlywheelSim turretSim;
+  private static TalonFXSimCollection turretMotorSim;
 
   private Turret() {
-    turretMotor = new WPI_TalonFX(Constants.CANDevices.TALONFX_TURRET_MOTOR);
+    turretMotor = new WPI_TalonFX(Constants.CANDevices.TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
@@ -81,6 +81,7 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setSensorPhase(kSensorPhase);
     turretMotor.setInverted(kMotorInvert);
     turretMotor.setNeutralMode(NeutralMode.Brake);
+    turretMotor.configNeutralDeadband(0.01);
 
     turretMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
@@ -93,12 +94,12 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
 
     //Setup simulation
-    m_turretSim = new FlywheelSim(
+    turretSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
       DCMotor.getFalcon500(1),
       GEAR_RATIO
     );
-    m_turretMotorSim = turretMotor.getSimCollection();
+    turretMotorSim = turretMotor.getSimCollection();
     
   }
 
@@ -136,19 +137,19 @@ public class Turret extends SubsystemBase implements Loggable {
 
   /**
    * convert a position in degrees to units the motor understands
-   * @param degrees 
-   * @return 
+   * @param degrees the absolute position (degrees)
+   * @return the position in ticks (F500 internal encoder)
    */
-  private double degreesToEncoderTicks(double degrees) {
+  private static double degreesToEncoderTicks(double degrees) {
     return (degrees / 360.0) * TICKS_PER_TURRET_ROTATION;
   }
 
   /**
    * Convert motor ticks to a mechanism position in degrees
-   * @param ticks 
-   * @return
+   * @param ticks the absolute position in f500 internal encoder ticks
+   * @return the absolute position (degrees)
    */
-  private double ticksToDegrees(double ticks) {
+  private static double ticksToDegrees(double ticks) {
     return (ticks / TICKS_PER_TURRET_ROTATION) * 360.0;
   }
 
@@ -157,28 +158,37 @@ public class Turret extends SubsystemBase implements Loggable {
    * @param ticks in native motor controller units (ticks/100mS)
    * @return velocity in degrees/second
    */
-  private double ticksPer100msToDegreesPerSec(double ticks) {
+  private static double ticksPer100msToDegreesPerSec(double ticks) {
     return ticksToDegrees(ticks) * 10.0;
+  }
+  
+  /**
+   * Converts a velocity to native sensor units.
+   * @param degrees the target velocity (degrees/s)
+   * @return the desired speed in ticks/100ms 
+   */
+  public static double degreesPerSecondToTicksPer100ms(double degrees) {
+    return degreesToEncoderTicks(degrees) / 10.0;
   }
 
   /**
-   * Sets the velocity 
-   * @param velocity The target velocity in ticks per 100ms
+   * Sets the velocity
+   * @param degrees degrees per second the motor should run
    */
-  public void setVelocity(double velocity) {
-    turretMotor.set(ControlMode.Velocity, velocity);
+  public void setVelocity(double degrees) {
+    turretMotor.set(ControlMode.Velocity, degreesPerSecondToTicksPer100ms(degrees));
   }
 
   public void drive(double speed) {
     turretMotor.set(ControlMode.PercentOutput, speed);
   }
 
+  @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2)
   /**
-   * Returns the internal sensor's position
-   * @return The internal sensor's position
+   * @return the current position error in degrees
    */
-  public double getEncoderPosition() {
-    return turretMotor.getSelectedSensorPosition();
+  public double getControllerError() {
+    return ticksToDegrees(turretMotor.getClosedLoopError());
   }
 
   /**
@@ -199,6 +209,15 @@ public class Turret extends SubsystemBase implements Loggable {
     return ticksPer100msToDegreesPerSec(turretMotor.getSelectedSensorVelocity());
   }
 
+   /**
+   * 
+   * @return The internal sensor's position
+   */
+  @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4)
+  public double getEncoderPosition() {
+    return turretMotor.getSelectedSensorPosition();
+  }
+
   public void zeroEncoder() {
     turretMotor.setSelectedSensorPosition(0.0);
   }
@@ -211,16 +230,16 @@ public class Turret extends SubsystemBase implements Loggable {
   @Override
   public void simulationPeriodic() {
     // Affect motor outputs by main system battery voltage dip 
-    m_turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+    turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
 
     // Pass motor output voltage to physics sim
-    m_turretSim.setInput(m_turretMotorSim.getMotorOutputLeadVoltage());
-    m_turretSim.update(Constants.LOOP_TIMESTEP_S);
+    turretSim.setInput(turretMotorSim.getMotorOutputLeadVoltage());
+    turretSim.update(Constants.LOOP_TIMESTEP_S);
 
     // Update motor sensor states based on physics model
-    double sim_velocity_ticks_per_100ms = m_turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    m_turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    m_turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + 
+    double sim_velocity_ticks_per_100ms = turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() +
       Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
 
   }

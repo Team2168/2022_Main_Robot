@@ -18,6 +18,22 @@ import org.team2168.commands.auto.TwoballTopToTerm;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
+import org.team2168.Constants.LiftPositions;
+import org.team2168.commands.*;
+import org.team2168.commands.climber.*;
+import org.team2168.commands.drivetrain.*;
+import org.team2168.commands.hood.*;
+import org.team2168.commands.indexer.*;
+import org.team2168.commands.intakeroller.*;
+import org.team2168.commands.intakeraiseandlower.*;
+import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.*;
+import org.team2168.commands.shooter.*;
+import org.team2168.commands.shootingpositions.*;
+import org.team2168.commands.hopper.*;
+import org.team2168.commands.turret.*;
+import org.team2168.subsystems.*;
+import org.team2168.subsystems.Hood.HoodPosition;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
@@ -36,6 +52,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -46,19 +63,22 @@ import io.github.oblarg.oblog.annotations.Log;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
+
 public class RobotContainer {
+
   // The robot's subsystems and commands are defined here...
-  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  // private final Pixy m_pixy = Pixy.getInstance();
-
   public final Drivetrain drivetrain = Drivetrain.getInstance();
-  // private final Climber climber = Climber.getInstance();
-  // private final Turret m_turret = Turret.getInstance();
-  // private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  public final Hopper hopper = Hopper.getInstance();
+  public final Pooper pooper = Pooper.getInstance();
+  private final Shooter shooter = Shooter.getInstance();
+  private final Climber climber = Climber.getInstance();
+  // private final Turret turret = Turret.getInstance(); // motor not powered for time being
+  private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
+  public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
+  private final Indexer indexer = Indexer.getInstance();
+  private final Hood hood = Hood.getInstance();
+  private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
 
-  // private ExtendExample extendExampleSubsystem= new ExtendExample(m_exampleSubsystem);
-  // private RetractExample retractExampleSubsystem= new RetractExample(m_exampleSubsystem);
-  // private final FindAllianceBall m_findAllianceBall = new FindAllianceBall(m_pixy);
 
   OI oi = OI.getInstance();
 
@@ -75,8 +95,6 @@ public class RobotContainer {
     Paths.getInstance();  // Create the instance so paths are generated soon after code execution begins, well before autos
     Logger.configureLoggingAndConfig(this, false);
 
-    // m_pixy.setDefaultCommand(m_findAllianceBall);
-    
     // Configure the button bindings
     configureButtonBindings();
     configureAutonomousRoutines();
@@ -88,38 +106,84 @@ public class RobotContainer {
     return instance;
   }
 
+    private void configureAutonomousRoutines() {
+        autoChooser.setDefaultOption("Do nothing", new DoNothing());
+        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+        autoChooser.addOption("4 Ball (ends at Terminal)", new FourBall(drivetrain));
+
+        // debug autos
+        autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
+        autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+        autoChooser.addOption("multipart nonzero start/end velocity", new MultipartNonZeroVel(drivetrain));
+        autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
+        // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
+        // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
+        SmartDashboard.putData(autoChooser);
+    }
   /**
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    //Driver Controls
+    //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
-    oi.testJoystick.ButtonStart().whenPressed(new ResetHeading(drivetrain));
+    //// Green button
+    // oi.driverJoystick.ButtonLeftStick()
+    //        .whenPressed(new DriveWithLimelight(drivetrain))
+    //        .whenReleased(new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0));
 
-    //Operator Controls
-    // m_turret.setDefaultCommand(new DriveTurretWithJoystick(m_turret, oi.operatorJoystick::getLeftStickRaw_X));
-    // climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+    //// Black button
+    // oi.driverJoystick.ButtonRightBumper().whenPressed(new AutoClimbFullSend());
 
-    // oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    // oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    // oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    // oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-  }
+    //// Red button
+    oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood));
 
-  private void configureAutonomousRoutines() {
-    autoChooser.setDefaultOption("Do nothing", new DoNothing());
-    autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-    autoChooser.addOption("4 Ball (ends at Terminal)", new FourBall(drivetrain));
 
-    // debug autos
-    autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
-    autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-    autoChooser.addOption("multipart nonzero start/end velocity", new MultipartNonZeroVel(drivetrain));
-    autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
-    // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
-    // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
-    SmartDashboard.putData(autoChooser);
+    //OPERATOR CONTROLS
+    //// main button cluster
+    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
+    oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter));
+    oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter));
+    oi.operatorJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter));
+    oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter));
+
+    //// start and back
+    oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
+    oi.operatorJoystick.ButtonBack().whenPressed(new BumpShooterSpeedDown(shooter));
+
+    //// dpad
+    // oi.operatorJoystick.ButtonUpDPad().whenPressed(new ManuallyStageBall(indexer)); // TODO implement manual staging
+    oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
+    oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED));
+    // oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
+    oi.operatorJoystick.ButtonLeftDPad().whenPressed(new BumpHoodAngleDown(hood));
+    oi.operatorJoystick.ButtonRightDPad().whenPressed(new BumpHoodAngleUp(hood));
+
+    //// sticks
+    oi.operatorJoystick.ButtonLeftStick().whenPressed(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
+
+    //// Trigger cluster
+    oi.operatorJoystick.ButtonLeftBumper()
+            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer))
+            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
+    oi.operatorJoystick.ButtonRightBumper()
+            .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+
+    //TEST JOYSTICK
+    indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
+    // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
+    oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
+
+    oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
+    oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
+    oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
+
+    oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
+    oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
+    oi.testJoystick.ButtonBack().whenPressed(new ResetHeading(drivetrain));
   }
 
   /**
