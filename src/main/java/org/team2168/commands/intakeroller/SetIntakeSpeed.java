@@ -2,48 +2,45 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.climber;
+package org.team2168.commands.intakeroller;
 
-import org.team2168.subsystems.Climber;
-
+import org.team2168.subsystems.IntakeRoller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+public class SetIntakeSpeed extends CommandBase {
+ 
+  private IntakeRoller iRoller;
+  private double speedValueForIntakeSpeed;
 
-public class ReturnToZero extends CommandBase {
-  /** Creates a new ReturnToZero. */
-  Climber climber;
-  private static final double LIFT_DESCENT_VELOCITY_IPS = -1.0; // inches per second
-
-  public ReturnToZero(Climber climber) {
+  /**
+   * 
+   * @param iRoller
+   * @param speedValueForIntakeSpeed speed of intake roller in %output mode
+   */
+  public SetIntakeSpeed(IntakeRoller iRoller, double speedValueForIntakeSpeed) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-    this.climber = climber;
+    this.iRoller = iRoller;
+    this.speedValueForIntakeSpeed = speedValueForIntakeSpeed;
+    addRequirements(iRoller);
   }
-
+  
+  
   // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-
-  }
-
+  public void initialize() {}
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(LIFT_DESCENT_VELOCITY_IPS);
+    iRoller.setRollerSpeed(speedValueForIntakeSpeed);  
   }
-
+   
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (!interrupted) {
-      //Don't zero if we didn't get to the sensor
-      climber.setSpeed(0.0);
-      climber.setEncoderPosZero();
-    }
+    iRoller.setRollerSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.isAtZeroPosition();
+    return false;
   }
 }
