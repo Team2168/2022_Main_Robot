@@ -151,15 +151,15 @@ public class RobotContainer {
     climber.setDefaultCommand(new DriveClimberWithJoystick(climber, oi.operatorJoystick::getRightStickRaw_Y));
    
 
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
-    oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
-    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
-    oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
-    oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
+    //oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    //oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
+    //oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
+    //oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
+    //oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
+    //oi.operatorJoystick.ButtonX().whenHeld(new SetPosition(climber, 12.0));
+    //oi.operatorJoystick.ButtonY().whenPressed(new ReturnToZero(climber));
+    //oi.operatorJoystick.ButtonRightBumper().whenPressed(new IntakeSpeed(intakeRoller, 0.5));
+    //oi.operatorJoystick.ButtonRightBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
 
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new IntakeSpeed(intakeRoller, -0.5));
     oi.operatorJoystick.ButtonLeftBumper().whenReleased(new IntakeSpeed(intakeRoller, 0.0));
@@ -170,6 +170,8 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonA().whenHeld(new HoodToAngle(hood, HoodPosition.BACK_OF_TARMAC.position_degrees));
     oi.operatorJoystick.ButtonB().whenHeld(new HoodToAngle(hood, HoodPosition.WHITE_LINE.position_degrees));
     oi.operatorJoystick.ButtonY().whenHeld(new HoodToAngle(hood, HoodPosition.TERMINAL.position_degrees));
+
+    oi.operatorJoystick.ButtonStart().whenHeld(new FireBalls(m_shooter, indexer));
 
     oi.operatorJoystick.ButtonLeftBumper().whenPressed(new BumpHoodAngleDown(hood));
     oi.operatorJoystick.ButtonRightBumper().whenPressed(new BumpHoodAngleUp(hood));
