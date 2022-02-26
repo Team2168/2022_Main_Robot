@@ -68,11 +68,11 @@ public class IntakeRoller extends SubsystemBase {
     return instance; 
   }
 
-  //  public void setRollerSpeed(double speed){
-  //    intakeRollerOne.set(speed);
+    public void setRollerSpeed(double speed){
+      intakeRollerOne.set(speed);
    
 
-  //    }
+      }
 
     public void setRollerSpeedVelocity(double speedRPM){
       speedRPMFunction = RpmToTicksPerOneHundredMS(speedRPM);
