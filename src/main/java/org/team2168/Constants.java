@@ -62,6 +62,9 @@ public final class Constants {
         public static final int CLIMBER_HOOK_LIMIT_SWITCH = 1;
         public static final int HOPPER_LINE_BREAK = 2;
         public static final int INDEXER_SENSOR = 3;
+        public static final int RED_LED = 5;
+        public static final int GREEN_LED = 6;
+        public static final int BLUE_LED = 7;
     }
 
     public static final class MotorSpeeds {
