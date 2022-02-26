@@ -24,14 +24,26 @@ public class LEDs extends SubsystemBase {
     blueLED = new DigitalOutput(Constants.DIO.BLUE_LED);
   }
 
+  /**
+   * Sets the red LED on/off
+   * @param isOn whether the red LED should be on (true) or off (false)
+   */
   public void red(boolean isOn) {
     redLED.set(!isOn);
   }
 
+  /**
+   * Sets the green LED on/off
+   * @param isOn whether the green LED should be on (true) or off (false)
+   */
   public void green(boolean isOn) {
     greenLED.set(!isOn);
   }
 
+  /**
+   * Sets the blue LED on/off
+   * @param isOn whether the blue LED should be on (true) or off (false)
+   */
   public void blue(boolean isOn) {
     blueLED.set(!isOn);
   }

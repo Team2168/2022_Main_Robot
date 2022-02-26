@@ -13,12 +13,16 @@ public class SetRedLED extends CommandBase {
   private LEDs leds;
   private boolean isOn;
 
+  /**
+   * Sets the red LED on/off
+   * @param leds the LED instance
+   * @param isOn whether the red LED should be on (true) or off (false)
+   */
   public SetRedLED(LEDs leds, boolean isOn) {
     this.leds = leds;
     this.isOn = isOn;
 
     addRequirements(leds);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
