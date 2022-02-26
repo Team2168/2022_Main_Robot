@@ -25,16 +25,13 @@ public class ColorSensor extends SubsystemBase implements Loggable {
                     try {
                         Thread.sleep(20);
                     } catch (InterruptedException e) {
-                        DriverStation.reportError("valueUpdateThread interrupted during sleep", e.getStackTrace());
+//                        DriverStation.reportError("valueUpdateThread interrupted during sleep", e.getStackTrace());
                     }
                 }
             });
 
     private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
-    // private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder,
-    // depends on what we give the teensy slave
 
-//    private volatile int[] data = new int[4]; // {r, g, b}
     private volatile Color8Bit data = new Color8Bit(0, 0, 0);
     private volatile double timestamp = getTimeStampSeconds();
 
@@ -77,7 +74,6 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
                 //
                 if ((intValue[0] ^ intValue[1] ^ intValue[2]) != intValue[3]) {
-                    System.out.println("Received garbled data from teensy!");
                     serialOutput = null;
                 } else {
                     data = new Color8Bit(intValue[0], intValue[1], intValue[2]);
