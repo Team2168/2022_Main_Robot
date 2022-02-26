@@ -27,6 +27,7 @@ public class SetPipeline extends CommandBase {
   @Override
   public void execute() {
     lime.setPipeline(pipelineNum);
+    lime.enableLimelight();
     isPipelineSet = true;
   }
 
