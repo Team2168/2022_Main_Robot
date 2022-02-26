@@ -53,6 +53,7 @@ public class DriveWithLimelight extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     dt.arcadeDrive(0.0, 0.0);
+    lime.pauseLimelight();
   }
 
   // Returns true when the command should end.
