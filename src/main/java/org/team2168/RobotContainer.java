@@ -11,6 +11,7 @@ import org.team2168.commands.*;
 import org.team2168.commands.LEDs.SetBlueLED;
 import org.team2168.commands.LEDs.SetGreenLED;
 import org.team2168.commands.LEDs.SetRedLED;
+import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.*;
@@ -136,6 +137,7 @@ public class RobotContainer {
 
     //TEST JOYSTICK
     indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
+    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter));
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
     oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
 
