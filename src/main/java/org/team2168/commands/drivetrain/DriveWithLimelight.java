@@ -46,6 +46,7 @@ public class DriveWithLimelight extends CommandBase {
   public void execute() {
     dt.arcadeDrive(0, driveLimeTurnSpeed);
     // System.out.println(driveLimeTurnSpeed);
+    lime.enableLimelight();
   }
 
   // Called once the command ends or is interrupted.
