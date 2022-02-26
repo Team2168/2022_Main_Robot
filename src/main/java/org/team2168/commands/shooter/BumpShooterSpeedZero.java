@@ -12,6 +12,10 @@ public class BumpShooterSpeedZero extends CommandBase {
   /** Creates a new BumpShooterSpeedZero. */
   private Shooter shooter;
 
+  /**
+   * Sets the bump amount to zero
+   * @param s the shooter instance
+   */
   public BumpShooterSpeedZero(Shooter s) {
     shooter = s;
     // Use addRequirements() here to declare subsystem dependencies.

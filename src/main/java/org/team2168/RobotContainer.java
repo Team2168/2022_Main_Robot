@@ -6,7 +6,6 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.SysIDCommand;
 import org.team2168.Constants.LiftPositions;
 import org.team2168.commands.*;
 import org.team2168.commands.climber.*;
@@ -163,7 +162,8 @@ public class RobotContainer {
             .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer))
             .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
     oi.operatorJoystick.ButtonRightBumper()
-            .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whileHeld(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
