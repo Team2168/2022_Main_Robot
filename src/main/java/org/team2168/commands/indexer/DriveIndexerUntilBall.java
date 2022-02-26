@@ -11,18 +11,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import java.util.function.DoubleSupplier;
 
 public class DriveIndexerUntilBall extends CommandBase {
-  private double indexerSpeed;
+  private DoubleSupplier indexerSpeed;
   private Indexer indexer;
 
   public DriveIndexerUntilBall(Indexer indexer, DoubleSupplier speed) {
     this.indexer = indexer;
-    this.indexerSpeed = speed.getAsDouble();
+    this.indexerSpeed = speed;
     addRequirements(indexer);
-  }
-
-  public DriveIndexerUntilBall(Indexer indexer, double speed) {
-    this.indexer = indexer;
-    indexerSpeed = speed;
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +27,7 @@ public class DriveIndexerUntilBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexer.drive(indexerSpeed);
+    indexer.drive(indexerSpeed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.

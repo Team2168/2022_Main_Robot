@@ -155,15 +155,23 @@ public class Shooter extends SubsystemBase implements Loggable {
   public void adjustVelocity(double delta) {
     setVelocityAdjustment(velocityAdjustment + delta);
   }
-  //bumps up
+  /**
+   * Bumps the shooter up by 50 RPM
+   */
   public void incrementSpeed() {
     adjustVelocity(50.0);
   }
-  //bumps down
+
+  /**
+   * Bumps the shooter down by 50 RPM
+   */
   public void decrementSpeed() {
     adjustVelocity(-50.0);
   }
-  //sets bump amount to zero
+
+  /**
+   * Sets the bump amount of the shooter to zero
+   */
   public void zeroSpeed() {
     setVelocityAdjustment(0.0);
   }
@@ -207,14 +215,18 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
 
-  public double gerError() {
-  return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
+  public double getError() {
+    return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
   }
 
+  /**
+   * Checks if the shooter is at speed
+   * @param errorTolerance the allowed error for the shooter
+   * @return whether the shooter is at speed
+   */
   @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
-  public boolean isAtSpeed() {
-    // Allowable error of 100 rpm
-    return Math.abs(ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx))) < 100;
+  public boolean isAtSpeed(double errorTolerance) {
+    return Math.abs(getError()) < errorTolerance;
   }
 
   public static Shooter getInstance(){

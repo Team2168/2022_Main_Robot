@@ -117,15 +117,23 @@ public class Hood extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  //bumps up
+  /**
+   * Bumps the Hood angle up by one degree
+   */
   public void incrementDegrees() {
     degreeAdjustment += 1.0;
   }
-  //bumps down
+
+  /**
+   * Bumps the Hood angle down one degree
+   */
   public void decrementDegrees() {
     degreeAdjustment -= 1.0;
   }
-  //changes bump amount to 0
+
+  /**
+   * Sets the bump amount to zero
+   */
   public void zeroDegrees() {
     degreeAdjustment = 0.0;
   }
@@ -243,7 +251,10 @@ public class Hood extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
-    //Will set encoder position to zero if at zero
+    /**
+     * Will set encoder position to zero if at zero
+     */
+
     if (atZero()) {
       setEncoderPosZero();
     }

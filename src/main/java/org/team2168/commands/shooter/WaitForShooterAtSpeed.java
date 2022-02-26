@@ -14,7 +14,7 @@ public class WaitForShooterAtSpeed extends CommandBase {
   private double errorTolerance; //Allowable range of error
   private double loopsToSettle = 10; //The amount of loops the shooter speed needs to be within allowable error for
   private int withinThresholdLoops = 0;
-  private final double DEFAULT_ERROR_TOLERANCE = 100; //in rpm
+  private final double DEFAULT_ERROR_TOLERANCE = 15; //in rpm
   
   public WaitForShooterAtSpeed(Shooter shooter, double errorTolerance) {
     // Doesn't require the shooter to keep the shooter being run by other commands
@@ -35,7 +35,7 @@ public class WaitForShooterAtSpeed extends CommandBase {
   @Override
   public void execute() {
     /* Checks if error is within threshold*/ 
-    if (Math.abs(shooter.gerError()) < errorTolerance) {
+    if (shooter.isAtSpeed(errorTolerance)) {
       ++withinThresholdLoops;
     }
     else {
