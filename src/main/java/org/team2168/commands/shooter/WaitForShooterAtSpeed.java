@@ -50,7 +50,7 @@ public class WaitForShooterAtSpeed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    /* Shooter must stay within allowable error for 10 loops for it to be at speed*/
+    /* Shooter must stay within allowable error for 10+ loops for it to be at speed*/
     return withinThresholdLoops > loopsToSettle;
   }
 }
