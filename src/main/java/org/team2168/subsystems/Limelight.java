@@ -10,6 +10,9 @@ package org.team2168.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+
+import org.team2168.subsystems.Shooter.ShooterRPM;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -37,9 +40,9 @@ public class Limelight extends SubsystemBase implements Loggable {
    * speed anymore and I don't want to overhaul the whole subsystem :/
    */
   // TODO create new pipelines
-  public static final int PIPELINE_FORWARD_BLUE = 0;
-  public static final int PIPELINE_FORWARD_RED = 2;
-  public static final int PIPELINE_BACK_TRENCH_BLUE = 1;
+  public static final int PIPELINE_LAUNCHPAD_LINE = 0;
+  public static final int PIPELINE_TARMAC_LINE = 1;
+  public static final int PIPELINE_BACK_TRENCH_BLUE = 2;
   public static final int PIPELINE_BACK_TRENCH_RED = 3;
   public static final int PIPELINE_DRIVER_VIEW = 4;
   public static final int PIPELINE_DEFAULT_DRIVE = 5;
@@ -149,7 +152,15 @@ public class Limelight extends SubsystemBase implements Loggable {
     setCamMode(0);
     enableVisionProcessing(true);
     setLedMode(LEDMode.PIPELINE); // set to current pipeline setting
-    setPipeline(PIPELINE_DRIVE_WITH_LIMELIGHT);
+    if (Shooter.getInstance().getVelocity() == Shooter.ShooterRPM.TARMAC_LINE.rpm) {
+      setPipeline(PIPELINE_TARMAC_LINE);
+    }
+    else if (Shooter.getInstance().getVelocity() == Shooter.ShooterRPM.LAUNCHPAD.rpm) {
+      setPipeline(PIPELINE_LAUNCHPAD_LINE);
+    }
+    else {
+      setPipeline(PIPELINE_DEFAULT_DRIVE);
+    }
     isLimelightEnabled = true;
   }
 
