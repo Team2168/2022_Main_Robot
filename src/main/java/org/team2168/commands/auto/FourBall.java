@@ -4,13 +4,11 @@
 
 package org.team2168.commands.auto;
 
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team2168.commands.DriveHopperAndIndexer;
 import org.team2168.commands.LowerAndRunIntake;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
-import org.team2168.commands.shootingpositions.Launchpad;
 import org.team2168.commands.shootingpositions.TarmacLine;
 import org.team2168.subsystems.*;
 import org.team2168.utils.PathUtil;
@@ -40,7 +38,7 @@ public class FourBall extends SequentialCommandGroup {
                         new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer),
                         new SequentialCommandGroup(
                                 PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain, InitialPathState.PRESERVEODOMETRY),
-                                PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain, InitialPathState.PRESERVEODOMETRY)
+                                PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
                                 PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
                         )
                 ),
