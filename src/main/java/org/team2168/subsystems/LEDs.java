@@ -8,6 +8,7 @@ import org.team2168.Constants;
 
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
 
 public class LEDs extends SubsystemBase {
   
@@ -33,14 +34,17 @@ public class LEDs extends SubsystemBase {
     blueLED.set(!isOn);
   }
 
+  @Log(name = "Red On?", rowIndex = 0, columnIndex = 0)
   public boolean getRedState() {
     return !redLED.get();
   }
 
+  @Log(name = "Green On?", rowIndex = 0, columnIndex = 1)
   public boolean getGreenState() {
     return !greenLED.get();
   }
 
+  @Log(name = "Blue On?", rowIndex = 0, columnIndex = 2)
   public boolean getBlueState() {
     return !blueLED.get();
   }
