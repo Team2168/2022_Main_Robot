@@ -89,6 +89,8 @@ public class RobotContainer {
   private final Hood hood = Hood.getInstance();
   private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
 
+  private final Command driveWithLimelight = new DriveWithLimelight(drivetrain, lime, true);
+
 
   OI oi = OI.getInstance();
 
@@ -118,7 +120,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
-    oi.driverJoystick.ButtonA().whenHeld(new DriveWithLimelight(drivetrain, lime));
+    oi.driverJoystick.ButtonLeftStick().whenHeld(new DriveWithLimelight(drivetrain, lime, true));
+    oi.driverJoystick.ButtonB().whenPressed(new DriveWithLimelight(drivetrain, lime));
 
     //// Green button
     // oi.driverJoystick.ButtonLeftStick()
