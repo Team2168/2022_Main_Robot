@@ -13,7 +13,6 @@ import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -30,16 +29,18 @@ public class FireBalls extends SequentialCommandGroup {
     this.indexer = indexer;
     this.hopper = hopper;
 
-    addCommands(
-      new WaitForShooterAtSpeed(shooter),
-      race(
-        new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
-        new DriveIndexerUntilNoBall(indexer, Constants.MotorSpeeds.INTAKE_SPEED)
-      ),
-      race(
-        new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
-        new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
-      )
-    );
+    if(shooter.getVelocity() > 0) {
+     addCommands(
+       new WaitForShooterAtSpeed(shooter),
+        race(
+          new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+          new DriveIndexerUntilNoBall(indexer, Constants.MotorSpeeds.INTAKE_SPEED)
+        ),
+        race(
+          new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+          new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
+        )
+      );
+    }
   }
 }
