@@ -106,8 +106,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter));
 
     //// start and back
-    //oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
-    oi.operatorJoystick.ButtonStart().whenHeld(new FireBalls(shooter, indexer));
+    oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
     oi.operatorJoystick.ButtonBack().whenPressed(new BumpShooterSpeedDown(shooter));
 
     //// dpad
@@ -126,7 +125,8 @@ public class RobotContainer {
             .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer))
             .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
     oi.operatorJoystick.ButtonRightBumper()
-            .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whenHeld(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 

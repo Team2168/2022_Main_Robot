@@ -4,9 +4,12 @@
 
 package org.team2168.commands;
 
+import org.team2168.Constants;
+import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.indexer.DriveIndexerUntilNoBall;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
+import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Shooter;
 
@@ -19,17 +22,20 @@ public class FireBalls extends SequentialCommandGroup {
   /** Creates a new FireBalls. */
   private Shooter shooter;
   private Indexer indexer;
+  private Hopper hopper;
   private double indexerSpeed = 0.8;
 
-  public FireBalls(Shooter shooter, Indexer indexer) {
+  public FireBalls(Shooter shooter, Indexer indexer, Hopper hopper) {
     this.shooter = shooter;
     this.indexer = indexer;
+    this.hopper = hopper;
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
     addCommands(
       new WaitForShooterAtSpeed(shooter),
+      new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
       new DriveIndexerUntilNoBall(indexer, indexerSpeed),
       new DriveIndexerUntilBall(indexer, indexerSpeed)
     );
