@@ -77,10 +77,11 @@ public class RobotContainer {
 
     // m_pixy.setDefaultCommand(m_findAllianceBall);
 
-    if (Constants.IS_COMPBOT)
+    if (Constants.IS_COMPBOT) {
       System.out.println("DID NOT FIND PRACTICE BOT JUMPER -- USING COMPETITION BOT GAINS");
-    else
-    System.out.println("FOUND PRACTICE BOT JUMPER -- CONFIGURING WITH PBOT GAINS");
+    } else {
+      System.out.println("FOUND PRACTICE BOT JUMPER -- CONFIGURING WITH PBOT GAINS");
+    }
     // Configure the button bindings
     configureButtonBindings();
    
