@@ -8,6 +8,9 @@ import java.util.function.DoubleFunction;
 
 import org.team2168.Constants.LiftPositions;
 import org.team2168.commands.*;
+import org.team2168.commands.LEDs.SetBlueLED;
+import org.team2168.commands.LEDs.SetGreenLED;
+import org.team2168.commands.LEDs.SetRedLED;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.*;
@@ -54,6 +57,7 @@ public class RobotContainer {
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
   private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
+  private final LEDs leds = LEDs.getInstance();
 
 
   OI oi = OI.getInstance();
@@ -135,9 +139,23 @@ public class RobotContainer {
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
     oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
 
-    oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
-    oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
-    oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
+    //oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
+    //oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
+    //oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
+
+    oi.testJoystick.ButtonA()
+            .whenPressed(new SetRedLED(leds, true))
+            .whenReleased(new SetRedLED(leds, false));
+          
+    oi.testJoystick.ButtonB()
+            .whenPressed(new SetGreenLED(leds, true))
+            .whenReleased(new SetGreenLED(leds, false));
+
+    oi.testJoystick.ButtonX()
+            .whenPressed(new SetBlueLED(leds, true))
+            .whenReleased(new SetBlueLED(leds, false));
+
+
 
     oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));

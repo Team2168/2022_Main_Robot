@@ -16,6 +16,8 @@ public class LEDs extends SubsystemBase {
   public DigitalOutput greenLED;
   public DigitalOutput blueLED;
 
+  static LEDs instance = null;
+
   public LEDs() {
     redLED = new DigitalOutput(Constants.DIO.RED_LED);
     greenLED = new DigitalOutput(Constants.DIO.GREEN_LED);
@@ -47,6 +49,12 @@ public class LEDs extends SubsystemBase {
   @Log(name = "Blue On?", rowIndex = 0, columnIndex = 2)
   public boolean getBlueState() {
     return !blueLED.get();
+  }
+
+  public static LEDs getInstance() {
+    if (instance == null) 
+      instance = new LEDs();
+    return instance;
   }
 
   @Override
