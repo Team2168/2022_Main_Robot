@@ -36,14 +36,20 @@ public class FourBall extends SequentialCommandGroup {
                 new DriveHopperAndIndexer(hopper, indexer).withTimeout(1.5),
 
 
-                new Launchpad(hood, shooter),
                 race (
                         new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer),
                         new SequentialCommandGroup(
                                 PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain, InitialPathState.PRESERVEODOMETRY),
                                 PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain, InitialPathState.PRESERVEODOMETRY)
+                                PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
                         )
-                )
+                ),
+                new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer).withTimeout(0.1),
+                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1),
+                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1.5),
+                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1.5)
 
         );
     }

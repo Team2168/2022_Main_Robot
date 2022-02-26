@@ -18,6 +18,7 @@ public class Paths {
     public final Trajectory path_4BALL_0;
     public final Trajectory path_4BALL_1;
     public final Trajectory path_4BALL_2;
+    public final Trajectory path_4BALL_3;
     public final Trajectory path_2BALL_1;
     public final Trajectory path_canweturn;
     public final Trajectory path_wecanturn;
@@ -33,6 +34,7 @@ public class Paths {
         path_4BALL_0 = getTrajectory("4BALL_0", true);
         path_4BALL_1 = getTrajectory("4BALL_1", true);
         path_4BALL_2 = getTrajectory("4BALL_2", true);
+        path_4BALL_3 = getTrajectory("4BALL_3", true);
         path_2BALL_1 = getTrajectory("2BALL_1", true);
         path_canweturn = getTrajectory("canweturn", true);
         path_wecanturn = getTrajectory("wecanturn", true);
