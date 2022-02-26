@@ -74,7 +74,7 @@ public class Limelight extends SubsystemBase implements Loggable {
 
   private Limelight() {
       networkTable = NetworkTableInstance.getDefault().getTable("limelight");
-
+      isLimelightEnabled = false;
       instantiateLocalVariables();
   }
 
@@ -246,6 +246,10 @@ public class Limelight extends SubsystemBase implements Loggable {
     limelightdata[0] = getPositionX();
     limelightdata[1] = getPositionY();
     limelightdata[2] = getTargetArea();
+
+    if (!isLimelightEnabled) {
+      pauseLimelight();
+    }
 
     // Sets the camera controls
     ledMode.setNumber(desiredLEDMode.val);
