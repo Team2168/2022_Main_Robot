@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -15,7 +16,7 @@ import io.github.oblarg.oblog.annotations.Log;
 public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
-    public boolean isDataValid;
+    private static final double DATA_THRESHOLD = 2.0;  // Time after which to consider data stale
 
     private Thread valueUpdateThread = new Thread(
             () -> {
@@ -33,7 +34,9 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     // private static final int SERIAL_PORT_ADDRESS = 2; // just a place holder,
     // depends on what we give the teensy slave
 
-    private volatile int[] data = new int[4]; // {r, g, b}
+//    private volatile int[] data = new int[4]; // {r, g, b}
+    private volatile Color8Bit data = new Color8Bit(0, 0, 0);
+    private volatile double timestamp = getTimeStampSeconds();
 
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT);
@@ -64,105 +67,67 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         serialPort.reset();
         byte[] serialOutput = null;
 
-        System.out.println("trying to read serial!");
-        short counter = 0;
-       
         while (serialOutput == null) {
             if (serialPort.getBytesReceived() >= 4) {
                 serialOutput = serialPort.read(4);
-                if ((serialOutput[0] ^ serialOutput[1] ^ serialOutput[2]) != serialOutput[3]) {
+                // convert values to integers
+                var intValue = new int[serialOutput.length];
+                for (int i = 0; i < serialOutput.length; i++)
+                    intValue[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
+
+                //
+                if ((intValue[0] ^ intValue[1] ^ intValue[2]) != intValue[3]) {
                     System.out.println("Received garbled data from teensy!");
                     serialOutput = null;
-                    isDataValid = false;
+                } else {
+                    data = new Color8Bit(intValue[0], intValue[1], intValue[2]);
                 }
             }
-                if (counter%100 == 0)
-                    System.out.println("Stalling while trying to read data.  Is teensy connected?");
-                counter++;
         }
-        System.out.println("successfully read from serial!");
-        isDataValid = true;
+        timestamp = getTimeStampSeconds();
 
-        // convert values to integers
-        for (int i = 0; i < serialOutput.length; i++)
-            data[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
     }
 
 
     @Log(name = "Color Sensor Alliance", methodName = "toString")
     public Alliance getColor() {
-        if (getRed() > getBlue())
+        if (data.red > data.blue)
             return Alliance.Red;
         else
             return Alliance.Blue;
     }
 
-    @Log
+    @Log(name = "Is team color?")
     public boolean isTeamColor() {
         return DriverStation.getAlliance() == getColor();
     }
 
-    @Log(name = "Pooper Petitioner")
-    public String decider() {
-        if (isTeamColor() == true) {
-            return "Keep the ball";
-        }
-        else {
-            return "Poop the ball";
-        }
+    @Log(name = "Is data stale?")
+    public boolean isDataStale() {
+        return getTimeSinceLastRead() > DATA_THRESHOLD;
     }
 
-    @Log(name = "Color Sensor Checksum")
-    public String checker() {
-        if (isDataValid == true) {
-            return "Data is valid";
-        }
-        else {
-            return "Data is unvalid";
-        }
+    @Log(name = "time since last read")
+    public double getTimeSinceLastRead() {
+        var currentTime = getTimeStampSeconds();
+        return currentTime - timestamp;
     }
 
+    public static double getTimeStampSeconds() {
+        double timestamp = System.currentTimeMillis();
+        return timestamp / 1000.0;
+    }
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
 
-         System.out.println(
-         String.format("R: %d G: %d B: %d", getRed(), getGreen(), getBlue())
-         );
+//         System.out.println(
+//         String.format("R: %d G: %d B: %d", data.red, data.green, data.blue)
+//         );
 
     }
 
-    public int getRed() {
-        try {
-            return data[0];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            DriverStation.reportError("Error while getting colorsensor red value!  Index out of range",
-                    e.getStackTrace());
-            return 0;
-        }
-    }
-
-    public int getGreen() {
-        try {
-            return data[1];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            DriverStation.reportError("Error while getting colorsensor green value!  Index out of range",
-                    e.getStackTrace());
-            return 0;
-        }
-    }
-
-    public int getBlue() {
-        try {
-            return data[2];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            DriverStation.reportError("Error while getting colorsensor blue value!  Index out of range",
-                    e.getStackTrace());
-            return 0;
-        }
-    }
-
-    public int[] getData() {
+    public Color8Bit getData() {
         return data;
     }
 }
