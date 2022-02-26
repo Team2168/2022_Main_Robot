@@ -38,6 +38,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
 
+  private double errorTolerance = 0.0;
+
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
   private final double CONTINUOUS_CURRENT_LIMIT_STATOR = 60; //amps
@@ -224,8 +226,13 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @param errorTolerance the allowed error for the shooter
    * @return whether the shooter is at speed
    */
-  @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
   public boolean isAtSpeed(double errorTolerance) {
+    this.errorTolerance = errorTolerance;
+    return Math.abs(getError()) < errorTolerance;
+  }
+
+  @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
+  private boolean isAtSpeed() {
     return Math.abs(getError()) < errorTolerance;
   }
 

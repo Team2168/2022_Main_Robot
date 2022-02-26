@@ -36,7 +36,10 @@ public class FireBalls extends SequentialCommandGroup {
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
         new DriveIndexerUntilNoBall(indexer, Constants.MotorSpeeds.INTAKE_SPEED)
       ),
-      new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
+      race(
+        new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+        new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
+      )
     );
   }
 }
