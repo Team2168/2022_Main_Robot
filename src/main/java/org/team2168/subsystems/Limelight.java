@@ -152,15 +152,6 @@ public class Limelight extends SubsystemBase implements Loggable {
     setCamMode(0);
     enableVisionProcessing(true);
     setLedMode(LEDMode.PIPELINE); // set to current pipeline setting
-    if (Shooter.getInstance().getVelocity() == Shooter.ShooterRPM.TARMAC_LINE.rpm) {
-      setPipeline(PIPELINE_TARMAC_LINE);
-    }
-    else if (Shooter.getInstance().getVelocity() == Shooter.ShooterRPM.LAUNCHPAD.rpm) {
-      setPipeline(PIPELINE_LAUNCHPAD_LINE);
-    }
-    else {
-      setPipeline(PIPELINE_DEFAULT_DRIVE);
-    }
     isLimelightEnabled = true;
   }
 
