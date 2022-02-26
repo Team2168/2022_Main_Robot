@@ -26,8 +26,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     FENDER_LOW(1100.0),
     FENDER_HIGH(1500.0),
     TARMAC_LINE(1650.0),
-    LAUNCHPAD(2085.0),
-    WALL_SHOT(2750.0);
+    LAUNCHPAD(1900.0),
+    WALL_SHOT(2750.0),
+    TERMINAL(2300.0);
 
     public final double rpm;
     private ShooterRPM(double rpm) {
@@ -76,7 +77,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
-  private static double velocityAdjustment = 0.0;
+
+  private double setPoint;
 
 
   /** Creates a new Shooter. */
@@ -143,28 +145,9 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
+      this.setPoint = setPoint;
+      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
-  }
-
-  public void setVelocityAdjustment(double adjustment) {
-    velocityAdjustment = adjustment;
-  }
-
-  public void adjustVelocity(double delta) {
-    setVelocityAdjustment(velocityAdjustment + delta);
-  }
-
-  public void incrementSpeed() {
-    adjustVelocity(50.0);
-  }
-
-  public void decrementSpeed() {
-    adjustVelocity(-50.0);
-  }
-
-  public void zeroSpeed() {
-    setVelocityAdjustment(0.0);
   }
 
 
@@ -195,6 +178,10 @@ public class Shooter extends SubsystemBase implements Loggable {
   @Log (name = "Speed (RPM)", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   public double getVelocity() {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
+  }
+
+  public double getSetPoint() {
+    return setPoint;
   }
 
   public void shoot(double d_Speed){

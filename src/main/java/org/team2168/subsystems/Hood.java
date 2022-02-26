@@ -28,7 +28,8 @@ public class Hood extends SubsystemBase implements Loggable {
     FENDER_HIGH(5.0),
     TARMAC_LINE(20.0),
     LAUNCHPAD(28.0),
-    WALL_SHOT(37.0),
+    WALL_SHOT(33.0),
+    TERMINAL(33.0),
     ZERO(0.0);
 
     public final double position_degrees;
@@ -45,7 +46,7 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
-  private static double degreeAdjustment = 0.0;
+  private static double setpoint = 0.0;
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -115,23 +116,9 @@ public class Hood extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  public void incrementDegrees() {
-    degreeAdjustment += 1.0;
+  public double getSetpoint() {
+    return setpoint;
   }
-
-  public void decrementDegrees() {
-    degreeAdjustment -= 1.0;
-  }
-
-  public void zeroDegrees() {
-    degreeAdjustment = 0.0;
-  }
-
-  @Log(name = "degree adjustment", rowIndex = 2, columnIndex = 3)
-  public double getDegreeAdjustment() {
-    return degreeAdjustment;
-  }
-
   /**
    * 
    * @return the leader motor position in native ticks
@@ -172,7 +159,8 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    var demand = MathUtil.clamp(degrees + degreeAdjustment, MIN_ANGLE, MAX_ANGLE);
+    var demand = MathUtil.clamp(degrees, MIN_ANGLE, MAX_ANGLE);
+    setpoint = degrees;
     hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(demand),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }

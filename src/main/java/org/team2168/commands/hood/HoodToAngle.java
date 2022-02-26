@@ -32,15 +32,11 @@ public class HoodToAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) {
-      hood.setPercentOutput(0.0);
-    }
-    hood.zeroDegrees();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

@@ -104,7 +104,9 @@ public class RobotContainer {
     private void configureAutonomousRoutines() {
         autoChooser.setDefaultOption("Do nothing", new DoNothing());
         autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-        autoChooser.addOption("4 Ball (ends at Terminal)", new FourBall(drivetrain));
+        autoChooser.addOption(
+                "4 Ball (ends at Terminal)",
+                new FourBall(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter));
 
         // debug autos
         autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
@@ -173,6 +175,7 @@ public class RobotContainer {
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
     oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
 
+    oi.testJoystick.ButtonX().whenPressed(new Terminal(hood, shooter));
     oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
     oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
     oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
@@ -181,6 +184,7 @@ public class RobotContainer {
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
     oi.testJoystick.ButtonBack().whenPressed(new ResetHeading(drivetrain));
+
   }
 
   /**
