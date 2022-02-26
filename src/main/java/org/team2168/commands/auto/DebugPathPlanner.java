@@ -4,8 +4,16 @@
 
 package org.team2168.commands.auto;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.Timestamp;
+import java.util.UUID;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import org.team2168.Constants;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.utils.PathUtil;
@@ -30,7 +38,7 @@ public class DebugPathPlanner extends CommandBase {
   double curvature;
   double time;
   String pathname;
-  StringBuilder out = new StringBuilder("time,expected velocity,actual velocity\n");
+  StringBuilder out = new StringBuilder("time,expected velocity,actual velocity,expected_curvature,actualturningrate\n");
 
   /** Creates a new DebugPath. */
   public DebugPathPlanner(Drivetrain drivetrain, String pathname) {
@@ -85,12 +93,12 @@ public class DebugPathPlanner extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    final String ENTRY = "%f,%f,%f%n";
+    final String ENTRY = "%f,%f,%f,%f,%f%n";
     SmartDashboard.putNumber("commanded velocity", vel);
     SmartDashboard.putNumber("commanded accelleration", accel);
     SmartDashboard.putNumber("commanded curvature", curvature);
     //print values used to plot commanded vs actual velocity 
-    out.append(String.format(ENTRY, time, vel, (drivetrain.getLeftEncoderRate() + drivetrain.getRightEncoderRate())/2.0));
+    out.append(String.format(ENTRY, time, vel, (drivetrain.getLeftEncoderRate() + drivetrain.getRightEncoderRate())/2.0, drivetrain.getTurnRate(), curvature));
   }
 
   // Called once the command ends or is interrupted.
@@ -98,6 +106,14 @@ public class DebugPathPlanner extends CommandBase {
   public void end(boolean interrupted) {
     rCommand.end(interrupted);
     System.out.println(out.toString());
+//    try {
+//      var fileName = System.currentTimeMillis() + ".csv";
+//      var file = Filesystem.getOperatingDirectory().toPath().resolve(fileName);
+//      Files.writeString(file, out);
+//      System.out.println("wrote to " + fileName);
+//    } catch (IOException e) {
+//      DriverStation.reportError("Failed to write path logs!", e.getStackTrace());
+//    }
   }
 
   // Returns true when the command should end.

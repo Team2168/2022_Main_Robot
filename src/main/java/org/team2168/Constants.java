@@ -27,8 +27,8 @@ public final class Constants {
 
     public static final class CANDevices {
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 17;
-        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 18;
-        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 19;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 19;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 18;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 2;
@@ -45,17 +45,17 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 0.65923;
-        public static final double kvVoltSecondsPerMeter = 1.9899;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.4609;
-        public static final double kPDriveVel = 2.807; // @1.5 m/s max error
+        public static final double ksVolts = 2.214;
+        public static final double kvVoltSecondsPerMeter = 2.0704;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.2426;
+        public static final double kPDriveVel = 2.7258; // @1.4 m/s max error
 
-        public static final double kTrackwidthMeters = 0.65563;//fudged to 0.87. Actual = 0.65563;
+        public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295     Actual = 0.65563;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
         public static final double kMaxSpeedMetersPerSecond = 4.2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1.0;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.4;  // 1.6 is feasible?
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;

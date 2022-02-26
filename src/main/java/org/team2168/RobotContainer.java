@@ -8,13 +8,7 @@ import java.util.List;
 import java.util.function.DoubleFunction;
 
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.auto.DoNothing;
-import org.team2168.commands.auto.Drive1Meter;
-import org.team2168.commands.auto.Drive3Meters;
-import org.team2168.commands.auto.FourBall;
-import org.team2168.commands.auto.MultipartNonZeroVel;
-import org.team2168.commands.auto.Paths;
-import org.team2168.commands.auto.TwoballTopToTerm;
+import org.team2168.commands.auto.*;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
@@ -53,6 +47,7 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import org.team2168.utils.PathUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -114,6 +109,8 @@ public class RobotContainer {
         // debug autos
         autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
         autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+        autoChooser.addOption("turningmaybe", new DebugPathPlanner(drivetrain, "turningmaybe"));
+        autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
         autoChooser.addOption("multipart nonzero start/end velocity", new MultipartNonZeroVel(drivetrain));
         autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
         // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));

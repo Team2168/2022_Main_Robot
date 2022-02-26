@@ -15,6 +15,7 @@ import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.RobotController;
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 
@@ -29,7 +30,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
-    private static boolean USE_PIGEON_GYRO = false;
+    private static boolean USE_PIGEON_GYRO = true;
     private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
     private AHRS navx;
 
@@ -394,9 +395,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     public void arcadeDrive(double xSpeed, double zRotation) {
         drive.arcadeDrive(xSpeed, zRotation);
-        //print speed values to see when the robot barely moves 
+        //print speed values to see when the robot barely moves
         //multiply value by the corresponding battery voltage to find kS
-        // System.out.println(xSpeed);
+        System.out.println(xSpeed);
+        System.out.println(RobotController.getBatteryVoltage());
     }
 
     /**
