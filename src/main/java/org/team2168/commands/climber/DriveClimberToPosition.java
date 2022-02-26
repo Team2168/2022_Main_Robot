@@ -8,15 +8,17 @@ import org.team2168.subsystems.Climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ExtendLift extends CommandBase {
-  /** Creates a new ExtendLift. */
+public class DriveClimberToPosition extends CommandBase {
+  /** Creates a new SetPosition. */
   Climber climber;
-  private double liftAscentVelocity = 3.0; // inches per second
+  double inches;
+  double acceptableErrorInches = 0.1;
 
-  public ExtendLift(Climber climber) {
+  public DriveClimberToPosition(Climber climber, double inch) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
     this.climber = climber;
+    inches = inch;
   }
 
   // Called when the command is initially scheduled.
@@ -26,18 +28,20 @@ public class ExtendLift extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setSpeed(liftAscentVelocity);
+    climber.setPosition(inches);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.setSpeed(0.0);
+    // climber.setPercentOutput(0.0);
+    // allows the position controller to maintain position
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climber.isAtUpperPosition();
+    return (climber.getPositionInches() < (inches + acceptableErrorInches) &&
+     climber.getPositionInches() > (inches - acceptableErrorInches));
   }
 }
