@@ -15,6 +15,7 @@ import io.github.oblarg.oblog.annotations.Log;
 public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
+    public boolean isDataValid;
 
     private Thread valueUpdateThread = new Thread(
             () -> {
@@ -65,12 +66,14 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
         System.out.println("trying to read serial!");
         short counter = 0;
+       
         while (serialOutput == null) {
             if (serialPort.getBytesReceived() >= 4) {
                 serialOutput = serialPort.read(4);
                 if ((serialOutput[0] ^ serialOutput[1] ^ serialOutput[2]) != serialOutput[3]) {
                     System.out.println("Received garbled data from teensy!");
                     serialOutput = null;
+                    isDataValid = false;
                 }
             }
                 if (counter%100 == 0)
@@ -78,11 +81,13 @@ public class ColorSensor extends SubsystemBase implements Loggable {
                 counter++;
         }
         System.out.println("successfully read from serial!");
+        isDataValid = true;
 
         // convert values to integers
         for (int i = 0; i < serialOutput.length; i++)
             data[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
     }
+
 
     @Log(name = "Color Sensor Alliance", methodName = "toString")
     public Alliance getColor() {
@@ -95,6 +100,26 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     @Log
     public boolean isTeamColor() {
         return DriverStation.getAlliance() == getColor();
+    }
+
+    @Log(name = "Pooper Petitioner")
+    public String decider() {
+        if (isTeamColor() == true) {
+            return "Keep the ball";
+        }
+        else {
+            return "Poop the ball";
+        }
+    }
+
+    @Log(name = "Color Sensor Checksum")
+    public String checker() {
+        if (isDataValid == true) {
+            return "Data is valid";
+        }
+        else {
+            return "Data is unvalid";
+        }
     }
 
     @Override
