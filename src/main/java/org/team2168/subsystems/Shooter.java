@@ -38,6 +38,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
 
+  private double errorTolerance = 0.0;
+
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
   private final double CONTINUOUS_CURRENT_LIMIT_STATOR = 60; //amps
@@ -147,6 +149,7 @@ public class Shooter extends SubsystemBase implements Loggable {
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
 
+  
   public void setVelocityAdjustment(double adjustment) {
     velocityAdjustment = adjustment;
   }
@@ -154,15 +157,23 @@ public class Shooter extends SubsystemBase implements Loggable {
   public void adjustVelocity(double delta) {
     setVelocityAdjustment(velocityAdjustment + delta);
   }
-
+  /**
+   * Bumps the shooter up by 50 RPM
+   */
   public void incrementSpeed() {
     adjustVelocity(50.0);
   }
 
+  /**
+   * Bumps the shooter down by 50 RPM
+   */
   public void decrementSpeed() {
     adjustVelocity(-50.0);
   }
 
+  /**
+   * Sets the bump amount of the shooter to zero
+   */
   public void zeroSpeed() {
     setVelocityAdjustment(0.0);
   }
@@ -197,9 +208,32 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
+  /**
+   * Sets the shooter at a speed
+   * @param d_Speed the speed for the shooter to run at, from 0.0 to 1.0
+   */
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
+  }
+
+  public double getError() {
+    return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
+  }
+
+  /**
+   * Checks if the shooter is at speed
+   * @param errorTolerance the allowed error for the shooter
+   * @return whether the shooter is at speed
+   */
+  public boolean isAtSpeed(double errorTolerance) {
+    this.errorTolerance = errorTolerance;
+    return Math.abs(getError()) < errorTolerance;
+  }
+
+  @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
+  private boolean isAtSpeed() {
+    return Math.abs(getError()) < errorTolerance;
   }
 
   public static Shooter getInstance(){

@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class BumpHoodAngleDown extends CommandBase {
   /** Creates a new BumpHoodAngleDown. */
   private Hood hood;
+
+  /**
+   * Bumps the hood down
+   * @param h the hood instance
+   */
   public BumpHoodAngleDown(Hood h) {
     hood = h;
     // Use addRequirements() here to declare subsystem dependencies.
