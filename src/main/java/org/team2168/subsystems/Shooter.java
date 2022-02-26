@@ -231,8 +231,13 @@ public class Shooter extends SubsystemBase implements Loggable {
     return Math.abs(getError()) < errorTolerance;
   }
 
+
+  /**
+   * Checks if the shooter is at speed.
+   * @return true when the shooter is within the errorTolerance specified by the last command
+   */
   @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
-  private boolean isAtSpeed() {
+  public boolean isAtSpeed() {
     return Math.abs(getError()) < errorTolerance;
   }
 
