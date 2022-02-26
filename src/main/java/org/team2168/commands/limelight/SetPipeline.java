@@ -15,7 +15,6 @@ public class SetPipeline extends CommandBase {
   boolean isPipelineSet = false;
 
   public SetPipeline(Limelight limelight, int pipeline) {
-    addRequirements(limelight);
     lime = limelight;
     pipelineNum = pipeline;
   }
