@@ -62,13 +62,10 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   }
   
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
-    addRequirements(limelight);
-    lime = limelight;
-    dt = drivetrain;
+    this(drivetrain, limelight, false);
   }
 
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, boolean useJoystick) {
-    addRequirements(limelight);
     lime = limelight;
     dt = drivetrain;
     this.useJoystick = useJoystick;
@@ -116,15 +113,17 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
         dt.arcadeDrive(oi.getGunStyleTrigger(), driveLimeTurnSpeed);
       }
     }
-    
-    System.out.println(driveLimeTurnSpeed);
+
+    // System.out.println(driveLimeTurnSpeed);
     SmartDashboard.putNumber("driveLimeTurnSpeed", driveLimeTurnSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    lime.pauseLimelight();
+    if (useJoystick) {
+      lime.pauseLimelight();
+    }
   }
 
   // Returns true when the command should end.
