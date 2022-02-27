@@ -9,6 +9,7 @@ import org.team2168.commands.DriveHopperAndIndexer;
 import org.team2168.commands.LowerAndRunIntake;
 import org.team2168.commands.QueueBallForShot;
 import org.team2168.commands.RetractAndStopIntake;
+import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.TarmacLine;
 import org.team2168.subsystems.*;
@@ -19,13 +20,22 @@ public class FourBall extends SequentialCommandGroup {
     /**
      * Creates a new FourBall.
      */
-    public FourBall(Drivetrain drivetrain, IntakeRaiseAndLower intakeRaiseAndLower, IntakeRoller intakeRoller, Hopper hopper, Indexer indexer, Hood hood, Shooter shooter) {
+    public FourBall(Drivetrain drivetrain,
+                    IntakeRaiseAndLower intakeRaiseAndLower,
+                    IntakeRoller intakeRoller,
+                    Hopper hopper,
+                    Indexer indexer,
+                    Hood hood,
+                    Shooter shooter,
+                    Pooper pooper,
+                    ColorSensor colorSensor) {
 
         Paths paths = Paths.getInstance();
         addCommands(
                 new TarmacLine(hood, shooter),
                 race (  // run group until path ends
-                        new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller),
+                        new IntakeLower(intakeRaiseAndLower),
+                        new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
                         PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, InitialPathState.DISCARDHEADING)
                 ),
                 new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),

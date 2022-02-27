@@ -117,7 +117,7 @@ public class RobotContainer {
         autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
         autoChooser.addOption(
                 "4 Ball (ends at Terminal)",
-                new FourBall(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter));
+                new FourBall(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, pooper, colorSensor));
 
         // debug autos
         autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
@@ -176,7 +176,7 @@ public class RobotContainer {
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whileHeld(new QueueBallForShot())
+            .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whenPressed(new IntakeLower(intakeRaiseAndLower))
             .whenReleased(new IntakeRaise(intakeRaiseAndLower));
 
@@ -215,7 +215,7 @@ public class RobotContainer {
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new QueueBallForShot());
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller));
 
     oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
