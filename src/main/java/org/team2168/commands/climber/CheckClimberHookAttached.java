@@ -11,9 +11,24 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class CheckClimberHookAttached extends CommandBase {
   /** Creates a new CheckClimberHookAttached. */
   Climber climb;
-  public CheckClimberHookAttached(Climber climber) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  private static final int DEFAULT_LOOPS_TO_SETTLE = 50;
+  private int loopsToSettle = 50;
+  private int atPositionLoops = 0;
+
+  /**
+   * 
+   * @param climber
+   * @param loopsToSettle The amount of consecutive loops the climber needs to have sensors depressed for
+   */
+  public CheckClimberHookAttached(Climber climber, int loopsToSettle) {
     climb = climber;
+    this.loopsToSettle = loopsToSettle;
+
+    //Intentionally doesn't require the climber subsystem
+  }
+
+  public CheckClimberHookAttached(Climber climber) {
+    this(climber, DEFAULT_LOOPS_TO_SETTLE);
   }
 
   // Called when the command is initially scheduled.
@@ -22,7 +37,14 @@ public class CheckClimberHookAttached extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (climb.isClimberHookAttached()) {
+      ++atPositionLoops;
+    }
+    else {
+      atPositionLoops = 0;
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -31,6 +53,6 @@ public class CheckClimberHookAttached extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return climb.isClimberHookAttached();
+    return atPositionLoops > loopsToSettle;
   }
 }

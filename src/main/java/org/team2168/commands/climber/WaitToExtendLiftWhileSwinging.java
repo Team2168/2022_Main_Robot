@@ -4,20 +4,22 @@
 
 package org.team2168.commands.climber;
 
-import org.team2168.Constants.LiftPositions;
 import org.team2168.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class WaitToExtendLiftWhileSwinging extends CommandBase {
-  Drivetrain dt;
-  double last_angle = LiftPositions.SAFE_EXTEND_PITCH;
-  boolean safe_to_extend = false;
+  private Drivetrain dt;
+  private double last_angle;
+  private double safe_angle;
+  private boolean safe_to_extend = false;
 
   /** Creates a new ExtendLiftWhileSwinging. */
-  public WaitToExtendLiftWhileSwinging() {
+  public WaitToExtendLiftWhileSwinging(double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     dt = Drivetrain.getInstance();
+    safe_angle = angle;
+    last_angle = safe_angle;
   }
 
   // Called when the command is initially scheduled.
@@ -30,7 +32,7 @@ public class WaitToExtendLiftWhileSwinging extends CommandBase {
     double current_angle = dt.getPitch();
     boolean swinging_away_from_bar = last_angle < current_angle;
 
-    safe_to_extend = (current_angle >= LiftPositions.SAFE_EXTEND_PITCH) && swinging_away_from_bar;
+    safe_to_extend = (current_angle >= safe_angle) && swinging_away_from_bar;
 
     last_angle = current_angle;
   }

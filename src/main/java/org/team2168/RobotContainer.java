@@ -145,10 +145,10 @@ public class RobotContainer {
     oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES));
     oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
     oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
-    oi.testJoystick.ButtonX().whenPressed(new ExtendClimberForNextBar(climber));
 
-    oi.testJoystick.ButtonRightBumper().whenPressed(new HangOnMidBar(climber));
-    oi.testJoystick.ButtonRightTrigger().whenPressed(new ClimbToHighBar(climber, monkeyBar));
+    // oi.testJoystick.ButtonRightBumper().whenPressed(new HangOnMidBar(climber));
+    // oi.testJoystick.ButtonRightTrigger().whenPressed(new ClimbToHighBar(climber, monkeyBar));
+    // oi.testJoystick.ButtonLeftBumper().whenPressed(new ClimbToTraverseBar(climber, monkeyBar));
 
     // oi.testJoystick.ButtonA()
     //         .whenPressed(new SetRedLED(leds, true))
@@ -165,6 +165,8 @@ public class RobotContainer {
     oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
+
+    oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
   }
 
   /**
