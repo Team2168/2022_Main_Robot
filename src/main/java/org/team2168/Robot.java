@@ -88,6 +88,8 @@ public class Robot extends TimedRobot {
     else
       robotContainer.drivetrain.setMotorsBrake();
 
+    Limelight.getInstance().enableLimelight();
+
     // TODO we probably don't want to do this
     if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
       robotContainer.drivetrain.zeroHeading();
@@ -106,7 +108,7 @@ public class Robot extends TimedRobot {
     robotContainer.drivetrain.setMotorsBrakeAutos();
     Hood.getInstance().setMotorBrake();
 
-    Limelight.getInstance().enableLimelight();
+//    Limelight.getInstance().enableLimelight();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     System.out.println("scheduling auto: " + autonomousCommand.getName());
@@ -125,7 +127,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
-    Limelight.getInstance().pauseLimelight();
+//    Limelight.getInstance().pauseLimelight();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

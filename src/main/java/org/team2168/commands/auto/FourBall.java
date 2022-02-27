@@ -5,11 +5,11 @@
 package org.team2168.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import org.team2168.commands.DriveHopperAndIndexer;
-import org.team2168.commands.LowerAndRunIntake;
-import org.team2168.commands.QueueBallForShot;
-import org.team2168.commands.RetractAndStopIntake;
+import org.team2168.commands.*;
+import org.team2168.commands.IntakeRoller.SetIntakeSpeed;
+import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.TarmacLine;
 import org.team2168.subsystems.*;
@@ -33,34 +33,37 @@ public class FourBall extends SequentialCommandGroup {
 
         Paths paths = Paths.getInstance();
         addCommands(
-                new TarmacLine(hood, shooter, lime),
+                new TarmacLine(hood, shooter, lime).withTimeout(0.2),
+                new IntakeLower(intakeRaiseAndLower),
                 race (  // run group until path ends
-                        new IntakeLower(intakeRaiseAndLower),
-                        new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
+                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                         PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, InitialPathState.DISCARDHEADING)
                 ),
                 new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                parallel (
+                        new WaitForShooterAtSpeed(shooter),
+                        new DriveWithLimelight(drivetrain, lime)
+                ).withTimeout(2.5),
+                new FireBalls(shooter, indexer, hopper),
                 new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
-                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1),
-                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
-                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1.5),
+                new FireBalls(shooter, indexer, hopper),
 
 
+                new IntakeLower(intakeRaiseAndLower),
                 race (
-                        new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller),
-                        new SequentialCommandGroup(
-                                PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain, InitialPathState.PRESERVEODOMETRY),
-                                PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
-                                PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
-                        )
+                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                        PathUtil.getPathCommand(paths.path_4BALL_AIO, drivetrain, InitialPathState.PRESERVEODOMETRY)
                 ),
-                new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                new IntakeRaise(intakeRaiseAndLower),
+                new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
+                PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
+                parallel (
+                        new WaitForShooterAtSpeed(shooter),
+                        new DriveWithLimelight(drivetrain, lime)
+                ).withTimeout(2.5),
+                new FireBalls(shooter, indexer, hopper),
                 new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
-                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1),
-                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
-                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1.5),
-                new DriveHopperAndIndexer(hopper, indexer).withTimeout(1.5)
-
+                new FireBalls(shooter, indexer, hopper)
         );
     }
 }

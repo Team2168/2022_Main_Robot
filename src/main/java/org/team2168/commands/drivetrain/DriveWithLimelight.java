@@ -62,13 +62,10 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   }
   
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
-    addRequirements(limelight);
-    lime = limelight;
-    dt = drivetrain;
+    this(drivetrain, limelight, false);
   }
 
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, boolean inTeleop) {
-    addRequirements(limelight);
     lime = limelight;
     dt = drivetrain;
     this.inTeleop = inTeleop;
@@ -117,7 +114,9 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    lime.pauseLimelight();
+    if (inTeleop) {
+      lime.pauseLimelight();
+    }
   }
 
   // Returns true when the command should end.

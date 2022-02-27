@@ -50,12 +50,12 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.2426;
         public static final double kPDriveVel = 2.7258; // @1.4 m/s max error
 
-        public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295     Actual = 0.65563;
+        public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295/Actual = 0.65563;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
         public static final double kMaxSpeedMetersPerSecond = 4.2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1.4;  // 1.6 is feasible?
+        public static final double kMaxAccelerationMetersPerSecondSquared = 2.0;  // 1.6 is feasible?
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
