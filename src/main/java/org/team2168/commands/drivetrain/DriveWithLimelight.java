@@ -51,7 +51,7 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   }
 
   //determines whether joystick should be used or not
-  private boolean inTeleop;
+  private boolean useJoystick;
 
   //speed of drivetrain rotation
   private double driveLimeTurnSpeed;
@@ -67,11 +67,11 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     dt = drivetrain;
   }
 
-  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, boolean inTeleop) {
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, boolean useJoystick) {
     addRequirements(limelight);
     lime = limelight;
     dt = drivetrain;
-    this.inTeleop = inTeleop;
+    this.useJoystick = useJoystick;
   }
 
   // Called when the command is initially scheduled.
@@ -97,6 +97,7 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     else {
       withinThresholdLoops = 0;
     }
+
     if (limeAngle < -errorToleranceAngle) {
       driveLimeTurnSpeed = -(pid.calculate(limeAngle) + MINIMUM_COMMAND);
     }
@@ -108,8 +109,14 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     }
 
     if (withinThresholdLoops < acceptableLoops) {
-      dt.arcadeDrive(0.0, driveLimeTurnSpeed);
+      if (!useJoystick) {
+        dt.arcadeDrive(0.0, driveLimeTurnSpeed);
+      }
+      else if (useJoystick) {
+        dt.arcadeDrive(oi.getGunStyleTrigger(), driveLimeTurnSpeed);
+      }
     }
+    
     System.out.println(driveLimeTurnSpeed);
     SmartDashboard.putNumber("driveLimeTurnSpeed", driveLimeTurnSpeed);
   }
@@ -123,6 +130,6 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    return (Math.abs(limeAngle) < errorToleranceAngle && !inTeleop); // command does not need to finish if bound to a button
+    return (Math.abs(limeAngle) < errorToleranceAngle && !useJoystick); // command does not need to finish if bound to a button
   }
 }
