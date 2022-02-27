@@ -38,7 +38,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
 
-  private double errorTolerance = 0.0;
+  private double errorTolerance = 15.0; // Default shooter speed error tolerance +/- target (RPM)
 
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
@@ -217,6 +217,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
 
+  @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1)
   public double getError() {
     return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
   }
