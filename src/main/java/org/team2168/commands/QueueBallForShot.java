@@ -7,7 +7,7 @@ package org.team2168.commands;
 import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
-import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.IntakeRoller.SetIntakeSpeed;
 import org.team2168.commands.pooper.PoopOnColor;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Hopper;

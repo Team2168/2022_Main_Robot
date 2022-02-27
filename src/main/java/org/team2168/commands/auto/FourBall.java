@@ -28,11 +28,12 @@ public class FourBall extends SequentialCommandGroup {
                     Hood hood,
                     Shooter shooter,
                     Pooper pooper,
-                    ColorSensor colorSensor) {
+                    ColorSensor colorSensor,
+                    Limelight lime) {
 
         Paths paths = Paths.getInstance();
         addCommands(
-                new TarmacLine(hood, shooter),
+                new TarmacLine(hood, shooter, lime),
                 race (  // run group until path ends
                         new IntakeLower(intakeRaiseAndLower),
                         new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
