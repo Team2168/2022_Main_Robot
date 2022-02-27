@@ -45,14 +45,17 @@ public final class Constants {
     }
 
     public static final class PneumaticsDevices {
-        public static final int MONKEYBAR_EXTEND = 1;
         public static final int MONKEYBAR_RETRACT = 0;
-        public static final int TEST_RETRACT = 14; 
-        public static final int TEST_EXTEND = 15;
+        public static final int MONKEYBAR_EXTEND = 1;
         public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
         public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
+        public static final int RED_LED = 5;
+        public static final int GREEN_LED = 6;
+        public static final int BLUE_LED = 7;
         public static final int INTAKE_RAISE = 12;
         public static final int INTAKE_LOWER = 13;
+        public static final int TEST_RETRACT = 14; 
+        public static final int TEST_EXTEND = 15;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
@@ -72,10 +75,18 @@ public final class Constants {
     }
     
     public static final class LiftPositions {
-        public static final double LIFT_ABOVE_BAR_EXTENSION_INCHES = 27.67;
+        public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
+        public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.67;
+        public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 21.0;
+
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
+        public static final double LIFT_ARREST_SING_INCHES = 1.8;
         public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
+        public static final double LIFT_ZERO_INCHES = 0.0;
+
+        public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 45.0;
+        public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 40.0;
     }
 
     public static final double LOOP_TIMESTEP_S = 0.02;

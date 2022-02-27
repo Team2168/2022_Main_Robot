@@ -177,6 +177,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     /**
+     * Gets gyro pitch
+     * 
+     * @return gyro pitch degrees
+     */
+    @Log(name = "Gyro Pitch", rowIndex = 2, columnIndex = 2)
+    public double getPitch() {
+        return pidgey.getPitch();
+    }
+
+    /**
      * Gets gyro turn rate
      * 
      * @return rate in degrees per second

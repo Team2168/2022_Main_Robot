@@ -22,6 +22,8 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
+  //TODO: make another enum
+  //This is for auto shooting
   public enum HoodPosition {
     //Auto Pos
     FENDER_LOW(9.0),
@@ -45,7 +47,7 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
-  private static double degreeAdjustment = 0.0;
+  private static double degreeAdjustment = 0.0; //for bumping up and down
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -115,18 +117,31 @@ public class Hood extends SubsystemBase implements Loggable {
     return instance;
   }
 
+  /**
+   * Bumps the Hood angle up by one degree
+   */
   public void incrementDegrees() {
     degreeAdjustment += 1.0;
   }
 
+  /**
+   * Bumps the Hood angle down one degree
+   */
   public void decrementDegrees() {
     degreeAdjustment -= 1.0;
   }
 
+  /**
+   * Sets the bump amount to zero
+   */
   public void zeroDegrees() {
     degreeAdjustment = 0.0;
   }
-
+  
+  /**
+   * 
+   * @return the amount the hood is bumped
+   */
   @Log(name = "degree adjustment", rowIndex = 2, columnIndex = 3)
   public double getDegreeAdjustment() {
     return degreeAdjustment;
@@ -236,6 +251,10 @@ public class Hood extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
+    /**
+     * Will set encoder position to zero if at zero
+     */
+
     if (atZero()) {
       setEncoderPosZero();
     }
