@@ -45,14 +45,17 @@ public final class Constants {
     }
 
     public static final class PneumaticsDevices {
-        public static final int MONKEYBAR_EXTEND = 1;
         public static final int MONKEYBAR_RETRACT = 0;
-        public static final int TEST_RETRACT = 14; 
-        public static final int TEST_EXTEND = 15;
+        public static final int MONKEYBAR_EXTEND = 1;
         public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
         public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
+        public static final int RED_LED = 5;
+        public static final int GREEN_LED = 6;
+        public static final int BLUE_LED = 7;
         public static final int INTAKE_RAISE = 12;
         public static final int INTAKE_LOWER = 13;
+        public static final int TEST_RETRACT = 14; 
+        public static final int TEST_EXTEND = 15;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
@@ -62,9 +65,6 @@ public final class Constants {
         public static final int CLIMBER_HOOK_LIMIT_SWITCH = 1;
         public static final int HOPPER_LINE_BREAK = 2;
         public static final int INDEXER_SENSOR = 3;
-        public static final int RED_LED = 5;
-        public static final int GREEN_LED = 6;
-        public static final int BLUE_LED = 7;
     }
 
     public static final class MotorSpeeds {
