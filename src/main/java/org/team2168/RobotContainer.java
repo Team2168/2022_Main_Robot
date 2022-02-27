@@ -119,8 +119,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
-    oi.driverJoystick.ButtonLeftStick().whenHeld(new DriveWithLimelight(drivetrain, lime, true));
-    oi.driverJoystick.ButtonB().whenPressed(new DriveWithLimelight(drivetrain, lime));
+    oi.driverJoystick.ButtonB().whenHeld(new DriveWithLimelight(drivetrain, lime, true));
 
     //// Green button
     // oi.driverJoystick.ButtonLeftStick()
