@@ -6,8 +6,8 @@ package org.team2168;
 
 import java.util.function.DoubleFunction;
 
-import org.team2168.commands.SysIDCommand;
 import org.team2168.Constants.LiftPositions;
+import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.*;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
@@ -127,8 +127,9 @@ public class RobotContainer {
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer, colorSensor, pooper))
-            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
+            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller))
+            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller));
+
     oi.operatorJoystick.ButtonRightBumper()
             .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
@@ -146,6 +147,9 @@ public class RobotContainer {
     oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new QueueBallForShot());
+
   }
 
   /**

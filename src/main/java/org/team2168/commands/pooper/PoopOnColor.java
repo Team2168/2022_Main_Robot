@@ -1,42 +1,50 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package org.team2168.commands.pooper;
-
-import org.team2168.subsystems.ColorSensor;
-import org.team2168.subsystems.Pooper;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import org.team2168.Constants;
+import org.team2168.commands.pooper.PooperPoop;
+import org.team2168.subsystems.Hopper;
+import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.ColorSensor;
+import org.team2168.subsystems.Pooper;
+
 
 public class PoopOnColor extends CommandBase {
+    Hopper hopper;
+    ColorSensor colorSensor;
+    Pooper pooper;
 
-  /** Creates a new PoopOnColor. */
-  public PoopOnColor(ColorSensor colorSensor, Pooper pooper, DriverStation ds) {
+    public PoopOnColor(ColorSensor colorSensor, Pooper pooper) {
+        this.colorSensor = colorSensor;
+        this.pooper = pooper;
+        // each subsystem used by the command must be passed into the
+        // addRequirements() method (which takes a vararg of Subsystem)
+        addRequirements(pooper);
+    }
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(colorSensor);
-  }
+    @Override
+    public void initialize() {
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    DriverStation.getAlliance();
-    
-  }
+    }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
+    @Override
+    public void execute() {
+            if (!colorSensor.isTeamColor()) {
+                pooper.extend();
+            
+            }
+        
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public void end(boolean interrupted) {
+        pooper.retract();
+
+    }
 }

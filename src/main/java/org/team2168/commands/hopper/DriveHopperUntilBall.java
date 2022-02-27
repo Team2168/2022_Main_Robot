@@ -4,6 +4,7 @@
 
 package org.team2168.commands.hopper;
 
+import org.team2168.Constants.MotorSpeeds;
 import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
