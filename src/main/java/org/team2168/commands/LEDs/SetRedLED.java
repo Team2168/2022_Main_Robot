@@ -2,22 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.shooter;
+package org.team2168.commands.LEDs;
 
-import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.LEDs;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BumpShooterSpeedDown extends CommandBase {
-  /** Creates a new BumpShooterSpeedDown. */
-  private Shooter shooter;
+public class SetRedLED extends CommandBase {
+  /** Creates a new SetRedLED. */
+  private LEDs leds;
+  private boolean isOn;
+
   /**
-  * Bumps the shooter speed down
-  * @param s the shooter instance
-  */
-  public BumpShooterSpeedDown(Shooter s) {
-    shooter = s;
-    // Use addRequirements() here to declare subsystem dependencies.
+   * Sets the red LED on/off
+   * @param leds the LED instance
+   * @param isOn whether the red LED should be on (true) or off (false)
+   */
+  public SetRedLED(LEDs leds, boolean isOn) {
+    this.leds = leds;
+    this.isOn = isOn;
+
+    addRequirements(leds);
   }
 
   // Called when the command is initially scheduled.
@@ -27,8 +32,7 @@ public class BumpShooterSpeedDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var setpoint = shooter.getSetPoint() - 50.0;
-    shooter.setSpeed(setpoint);
+    leds.red(isOn);
   }
 
   // Called once the command ends or is interrupted.

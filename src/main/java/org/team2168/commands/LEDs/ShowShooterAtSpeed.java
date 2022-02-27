@@ -2,21 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.shooter;
+package org.team2168.commands.LEDs;
 
+import org.team2168.subsystems.LEDs;
 import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BumpShooterSpeedDown extends CommandBase {
-  /** Creates a new BumpShooterSpeedDown. */
+public class ShowShooterAtSpeed extends CommandBase {
+  /** Creates a new ShowShooterAtSpeed. */
+  private LEDs leds;
   private Shooter shooter;
-  /**
-  * Bumps the shooter speed down
-  * @param s the shooter instance
-  */
-  public BumpShooterSpeedDown(Shooter s) {
-    shooter = s;
+
+  public ShowShooterAtSpeed(LEDs leds, Shooter shooter) {
+    this.leds = leds;
+    this.shooter = shooter;
+
+    addRequirements(leds);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -27,8 +29,15 @@ public class BumpShooterSpeedDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var setpoint = shooter.getSetPoint() - 50.0;
-    shooter.setSpeed(setpoint);
+    if(shooter.isAtSpeed()) {
+      leds.red(false);
+      leds.green(true);
+      leds.blue(false);
+    } else {
+      leds.red(true);
+      leds.blue(false);
+      leds.green(false);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -38,6 +47,6 @@ public class BumpShooterSpeedDown extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

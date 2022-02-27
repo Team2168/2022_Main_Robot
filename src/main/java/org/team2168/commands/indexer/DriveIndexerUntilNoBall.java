@@ -2,22 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.shooter;
+package org.team2168.commands.indexer;
 
-import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class BumpShooterSpeedDown extends CommandBase {
-  /** Creates a new BumpShooterSpeedDown. */
-  private Shooter shooter;
-  /**
-  * Bumps the shooter speed down
-  * @param s the shooter instance
-  */
-  public BumpShooterSpeedDown(Shooter s) {
-    shooter = s;
-    // Use addRequirements() here to declare subsystem dependencies.
+public class DriveIndexerUntilNoBall extends CommandBase {
+  /** Creates a new DriveUntilNoBall. */
+  private Indexer indexer;
+  private double indexerSpeed;
+
+  public DriveIndexerUntilNoBall(Indexer indexer, double speed) {
+    this.indexer = indexer;
+    indexerSpeed = speed;
+
+    addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
@@ -27,17 +27,19 @@ public class BumpShooterSpeedDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var setpoint = shooter.getSetPoint() - 50.0;
-    shooter.setSpeed(setpoint);
+    indexer.drive(indexerSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    indexer.drive(0.0);
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    //Waits until there is no ball
+    return !indexer.isBallPresent();
   }
 }

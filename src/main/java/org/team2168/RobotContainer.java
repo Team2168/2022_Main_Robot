@@ -12,8 +12,14 @@ import org.team2168.commands.auto.*;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
+
 import org.team2168.Constants.LiftPositions;
+import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.*;
+import org.team2168.commands.LEDs.SetBlueLED;
+import org.team2168.commands.LEDs.SetGreenLED;
+import org.team2168.commands.LEDs.SetRedLED;
+import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.*;
@@ -72,7 +78,12 @@ public class RobotContainer {
   public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
+  private final ColorSensor colorSensor = ColorSensor.getInstance();
+
+  // private final ExampleCommand m_autoCommand = new
+  // ExampleCommand(m_exampleSubsystem);
   private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
+  private final LEDs leds = LEDs.getInstance();
 
 
   OI oi = OI.getInstance();
@@ -123,6 +134,8 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
+    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter));
+
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
 
@@ -163,10 +176,13 @@ public class RobotContainer {
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer))
-            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller, hopper, indexer));
+            .whileHeld(new QueueBallForShot())
+            .whenPressed(new IntakeLower(intakeRaiseAndLower))
+            .whenReleased(new IntakeRaise(intakeRaiseAndLower));
+
     oi.operatorJoystick.ButtonRightBumper()
-            .whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whileHeld(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
@@ -175,15 +191,33 @@ public class RobotContainer {
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
     oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
 
-    oi.testJoystick.ButtonX().whenPressed(new Terminal(hood, shooter));
-    oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES));
+    oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES));
     oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
     oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
+
+    // oi.testJoystick.ButtonRightBumper().whenPressed(new HangOnMidBar(climber));
+    // oi.testJoystick.ButtonRightTrigger().whenPressed(new ClimbToHighBar(climber, monkeyBar));
+    // oi.testJoystick.ButtonLeftBumper().whenPressed(new ClimbToTraverseBar(climber, monkeyBar));
+
+    // oi.testJoystick.ButtonA()
+    //         .whenPressed(new SetRedLED(leds, true))
+    //         .whenReleased(new SetRedLED(leds, false));
+          
+    // oi.testJoystick.ButtonB()
+    //         .whenPressed(new SetGreenLED(leds, true))
+    //         .whenReleased(new SetGreenLED(leds, false));
+
+    // oi.testJoystick.ButtonX()
+    //         .whenPressed(new SetBlueLED(leds, true))
+    //         .whenReleased(new SetBlueLED(leds, false));
 
     oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
-    oi.testJoystick.ButtonBack().whenPressed(new ResetHeading(drivetrain));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new QueueBallForShot());
+
+    oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
   }
 

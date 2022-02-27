@@ -12,6 +12,12 @@ public class HoodToAngle extends CommandBase {
   /** Creates a new HoodToAngle. */
   private Hood hood;
   private double angle;
+
+  /**
+   * Sets the hood to an angle
+   * @param h the hood instance
+   * @param a the angle to go to
+   */
   public HoodToAngle(Hood h, double a) {
     hood = h;
     angle = a;

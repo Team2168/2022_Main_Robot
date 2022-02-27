@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class BumpHoodAngleZero extends CommandBase {
   /** Creates a new BumpHoodAngleZero. */
   public Hood hood;
+
+  /**
+   * Sets the bump amount of the hood to zero
+   * @param h the hood instance
+   */
   public BumpHoodAngleZero(Hood h) {
     hood = h;
     // Use addRequirements() here to declare subsystem dependencies.

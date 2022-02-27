@@ -39,6 +39,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   public WPI_TalonFX _motorRight;
   public WPI_TalonFX _motorLeft;
 
+  private double errorTolerance = 15.0; // Default shooter speed error tolerance +/- target (RPM)
+
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
   private final double CONTINUOUS_CURRENT_LIMIT_STATOR = 60; //amps
@@ -151,6 +153,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
 
+
   /**
    * Convert speed in motor units per 100ms to RPM
    * 
@@ -184,9 +187,38 @@ public class Shooter extends SubsystemBase implements Loggable {
     return setPoint;
   }
 
+  /**
+   * Sets the shooter at a speed
+   * @param d_Speed the speed for the shooter to run at, from 0.0 to 1.0
+   */
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
+  }
+
+  @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1)
+  public double getError() {
+    return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
+  }
+
+  /**
+   * Checks if the shooter is at speed
+   * @param errorTolerance the allowed error for the shooter
+   * @return whether the shooter is at speed
+   */
+  public boolean isAtSpeed(double errorTolerance) {
+    this.errorTolerance = errorTolerance;
+    return Math.abs(getError()) < errorTolerance;
+  }
+
+
+  /**
+   * Checks if the shooter is at speed.
+   * @return true when the shooter is within the errorTolerance specified by the last command
+   */
+  @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
+  public boolean isAtSpeed() {
+    return Math.abs(getError()) < errorTolerance;
   }
 
   public static Shooter getInstance(){

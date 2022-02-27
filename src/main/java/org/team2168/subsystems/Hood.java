@@ -22,6 +22,8 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
+  //TODO: make another enum
+  //This is for auto shooting
   public enum HoodPosition {
     //Auto Pos
     FENDER_LOW(9.0),
@@ -47,6 +49,7 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
   private static double setpoint = 0.0;
+
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -119,6 +122,7 @@ public class Hood extends SubsystemBase implements Loggable {
   public double getSetpoint() {
     return setpoint;
   }
+
   /**
    * 
    * @return the leader motor position in native ticks
@@ -224,6 +228,10 @@ public class Hood extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
+    /**
+     * Will set encoder position to zero if at zero
+     */
+
     if (atZero()) {
       setEncoderPosZero();
     }

@@ -1,39 +1,56 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package org.team2168.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import org.team2168.subsystems.Shooter;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class WaitForShooterAtSpeed extends CommandBase {
+  /** Creates a new WaitForShootAtSpeed. */
+  private Shooter shooter;
+  private double errorTolerance; //Allowable range of error
+  private double loopsToSettle = 10; //The amount of loops the shooter speed needs to be within allowable error for
+  private int withinThresholdLoops = 0;
+  private final double DEFAULT_ERROR_TOLERANCE = 15; //in rpm
+  
+  public WaitForShooterAtSpeed(Shooter shooter, double errorTolerance) {
+    // Doesn't require the shooter to keep the shooter being run by other commands
+    this.shooter = shooter;
+    this.errorTolerance = errorTolerance;
+  }
 
-    Shooter shooter;
-    boolean atSpeed;
+  public WaitForShooterAtSpeed(Shooter shooter) {
+    this.shooter = shooter;
+    errorTolerance = DEFAULT_ERROR_TOLERANCE;
+  }
 
-    private static final double THRESHOLD = 20.0;
-    public WaitForShooterAtSpeed(Shooter shooter) {
-        this.shooter = shooter;
-        addRequirements();
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {}
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    /* Checks if error is within threshold*/ 
+    if (shooter.isAtSpeed(errorTolerance)) {
+      ++withinThresholdLoops;
     }
-
-    @Override
-    public void initialize() {
-
+    else {
+      withinThresholdLoops = 0;
     }
+  }
 
-    @Override
-    public void execute() {
-        if (shooter.getSetPoint() - shooter.getVelocity() > THRESHOLD)
-            atSpeed = true;
-    }
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {}
 
-    @Override
-    public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return atSpeed;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-
-    }
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    /* Shooter must stay within allowable error for 10+ loops for it to be at speed*/
+    return withinThresholdLoops > loopsToSettle;
+  }
 }

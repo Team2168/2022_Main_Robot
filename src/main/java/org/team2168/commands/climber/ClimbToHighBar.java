@@ -4,7 +4,8 @@
 
 package org.team2168.commands.climber;
 
-import org.team2168.Constants;
+import org.team2168.Constants.LiftPositions;
+import org.team2168.commands.Sleep;
 import org.team2168.commands.monkeybar.CheckMonkeyHookAttached;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
 import org.team2168.commands.monkeybar.RetractMonkeyBar;
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ClimbWithMonkeyBars extends SequentialCommandGroup {
+public class ClimbToHighBar extends SequentialCommandGroup {
   /** Creates a new ClimbWithMonkeyBars. */
 
 /**
@@ -25,13 +26,18 @@ public class ClimbWithMonkeyBars extends SequentialCommandGroup {
  * 
  * Should be used after robot initially climbs the mid bar.
  */
-  public ClimbWithMonkeyBars(Climber climb, MonkeyBar monkey) {
+  public ClimbToHighBar(Climber climb, MonkeyBar monkey) {
     addCommands(
+      // new DriveClimberToPosition(climb, LiftPositions.LIFT_ARREST_SING_INCHES),
+      // new Sleep().withTimeout(2.0), //stay connected with the climber bars to slow the swing down
+      new DriveClimberToPosition(climb, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
-      new CheckClimberHookAttached(climb),
+      new DriveClimberToPosition(climb, LiftPositions.LIFT_EXTEND_BELOW_NEXT_BAR_INCHES),
+      new WaitToExtendLiftWhileSwinging(LiftPositions.SAFE_HIGH_BAR_EXTEND_PITCH),
+      new DriveClimberToPosition(climb, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
       new RetractMonkeyBar(monkey),
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
+      new CheckClimberHookAttached(climb, 10),
+      new DriveClimberToPosition(climb, LiftPositions.LIFT_RETRACTION_INCHES));
   }
 }

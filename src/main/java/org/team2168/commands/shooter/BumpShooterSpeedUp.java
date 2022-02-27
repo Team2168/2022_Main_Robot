@@ -13,9 +13,8 @@ public class BumpShooterSpeedUp extends CommandBase {
   private Shooter shooter;
 
   /**
-   * Bumps the Shooter speed
-   * @param s The shooter to be used
-   * @param bumpAmount the amount in RPM the shooter should be changed
+   * Bumps the Shooter speed up
+   * @param s the shooter instance
    */
   public BumpShooterSpeedUp(Shooter s) {
     shooter = s;
