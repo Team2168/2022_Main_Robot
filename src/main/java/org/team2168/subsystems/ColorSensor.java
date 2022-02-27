@@ -109,8 +109,11 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         normRaw();
         if (rNorm>bNorm)//(data.red > data.blue)
             return Alliance.Red;
-        else
+        else if((gNorm%rNorm)>1 && (gNorm%bNorm)>1)
+            return Alliance.Invalid;
+        else 
             return Alliance.Blue;
+        
     }
 
     @Log(name = "Is team color?")
