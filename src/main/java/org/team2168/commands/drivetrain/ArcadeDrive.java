@@ -32,6 +32,7 @@ public class ArcadeDrive extends CommandBase {
   @Override
   public void execute() {
     dt.arcadeDrive(speed.getAsDouble(), turn.getAsDouble());
+    // System.out.println(turn.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
