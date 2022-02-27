@@ -134,8 +134,9 @@ public class RobotContainer {
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whenPressed(new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller))
-            .whenReleased(new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller));
+            .whileHeld(new QueueBallForShot())
+            .whenPressed(new IntakeLower(intakeRaiseAndLower))
+            .whenReleased(new IntakeRaise(intakeRaiseAndLower));
 
     oi.operatorJoystick.ButtonRightBumper()
             .whileHeld(new FireBalls(shooter, indexer, hopper))
