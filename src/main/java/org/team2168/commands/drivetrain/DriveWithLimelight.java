@@ -9,6 +9,7 @@ import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -23,16 +24,18 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
 
   private double errorToleranceAngle = 0.5; // in degrees
   private double limeAngle;
+  private int withinThresholdLoops = 0;
+  private int acceptableLoops = 10;
 
-  private final double MINIMUM_COMMAND = 2.214/12;
+  private static final double MINIMUM_COMMAND = 2.02/12;
   
   //limelight gains
   @Log(name = "P")
-  private double P = 0.04;
+  private double P = 0.02;
   @Log(name = "I")
   private double I = 0.0;
   @Log(name = "D")
-  private double D = 0.00125;
+  private double D = 0.0;
 
   @Config
   void setLimeP(int P) {
@@ -52,6 +55,11 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
 
   //speed of drivetrain rotation
   private double driveLimeTurnSpeed;
+
+  @Log(name = "Turn Speed")
+  private double getLimeTurnSpeed() {
+    return driveLimeTurnSpeed;
+  }
   
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
     addRequirements(limelight);
@@ -83,15 +91,27 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   public void execute() {
     limeAngle = lime.getPositionX();
 
-    if (limeAngle < -errorToleranceAngle) {
-      driveLimeTurnSpeed = -(pid.calculate(limeAngle) - MINIMUM_COMMAND);
+    if (Math.abs(limeAngle) < errorToleranceAngle) {
+      ++withinThresholdLoops;
     }
-    else if (limeAngle > errorToleranceAngle) {
+    else {
+      withinThresholdLoops = 0;
+    }
+    if (limeAngle < -errorToleranceAngle) {
       driveLimeTurnSpeed = -(pid.calculate(limeAngle) + MINIMUM_COMMAND);
     }
+    else if (limeAngle > errorToleranceAngle) {
+      driveLimeTurnSpeed = -(pid.calculate(limeAngle) - MINIMUM_COMMAND);
+    }
+    else {
+      driveLimeTurnSpeed = 0.0;
+    }
 
-    dt.arcadeDrive(0.0, driveLimeTurnSpeed);
-    // System.out.println(driveLimeTurnSpeed);
+    if (withinThresholdLoops < acceptableLoops) {
+      dt.arcadeDrive(0.0, driveLimeTurnSpeed);
+    }
+    System.out.println(driveLimeTurnSpeed);
+    SmartDashboard.putNumber("driveLimeTurnSpeed", driveLimeTurnSpeed);
   }
 
   // Called once the command ends or is interrupted.
