@@ -17,6 +17,12 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
     private static final double DATA_THRESHOLD = 2.0;  // Time after which to consider data stale
+   
+    static int rNorm = 0;
+    static int gNorm = 0;
+    static int bNorm = 0;
+    static int MaxVal = 0;
+    static int valScal = 255;
 
     private Thread valueUpdateThread = new Thread(
             () -> {
@@ -84,10 +90,24 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     }
 
+    public void normRaw(){
+        int Norm_scale = valScal;
+        MaxVal = data.red;
+        if(data.green>MaxVal){
+            MaxVal=data.green;
+        }
+        if(data.blue>MaxVal){
+            MaxVal=data.blue;
+        }
+       rNorm=(Norm_scale*data.red)/MaxVal;
+       gNorm=(Norm_scale*data.green)/MaxVal;
+       bNorm=(Norm_scale*data.blue)/MaxVal;
+    }
 
     @Log(name = "Color Sensor Alliance", methodName = "toString")
     public Alliance getColor() {
-        if (data.red > data.blue)
+        normRaw();
+        if (rNorm>bNorm)//(data.red > data.blue)
             return Alliance.Red;
         else
             return Alliance.Blue;
