@@ -4,8 +4,6 @@
 
 package org.team2168.subsystems;
 
-import javax.lang.model.util.ElementScanner6;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -20,14 +18,15 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     private static ColorSensor instance = null;
     private static final double DATA_THRESHOLD = 2.0;  // Time after which to consider data stale
    
-    static int rNorm = 0;
-    static int gNorm = 0;
-    static int bNorm = 0;
-    static int MaxVal = 0;
+    static int rNorm = 1; //init to non-zero to avoid divide by zero error when no comms to sensor
+    static int gNorm = 1;
+    static int bNorm = 1;
+    static int MaxVal = 1;
     static int valScal = 255;
 
     private Thread valueUpdateThread = new Thread(
             () -> {
+                serialPort.reset();
                 while (true) {
                     this.readSensor();
                     try {
@@ -40,8 +39,8 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     private static final SerialPort.Port SERIAL_PORT_PORT = SerialPort.Port.kOnboard; // port on the roborio
 
-    private volatile Color8Bit data = new Color8Bit(0, 0, 0);
-    private volatile double timestamp = getTimeStampSeconds();
+    private volatile Color8Bit data = new Color8Bit(1, 1, 1); // avoid divide by zero erros
+    private volatile double timestamp = Timer.getFPGATimestamp();
 
     private ColorSensor() {
         serialPort = new SerialPort(9600, SERIAL_PORT_PORT);
@@ -68,31 +67,27 @@ public class ColorSensor extends SubsystemBase implements Loggable {
      * it.
      * 
      */
-    public void readSensor() {
-        serialPort.reset();
+    private void readSensor() {
         byte[] serialOutput = null;
 
-        while (serialOutput == null) {
-            if (serialPort.getBytesReceived() >= 4) {
-                serialOutput = serialPort.read(4);
-                // convert values to integers
-                var intValue = new int[serialOutput.length];
-                for (int i = 0; i < serialOutput.length; i++)
-                    intValue[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
+        if (serialPort.getBytesReceived() >= 4) {
+            serialOutput = serialPort.read(4);
+            // convert values to integers
+            var intValue = new int[serialOutput.length];
+            for (int i = 0; i < serialOutput.length; i++)
+                intValue[i] = Byte.toUnsignedInt(serialOutput[i]); // Value on teensy will be unsigned int; byte is signed 2^7
 
-                //
-                if ((intValue[0] ^ intValue[1] ^ intValue[2]) != intValue[3]) {
-                    serialOutput = null;
-                } else {
-                    data = new Color8Bit(intValue[0], intValue[1], intValue[2]);
-                }
+            //
+            if ((intValue[0] ^ intValue[1] ^ intValue[2]) != intValue[3]) {
+                // serialOutput = null;
+            } else {
+                data = new Color8Bit(intValue[0], intValue[1], intValue[2]);
+                timestamp = Timer.getFPGATimestamp();
             }
         }
-        timestamp = getTimeStampSeconds();
-
     }
 
-    public void normRaw(){
+    private void normRaw(){
         int Norm_scale = valScal;
         MaxVal = data.red;
         if(data.green>MaxVal){
@@ -106,22 +101,27 @@ public class ColorSensor extends SubsystemBase implements Loggable {
        bNorm=(Norm_scale*data.blue)/MaxVal;
     }
 
-    @Log(name = "Color Sensor Alliance", methodName = "toString")
+    @Log(name = "Color Sensor Alliance")
+    public String getColorName() {
+        return getColor().name();
+    }
+
     public Alliance getColor() {
         normRaw();
 
-        if (rNorm>bNorm)//(data.red > data.blue)
+        if (rNorm > bNorm)//(data.red > data.blue)
             return Alliance.Red;
             //TODO figure out these bottom vals
-       else if(rNorm<40 && bNorm<40 && gNorm>10)
-          return Alliance.Invalid;
+        else if(rNorm < 40 && bNorm < 40 && gNorm > 10)
+            return Alliance.Invalid;
         else
-        return Alliance.Blue;//   return Alliance.Invalid;
+            return Alliance.Blue;//   return Alliance.Invalid;
     }
 
     @Log(name = "Is team color?")
     public boolean isTeamColor() {
-        return DriverStation.getAlliance() == getColor();
+        Alliance alliance = DriverStation.getAlliance();
+        return alliance == getColor() && alliance != Alliance.Invalid;
     }
 
     @Log(name = "Is data stale?")
@@ -131,21 +131,16 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     @Log(name = "time since last read")
     public double getTimeSinceLastRead() {
-        var currentTime = getTimeStampSeconds();
-        return currentTime - timestamp;
+        return Timer.getFPGATimestamp() - timestamp;
     }
 
-    public static double getTimeStampSeconds() {
-        double timestamp = System.currentTimeMillis();
-        return timestamp / 1000.0;
-    }
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
 
-//         System.out.println(
-//         String.format("R: %d G: %d B: %d", data.red, data.green, data.blue)
-//         );
+        // System.out.println(
+        // String.format("R: %d G: %d B: %d", data.red, data.green, data.blue)
+        // );
 
     }
 
