@@ -147,6 +147,9 @@ public class RobotContainer {
     oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
     oi.testJoystick.ButtonX().whenPressed(new ExtendClimberForNextBar(climber));
 
+    oi.testJoystick.ButtonRightBumper().whenPressed(new HangOnMidBar(climber));
+    oi.testJoystick.ButtonRightTrigger().whenPressed(new ClimbToHighBar(climber, monkeyBar));
+
     // oi.testJoystick.ButtonA()
     //         .whenPressed(new SetRedLED(leds, true))
     //         .whenReleased(new SetRedLED(leds, false));

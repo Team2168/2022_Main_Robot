@@ -80,8 +80,10 @@ public final class Constants {
         public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 22.5;
 
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
+        public static final double LIFT_ARREST_SING_INCHES = 1.8;
         public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
+        public static final double LIFT_ZERO_INCHES = 0.0;
 
         public static final double SAFE_EXTEND_PITCH = 45.0;
     }

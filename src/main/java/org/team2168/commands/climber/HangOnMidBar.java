@@ -20,8 +20,8 @@ public class HangOnMidBar extends SequentialCommandGroup {
  */
   public HangOnMidBar(Climber climb) {
     addCommands(
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES),
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ABOVE_BAR_FROM_GROUND_INCHES),
       new CheckClimberHookAttached(climb),
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ZERO_INCHES));
   }
 }
