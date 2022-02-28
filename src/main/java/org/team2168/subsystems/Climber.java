@@ -52,9 +52,9 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static double kP = 0.3;
-  private static double kI = 0.0;
-  private static double kD = 0.0;
+  private static final double kP = 0.3;
+  private static final double kI = 0.0;
+  private static final double kD = 0.0;
   private static final double kF = 0.0;
   private static final double kArbitraryFeedForward = 0.032;
   private static final int kIzone = 0;
@@ -258,13 +258,6 @@ public class Climber extends SubsystemBase implements Loggable {
   @Log.BooleanBox(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 5, width = 1, height = 1)
   public boolean isClimberHookAttached() {
     return !climbHooks.get();
-  }
-
-  @Config(name = "Config PID", rowIndex = 7, columnIndex = 5)
-  public void configPID(double P, double I, double D) {
-    kP = P;
-    kI = I;
-    kD = D;
   }
 
   @Override

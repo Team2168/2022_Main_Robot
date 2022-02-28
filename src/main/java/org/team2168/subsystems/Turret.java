@@ -131,7 +131,6 @@ public class Turret extends SubsystemBase implements Loggable {
    * Command the turret to an absolute position relative to the zero position sensor
    * @param degrees the destination position (degrees)
    */
-  @Config(name = "Set Rotation (Degrees)", rowIndex = 5, columnIndex = 0, width = 1, height = 1)
   public void setRotationDegrees(double degrees) {
     //CHECK THIS
     turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(degrees));

@@ -32,7 +32,6 @@ public class Pooper extends SubsystemBase implements Loggable {
   /**
    * Extends the pooperSolenoid to the extended position 
    */
-  @Log(name = "Poop", rowIndex = 0, columnIndex = 1)
   public void extend() {
     pooperSolenoid.set(DoubleSolenoid.Value.kForward);
   }
@@ -41,7 +40,6 @@ public class Pooper extends SubsystemBase implements Loggable {
   /**
    * Retracts the pooperSolenoid to the retracted
    */
-  @Log(name = "Unpoop", rowIndex = 0, columnIndex = 2)
   public void retract() {
     pooperSolenoid.set(DoubleSolenoid.Value.kReverse);
   }

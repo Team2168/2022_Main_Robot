@@ -38,12 +38,10 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
     // This method will be called once per scheduler run
   }
 
-  @Config(name = "Extend MonkeyBar", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public void extend() {
     solenoid.set(DoubleSolenoid.Value.kForward);
   }
 
-  @Config(name = "Retract MonkeyBar", rowIndex = 1, columnIndex = 2, width = 1, height = 1)
   public void retract() {
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }

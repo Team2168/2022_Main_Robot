@@ -238,7 +238,6 @@ public class Hood extends SubsystemBase implements Loggable {
    * Change all motors to their default mix of brake/coast modes.
    * Should be used for normal match play.
    */
-  @Config(name = "Set Motors To Brake", rowIndex = 5, columnIndex = 1, width = 2, height = 2)
   public void setMotorBrake() {
     hoodMotor.setNeutralMode(NeutralMode.Brake);
   }
@@ -247,7 +246,6 @@ public class Hood extends SubsystemBase implements Loggable {
    * Change all the drivetrain motor controllers to coast mode.
    * Useful for allowing robot to be manually pushed around the field.
    */
-  @Config(name = "Set Motors To Coast", rowIndex = 5, columnIndex = 3, width = 2, height = 2)
   public void setMotorCoast() {
     hoodMotor.setNeutralMode(NeutralMode.Coast);
   }

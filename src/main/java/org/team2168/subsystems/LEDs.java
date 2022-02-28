@@ -30,7 +30,6 @@ public class LEDs extends SubsystemBase {
    * Sets the red LED on/off
    * @param isOn whether the red LED should be on (true) or off (false)
    */
-  @Log(name = "Turn LEDs Red", rowIndex = 1, columnIndex = 0, width = 1, height = 1)
   public void red(boolean isOn) {
     redLED.set(isOn);
   }
@@ -39,7 +38,6 @@ public class LEDs extends SubsystemBase {
    * Sets the green LED on/off
    * @param isOn whether the green LED should be on (true) or off (false)
    */
-  @Log(name = "Turn LEDs Green", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public void green(boolean isOn) {
     greenLED.set(isOn);
   }
@@ -48,7 +46,6 @@ public class LEDs extends SubsystemBase {
    * Sets the blue LED on/off
    * @param isOn whether the blue LED should be on (true) or off (false)
    */
-  @Log(name = "Turn LEDs Blue", rowIndex = 1, columnIndex = 2, width = 1, height = 1)
   public void blue(boolean isOn) {
     blueLED.set(isOn);
   }

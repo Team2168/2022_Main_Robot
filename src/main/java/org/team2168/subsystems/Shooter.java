@@ -143,7 +143,6 @@ public class Shooter extends SubsystemBase implements Loggable {
    * 
    * @param setPoint speed in RPM
    */
-  @Log (name = "Set Shooter Speed", rowIndex = 3, columnIndex = 0, width = 1, height = 1)
   public void setSpeed(double setPoint)
   {
       var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);

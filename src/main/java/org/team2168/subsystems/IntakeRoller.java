@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants.CANDevices;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class IntakeRoller extends SubsystemBase {
@@ -65,7 +64,6 @@ public class IntakeRoller extends SubsystemBase {
 
     }
 
-    @Config(name = "Set Roller Velocity", rowIndex = 3, columnIndex = 3, width = 2, height = 2)
     public void setRollerSpeedVelocity(double speedRPM){
       intakeRollerOne.set(ControlMode.Velocity, RpmToTicksPerOneHundredMS(speedRPM));
     }

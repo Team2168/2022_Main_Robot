@@ -5,7 +5,6 @@
 package org.team2168.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.pseudoresonance.pixy2api.Pixy2;
 import io.github.pseudoresonance.pixy2api.Pixy2CCC;
 import io.github.pseudoresonance.pixy2api.links.SPILink;
@@ -30,12 +29,10 @@ public class Pixy extends SubsystemBase {
     return instance;
   }
 
-  @Config(name = "Turn LEDs On", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   public void turnLEDsOn() {
     cam.setLamp((byte) 1, (byte) 1);
   }
 
-  @Config(name = "Turn LEDs Off", rowIndex = 0, columnIndex = 1, width = 1, height = 1)
   public void turnLEDsOff() {
     cam.setLamp((byte) 0, (byte) 0);
   }
