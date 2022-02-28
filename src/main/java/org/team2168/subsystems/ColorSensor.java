@@ -108,11 +108,10 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     public Alliance getColor() {
         normRaw();
-
         if (rNorm > bNorm)//(data.red > data.blue)
             return Alliance.Red;
-            //TODO figure out these bottom vals
-        else if(rNorm < 40 && bNorm < 40 && gNorm > 10)
+            //TODO figure out this bottom val
+        else if(gNorm > 120)
             return Alliance.Invalid;
         else
             return Alliance.Blue;//   return Alliance.Invalid;
