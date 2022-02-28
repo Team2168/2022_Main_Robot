@@ -6,7 +6,7 @@ package org.team2168.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team2168.commands.*;
-import org.team2168.commands.IntakeRoller.SetIntakeSpeed;
+import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;

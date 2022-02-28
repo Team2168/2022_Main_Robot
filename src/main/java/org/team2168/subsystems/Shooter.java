@@ -25,10 +25,16 @@ public class Shooter extends SubsystemBase implements Loggable {
   public enum ShooterRPM {
     FENDER_LOW(1100.0),
     FENDER_HIGH(1500.0),
-    TARMAC_LINE(1650.0),
-    LAUNCHPAD(1900.0),
-    WALL_SHOT(2750.0),
+    TARMAC_LINE(1550),//PBot (1650.0),
+    LAUNCHPAD (1870),//PBot(2085.0),
+    WALL_SHOT(2500),//PBot(2750.0);
     TERMINAL(2300.0);
+
+
+
+
+
+
 
     public final double rpm;
     private ShooterRPM(double rpm) {
@@ -130,7 +136,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
-    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
+
+    // _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
+    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/7512, kTimeoutMs);
+
     // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
     _motorRight.config_kP(kPIDLoopIdx, 0.25, kTimeoutMs);
     _motorRight.config_kI(kPIDLoopIdx, 0.0025, kTimeoutMs);
