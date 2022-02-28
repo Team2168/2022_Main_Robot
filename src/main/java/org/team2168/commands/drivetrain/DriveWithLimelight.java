@@ -15,12 +15,14 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
+import java.util.function.DoubleSupplier;
+
 public class DriveWithLimelight extends CommandBase implements Loggable {
   /** Creates a new DriveWithLimelight. */
   private Drivetrain dt;
   private Limelight lime;
-  private OI oi;
   private PIDController pid;
+  private DoubleSupplier joystickInput;
 
   private double errorToleranceAngle = 0.5; // in degrees
   private double limeAngle;
@@ -51,34 +53,31 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   }
 
   //determines whether joystick should be used or not
-  private boolean useJoystick;
+  private boolean manualControl;
 
   //speed of drivetrain rotation
+  @Log(name = "Turn Speed")
   private double driveLimeTurnSpeed;
 
-  @Log(name = "Turn Speed")
-  private double getLimeTurnSpeed() {
-    return driveLimeTurnSpeed;
-  }
-  
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
-    this(drivetrain, limelight, false);
+    this(drivetrain, limelight, () -> 0.0);
+    manualControl = false;
   }
 
-  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, boolean useJoystick) {
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, DoubleSupplier joystickInput) {
     lime = limelight;
     dt = drivetrain;
-    this.useJoystick = useJoystick;
+    this.joystickInput = joystickInput;
+    manualControl = true;
+
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    oi = OI.getInstance();
     pid = new PIDController(P, I, D);
-    if (!lime.isLimelightEnabled()) {
-      lime.enableLimelight();
-    }
+    lime.enableLimelight();
 
     pid.setTolerance(errorToleranceAngle);
   }
@@ -106,22 +105,15 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     }
 
     if (withinThresholdLoops < acceptableLoops) {
-      if (!useJoystick) {
-        dt.arcadeDrive(0.0, driveLimeTurnSpeed);
-      }
-      else if (useJoystick) {
-        dt.arcadeDrive(oi.getGunStyleTrigger(), driveLimeTurnSpeed);
-      }
+      dt.arcadeDrive(joystickInput.getAsDouble(), driveLimeTurnSpeed);
     }
-
-    // System.out.println(driveLimeTurnSpeed);
-    SmartDashboard.putNumber("driveLimeTurnSpeed", driveLimeTurnSpeed);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (useJoystick) {
+    if (manualControl) {
       lime.pauseLimelight();
     }
   }
@@ -129,6 +121,6 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    return (Math.abs(limeAngle) < errorToleranceAngle && withinThresholdLoops >= acceptableLoops && !useJoystick); // command does not need to finish if bound to a button
+    return (Math.abs(limeAngle) < errorToleranceAngle && withinThresholdLoops >= acceptableLoops && !manualControl); // command does not need to finish if bound to a button
   }
 }

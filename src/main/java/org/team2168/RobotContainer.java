@@ -82,16 +82,17 @@ public class RobotContainer {
   private final Climber climber = Climber.getInstance();
   // private final Turret turret = Turret.getInstance(); // motor not powered for time being
   private final MonkeyBar monkeyBar = MonkeyBar.getInstance();
-  private final Limelight lime = Limelight.getInstance();
+  public final Limelight lime = Limelight.getInstance();
   public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
   private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
 
-  private final Command driveWithLimelight = new DriveWithLimelight(drivetrain, lime, true);
-
-
   OI oi = OI.getInstance();
+
+  private final Command driveWithLimelight = new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger);
+
+
 
   private static RobotContainer instance = null;
 
@@ -119,7 +120,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
-    oi.driverJoystick.ButtonB().whenHeld(new DriveWithLimelight(drivetrain, lime, true));
+    oi.driverJoystick.ButtonB().whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger));
 
     //// Green button
     // oi.driverJoystick.ButtonLeftStick()
