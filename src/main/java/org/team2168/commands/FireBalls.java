@@ -4,6 +4,7 @@
 
 package org.team2168.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.team2168.Constants;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
@@ -29,6 +30,7 @@ public class FireBalls extends SequentialCommandGroup {
     this.shooter = shooter;
     this.indexer = indexer;
     this.hopper = hopper;
+    boolean hasTwoBalls = hopper.isBallPresent();
 
     addCommands(
       new WaitForShooterAtSpeed(shooter),
@@ -38,7 +40,7 @@ public class FireBalls extends SequentialCommandGroup {
       ),
       race(
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
-        new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
+        (hasTwoBalls) ? new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED) : new InstantCommand()
       )
     );
   }

@@ -40,13 +40,15 @@ public class FourBall extends SequentialCommandGroup {
                         PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, InitialPathState.DISCARDHEADING)
                 ),
                 new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+
                 parallel (
-                        new WaitForShooterAtSpeed(shooter),
-                        new DriveWithLimelight(drivetrain, lime)
-                ).withTimeout(2.5),
+                        new DriveWithLimelight(drivetrain, lime),
+                        new WaitForShooterAtSpeed(shooter)
+                ).withTimeout(30),
                 new FireBalls(shooter, indexer, hopper),
                 new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
                 new FireBalls(shooter, indexer, hopper),
+
 
 
                 new IntakeLower(intakeRaiseAndLower),
@@ -57,10 +59,11 @@ public class FourBall extends SequentialCommandGroup {
                 new IntakeRaise(intakeRaiseAndLower),
                 new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
                 PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
+
                 parallel (
-                        new WaitForShooterAtSpeed(shooter),
-                        new DriveWithLimelight(drivetrain, lime)
-                ).withTimeout(2.5),
+                new DriveWithLimelight(drivetrain, lime),
+                new WaitForShooterAtSpeed(shooter)
+                ).withTimeout(30),
                 new FireBalls(shooter, indexer, hopper),
                 new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
                 new FireBalls(shooter, indexer, hopper)

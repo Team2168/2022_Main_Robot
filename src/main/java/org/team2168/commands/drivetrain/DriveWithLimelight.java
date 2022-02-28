@@ -122,6 +122,6 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    return (Math.abs(limeAngle) < errorToleranceAngle && !inTeleop); // command does not need to finish if bound to a button
+    return (withinThresholdLoops <= acceptableLoops && !inTeleop); // command does not need to finish if bound to a button
   }
 }
