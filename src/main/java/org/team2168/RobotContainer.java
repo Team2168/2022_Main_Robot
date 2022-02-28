@@ -7,6 +7,7 @@ package org.team2168;
 import java.util.List;
 import java.util.function.DoubleFunction;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.*;
 import org.team2168.commands.drivetrain.ArcadeDrive;
@@ -149,10 +150,20 @@ public class RobotContainer {
 
     private void configureAutonomousRoutines() {
         autoChooser.setDefaultOption("Do nothing", new DoNothing());
-        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+//        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+        autoChooser.addOption("2 ball", new TwoBall(
+                drivetrain, intakeRaiseAndLower, intakeRoller,
+                hopper, indexer, hood,
+                shooter, pooper, colorSensor,
+                lime));
+        autoChooser.addOption("3 Ball", new ThreeBall(
+                drivetrain, intakeRaiseAndLower, intakeRoller,
+                hopper, indexer, hood,
+                shooter, pooper, colorSensor,
+                lime));
         autoChooser.addOption(
-                "4 Ball (ends at Terminal)",
-                new FourBall(drivetrain, intakeRaiseAndLower, intakeRoller,
+                "4 Ball (ends at Terminal)", new FourBall(
+                            drivetrain, intakeRaiseAndLower, intakeRoller,
                             hopper, indexer, hood,
                             shooter, pooper, colorSensor,
                             lime));
@@ -160,9 +171,7 @@ public class RobotContainer {
         // debug autos
         autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
         autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-        autoChooser.addOption("turningmaybe", new DebugPathPlanner(drivetrain, "turningmaybe"));
         autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
-        autoChooser.addOption("multipart nonzero start/end velocity", new MultipartNonZeroVel(drivetrain));
         autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
         // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
         // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
@@ -230,7 +239,10 @@ public class RobotContainer {
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
     oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
 
-    oi.testJoystick.ButtonX().whenPressed(new HoodToAngle(hood, HoodPosition.TARMAC_LINE.position_degrees));
+    oi.testJoystick.ButtonX().whenPressed(new ParallelCommandGroup(
+            new HoodToAngle(hood, 0.0),
+            new SetShooterSpeed(shooter, 0.0)
+    ));
     oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES));
     oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
     oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));

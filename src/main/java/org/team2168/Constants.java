@@ -55,7 +55,7 @@ public final class Constants {
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
         public static final double kMaxSpeedMetersPerSecond = 4.2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 4.0;  // 1.6 is feasible?
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.6;  // 3.0 is feasable?
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
