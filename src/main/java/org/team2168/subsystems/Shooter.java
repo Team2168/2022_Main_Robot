@@ -217,6 +217,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
 
+  public double getSetpoint() {
+    return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopTarget());
+  }
+
   @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1)
   public double getError() {
     return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
@@ -229,7 +233,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public boolean isAtSpeed(double errorTolerance) {
     this.errorTolerance = errorTolerance;
-    return Math.abs(getError()) < errorTolerance;
+    return (Math.abs(getError()) < errorTolerance) && (getSetpoint() != 0.0);
   }
 
 
