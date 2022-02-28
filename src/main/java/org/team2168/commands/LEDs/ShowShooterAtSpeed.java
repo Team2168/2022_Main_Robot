@@ -29,7 +29,7 @@ public class ShowShooterAtSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(shooter.isAtSpeed()) {
+    if(shooter.isAtSpeed(15)) {
       leds.red(false);
       leds.green(true);
       leds.blue(false);

@@ -240,7 +240,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
   private boolean isAtSpeed() {
-    return Math.abs(getError()) < errorTolerance;
+    return Math.abs(getError()) < errorTolerance && getVelocity() > 0;
   }
 
   public static Shooter getInstance(){
