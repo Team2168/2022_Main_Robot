@@ -223,12 +223,14 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   /**
    * Checks if the shooter is at speed
+   * If the shooter speed is 0, then it is not at speed
    * @param errorTolerance the allowed error for the shooter
    * @return whether the shooter is at speed
    */
   public boolean isAtSpeed(double errorTolerance) {
     this.errorTolerance = errorTolerance;
-    return Math.abs(getError()) < errorTolerance;
+    //              within the allowed error           speed more than 0
+    return ((Math.abs(getError()) < errorTolerance) && getVelocity() > 0);
   }
 
 
