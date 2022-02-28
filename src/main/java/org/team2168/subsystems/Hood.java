@@ -28,11 +28,17 @@ public class Hood extends SubsystemBase implements Loggable {
     //Auto Pos
     FENDER_LOW(9.0),
     FENDER_HIGH(5.0),
-    TARMAC_LINE(17),//PBot(20.0),
-    LAUNCHPAD(25),//PBot(28.0),
-    WALL_SHOT(36),//PBot(37.0),
+    TARMAC_LINE(20.0),
+    LAUNCHPAD(28.0),
+    WALL_SHOT(37.0),
     TERMINAL(33.0),
     ZERO(0.0);
+//    FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
+//    FENDER_HIGH_COMPBOT(5.0),
+//    TARMAC_LINE_COMPBOT(17),
+//    LAUNCHPAD_COMPBOT(25),
+//    WALL_SHOT_COMPBOT(36),
+//    TERMINAL_COMPBOT(33.0),
 
     public final double position_degrees;
     
