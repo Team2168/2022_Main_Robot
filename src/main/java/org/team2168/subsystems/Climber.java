@@ -18,12 +18,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -50,9 +52,9 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.3;
-  private static final double kI = 0.0;
-  private static final double kD = 0.0;
+  private static double kP = 0.3;
+  private static double kI = 0.0;
+  private static double kD = 0.0;
   private static final double kF = 0.0;
   private static final double kArbitraryFeedForward = 0.032;
   private static final int kIzone = 0;
@@ -143,7 +145,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return true when the lift is fully lowered
    */
-  @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
+  @Log (name = "At Zero", rowIndex = 5, columnIndex = 5)
   public boolean isAtZeroPosition() {
     return climbMotorLeft.isRevLimitSwitchClosed() == 1;
   }
@@ -209,7 +211,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return current lift velocity (inches/second)
    */
-  @Log(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3)
+  @Log.Graph(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3, visibleTime = 5)
   public double getSpeedInchesPerSecond() {
     return convertVelocityHundredMstoSeconds(ticksToInches(climbMotorLeft.getSelectedSensorVelocity()));
   }
@@ -218,7 +220,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return current lift position (inches), zero is fully lowered
    */
-  @Log(name = "Position (In)", rowIndex = 3, columnIndex = 2)
+  @Log.Graph(name = "Position (In)", rowIndex = 5, columnIndex = 3, visibleTime = 5)
   public double getPositionInches() {
     return ticksToInches(climbMotorLeft.getSelectedSensorPosition());
   }
@@ -253,9 +255,16 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return the value of the collective limit switches on the climber Hooks
    */
-  @Log(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 4)
+  @Log(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 5)
   public boolean isClimberHookAttached() {
     return !climbHooks.get();
+  }
+
+  @Config(name = "Config PID", rowIndex = 7, columnIndex = 5)
+  public void configPID(double P, double I, double D) {
+    kP = P;
+    kI = I;
+    kD = D;
   }
 
   @Override

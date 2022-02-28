@@ -101,7 +101,7 @@ public class ColorSensor extends SubsystemBase implements Loggable {
        bNorm=(Norm_scale*data.blue)/MaxVal;
     }
 
-    @Log(name = "Color Sensor Alliance")
+    @Log(name = "Color Sensor Alliance", rowIndex = 1, columnIndex = 1)
     public String getColorName() {
         return getColor().name();
     }
@@ -118,18 +118,18 @@ public class ColorSensor extends SubsystemBase implements Loggable {
             return Alliance.Blue;//   return Alliance.Invalid;
     }
 
-    @Log(name = "Is team color?")
+    @Log(name = "Is team color?", rowIndex = 3, columnIndex = 1)
     public boolean isTeamColor() {
         Alliance alliance = DriverStation.getAlliance();
         return alliance == getColor() && alliance != Alliance.Invalid;
     }
 
-    @Log(name = "Is data stale?")
+    @Log(name = "Is data stale?", rowIndex = 1, columnIndex = 3)
     public boolean isDataStale() {
         return getTimeSinceLastRead() > DATA_THRESHOLD;
     }
 
-    @Log(name = "time since last read")
+    @Log(name = "time since last read", rowIndex = 3, columnIndex = 3)
     public double getTimeSinceLastRead() {
         return Timer.getFPGATimestamp() - timestamp;
     }
