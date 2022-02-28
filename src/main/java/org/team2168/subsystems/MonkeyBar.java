@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class MonkeyBar extends SubsystemBase implements Loggable{
@@ -37,10 +38,12 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
     // This method will be called once per scheduler run
   }
 
+  @Config(name = "Extend MonkeyBar", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public void extend() {
     solenoid.set(DoubleSolenoid.Value.kForward);
   }
 
+  @Config(name = "Retract MonkeyBar", rowIndex = 1, columnIndex = 2, width = 1, height = 1)
   public void retract() {
     solenoid.set(DoubleSolenoid.Value.kReverse);
   }
@@ -49,7 +52,7 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
    * 
    * @return true when the monkeybar is on the bar
    */
-  @Log(name="Hook engaged?")
+  @Log.BooleanBox(name = "Hook engaged?", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   public boolean isHookEngaged() {
     return !limitSwitch.get();
   }
@@ -62,7 +65,7 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
    * 
    * @return is solenoid extended?
    */
-  @Log(name="extended?")
+  @Log.BooleanBox(name = "extended?", rowIndex = 0, columnIndex = 1, width = 1, height = 1)
   public boolean isExtended() {
     return solenoid.get() == DoubleSolenoid.Value.kForward;
   }
@@ -75,7 +78,7 @@ public class MonkeyBar extends SubsystemBase implements Loggable{
    * 
    * @return is solenoid retracted?
    */
-  @Log(name="retracted?")
+  @Log.BooleanBox(name = "retracted?", rowIndex = 0, columnIndex = 2, width = 1, height = 1)
   public boolean isRetracted() {
     return solenoid.get() == DoubleSolenoid.Value.kReverse;
   }

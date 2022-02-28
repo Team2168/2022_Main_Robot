@@ -62,7 +62,7 @@ public class Indexer extends SubsystemBase implements Loggable {
    * 
    * @return boolean is meant to detect the presence of a ball in the indexer
    */
-  @Log(name = "Is ball present?")
+  @Log.BooleanBox(name = "Is ball present?", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public boolean isBallPresent() {
     return !detector.get();
   }

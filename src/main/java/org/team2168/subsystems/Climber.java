@@ -211,7 +211,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return current lift velocity (inches/second)
    */
-  @Log.Graph(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3, visibleTime = 5)
+  @Log.Graph(name = "Speed (In-s)", rowIndex = 3, columnIndex = 3, visibleTime = 5, width = 3, height = 2)
   public double getSpeedInchesPerSecond() {
     return convertVelocityHundredMstoSeconds(ticksToInches(climbMotorLeft.getSelectedSensorVelocity()));
   }
@@ -220,7 +220,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return current lift position (inches), zero is fully lowered
    */
-  @Log.Graph(name = "Position (In)", rowIndex = 5, columnIndex = 3, visibleTime = 5)
+  @Log.Graph(name = "Position (In)", rowIndex = 7, columnIndex = 3, visibleTime = 5, width = 3, height = 2)
   public double getPositionInches() {
     return ticksToInches(climbMotorLeft.getSelectedSensorPosition());
   }
@@ -255,7 +255,7 @@ public class Climber extends SubsystemBase implements Loggable {
    * 
    * @return the value of the collective limit switches on the climber Hooks
    */
-  @Log(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 5)
+  @Log.BooleanBox(name = "Is Climber Attached?", rowIndex = 3, columnIndex = 5, width = 1, height = 1)
   public boolean isClimberHookAttached() {
     return !climbHooks.get();
   }

@@ -30,6 +30,7 @@ public class LEDs extends SubsystemBase {
    * Sets the red LED on/off
    * @param isOn whether the red LED should be on (true) or off (false)
    */
+  @Log(name = "Turn LEDs Red", rowIndex = 1, columnIndex = 0, width = 1, height = 1)
   public void red(boolean isOn) {
     redLED.set(isOn);
   }
@@ -38,6 +39,7 @@ public class LEDs extends SubsystemBase {
    * Sets the green LED on/off
    * @param isOn whether the green LED should be on (true) or off (false)
    */
+  @Log(name = "Turn LEDs Green", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public void green(boolean isOn) {
     greenLED.set(isOn);
   }
@@ -46,21 +48,22 @@ public class LEDs extends SubsystemBase {
    * Sets the blue LED on/off
    * @param isOn whether the blue LED should be on (true) or off (false)
    */
+  @Log(name = "Turn LEDs Blue", rowIndex = 1, columnIndex = 2, width = 1, height = 1)
   public void blue(boolean isOn) {
     blueLED.set(isOn);
   }
 
-  @Log(name = "Red On?", rowIndex = 0, columnIndex = 0)
+  @Log.BooleanBox(name = "Red On?", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   public boolean getRedState() {
     return redLED.get();
   }
 
-  @Log(name = "Green On?", rowIndex = 0, columnIndex = 1)
+  @Log.BooleanBox(name = "Green On?", rowIndex = 0, columnIndex = 1, width = 1, height = 1)
   public boolean getGreenState() {
     return greenLED.get();
   }
 
-  @Log(name = "Blue On?", rowIndex = 0, columnIndex = 2)
+  @Log.BooleanBox(name = "Blue On?", rowIndex = 0, columnIndex = 2, width = 1, height = 1)
   public boolean getBlueState() {
     return blueLED.get();
   }

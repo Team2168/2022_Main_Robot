@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import org.team2168.Constants.CANDevices;
@@ -30,8 +31,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private WPI_TalonFX rightMotor1;
     private WPI_TalonFX rightMotor2;
     private WPI_TalonFX rightMotor3;
+
+    @Log.Gyro(name = "Pidgey (gyro)", rowIndex = 7, columnIndex = 3, width = 1, height = 2)
     private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
 
+    @Log.DifferentialDrive(name = "Drivetrain", rowIndex = 7, columnIndex = 1, width = 3, height = 2)
     private DifferentialDrive drive;
     private DifferentialDriveOdometry odometry;
 
@@ -303,7 +307,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * @return encoder velocity in meters/second
      */
     @Log(name = "Right Velocity", rowIndex = 4, columnIndex = 1)
-
     public double getRightEncoderRate() {
         return ticksToMeters(getRightEncoderRateRaw()) * 10.0;
     }
@@ -329,6 +332,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * Change all motors to their default mix of brake/coast modes.
      * Should be used for normal match play.
      */
+    @Config(name = "Set Brake Mode", rowIndex = 1, columnIndex = 5)
     public void setMotorsBrake() {
         leftMotor1.setNeutralMode(NeutralMode.Brake);
         leftMotor2.setNeutralMode(NeutralMode.Coast);
@@ -342,6 +346,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * Change all the drivetrain motor controllers to coast mode.
      * Useful for allowing robot to be manually pushed around the field.
      */
+    @Config(name = "Set Coast Mode", rowIndex = 2, columnIndex = 5)
     public void setMotorsCoast() {
         leftMotor1.setNeutralMode(NeutralMode.Coast);
         leftMotor2.setNeutralMode(NeutralMode.Coast);

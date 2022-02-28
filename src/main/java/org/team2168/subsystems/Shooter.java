@@ -143,6 +143,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * 
    * @param setPoint speed in RPM
    */
+  @Log (name = "Set Shooter Speed", rowIndex = 3, columnIndex = 0, width = 1, height = 1)
   public void setSpeed(double setPoint)
   {
       var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
@@ -203,7 +204,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * 
    * @return shooter speed in RPM
    */
-  @Log (name = "Speed (RPM)", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
+  @Log(name = "Speed (RPM)", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   public double getVelocity() {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
@@ -217,7 +218,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
   }
 
-  @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1)
+  @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1, width = 1, height = 1)
   public double getError() {
     return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
   }
@@ -237,7 +238,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * Checks if the shooter is at speed.
    * @return true when the shooter is within the errorTolerance specified by the last command
    */
-  @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
+  @Log.BooleanBox(name = "At Speed?", columnIndex = 1, rowIndex = 1, width = 1, height = 1)
   public boolean isAtSpeed() {
     return Math.abs(getError()) < errorTolerance;
   }

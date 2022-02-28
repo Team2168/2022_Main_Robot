@@ -37,12 +37,12 @@ public class IntakeRaiseAndLower extends SubsystemBase implements Loggable {
     upAndDown.set(DoubleSolenoid.Value.kReverse);
   }
 
-  @Log(name = "Intake Lowered?")
+  @Log.BooleanBox(name = "Intake Lowered?", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public boolean isIntakeLowered() {
     return upAndDown.get() == DoubleSolenoid.Value.kForward;
   }
 
-  @Log(name = "Intake Raised?")
+  @Log.BooleanBox(name = "Intake Raised?", rowIndex = 2, columnIndex = 1, width = 1, height = 1)
   public boolean isIntakeRaised() {
     return upAndDown.get() == DoubleSolenoid.Value.kReverse;
   }

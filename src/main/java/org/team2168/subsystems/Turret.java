@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Turret extends SubsystemBase implements Loggable {
@@ -109,7 +110,7 @@ public class Turret extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
+  @Log (name = "At Zero", rowIndex = 3, columnIndex = 0, width = 1, height = 1)
   public boolean isTurretAtZero() {
     return hallEffectSensor.isFwdLimitSwitchClosed();
   }
@@ -130,6 +131,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * Command the turret to an absolute position relative to the zero position sensor
    * @param degrees the destination position (degrees)
    */
+  @Config(name = "Set Rotation (Degrees)", rowIndex = 5, columnIndex = 0, width = 1, height = 1)
   public void setRotationDegrees(double degrees) {
     //CHECK THIS
     turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(degrees));
@@ -183,7 +185,7 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2)
+  @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2, width = 1, height = 1)
   /**
    * @return the current position error in degrees
    */
@@ -195,7 +197,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * 
    * @return the turret position in degrees relative to the zero position sensor
    */
-  @Log(name = "Position (deg)", rowIndex = 3, columnIndex = 2)
+  @Log(name = "Position (deg)", rowIndex = 3, columnIndex = 2, width = 1, height = 1)
   public double getPositionDegrees() {
     return ticksToDegrees(turretMotor.getSelectedSensorPosition());
   }
@@ -204,7 +206,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * 
    * @return the turret velocity in degrees per second
    */
-  @Log(name = "Speed (deg-s)", rowIndex = 3, columnIndex = 3)
+  @Log(name = "Speed (deg-s)", rowIndex = 3, columnIndex = 3, width = 1, height = 1)
   public double getVelocityDegPerSec() {
     return ticksPer100msToDegreesPerSec(turretMotor.getSelectedSensorVelocity());
   }
@@ -213,7 +215,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * 
    * @return The internal sensor's position
    */
-  @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4)
+  @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4, width = 1, height = 1)
   public double getEncoderPosition() {
     return turretMotor.getSelectedSensorPosition();
   }

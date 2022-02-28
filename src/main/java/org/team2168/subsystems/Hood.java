@@ -17,6 +17,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import org.team2168.Constants;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Hood extends SubsystemBase implements Loggable {
@@ -196,7 +197,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * 
    * @return the hood posiiton in degrees relative to is lowered position (0.0)
    */
-  @Log(name = "Position (deg)", rowIndex = 3, columnIndex = 0)
+  @Log.Graph(name = "Position (deg)", rowIndex = 3, columnIndex = 0, width = 3, height = 2)
   public double getPositionDegrees() {
     return ticksToDegrees(getPositionTicks());
   }
@@ -205,7 +206,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * 
    * @return the hood posititon in raw f500 encoder ticks
    */
-  @Log(name = "Position (ticks)", rowIndex = 3, columnIndex = 1)
+  @Log(name = "Position (ticks)", rowIndex = 3, columnIndex = 3)
   public double getPositionTicks() {
     return hoodMotor.getSelectedSensorPosition();
   }
@@ -228,7 +229,7 @@ public class Hood extends SubsystemBase implements Loggable {
     hoodMotor.set(ControlMode.Velocity, degreesToTicks(degrees) / 10);
   }
 
-  @Log(name = "At Zero (Limit Switch)", rowIndex = 1, columnIndex = 1)
+  @Log.BooleanBox(name = "At Zero (Limit Switch)", rowIndex = 1, columnIndex = 1, width = 1, height = 1)
   public boolean atZero() {
     return (hoodMotor.isRevLimitSwitchClosed() == 1);
   }
@@ -237,6 +238,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * Change all motors to their default mix of brake/coast modes.
    * Should be used for normal match play.
    */
+  @Config(name = "Set Motors To Brake", rowIndex = 5, columnIndex = 1, width = 2, height = 2)
   public void setMotorBrake() {
     hoodMotor.setNeutralMode(NeutralMode.Brake);
   }
@@ -245,6 +247,7 @@ public class Hood extends SubsystemBase implements Loggable {
    * Change all the drivetrain motor controllers to coast mode.
    * Useful for allowing robot to be manually pushed around the field.
    */
+  @Config(name = "Set Motors To Coast", rowIndex = 5, columnIndex = 3, width = 2, height = 2)
   public void setMotorCoast() {
     hoodMotor.setNeutralMode(NeutralMode.Coast);
   }
