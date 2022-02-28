@@ -243,25 +243,9 @@ public class RobotContainer {
             new HoodToAngle(hood, 0.0),
             new SetShooterSpeed(shooter, 0.0)
     ));
-    oi.testJoystick.ButtonY().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES));
-    oi.testJoystick.ButtonB().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES));
-    oi.testJoystick.ButtonA().whenPressed(new DriveClimberToPosition(climber, LiftPositions.LIFT_RETRACTION_INCHES));
 
-    // oi.testJoystick.ButtonRightBumper().whenPressed(new HangOnMidBar(climber));
-    // oi.testJoystick.ButtonRightTrigger().whenPressed(new ClimbToHighBar(climber, monkeyBar));
-    // oi.testJoystick.ButtonLeftBumper().whenPressed(new ClimbToTraverseBar(climber, monkeyBar));
-
-    // oi.testJoystick.ButtonA()
-    //         .whenPressed(new SetRedLED(leds, true))
-    //         .whenReleased(new SetRedLED(leds, false));
-          
-    // oi.testJoystick.ButtonB()
-    //         .whenPressed(new SetGreenLED(leds, true))
-    //         .whenReleased(new SetGreenLED(leds, false));
-
-    // oi.testJoystick.ButtonX()
-    //         .whenPressed(new SetBlueLED(leds, true))
-    //         .whenReleased(new SetBlueLED(leds, false));
+    oi.testJoystick.ButtonY().whenPressed(new HoodToAngle(hood, HoodPosition.TARMAC_LINE.position_degrees));
+    oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, HoodPosition.LAUNCHPAD.position_degrees));
 
     oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));

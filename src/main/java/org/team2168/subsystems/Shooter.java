@@ -27,7 +27,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     FENDER_HIGH(1500.0),
     TARMAC_LINE(1650.0),
     LAUNCHPAD(2085.0),
-    WALL_SHOT(2750.0);
+    WALL_SHOT(2750.0),
+    TERMINAL(2300);
 //    FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
 //    FENDER_HIGH_CBOT(1500.0),
 //    TARMAC_LINE_CBOT(1550),//PBot (1650.0),
