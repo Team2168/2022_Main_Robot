@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.RetractAndStopIntake;
+import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.Launchpad;
@@ -35,7 +36,7 @@ public class ThreeBall extends SequentialCommandGroup {
                 ),
 
                 parallel (
-//                        new DriveWithLimelight(drivetrain, lime),
+                        new DriveWithLimelight(drivetrain, lime),
                         new WaitForShooterAtSpeed(shooter)
                 ).withTimeout(5),
                 new FireBalls(shooter, indexer, hopper),
@@ -50,7 +51,7 @@ public class ThreeBall extends SequentialCommandGroup {
                 ),
                 new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                 parallel (
-//                        new DriveWithLimelight(drivetrain, lime),
+                        new DriveWithLimelight(drivetrain, lime),
                         new WaitForShooterAtSpeed(shooter)
                 ).withTimeout(5),
                 new FireBalls(shooter, indexer, hopper)

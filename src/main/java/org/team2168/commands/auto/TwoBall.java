@@ -5,9 +5,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.RetractAndStopIntake;
+import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.TarmacLine;
+import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.subsystems.*;
 import org.team2168.utils.PathUtil;
 
@@ -25,7 +27,7 @@ public class TwoBall extends SequentialCommandGroup {
             Limelight lime) {
         Paths paths = Paths.getInstance();
         addCommands(
-                new TarmacLine(hood, shooter, lime).withTimeout(0.2),
+                new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
                 new IntakeLower(intakeRaiseAndLower),
                 race (  // run group until path ends
                         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
@@ -34,7 +36,7 @@ public class TwoBall extends SequentialCommandGroup {
                 new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
 
                 parallel (
-//                        new DriveWithLimelight(drivetrain, lime),
+                        new DriveWithLimelight(drivetrain, lime),
                         new WaitForShooterAtSpeed(shooter)
                 ).withTimeout(7),
                 new FireBalls(shooter, indexer, hopper),
