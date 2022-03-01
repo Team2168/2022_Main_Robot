@@ -11,15 +11,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.*;
 import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.drivetrain.ResetHeading;
 import org.team2168.subsystems.Drivetrain;
 
-import org.team2168.Constants.LiftPositions;
-import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.*;
-import org.team2168.commands.LEDs.SetBlueLED;
-import org.team2168.commands.LEDs.SetGreenLED;
-import org.team2168.commands.LEDs.SetRedLED;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.climber.*;
 import org.team2168.commands.drivetrain.*;
@@ -33,39 +27,6 @@ import org.team2168.commands.shootingpositions.*;
 import org.team2168.commands.hopper.*;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
-import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.drivetrain.DriveWithLimelight;
-import org.team2168.commands.hood.BumpHoodAngleDown;
-import org.team2168.commands.hood.BumpHoodAngleUp;
-import org.team2168.commands.hood.BumpHoodAngleZero;
-import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.intakeraiseandlower.IntakeLower;
-import org.team2168.commands.intakeraiseandlower.IntakeRaise;
-import org.team2168.commands.indexer.DriveIndexer;
-import org.team2168.commands.monkeybar.ExtendMonkeyBar;
-import org.team2168.commands.monkeybar.RetractMonkeyBar;
-import org.team2168.commands.pooper.PooperPoop;
-import org.team2168.commands.pooper.PooperUnpoop;
-import org.team2168.commands.shooter.BumpShooterSpeedDown;
-import org.team2168.commands.shooter.BumpShooterSpeedUp;
-import org.team2168.commands.shooter.BumpShooterSpeedZero;
-import org.team2168.commands.shooter.SetShooterSpeed;
-import org.team2168.commands.shooter.ShootWithController;
-import org.team2168.commands.turret.DriveTurretWithJoystick;
-import org.team2168.commands.turret.RotateTurret;
-import org.team2168.commands.turret.ZeroTurret;
-import org.team2168.subsystems.Climber;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Hood;
-import org.team2168.subsystems.Indexer;
-import org.team2168.subsystems.IntakeRaiseAndLower;
-import org.team2168.subsystems.IntakeRoller;
-import org.team2168.subsystems.Limelight;
-import org.team2168.subsystems.MonkeyBar;
-import org.team2168.subsystems.Pooper;
-import org.team2168.subsystems.Shooter;
-import org.team2168.subsystems.Turret;
 import org.team2168.subsystems.Hood.HoodPosition;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -85,8 +46,6 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import org.team2168.utils.PathUtil;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -166,10 +125,10 @@ public class RobotContainer {
                             lime));
 
         // debug autos
-        autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
-        autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-        autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
-        autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
+        // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
+        // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+        // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
+        // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
         // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
         // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
         SmartDashboard.putData(autoChooser);
