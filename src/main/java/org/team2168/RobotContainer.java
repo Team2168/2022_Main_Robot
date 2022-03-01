@@ -243,6 +243,7 @@ public class RobotContainer {
 
     oi.testJoystick.ButtonY().whenPressed(new HoodToAngle(hood, HoodPosition.TARMAC_LINE.position_degrees));
     oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, HoodPosition.LAUNCHPAD.position_degrees));
+    oi.testJoystick.ButtonA().whenHeld(new DriveWithLimelight(drivetrain, lime, 2.0, true));
 
     oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));

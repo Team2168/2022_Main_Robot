@@ -41,7 +41,7 @@ public class TwoBall extends SequentialCommandGroup {
                 new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                 new WaitForShooterAtSpeed(shooter),
                 new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
-                new DriveWithLimelight(drivetrain, lime, 2.0),
+                new DriveWithLimelight(drivetrain, lime, 2.0, true),
                 new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                 new FireBalls(shooter, indexer, hopper),
                 new WaitForShooterAtSpeed(shooter).withTimeout(0.5),

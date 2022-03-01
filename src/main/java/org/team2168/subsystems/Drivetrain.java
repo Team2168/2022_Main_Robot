@@ -405,10 +405,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     public void arcadeDrive(double xSpeed, double zRotation) {
         drive.arcadeDrive(xSpeed, zRotation);
-        //print speed values to see when the robot barely moves
-        //multiply value by the corresponding battery voltage to find kS
-//        System.out.println(xSpeed);
-//        System.out.println(RobotController.getBatteryVoltage());
     }
 
     /**

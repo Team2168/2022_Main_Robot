@@ -30,14 +30,16 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   private int withinThresholdLoops = 0;
   private int acceptableLoops = 10;
 
-  private static final double MINIMUM_COMMAND = 2.02/12;
+  private static final double MINIMUM_COMMAND = 0.25;  // TODO normalize for battery voltage
+  private static final double MAX_INTEGRAL = 1.0;
   
   //limelight gains
-  @Log(name = "P")
-  private double P = 0.02;
-  @Log(name = "I")
-  private double I = 0.002;
-  @Log(name = "D")
+  private double P;
+  private double I;
+  private double P_FAR = 0.02;
+  private double P_NEAR = 0.01;
+  private double I_FAR = 0.002;
+  private double I_NEAR = 0.001;
   private double D = 0.0;
 
   @Config
@@ -65,19 +67,26 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     manualControl = false;
   }
 
-  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, double acceptableAngle) {
-    this(drivetrain, limelight, acceptableAngle, () -> 0.0);
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, double acceptableAngle, boolean near) {
+    this(drivetrain, limelight, acceptableAngle, () -> 0.0, near);
     manualControl = false;
   }
 
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, DoubleSupplier joystickInput) {
-    this(drivetrain, limelight, DEFAULT_MAXANGLE, joystickInput);
+    this(drivetrain, limelight, DEFAULT_MAXANGLE, joystickInput, true);
   }
-  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, double acceptableAngle, DoubleSupplier joystickInput) {
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, double acceptableAngle, DoubleSupplier joystickInput, boolean near) {
     lime = limelight;
     dt = drivetrain;
     this.errorToleranceAngle = acceptableAngle;
     this.joystickInput = joystickInput;
+    if (near) {
+      P = P_NEAR;
+      I = I_NEAR;
+    } else {
+      P = P_FAR;
+      I = I_FAR;
+    }
     manualControl = true;
 
     addRequirements(drivetrain);
@@ -90,6 +99,7 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     lime.enableLimelight();
 
     pid.setTolerance(errorToleranceAngle);
+    pid.setIntegratorRange(-MAX_INTEGRAL, MAX_INTEGRAL);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
