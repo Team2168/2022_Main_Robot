@@ -24,7 +24,8 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   private PIDController pid;
   private DoubleSupplier joystickInput;
 
-  private double errorToleranceAngle = 0.5; // in degrees
+  private static double DEFAULT_MAXANGLE = 0.5;
+  private double errorToleranceAngle; // in degrees
   private double limeAngle;
   private int withinThresholdLoops = 0;
   private int acceptableLoops = 10;
@@ -64,9 +65,18 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     manualControl = false;
   }
 
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, double acceptableAngle) {
+    this(drivetrain, limelight, acceptableAngle, () -> 0.0);
+    manualControl = false;
+  }
+
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, DoubleSupplier joystickInput) {
+    this(drivetrain, limelight, DEFAULT_MAXANGLE, joystickInput);
+  }
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, double acceptableAngle, DoubleSupplier joystickInput) {
     lime = limelight;
     dt = drivetrain;
+    this.errorToleranceAngle = acceptableAngle;
     this.joystickInput = joystickInput;
     manualControl = true;
 
@@ -121,6 +131,6 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (Math.abs(limeAngle) < errorToleranceAngle && withinThresholdLoops >= acceptableLoops && !manualControl); // command does not need to finish if bound to a button
+    return (withinThresholdLoops >= acceptableLoops && !manualControl); // command does not need to finish if bound to a button
   }
 }
