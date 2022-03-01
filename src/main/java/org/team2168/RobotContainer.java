@@ -203,40 +203,40 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
-    indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
+    // indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
-    oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
+    // oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));
 
-    oi.testJoystick.ButtonX().whenPressed(new ParallelCommandGroup(
-            new HoodToAngle(hood, 0.0),
-            new SetShooterSpeed(shooter, 0.0)
-    ));
+    // oi.testJoystick.ButtonX().whenPressed(new ParallelCommandGroup(
+    //         new HoodToAngle(hood, 0.0),
+    //         new SetShooterSpeed(shooter, 0.0)
+    // ));
 
-    oi.testJoystick.ButtonY().whenPressed(new HoodToAngle(hood, HoodPosition.TARMAC_LINE.position_degrees));
-    oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, HoodPosition.LAUNCHPAD.position_degrees));
-    oi.testJoystick.ButtonA().whenHeld(new DriveWithLimelight(drivetrain, lime, 2.0, true));
+    // oi.testJoystick.ButtonY().whenPressed(new HoodToAngle(hood, HoodPosition.TARMAC_LINE.position_degrees));
+    // oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, HoodPosition.LAUNCHPAD.position_degrees));
+    // oi.testJoystick.ButtonA().whenHeld(new DriveWithLimelight(drivetrain, lime, 2.0, true));
 
-    // oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    // oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
-    // oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
-    // oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
+    // // oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    // // oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
+    // // oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
+    // // oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
-    oi.testJoystick.ButtonLeftBumper()
-            .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
-            // .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
-            .whenPressed(new IntakeLower(intakeRaiseAndLower))
-            .whenReleased(new IntakeRaise(intakeRaiseAndLower))
-            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
-            .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
-            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+    // oi.testJoystick.ButtonLeftBumper()
+    //         .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         // .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whenPressed(new IntakeLower(intakeRaiseAndLower))
+    //         .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
-    oi.testJoystick.ButtonRightBumper()
-            .whileHeld(new FireBalls(shooter, indexer, hopper))
-            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
-            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
-            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+    // oi.testJoystick.ButtonRightBumper()
+    //         .whileHeld(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
-    oi.testJoystick.ButtonLeftDPad().whenPressed(new Launchpad(hood, shooter, lime));
+    // oi.testJoystick.ButtonLeftDPad().whenPressed(new Launchpad(hood, shooter, lime));
 
   }
 
