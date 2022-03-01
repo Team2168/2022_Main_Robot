@@ -105,16 +105,17 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     public String getColorName() {
         return getColor().name();
     }
-
+    
     public Alliance getColor() {
-        normRaw();
-            //TODO figure out this bottom val
-        if(Math.abs(bNorm - gNorm) < 20 && rNorm == MaxVal)
-            return Alliance.Invalid;
-        else if (rNorm == MaxVal)//(data.red > data.blue)
-            return Alliance.Red;
+        Alliance color;
+        normRaw();      
+       if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
+            color = Alliance.Invalid;
+       else if(rNorm==255)
+            color = Alliance.Red;
         else
-            return Alliance.Blue;//   return Alliance.Invalid;
+            color = Alliance.Blue;//   return Alliance.Invalid;
+        return color;
     }
 
     @Log(name = "Is team color?")
