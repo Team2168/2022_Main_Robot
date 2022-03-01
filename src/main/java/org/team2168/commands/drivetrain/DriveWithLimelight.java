@@ -15,12 +15,14 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
+import java.util.function.DoubleSupplier;
+
 public class DriveWithLimelight extends CommandBase implements Loggable {
   /** Creates a new DriveWithLimelight. */
   private Drivetrain dt;
   private Limelight lime;
-  private OI oi;
   private PIDController pid;
+  private DoubleSupplier joystickInput;
 
   private double errorToleranceAngle = 0.5; // in degrees
   private double limeAngle;
@@ -33,7 +35,7 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   @Log(name = "P")
   private double P = 0.02;
   @Log(name = "I")
-  private double I = 0.0;
+  private double I = 0.002;
   @Log(name = "D")
   private double D = 0.0;
 
@@ -51,34 +53,31 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   }
 
   //determines whether joystick should be used or not
-  private boolean inTeleop;
+  private boolean manualControl;
 
   //speed of drivetrain rotation
+  @Log(name = "Turn Speed")
   private double driveLimeTurnSpeed;
 
-  @Log(name = "Turn Speed")
-  private double getLimeTurnSpeed() {
-    return driveLimeTurnSpeed;
-  }
-  
   public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight) {
-    this(drivetrain, limelight, false);
+    this(drivetrain, limelight, () -> 0.0);
+    manualControl = false;
   }
 
-  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, boolean inTeleop) {
+  public DriveWithLimelight(Drivetrain drivetrain, Limelight limelight, DoubleSupplier joystickInput) {
     lime = limelight;
     dt = drivetrain;
-    this.inTeleop = inTeleop;
+    this.joystickInput = joystickInput;
+    manualControl = true;
+
+    addRequirements(drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    oi = OI.getInstance();
     pid = new PIDController(P, I, D);
-    if (!lime.isLimelightEnabled()) {
-      lime.enableLimelight();
-    }
+    lime.enableLimelight();
 
     pid.setTolerance(errorToleranceAngle);
   }
@@ -94,6 +93,7 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     else {
       withinThresholdLoops = 0;
     }
+
     if (limeAngle < -errorToleranceAngle) {
       driveLimeTurnSpeed = -(pid.calculate(limeAngle) + MINIMUM_COMMAND);
     }
@@ -105,23 +105,22 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
     }
 
     if (withinThresholdLoops < acceptableLoops) {
-      dt.arcadeDrive(0.0, driveLimeTurnSpeed);
+      dt.arcadeDrive(joystickInput.getAsDouble(), driveLimeTurnSpeed);
     }
-    System.out.println(driveLimeTurnSpeed);
-    SmartDashboard.putNumber("driveLimeTurnSpeed", driveLimeTurnSpeed);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (inTeleop) {
+    if (manualControl) {
       lime.pauseLimelight();
     }
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { 
-    return (withinThresholdLoops <= acceptableLoops && !inTeleop); // command does not need to finish if bound to a button
+  public boolean isFinished() {
+    return (Math.abs(limeAngle) < errorToleranceAngle && withinThresholdLoops >= acceptableLoops && !manualControl); // command does not need to finish if bound to a button
   }
 }
