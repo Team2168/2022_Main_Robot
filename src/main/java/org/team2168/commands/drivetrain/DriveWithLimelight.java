@@ -35,7 +35,7 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   @Log(name = "P")
   private double P = 0.02;
   @Log(name = "I")
-  private double I = 0.0;
+  private double I = 0.002;
   @Log(name = "D")
   private double D = 0.0;
 
