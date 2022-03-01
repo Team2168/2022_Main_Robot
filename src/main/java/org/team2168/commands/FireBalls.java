@@ -28,16 +28,14 @@ public class FireBalls extends SequentialCommandGroup {
 
     addCommands(
       new WaitForShooterAtSpeed(shooter),
-      race(
+      race( // Make sure the ball is queued up near the top before starting sequence 
+        new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+        new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
+      ),
+      race( // Run indexer until the ball is gone
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
         new DriveIndexerUntilNoBall(indexer, Constants.MotorSpeeds.INTAKE_SPEED)
-      ),
-
-      race(
-      new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
-      new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED).withTimeout(0.5)
       )
     );
-
   }
 }

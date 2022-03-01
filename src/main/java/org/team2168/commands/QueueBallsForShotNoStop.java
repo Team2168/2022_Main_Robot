@@ -27,8 +27,6 @@ public class QueueBallsForShotNoStop extends CommandBase {
 
     @Override
     public void execute() {
-        intakeRoller.setRollerSpeed(Constants.MotorSpeeds.INTAKE_SPEED);
-        hopper.driveHopper(Constants.MotorSpeeds.HOPPER_SPEED);
 //        if (hopper.isBallPresent()) {
 ////            hopper.driveHopper(0.0);
 ////            if (!colorSensor.isTeamColor()) {
@@ -46,6 +44,14 @@ public class QueueBallsForShotNoStop extends CommandBase {
             indexer.drive(Constants.MotorSpeeds.INDEXER_SPEED);
         }
 
+        if (indexer.isBallPresent() && hopper.isBallPresent()) {
+            indexer.drive(0.0);
+            intakeRoller.setRollerSpeed(0.0);
+        } else {
+            hopper.driveHopper(Constants.MotorSpeeds.HOPPER_SPEED);
+            intakeRoller.setRollerSpeed(Constants.MotorSpeeds.INTAKE_SPEED);
+        }
+
     }
 
     @Override
@@ -56,6 +62,8 @@ public class QueueBallsForShotNoStop extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-
+        indexer.drive(0.0);
+        intakeRoller.setRollerSpeed(0.0);
+        indexer.drive(0.0);
     }
 }

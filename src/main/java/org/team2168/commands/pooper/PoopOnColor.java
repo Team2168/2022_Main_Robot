@@ -1,11 +1,7 @@
 package org.team2168.commands.pooper;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import org.team2168.Constants;
-import org.team2168.commands.pooper.PooperPoop;
 import org.team2168.subsystems.Hopper;
-import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Pooper;
 
@@ -24,17 +20,13 @@ public class PoopOnColor extends CommandBase {
     }
 
     @Override
-    public void initialize() {
-
-    }
+    public void initialize() {}
 
     @Override
     public void execute() {
-            if (!colorSensor.isTeamColor()) {
-                pooper.extend();
-            
-            }
-        
+        if (!colorSensor.isTeamColor()) {
+            pooper.extend();
+        }
     }
 
     @Override

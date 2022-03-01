@@ -37,30 +37,35 @@ public class ThreeBall extends SequentialCommandGroup {
                         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                         PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
                 ),
-                new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                 new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
 
                 new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                 new WaitForShooterAtSpeed(shooter),
                 new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
-                new DriveWithLimelight(drivetrain, lime, 2.0, true),
+                new DriveWithLimelight(drivetrain, lime, 1.5, true),
                 new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                 new FireBalls(shooter, indexer, hopper),
-                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                new WaitForShooterAtSpeed(shooter),
                 new FireBalls(shooter, indexer, hopper),
 
 
                 new IntakeLower(intakeRaiseAndLower),
-                new Launchpad(hood, shooter, lime),
+                // new Launchpad(hood, shooter, lime),
+                new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
                 race (
-                new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                PathUtil.getPathCommand(paths.path_3Ball_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                        sequence(
+                                PathUtil.getPathCommand(paths.path_3Ball_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
+                                // PathUtil.getPathCommand(paths.path_3Ball_2, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
+                                new DriveWithLimelight(drivetrain, lime, 1.5, false)
+                        )
                 ),
-                new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
-                parallel (
-                        new DriveWithLimelight(drivetrain, lime, 0.5, false),
-                        new WaitForShooterAtSpeed(shooter)
-                ).withTimeout(5),
+                
+                // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
+                new FireBalls(shooter, indexer, hopper),
+                new InstantCommand(() -> System.out.println("fired!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                 new FireBalls(shooter, indexer, hopper)
         );
     }

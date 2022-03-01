@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.DoubleFunction;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import org.team2168.commands.SysIDCommand;
+
 import org.team2168.commands.auto.*;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.subsystems.Drivetrain;
@@ -20,6 +20,7 @@ import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.*;
 import org.team2168.commands.indexer.*;
 import org.team2168.commands.intakeraiseandlower.*;
+import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.*;
 import org.team2168.commands.shooter.*;
@@ -180,9 +181,13 @@ public class RobotContainer {
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+            .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+            // .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whenPressed(new IntakeLower(intakeRaiseAndLower))
-            .whenReleased(new IntakeRaise(intakeRaiseAndLower));
+            .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
     oi.operatorJoystick.ButtonRightBumper()
             .whileHeld(new FireBalls(shooter, indexer, hopper))
@@ -204,13 +209,27 @@ public class RobotContainer {
     oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, HoodPosition.LAUNCHPAD.position_degrees));
     oi.testJoystick.ButtonA().whenHeld(new DriveWithLimelight(drivetrain, lime, 2.0, true));
 
-    oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
-    oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
+    // oi.testJoystick.ButtonLeftDPad().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    // oi.testJoystick.ButtonRightDPad().whenPressed(new RetractMonkeyBar(monkeyBar));
+    // oi.testJoystick.ButtonStart().whenPressed(new DriveClimberToZero(climber));
+    // oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller));
+    oi.testJoystick.ButtonLeftBumper()
+            .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+            // .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+            .whenPressed(new IntakeLower(intakeRaiseAndLower))
+            .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
-    oi.testJoystick.ButtonBack().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
+    oi.testJoystick.ButtonRightBumper()
+            .whileHeld(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+
+    oi.testJoystick.ButtonLeftDPad().whenPressed(new Launchpad(hood, shooter, lime));
 
   }
 
