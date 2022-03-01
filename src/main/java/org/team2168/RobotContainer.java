@@ -196,7 +196,10 @@ public class RobotContainer {
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
 
-    oi.operatorJoystick.ButtonLeftTrigger().whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
+    oi.operatorJoystick.ButtonLeftTrigger()
+            .whenPressed(new HoodToAngle(hood, 0.0))
+            .whenPressed(new SetShooterSpeed(shooter, 0.0))
+            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
 
     //TEST JOYSTICK
