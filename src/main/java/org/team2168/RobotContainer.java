@@ -142,7 +142,7 @@ public class RobotContainer {
 
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
-    oi.driverJoystick.ButtonB().whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger));
+    oi.driverJoystick.ButtonLeftStick().whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger));
 
     //// Green button
     // oi.driverJoystick.ButtonLeftStick()
@@ -150,7 +150,10 @@ public class RobotContainer {
     //        .whenReleased(new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0));
 
     //// Black button
-    // oi.driverJoystick.ButtonRightBumper().whenPressed(new AutoClimbFullSend());
+    oi.driverJoystick.ButtonRightBumper()
+            .whenPressed(new HoodToAngle(hood, 0.0))
+            .whenPressed(new SetShooterSpeed(shooter, 0.0))
+            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
     //// Red button
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood));
@@ -194,12 +197,6 @@ public class RobotContainer {
             //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
-
-
-    oi.operatorJoystick.ButtonLeftTrigger()
-            .whenPressed(new HoodToAngle(hood, 0.0))
-            .whenPressed(new SetShooterSpeed(shooter, 0.0))
-            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
 
     //TEST JOYSTICK

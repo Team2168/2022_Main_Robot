@@ -126,6 +126,8 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
 
     if (withinThresholdLoops < acceptableLoops) {
       dt.arcadeDrive(joystickInput.getAsDouble(), driveLimeTurnSpeed);
+    } else if (manualControl) {
+      dt.arcadeDrive(joystickInput.getAsDouble(), 0.0);  // still drive fwd & back if you're within threshold
     }
     
   }
