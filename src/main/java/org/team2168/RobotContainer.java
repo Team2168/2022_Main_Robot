@@ -138,7 +138,7 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter));
+    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter, climber));
 
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
@@ -156,7 +156,7 @@ public class RobotContainer {
             .whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
 
     //// Red button
-    oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood));
+    oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
 
 
     //OPERATOR CONTROLS
