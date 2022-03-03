@@ -198,6 +198,10 @@ public class RobotContainer {
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
+    oi.operatorJoystick.ButtonLeftTrigger()
+            .whenPressed(new HoodToAngle(hood, 0.0))
+            .whenPressed(new SetShooterSpeed(shooter, 0.0));
+
 
     //TEST JOYSTICK
     // indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
