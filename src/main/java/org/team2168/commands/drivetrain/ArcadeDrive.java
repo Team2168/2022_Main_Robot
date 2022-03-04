@@ -31,7 +31,7 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    dt.arcadeDrive(0.85 * speed.getAsDouble(), turn.getAsDouble());
+    dt.arcadeDrive(speed.getAsDouble(), turn.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
