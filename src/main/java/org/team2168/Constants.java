@@ -97,9 +97,9 @@ public final class Constants {
     }
     
     public static final class LiftPositions {
-        public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
+        public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 30.1;
         public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.67;
-        public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 21.0;
+        public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 19.0;
 
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
         public static final double LIFT_ARREST_SING_INCHES = 1.8;
