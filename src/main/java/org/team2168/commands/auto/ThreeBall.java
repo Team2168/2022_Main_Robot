@@ -3,12 +3,15 @@ package org.team2168.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
+import org.team2168.Constants;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.Launchpad;
 import org.team2168.commands.shootingpositions.TarmacLine;
@@ -64,9 +67,16 @@ public class ThreeBall extends SequentialCommandGroup {
                 
                 // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                 new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                new FireBalls(shooter, indexer, hopper),
+                race (
+                        new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
+                        new FireBalls(shooter, indexer, hopper)
+                ),
+                
                 new InstantCommand(() -> System.out.println("fired!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                new FireBalls(shooter, indexer, hopper)
+                race (
+                        new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
+                        new FireBalls(shooter, indexer, hopper)
+                )
         );
     }
 }
