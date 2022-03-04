@@ -26,7 +26,7 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
   public ClimbToTraverseBar(Climber climb, MonkeyBar monkey) {
     addCommands(
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARREST_SING_INCHES),
-      new Sleep().withTimeout(1.5), //stay connected with the climber bars to slow the swing down
+      new Sleep().withTimeout(1.85), //stay connected with the climber bars to slow the swing down
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
