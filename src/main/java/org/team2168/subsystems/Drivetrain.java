@@ -47,8 +47,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private static Drivetrain instance = null;
 
     private static final boolean ENABLE_CURRENT_LIMIT = true;
-    private static final double CONTINUOUS_CURRENT_LIMIT = 40; // amps
-    private static final double TRIGGER_THRESHOLD_LIMIT = 60; // amp
+    private static final double CONTINUOUS_CURRENT_LIMIT = 35; // amps
+    private static final double TRIGGER_THRESHOLD_LIMIT = 40; // amp
     private static final double TRIGGER_THRESHOLD_TIME = 0.2; // s
     private final static double NEUTRALDEADBAND = 0.001;
 

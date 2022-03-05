@@ -193,7 +193,7 @@ public class RobotContainer {
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
     oi.operatorJoystick.ButtonRightBumper()
-            .whileHeld(new FireBalls(shooter, indexer, hopper))
+            .whenPressed(new FireBalls(shooter, indexer, hopper))
             //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));

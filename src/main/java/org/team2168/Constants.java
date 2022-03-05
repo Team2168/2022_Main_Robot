@@ -109,6 +109,7 @@ public final class Constants {
 
         public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 45.0;
         public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 40.0;
+        public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
     }
 
     public static final double LOOP_TIMESTEP_S = 0.02;
