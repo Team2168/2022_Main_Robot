@@ -4,7 +4,10 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -79,6 +82,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final double DEGREES_PER_REV = 360.0;
     public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+
+    private double setPointPosition_sensorUnits;
+    private double setPointHeading_sensorUnits;
 
     /**
      * Gets the singleton instance of the drivetrain
@@ -190,6 +196,51 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         odometry.update(rot, getLeftEncoderDistance(), getRightEncoderDistance());
     }
 
+    public void switchGains(boolean straightmode)
+    {
+      if(straightmode) {
+        /* Motion Magic Configs */
+        rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second 
+        rightMotor1.configMotionCruiseVelocity((int) (incheaPerSecToTicksPer100ms(10.0*12.0))); //distance units per 100 ms
+            /* FPID for Heading */
+        rightMotor1.config_kF(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kF, DrivetrainConstants.kTimeoutMs);
+        rightMotor1.config_kP(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kP, Drivetrain.kTimeoutMs);
+        rightMotor1.config_kI(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kI, Drivetrain.kTimeoutMs);
+        rightMotor1.config_kD(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kD, Drivetrain.kTimeoutMs);
+        rightMotor1.config_IntegralZone(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kIzone, Constants.kTimeoutMs);
+        rightMotor1.configClosedLoopPeakOutput(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kPeakOutput, Constants.kTimeoutMs);
+  
+        rightMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
+        rightMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
+        rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+        rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+        leftMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
+        leftMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
+        leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+        leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+      } else {
+        //gains used when turning in place
+        /* Motion Magic Configs */
+        rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second 
+        rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
+        rightMotor1.config_kF(Constants.Drivetrain.SLOT_1, Constants.kGains_Turning.kF,Constants.kTimeoutMs);
+        rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Turning.kP,Constants.kTimeoutMs);
+        rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Turning.kI,Constants.kTimeoutMs);
+        rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Turning.kD,Constants.kTimeoutMs);
+        rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning.kIzone, Constants.kTimeoutMs);
+        rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning.kPeakOutput, Constants.kTimeoutMs);
+
+        rightMotor1.configNominalOutputForward(0.13, Constants.kTimeoutMs);
+        rightMotor1.configNominalOutputReverse(-0.13, Constants.kTimeoutMs);
+        rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+        rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+        leftMotor1.configNominalOutputForward(0.13, Constants.kTimeoutMs);
+        leftMotor1.configNominalOutputReverse(-0.13, Constants.kTimeoutMs);
+        leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
+        leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
+      }
+    }
+
     /**
      * Gets the odometry pose
      * 
@@ -198,6 +249,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     // @Log(name = "Robot Pose", rowIndex = 3, columnIndex = 0) //Pose2d is not a supported loggable type
     public Pose2d getPose() {
         return odometry.getPoseMeters();
+    }
+
+    /**
+     * 
+     * @param vel set the cruise velocity (in/sec)
+     */
+    public void setCruiseVelocity(double vel) {
+        rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(vel))); //distance units per 100 ms
     }
 
     /**
@@ -295,6 +354,38 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return ticksToMeters(getRightEncoderDistanceRaw());
     }
 
+    public void setSetPointPosition(double setPoint, double setAngle) {
+        setPointPosition_sensorUnits = inchesToTicks(setPoint);
+        setPointHeading_sensorUnits = degreesToTicks(setAngle);
+    
+        rightMotor1.set(ControlMode.MotionMagic, setPointPosition_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
+        rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
+        rightMotor3.follow(rightMotor1, FollowerType.PercentOutput);
+        leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor3.follow(rightMotor1, FollowerType.AuxOutput1);
+      }
+    
+      public void setSetPointHeadingTeleop(double speed, double setAngle) {
+        setPointHeading_sensorUnits = degreesToTicks(setAngle);
+    
+        rightMotor1.set(ControlMode.PercentOutput, speed, DemandType.AuxPID, setPointHeading_sensorUnits);
+        rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
+        rightMotor3.follow(rightMotor1, FollowerType.PercentOutput);
+        leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor3.follow(rightMotor1, FollowerType.AuxOutput1);
+      }
+
+    public double getErrorPosition() {
+        return ticksToInches(setPointPosition_sensorUnits-rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_PRIMARY));
+        //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
+    }
+    
+    public double getErrorHeading() {
+        return ticksToDegrees(setPointHeading_sensorUnits-rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_TURN)); 
+    }
+
     /**
      * Zeroes gyro heading
      */
@@ -383,6 +474,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return ticksToMeters(getRightEncoderRateRaw()) * 10.0;
     }
 
+    private double inchesToTicks(double setpoint) {
+        return (setpoint * TICKS_PER_REV * GEAR_RATIO) / WHEEL_CIRCUMFERENCE;
+    }
+
+    private double inchesPerSecToTicksPer100ms(double setpoint) {
+        return inchesToTicks(setpoint) / 10.0;
+    }
+
     private double ticksToInches(double setpoint) {
         return (setpoint * WHEEL_CIRCUMFERENCE) / (TICKS_PER_REV * GEAR_RATIO);
     }
@@ -390,6 +489,21 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private double ticksToMeters(double ticks) {
         // the cheezy poofs have been colluding to get inside of our codebase
         return ticksToInches(ticks) * 0.0254;
+    }
+
+    /**
+     * Converts a setpoint in degrees to IMU 'encoder ticks'
+     * @param setpoint
+     * @return
+     */
+    private double degreesToTicks(double setpoint) {
+        // return (setpoint / DEGREES_PER_REV) * PIGEON_UNITS_PER_ROTATION / 2.0;
+        return setpoint * 10.0;
+    }
+
+    private double ticksToDegrees(double setpoint) {
+        // return (setpoint / PIGEON_UNITS_PER_ROTATION) * DEGREES_PER_REV * 2.0; 
+        return setpoint / 10.0;
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
