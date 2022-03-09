@@ -4,6 +4,7 @@
 
 package org.team2168.commands.hopper;
 
+import org.team2168.Constants.MotorSpeeds;
 import org.team2168.subsystems.Hopper;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -39,6 +40,6 @@ public class DriveHopperUntilBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return hopper.isBallEnteringHopper();
+    return hopper.isBallPresent();
   }
 }

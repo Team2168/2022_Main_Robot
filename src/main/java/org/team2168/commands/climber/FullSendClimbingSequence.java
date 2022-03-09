@@ -4,25 +4,22 @@
 
 package org.team2168.commands.climber;
 
-import org.team2168.commands.monkeybar.ExtendMonkeyBar;
-import org.team2168.commands.monkeybar.RetractMonkeyBar;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.MonkeyBar;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ClimbingSequence extends SequentialCommandGroup {
-  /** Creates a new ClimbingSequence. */
-  Climber climb = Climber.getInstance();
-  MonkeyBar monkey = MonkeyBar.getInstance();
-  public ClimbingSequence() {
+public class FullSendClimbingSequence extends SequentialCommandGroup {
+
+  public FullSendClimbingSequence(Climber climber, MonkeyBar monkeyBar) {
     addCommands(
-      new HangOnMidBar(climb),
-      new ClimbWithMonkeyBars(climb, monkey),
-      new ClimbWithMonkeyBars(climb, monkey));
+      new DriveClimberToZero(climber).withTimeout(2.0),
+      new HangOnMidBar(climber),
+      new ClimbToHighBar(climber, monkeyBar),
+      new ClimbToTraverseBar(climber, monkeyBar)
+    );
   }
 }

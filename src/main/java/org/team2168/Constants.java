@@ -4,6 +4,7 @@
 
 package org.team2168;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
@@ -25,10 +26,9 @@ public final class Constants {
     }
 
     public static final class CANDevices {
-
         public static final int DRIVETRAIN_RIGHT_MOTOR_1 = 17;
-        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 18;
-        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 19;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_2 = 19;
+        public static final int DRIVETRAIN_RIGHT_MOTOR_3 = 18;
         public static final int DRIVETRAIN_LEFT_MOTOR_1 = 0;
         public static final int DRIVETRAIN_LEFT_MOTOR_2 = 1;
         public static final int DRIVETRAIN_LEFT_MOTOR_3 = 2;
@@ -44,15 +44,40 @@ public final class Constants {
         public static final int PIGEON_IMU = 20;
     }
 
+    public static final class Drivetrain {
+        public static final double ksVolts = 2.214;
+        public static final double kvVoltSecondsPerMeter = 2.0704;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.2426;
+        public static final double kPDriveVel = 2.7258; // @1.4 m/s max error
+
+        public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295/Actual = 0.65563;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
+
+        public static final double kMaxSpeedMetersPerSecond = 4.2;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.6;  // 3.0 is feasable?
+
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
+        public static final double kRamseteZeta = 0.7; // worked for 1m/s 0.9; //stock 0.7 worked straight @ 0.85
+
+        public static final double MAX_VOLTAGE = 10.0;
+        public static final double MAX_VELOCITY = 3.7;  // 4.8 works on a crispy battery; 3.7 slow but steady
+        public static final double MAX_ACCEL = 0.7;  // 1.4 works on a crispy battery; 0.7 slow but steady
+    }
+
     public static final class PneumaticsDevices {
-        public static final int MONKEYBAR_EXTEND = 1;
         public static final int MONKEYBAR_RETRACT = 0;
-        public static final int TEST_RETRACT = 14; 
-        public static final int TEST_EXTEND = 15;
+        public static final int MONKEYBAR_EXTEND = 1;
         public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
         public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
+        public static final int RED_LED = 5;
+        public static final int GREEN_LED = 6;
+        public static final int BLUE_LED = 7;
         public static final int INTAKE_RAISE = 12;
         public static final int INTAKE_LOWER = 13;
+        public static final int TEST_RETRACT = 14; 
+        public static final int TEST_EXTEND = 15;
 
         public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.REVPH;
     }
@@ -72,10 +97,19 @@ public final class Constants {
     }
     
     public static final class LiftPositions {
-        public static final double LIFT_ABOVE_BAR_EXTENSION_INCHES = 27.67;
+        public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
+        public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.67;
+        public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 19.0;
+
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
+        public static final double LIFT_ARREST_SING_INCHES = 1.8;
         public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
+        public static final double LIFT_ZERO_INCHES = 0.0;
+
+        public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 45.0;
+        public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 40.0;
+        public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
     }
 
     public static final double LOOP_TIMESTEP_S = 0.02;

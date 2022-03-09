@@ -12,6 +12,10 @@ public class BumpShooterSpeedZero extends CommandBase {
   /** Creates a new BumpShooterSpeedZero. */
   private Shooter shooter;
 
+  /**
+   * Sets the bump amount to zero
+   * @param s the shooter instance
+   */
   public BumpShooterSpeedZero(Shooter s) {
     shooter = s;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,7 +28,7 @@ public class BumpShooterSpeedZero extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.zeroSpeed();
+    shooter.setSpeed(0.0);
   }
 
   // Called once the command ends or is interrupted.

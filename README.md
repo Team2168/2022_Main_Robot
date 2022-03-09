@@ -53,6 +53,9 @@
   Determines if the ball in the hopper area matches our alliance color.
 
   * color-sensor for ball color detection
+  * wiring map:
+  ![image](images/color_sensor_wire_map.png)
+
 * Climber - `Aiden`  
   Linear lift that can raise/lower to perform the climb.
 
