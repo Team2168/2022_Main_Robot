@@ -83,6 +83,11 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.configNeutralDeadband(0.01);
 
+    turretMotor.configForwardSoftLimitThreshold(MAX_ROTATION_TICKS);
+    turretMotor.configReverseSoftLimitThreshold(-MAX_ROTATION_TICKS);
+    turretMotor.configForwardSoftLimitEnable(true, 0);
+    turretMotor.configReverseSoftLimitEnable(true, 0);
+
     turretMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
     turretMotor.config_kF(kPIDLoopIdx, kGains.kF, kTimeoutMs);
