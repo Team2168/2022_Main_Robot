@@ -155,7 +155,6 @@ public class Hopper extends SubsystemBase implements Loggable {
   }
 
   /**
-   * @param Sensor position 
    */
   public void zeroEncoder() {
     hopperMotor.setSelectedSensorPosition(0.0);
@@ -167,7 +166,7 @@ public class Hopper extends SubsystemBase implements Loggable {
  * @return If ball enters hopper
  */
  @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
-    public boolean isBallEnteringHopper() {
+    public boolean isBallPresent() {
       return !hopperLineBreak.get();
   }
 
@@ -196,13 +195,6 @@ public class Hopper extends SubsystemBase implements Loggable {
 public double getHopperRPM() {
   return (hopperMotor.getSelectedSensorVelocity() / TICKS_PER_REV * 600);
 }
-
-  public void ballEnteringHopper() {
-    if (isBallEnteringHopper()) {
-      driveHopper(0.0);
-      driveHopperVelocity(0.0);
-    }
-  }
 
   @Override
   public void periodic() {

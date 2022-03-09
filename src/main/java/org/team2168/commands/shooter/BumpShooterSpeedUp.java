@@ -13,9 +13,8 @@ public class BumpShooterSpeedUp extends CommandBase {
   private Shooter shooter;
 
   /**
-   * Bumps the Shooter speed
-   * @param s The shooter to be used
-   * @param bumpAmount the amount in RPM the shooter should be changed
+   * Bumps the Shooter speed up
+   * @param s the shooter instance
    */
   public BumpShooterSpeedUp(Shooter s) {
     shooter = s;
@@ -29,7 +28,8 @@ public class BumpShooterSpeedUp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.incrementSpeed();
+    var setpoint = shooter.getSetPoint() + 50.0;
+    shooter.setSpeed(setpoint);
   }
 
   // Called once the command ends or is interrupted.

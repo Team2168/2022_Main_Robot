@@ -29,7 +29,7 @@ public class ClimbWithMonkeyBars extends SequentialCommandGroup {
     addCommands(
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ABOVE_BAR_EXTENSION_INCHES),
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
       new CheckClimberHookAttached(climb),
       new RetractMonkeyBar(monkey),
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES));
