@@ -88,8 +88,7 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
 
-  private double setPoint;
-
+  private double setPoint_RPM;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -140,7 +139,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     /* Config the Velocity closed loop gains in slot0 */
 
     _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
-//    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/7512, kTimeoutMs);  // TODO this is compbot
+    // _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/7512, kTimeoutMs);  // TODO this is compbot
 
     // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
     _motorRight.config_kP(kPIDLoopIdx, 0.25, kTimeoutMs);
@@ -158,12 +157,10 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      this.setPoint = setPoint;
+      this.setPoint_RPM = setPoint;
       var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
-
-
 
   /**
    * Convert speed in motor units per 100ms to RPM
@@ -194,8 +191,12 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
+  /**
+   * 
+   * @return target speed in RPM
+   */
   public double getSetPoint() {
-    return setPoint;
+    return setPoint_RPM;
   }
 
   /**
@@ -219,9 +220,8 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public boolean isAtSpeed(double errorTolerance) {
     this.errorTolerance = errorTolerance;
-    return Math.abs(getError()) < errorTolerance;
+    return (Math.abs(getError()) < errorTolerance) && (getSetPoint() != 0.0);
   }
-
 
   /**
    * Checks if the shooter is at speed.
