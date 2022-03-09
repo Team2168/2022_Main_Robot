@@ -48,6 +48,14 @@ Follow the installation steps here: https://docs.wpilib.org/en/stable/docs/zero-
 
 A shortcut should be added to your desktop named: `2022 WPILib VS Code`.
 
+### Install PathPlanner:
+
+If you plan to create autonomous routines, install pathplanner (Version 2022.1.0).
+
+Download the `pathplanner-<platform>.zip` from: https://github.com/mjansen4857/pathplanner/releases/tag/v2022.1.0
+
+**Do not download from the Windows/Mac App store!  These versions will automatically update.**
+
 ### Clone the Repo:
 
 From `git bash`:

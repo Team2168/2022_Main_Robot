@@ -4,6 +4,7 @@
 
 package org.team2168.commands.LEDs;
 
+import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.LEDs;
 import org.team2168.subsystems.Shooter;
 
@@ -13,10 +14,12 @@ public class ShowShooterAtSpeed extends CommandBase {
   /** Creates a new ShowShooterAtSpeed. */
   private LEDs leds;
   private Shooter shooter;
+  private Climber climber;
 
-  public ShowShooterAtSpeed(LEDs leds, Shooter shooter) {
+  public ShowShooterAtSpeed(LEDs leds, Shooter shooter, Climber climber) {
     this.leds = leds;
     this.shooter = shooter;
+    this.climber = climber;
 
     addRequirements(leds);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,7 +32,11 @@ public class ShowShooterAtSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(shooter.isAtSpeed()) {
+    if (climber.isClimberHookAttached()) {
+      leds.red(false);
+      leds.green(false);
+      leds.blue(true);
+    } else if (shooter.isAtSpeed()) {
       leds.red(false);
       leds.green(true);
       leds.blue(false);

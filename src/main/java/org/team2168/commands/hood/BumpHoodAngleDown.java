@@ -28,7 +28,8 @@ public class BumpHoodAngleDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hood.decrementDegrees();
+    var setpoint = hood.getSetpoint() - 1.0;
+    hood.setPosition(setpoint);
   }
 
   // Called once the command ends or is interrupted.

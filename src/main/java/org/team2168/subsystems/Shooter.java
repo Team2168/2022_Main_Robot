@@ -23,11 +23,20 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    FENDER_LOW(1100.0),
+    AUTO_TARMAC_LINE(1718.0),
+    AUTO_LAUNCHPAD(2335.0),
+    FENDER_LOW(900.0),
     FENDER_HIGH(1500.0),
-    TARMAC_LINE(1650.0),
+    TARMAC_LINE(1718.0),  // 1650
     LAUNCHPAD(2085.0),
-    WALL_SHOT(2750.0);
+    WALL_SHOT(2750.0),
+    TERMINAL(2300);
+//    FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
+//    FENDER_HIGH_CBOT(1500.0),
+//    TARMAC_LINE_CBOT(1550),//PBot (1650.0),
+//    LAUNCHPAD_CBOT (1870),//PBot(2085.0),
+//    WALL_SHOT_CBOT(2500),//PBot(2750.0);
+//    TERMINAL_CBOT(2300.0);
 
     public final double rpm;
     private ShooterRPM(double rpm) {
@@ -78,7 +87,8 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
-  private static double velocityAdjustment = 0.0;
+
+  private double setPoint;
 
 
   /** Creates a new Shooter. */
@@ -128,7 +138,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.configPeakOutputReverse(0.0, kTimeoutMs); //set so that the shooter CANNOT run backwards
 
     /* Config the Velocity closed loop gains in slot0 */
+
     _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
+//    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/7512, kTimeoutMs);  // TODO this is compbot
+
     // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
     _motorRight.config_kP(kPIDLoopIdx, 0.25, kTimeoutMs);
     _motorRight.config_kI(kPIDLoopIdx, 0.0025, kTimeoutMs);
@@ -145,38 +158,11 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
+      this.setPoint = setPoint;
+      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
 
-  
-  public void setVelocityAdjustment(double adjustment) {
-    velocityAdjustment = adjustment;
-  }
-
-  public void adjustVelocity(double delta) {
-    setVelocityAdjustment(velocityAdjustment + delta);
-  }
-  /**
-   * Bumps the shooter up by 50 RPM
-   */
-  public void incrementSpeed() {
-    adjustVelocity(50.0);
-  }
-
-  /**
-   * Bumps the shooter down by 50 RPM
-   */
-  public void decrementSpeed() {
-    adjustVelocity(-50.0);
-  }
-
-  /**
-   * Sets the bump amount of the shooter to zero
-   */
-  public void zeroSpeed() {
-    setVelocityAdjustment(0.0);
-  }
 
 
   /**
@@ -206,6 +192,10 @@ public class Shooter extends SubsystemBase implements Loggable {
   @Log (name = "Speed (RPM)", rowIndex = 0, columnIndex = 0, width = 1, height = 1)
   public double getVelocity() {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
+  }
+
+  public double getSetPoint() {
+    return setPoint;
   }
 
   /**
