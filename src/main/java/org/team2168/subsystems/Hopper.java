@@ -81,14 +81,12 @@ public class Hopper extends SubsystemBase implements Loggable {
    */
   private static FlywheelSim hopperSim;
  
-    public static Hopper getInstance() {
-      if (instance == null)
-        instance = new Hopper();
-      return instance; 
-    }
+  public static Hopper getInstance() {
+    if (instance == null)
+      instance = new Hopper();
+    return instance; 
+  }
 
-
-  
   /** Creates a new Hopper. */
   private Hopper() {
     hopperMotor = new TalonFXHelper(CANDevices.HOPPER_MOTOR);
@@ -116,14 +114,13 @@ public class Hopper extends SubsystemBase implements Loggable {
     );
 
     hopperMotorSim = hopperMotor.getSimCollection();
+  }
 
-}
-
-/**
- * 
- * @param ticks
- * @return inches
- */
+  /**
+   * 
+   * @param ticks
+   * @return inches
+   */
 
   private static double ticksToInches(double ticks) {
     return ((ticks / TICKS_PER_REV) * GEAR_RATIO * INCHES_PER_REV);
@@ -162,12 +159,11 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.setSelectedSensorPosition(0.0);
   }
 
-
-/**
- * 
- * @return If ball enters hopper
- */
- @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
+  /**
+   * 
+   * @return If ball enters hopper
+   */
+  @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
     public boolean isBallPresent() {
       return !hopperLineBreak.get();
   }
@@ -184,27 +180,24 @@ public class Hopper extends SubsystemBase implements Loggable {
   /**
    * @return Hopper speed in Inches Per Second
    */
-@Log(name = "Inches Per Second", rowIndex = 1, columnIndex = 3)
+  @Log(name = "Inches Per Second", rowIndex = 1, columnIndex = 3)
   public double getHopperSpeed() {
     return hopperMotor.getSelectedSensorVelocity();
   }
 
-/**
- * 
- * @return Hopper wheel Rotations Per Minute
- */
-@Log(name = "Rotations Per Minute", rowIndex = 1, columnIndex = 4)
-public double getHopperRPM() {
-  return (hopperMotor.getSelectedSensorVelocity() / TICKS_PER_REV * 600);
-}
+  /**
+   * 
+   * @return Hopper wheel Rotations Per Minute
+   */
+  @Log(name = "Rotations Per Minute", rowIndex = 1, columnIndex = 4)
+  public double getHopperRPM() {
+    return (hopperMotor.getSelectedSensorVelocity() / TICKS_PER_REV * 600);
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-
-  
-  
 
   public void simulationPeriodic() {
 
