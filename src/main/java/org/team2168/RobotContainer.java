@@ -10,7 +10,6 @@ import java.util.function.DoubleFunction;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 import org.team2168.commands.auto.*;
-import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.subsystems.Drivetrain;
 
 import org.team2168.commands.*;
@@ -141,8 +140,15 @@ public class RobotContainer {
     leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter, climber));
 
     //DRIVER CONTROLS
-    drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+    // drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
     oi.driverJoystick.ButtonLeftStick().whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger));
+
+    if (climber.isAtUpperPosition()) {
+      drivetrain.setDefaultCommand(new ArcadeDriveWithClimberUp(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+    }
+    else {
+      drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
+    }
 
     //// Green button
     // oi.driverJoystick.ButtonLeftStick()
