@@ -202,6 +202,10 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, 0.0));
 
+    oi.operatorJoystick.ButtonRightTrigger()
+            .whenPressed(new ExtendMonkeyBar(monkeyBar))
+            .whenReleased(new RetractMonkeyBar(monkeyBar));
+
 
     //TEST JOYSTICK
     // indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
