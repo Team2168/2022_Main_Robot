@@ -9,11 +9,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 import org.team2168.utils.CanDigitalInput;
 import org.team2168.utils.Gains;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -26,7 +26,7 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Turret extends SubsystemBase implements Loggable {
   /** Creates a new Turret. */
   private static CanDigitalInput hallEffectSensor;
-  private static WPI_TalonFX turretMotor;
+  private static TalonFXHelper turretMotor;
   private static Turret instance = null;
 
   private static final double TICKS_PER_REV = 2048;
@@ -67,7 +67,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static TalonFXSimCollection turretMotorSim;
 
   private Turret() {
-    turretMotor = new WPI_TalonFX(Constants.CANDevices.TURRET_MOTOR);
+    turretMotor = new TalonFXHelper(Constants.CANDevices.TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,

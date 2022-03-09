@@ -10,11 +10,11 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -32,7 +32,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   /**
    * the hopper motor it moves the hopper
    */
-  private static WPI_TalonFX hopperMotor;
+  private static TalonFXHelper hopperMotor;
   
   /**
    * the hopperLineBreak, its lets the driver know the ball is entering the hopper
@@ -91,7 +91,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   
   /** Creates a new Hopper. */
   private Hopper() {
-    hopperMotor = new WPI_TalonFX(CANDevices.HOPPER_MOTOR);
+    hopperMotor = new TalonFXHelper(CANDevices.HOPPER_MOTOR);
     hopperLineBreak = new DigitalInput(DIO.HOPPER_LINE_BREAK);
     
 
@@ -106,6 +106,8 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.configNeutralDeadband(0.01);
 
     hopperMotor.setInverted(hopperMotorInvert);
+
+    hopperMotor.configOpenLoopStatusFrameRates();
 
     hopperSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),

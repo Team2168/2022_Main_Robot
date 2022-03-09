@@ -7,8 +7,6 @@ package org.team2168.subsystems;
 import org.team2168.Constants.PneumaticsDevices;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;
 import io.github.oblarg.oblog.Loggable;
