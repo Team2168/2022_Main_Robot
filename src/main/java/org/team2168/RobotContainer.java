@@ -4,32 +4,6 @@
 
 package org.team2168;
 
-import java.util.List;
-import java.util.function.DoubleFunction;
-
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-
-import org.team2168.commands.auto.*;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.subsystems.Drivetrain;
-
-import org.team2168.commands.*;
-import org.team2168.commands.LEDs.ShowShooterAtSpeed;
-import org.team2168.commands.climber.*;
-import org.team2168.commands.drivetrain.*;
-import org.team2168.commands.hood.*;
-import org.team2168.commands.indexer.*;
-import org.team2168.commands.intakeraiseandlower.*;
-import org.team2168.commands.intakeroller.SetIntakeSpeed;
-import org.team2168.commands.monkeybar.*;
-import org.team2168.commands.pooper.*;
-import org.team2168.commands.shooter.*;
-import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.hopper.*;
-import org.team2168.commands.turret.*;
-import org.team2168.subsystems.*;
-import org.team2168.subsystems.Hood.HoodPosition;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -47,6 +21,38 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import org.team2168.commands.FireBalls;
+import org.team2168.commands.LEDs.ShowShooterAtSpeed;
+import org.team2168.commands.QueueBallsForShotNoStop;
+import org.team2168.commands.StowEverything;
+import org.team2168.commands.SysIDCommand;
+import org.team2168.commands.auto.DoNothing;
+import org.team2168.commands.auto.pathplanner.FourBall;
+import org.team2168.commands.auto.pathplanner.Paths;
+import org.team2168.commands.auto.pathplanner.ThreeBall;
+import org.team2168.commands.auto.pathplanner.TwoBall;
+import org.team2168.commands.climber.DriveClimber;
+import org.team2168.commands.climber.FullSendClimbingSequence;
+import org.team2168.commands.drivetrain.ArcadeDrive;
+import org.team2168.commands.drivetrain.DriveWithLimelight;
+import org.team2168.commands.hood.BumpHoodAngleDown;
+import org.team2168.commands.hood.BumpHoodAngleUp;
+import org.team2168.commands.hood.HoodToAngle;
+import org.team2168.commands.hopper.DriveHopperUntilBall;
+import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
+import org.team2168.commands.indexer.DriveIndexer;
+import org.team2168.commands.indexer.DriveIndexerUntilBall;
+import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.intakeraiseandlower.IntakeRaise;
+import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.shooter.BumpShooterSpeedDown;
+import org.team2168.commands.shooter.BumpShooterSpeedUp;
+import org.team2168.commands.shooter.SetShooterSpeed;
+import org.team2168.commands.shootingpositions.*;
+import org.team2168.subsystems.*;
+
+import java.util.List;
+import java.util.function.DoubleFunction;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
