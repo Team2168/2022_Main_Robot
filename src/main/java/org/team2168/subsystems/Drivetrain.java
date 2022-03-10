@@ -35,10 +35,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private AHRS navx;
 
     private WPI_TalonFX leftMotor1;
-    private WPI_TalonFX leftMotor2;
+    //private WPI_TalonFX leftMotor2; This is removed for testing purposes
     private WPI_TalonFX leftMotor3;
     private WPI_TalonFX rightMotor1;
-    private WPI_TalonFX rightMotor2;
+    //private WPI_TalonFX rightMotor2; Read above
     private WPI_TalonFX rightMotor3;
 
     private DifferentialDrive drive;
@@ -72,7 +72,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
     public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-    public static final double GEAR_RATIO = (50.0/10.0) * (36.0/30.0);  // 6.0 : 1.0
+    public static final double GEAR_RATIO = (50.0/10.0) * (38.0/28.0);  // new ratio
     public static final double WHEEL_DIAMETER = 4.0;
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
     public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
@@ -103,10 +103,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private Drivetrain() {
         // Instantiate motor objects
         leftMotor1 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_1);
-        leftMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_2);
+        //leftMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_2);
         leftMotor3 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_3);
         rightMotor1 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_1);
-        rightMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_2);
+        //rightMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_2);
         rightMotor3 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_3);
 
         // Instantiate gyro
@@ -118,10 +118,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         // Reset the configurations on the motor controllers
         leftMotor1.configFactoryDefault();
-        leftMotor2.configFactoryDefault();
+        //leftMotor2.configFactoryDefault();
         leftMotor3.configFactoryDefault();
         rightMotor1.configFactoryDefault();
-        rightMotor2.configFactoryDefault();
+        //rightMotor2.configFactoryDefault();
         rightMotor3.configFactoryDefault();
 
         // Create a current limit
@@ -140,10 +140,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         // rightConfig.neutralDeadband = NEUTRALDEADBAND;
 
         leftMotor1.configAllSettings(leftConfig);
-        leftMotor2.configAllSettings(leftConfig);
+        //leftMotor2.configAllSettings(leftConfig);
         leftMotor3.configAllSettings(leftConfig);
         rightMotor1.configAllSettings(rightConfig);
-        rightMotor2.configAllSettings(rightConfig);
+        //rightMotor2.configAllSettings(rightConfig);
         rightMotor3.configAllSettings(rightConfig);
 
         leftMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
@@ -151,16 +151,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
         rightMotor1.enableVoltageCompensation(true);
 
-        leftMotor2.follow(leftMotor1);
+        //leftMotor2.follow(leftMotor1);
         leftMotor3.follow(leftMotor1);
-        rightMotor2.follow(rightMotor1);
+        //rightMotor2.follow(rightMotor1);
         rightMotor3.follow(rightMotor1);
         
         leftMotor1.setInverted(leftInvert);
-        leftMotor2.setInverted(InvertType.FollowMaster);
+        //leftMotor2.setInverted(InvertType.FollowMaster);
         leftMotor3.setInverted(InvertType.FollowMaster);
         rightMotor1.setInverted(rightInvert);
-        rightMotor2.setInverted(InvertType.FollowMaster);
+        //rightMotor2.setInverted(InvertType.FollowMaster);
         rightMotor3.setInverted(InvertType.FollowMaster);
 
         setMotorsBrake();
@@ -413,19 +413,19 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     public void setMotorsBrake() {
         leftMotor1.setNeutralMode(NeutralMode.Brake);
-        leftMotor2.setNeutralMode(NeutralMode.Coast);
+        //leftMotor2.setNeutralMode(NeutralMode.Coast);
         leftMotor3.setNeutralMode(NeutralMode.Coast);
         rightMotor1.setNeutralMode(NeutralMode.Brake);
-        rightMotor2.setNeutralMode(NeutralMode.Coast);
+        //rightMotor2.setNeutralMode(NeutralMode.Coast);
         rightMotor3.setNeutralMode(NeutralMode.Coast);
     }
 
     public void setMotorsBrakeAutos() {
         leftMotor1.setNeutralMode(NeutralMode.Brake);
-        leftMotor2.setNeutralMode(NeutralMode.Brake);
+        //leftMotor2.setNeutralMode(NeutralMode.Brake);
         leftMotor3.setNeutralMode(NeutralMode.Brake);
         rightMotor1.setNeutralMode(NeutralMode.Brake);
-        rightMotor2.setNeutralMode(NeutralMode.Brake);
+       //rightMotor2.setNeutralMode(NeutralMode.Brake);
         rightMotor3.setNeutralMode(NeutralMode.Brake);
     }
     
@@ -435,10 +435,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     public void setMotorsCoast() {
         leftMotor1.setNeutralMode(NeutralMode.Coast);
-        leftMotor2.setNeutralMode(NeutralMode.Coast);
+        //leftMotor2.setNeutralMode(NeutralMode.Coast);
         leftMotor3.setNeutralMode(NeutralMode.Coast);
         rightMotor1.setNeutralMode(NeutralMode.Coast);
-        rightMotor2.setNeutralMode(NeutralMode.Coast);
+        //rightMotor2.setNeutralMode(NeutralMode.Coast);
         rightMotor3.setNeutralMode(NeutralMode.Coast);
     }
 
