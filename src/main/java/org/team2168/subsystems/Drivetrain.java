@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
+import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
@@ -65,30 +66,35 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final boolean DT_REVERSE_RIGHT3 = true;
     public static final boolean DT_3_MOTORS_PER_SIDE = true;
 
-    /** Invert Directions for Left and Right */
+    /**
+     * Invert Directions for Left and Right
+     */
     TalonFXInvertType leftInvert = TalonFXInvertType.CounterClockwise; // Same as invert = "false"
     TalonFXInvertType rightInvert = TalonFXInvertType.Clockwise; // Same as invert = "true"
 
-    /** Config Objects for motor controllers */
+    /**
+     * Config Objects for motor controllers
+     */
     TalonFXConfiguration leftConfig = new TalonFXConfiguration();
     TalonFXConfiguration rightConfig = new TalonFXConfiguration();
 
     public static final double TICKS_PER_REV = 2048.0; // one event per edge on each quadrature channel
     public static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
-    public static final double GEAR_RATIO = (50.0/10.0) * (36.0/30.0);  // 6.0 : 1.0
+    public static final double GEAR_RATIO = (50.0 / 10.0) * (36.0 / 30.0);  // 6.0 : 1.0
     public static final double WHEEL_DIAMETER = 4.0;
     public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI; // inches
     public static final double PIGEON_UNITS_PER_ROTATION = 8192.0;
     public static final double DEGREES_PER_REV = 360.0;
     public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+    public static final int TIMEOUT = 30;  // 30ms
 
     private double setPointPosition_sensorUnits;
     private double setPointHeading_sensorUnits;
 
     /**
      * Gets the singleton instance of the drivetrain
-     * 
+     *
      * @return drivetrain
      */
     public static Drivetrain getInstance() {
@@ -101,7 +107,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * Creates a new Drivetrain.
      * This Drivetrain is configured to have 2 front "leader" motors, and 4 rear
      * "follower" motors
-     * 
+     * <p>
      * Each motor in the drivetrain is coupled together mechanically, so there isn't
      * much of a point in
      * giving each motor freedom.
@@ -116,7 +122,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor3 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_3);
 
         // Instantiate gyro
-        if(USE_PIGEON_GYRO) {
+        if (USE_PIGEON_GYRO) {
             pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
         } else {
             navx = new AHRS(SPI.Port.kMXP);
@@ -161,7 +167,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         leftMotor3.follow(leftMotor1);
         rightMotor2.follow(rightMotor1);
         rightMotor3.follow(rightMotor1);
-        
+
         leftMotor1.setInverted(leftInvert);
         leftMotor2.setInverted(InvertType.FollowMaster);
         leftMotor3.setInverted(InvertType.FollowMaster);
@@ -173,21 +179,21 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
         drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
-        if(USE_PIGEON_GYRO) {
-            pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 1);  // status frame in ms
+        if (USE_PIGEON_GYRO) {
+            pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 1);  // status frame in ms
             odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
         } else {
             odometry = new DifferentialDriveOdometry(navx.getRotation2d());
         }
-        
+
     }
 
     @Override
     public void periodic() {
         Rotation2d rot;
 
-        if(USE_PIGEON_GYRO) {
-            rot = pidgey.getRotation2d();    
+        if (USE_PIGEON_GYRO) {
+            rot = pidgey.getRotation2d();
         } else {
             rot = navx.getRotation2d();
         }
@@ -196,54 +202,60 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         odometry.update(rot, getLeftEncoderDistance(), getRightEncoderDistance());
     }
 
-    public void switchGains(boolean straightmode)
-    {
-      if(straightmode) {
-        /* Motion Magic Configs */
-        rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second 
-        rightMotor1.configMotionCruiseVelocity((int) (incheaPerSecToTicksPer100ms(10.0*12.0))); //distance units per 100 ms
-            /* FPID for Heading */
-        rightMotor1.config_kF(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kF, DrivetrainConstants.kTimeoutMs);
-        rightMotor1.config_kP(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kP, Drivetrain.kTimeoutMs);
-        rightMotor1.config_kI(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kI, Drivetrain.kTimeoutMs);
-        rightMotor1.config_kD(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kD, Drivetrain.kTimeoutMs);
-        rightMotor1.config_IntegralZone(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kIzone, Constants.kTimeoutMs);
-        rightMotor1.configClosedLoopPeakOutput(Drivetrain.SLOT_1, Drivetrain.kGains_Turning_Straight.kPeakOutput, Constants.kTimeoutMs);
-  
-        rightMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
-        rightMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
-        rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
-        rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-        leftMotor1.configNominalOutputForward(0.045, Constants.kTimeoutMs);
-        leftMotor1.configNominalOutputReverse(-0.045, Constants.kTimeoutMs);
-        leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
-        leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-      } else {
-        //gains used when turning in place
-        /* Motion Magic Configs */
-        rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second 
-        rightMotor1.configMotionCruiseVelocity((int) (inches_per_sec_to_ticks_per_100ms(5.0*12.0))); //distance units per 100 ms
-        rightMotor1.config_kF(Constants.Drivetrain.SLOT_1, Constants.kGains_Turning.kF,Constants.kTimeoutMs);
-        rightMotor1.config_kP(Constants.SLOT_1, Constants.kGains_Turning.kP,Constants.kTimeoutMs);
-        rightMotor1.config_kI(Constants.SLOT_1, Constants.kGains_Turning.kI,Constants.kTimeoutMs);
-        rightMotor1.config_kD(Constants.SLOT_1, Constants.kGains_Turning.kD,Constants.kTimeoutMs);
-        rightMotor1.config_IntegralZone(Constants.SLOT_1, Constants.kGains_Turning.kIzone, Constants.kTimeoutMs);
-        rightMotor1.configClosedLoopPeakOutput(Constants.SLOT_1, Constants.kGains_Turning.kPeakOutput, Constants.kTimeoutMs);
+    public void switchGains(boolean straightmode) {
+        final TalonFXConfiguration straightConfig = new TalonFXConfiguration();
+        straightConfig.slot1.kF = Constants.Drivetrain.kGains_Turning_Straight.kF;
+        straightConfig.slot1.kP = Constants.Drivetrain.kGains_Turning_Straight.kP;
+        straightConfig.slot1.kI = Constants.Drivetrain.kGains_Turning_Straight.kI;
+        straightConfig.slot1.kD = Constants.Drivetrain.kGains_Turning_Straight.kD;
+        straightConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning_Straight.kIzone;
+        straightConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning_Straight.kPeakOutput;
 
-        rightMotor1.configNominalOutputForward(0.13, Constants.kTimeoutMs);
-        rightMotor1.configNominalOutputReverse(-0.13, Constants.kTimeoutMs);
-        rightMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
-        rightMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-        leftMotor1.configNominalOutputForward(0.13, Constants.kTimeoutMs);
-        leftMotor1.configNominalOutputReverse(-0.13, Constants.kTimeoutMs);
-        leftMotor1.configPeakOutputForward(1.0, Constants.kTimeoutMs);
-        leftMotor1.configPeakOutputReverse(-1.0, Constants.kTimeoutMs);
-      }
+        final TalonFXConfiguration turnConfig = new TalonFXConfiguration();
+        turnConfig.slot1.kF = Constants.Drivetrain.kGains_Turning.kF;
+        turnConfig.slot1.kP = Constants.Drivetrain.kGains_Turning.kP;
+        turnConfig.slot1.kI = Constants.Drivetrain.kGains_Turning.kI;
+        turnConfig.slot1.kD = Constants.Drivetrain.kGains_Turning.kD;
+        turnConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning.kIzone;
+        turnConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning.kPeakOutput;
+
+        if (straightmode) {
+            /* Motion Magic Configs */
+            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
+            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
+            /* FPID for Heading */
+            rightMotor1.configAllSettings(straightConfig);
+
+            rightMotor1.configNominalOutputForward(0.045, TIMEOUT);
+            rightMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
+            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
+            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+            leftMotor1.configNominalOutputForward(0.045, TIMEOUT);
+            leftMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
+            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
+            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+        } else {
+            //gains used when turning in place
+            /* Motion Magic Configs */
+            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
+            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(5.0 * 12.0))); //distance units per 100 ms
+
+            rightMotor1.configAllSettings(turnConfig);
+
+            rightMotor1.configNominalOutputForward(0.13, TIMEOUT);
+            rightMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
+            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
+            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+            leftMotor1.configNominalOutputForward(0.13, TIMEOUT);
+            leftMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
+            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
+            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+        }
     }
 
     /**
      * Gets the odometry pose
-     * 
+     *
      * @return Pose2d odometry pose
      */
     // @Log(name = "Robot Pose", rowIndex = 3, columnIndex = 0) //Pose2d is not a supported loggable type
@@ -252,7 +264,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     /**
-     * 
      * @param vel set the cruise velocity (in/sec)
      */
     public void setCruiseVelocity(double vel) {
@@ -261,12 +272,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets gyro heading
-     * 
+     *
      * @return gyro heading from -180.0 to 180.0 degrees
      */
     @Log(name = "Gyro Heading", rowIndex = 2, columnIndex = 1)
     public double getHeading() {
-        if(USE_PIGEON_GYRO) {
+        if (USE_PIGEON_GYRO) {
             return pidgey.getRotation2d().getDegrees();
         } else {
             return navx.getRotation2d().getDegrees();
@@ -275,7 +286,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets gyro pitch
-     * 
+     *
      * @return gyro pitch degrees
      */
     @Log(name = "Gyro Pitch", rowIndex = 2, columnIndex = 2)
@@ -285,12 +296,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets gyro turn rate
-     * 
+     *
      * @return rate in degrees per second
      */
     @Log(name = "Turn velocity", rowIndex = 2, columnIndex = 0)
     public double getTurnRate() {
-        if(USE_PIGEON_GYRO) {
+        if (USE_PIGEON_GYRO) {
             return -pidgey.getRate();
         } else {
             return -navx.getRate();
@@ -299,7 +310,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Get average encoder distance
-     * 
+     *
      * @return gets distance in meters
      */
     @Log(name = "Average Encoder Distance (m)", rowIndex = 1, columnIndex = 0)
@@ -309,7 +320,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets wheel speeds in meters per second
-     * 
+     *
      * @return DifferentialDriveWheelSpeeds object
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -318,7 +329,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets left encoder distance in raw sensor units
-     * 
+     *
      * @return distance in sensor ticks
      */
     public double getLeftEncoderDistanceRaw() {
@@ -327,7 +338,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets left encoder distance
-     * 
+     *
      * @return encoder distance in meters
      */
     @Log(name = "Left Encoder Distance (m)", rowIndex = 1, columnIndex = 1)
@@ -337,7 +348,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets right encoder distance in raw sensor ticks
-     * 
+     *
      * @return distance in sensor ticks
      */
     public double getRightEncoderDistanceRaw() {
@@ -346,7 +357,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets right encoder distance
-     * 
+     *
      * @return encoder distance in meters
      */
     @Log(name = "Right Encoder Distance (m)", rowIndex = 1, columnIndex = 2)
@@ -357,43 +368,44 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public void setSetPointPosition(double setPoint, double setAngle) {
         setPointPosition_sensorUnits = inchesToTicks(setPoint);
         setPointHeading_sensorUnits = degreesToTicks(setAngle);
-    
+
         rightMotor1.set(ControlMode.MotionMagic, setPointPosition_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
         rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
         rightMotor3.follow(rightMotor1, FollowerType.PercentOutput);
         leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
         leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
         leftMotor3.follow(rightMotor1, FollowerType.AuxOutput1);
-      }
-    
-      public void setSetPointHeadingTeleop(double speed, double setAngle) {
+    }
+
+    public void setSetPointHeadingTeleop(double speed, double setAngle) {
         setPointHeading_sensorUnits = degreesToTicks(setAngle);
-    
+
         rightMotor1.set(ControlMode.PercentOutput, speed, DemandType.AuxPID, setPointHeading_sensorUnits);
         rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
         rightMotor3.follow(rightMotor1, FollowerType.PercentOutput);
         leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
         leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
         leftMotor3.follow(rightMotor1, FollowerType.AuxOutput1);
-      }
+    }
 
     public double getErrorPosition() {
-        return ticksToInches(setPointPosition_sensorUnits-rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_PRIMARY));
+        return ticksToInches(setPointPosition_sensorUnits - rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_PRIMARY));
         //return _leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
     }
-    
+
     public double getErrorHeading() {
-        return ticksToDegrees(setPointHeading_sensorUnits-rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_TURN)); 
+        return ticksToDegrees(setPointHeading_sensorUnits - rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_TURN));
     }
 
     /**
      * Zeroes gyro heading
      */
     public void zeroHeading() {
-        if(USE_PIGEON_GYRO) {
+        if (USE_PIGEON_GYRO) {
             pidgey.reset();
         } else {
-            navx.reset();;
+            navx.reset();
+            ;
         }
     }
 
@@ -407,14 +419,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Resets odometry to specified pose
-     * 
+     *
      * @param pose            pose to set odometry
      * @param preserveHeading do we preserve the gyro heading?
      */
     public void resetOdometry(Pose2d pose, boolean preserveHeading) {
         Rotation2d rot;
 
-        if(USE_PIGEON_GYRO) {
+        if (USE_PIGEON_GYRO) {
             rot = pidgey.getRotation2d();
         } else {
             rot = navx.getRotation2d();
@@ -428,7 +440,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Reset odometry to specified pose, while resetting the gyro.
-     * 
+     *
      * @param pose pose to set odometry
      */
     public void resetOdometry(Pose2d pose) {
@@ -437,7 +449,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets Left encoder velocity
-     * 
+     *
      * @return velocity in sensor ticks
      */
     public double getLeftEncoderRateRaw() {
@@ -446,7 +458,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets Right encoder velocity
-     * 
+     *
      * @return velocity in sensor ticks
      */
     public double getRightEncoderRateRaw() {
@@ -455,7 +467,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets left encoder velocity
-     * 
+     *
      * @return encoder velocity in meters/second
      */
     @Log(name = "Left Velocity", rowIndex = 4, columnIndex = 0)
@@ -465,7 +477,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Gets left encoder velocity
-     * 
+     *
      * @return encoder velocity in meters/second
      */
     @Log(name = "Right Velocity", rowIndex = 4, columnIndex = 1)
@@ -493,6 +505,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     /**
      * Converts a setpoint in degrees to IMU 'encoder ticks'
+     *
      * @param setpoint
      * @return
      */
@@ -542,7 +555,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor2.setNeutralMode(NeutralMode.Brake);
         rightMotor3.setNeutralMode(NeutralMode.Brake);
     }
-    
+
     /**
      * Change all the drivetrain motor controllers to coast mode.
      * Useful for allowing robot to be manually pushed around the field.

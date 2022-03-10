@@ -35,6 +35,7 @@ import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.drivetrain.DriveWithLimelight;
+import org.team2168.commands.drivetrain.DriveXDistance;
 import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.hood.HoodToAngle;
@@ -130,6 +131,8 @@ public class RobotContainer {
                             hopper, indexer, hood,
                             shooter, pooper, colorSensor,
                             lime));
+        autoChooser.addOption("Drive 3 Feet",
+                new DriveXDistance(drivetrain, 3.0));
 
         // debug autos
         // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
