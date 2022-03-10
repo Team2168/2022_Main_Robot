@@ -93,6 +93,8 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.configMotionAcceleration(ACCELERATION);
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
 
+    turretMotor.configClosedLoopStatusFrameRates();
+
     //Setup simulation
     turretSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),

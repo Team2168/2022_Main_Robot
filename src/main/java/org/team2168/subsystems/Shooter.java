@@ -150,6 +150,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
     // Reduce can status frame rates
     _motorLeft.configFollowerStatusFrameRates();
+    _motorRight.configClosedLoopStatusFrameRates();
   }
 
   /**

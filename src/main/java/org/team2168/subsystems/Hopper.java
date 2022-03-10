@@ -91,7 +91,6 @@ public class Hopper extends SubsystemBase implements Loggable {
   private Hopper() {
     hopperMotor = new TalonFXHelper(CANDevices.HOPPER_MOTOR);
     hopperLineBreak = new DigitalInput(DIO.HOPPER_LINE_BREAK);
-    
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
@@ -140,23 +139,8 @@ public class Hopper extends SubsystemBase implements Loggable {
    * 
    * @param speed
    */
-
   public void driveHopper(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
-  }
-
-  /**
-   * 
-   * @param InchesPerSecond
-   */
-  public void driveHopperVelocity(double InchesPerSecond) {
-    hopperMotor.set(ControlMode.Velocity, inchesToTicks(InchesPerSecond) *  TIME_UNITS_OF_VELOCITY);
-  }
-
-  /**
-   */
-  public void zeroEncoder() {
-    hopperMotor.setSelectedSensorPosition(0.0);
   }
 
   /**
@@ -172,26 +156,9 @@ public class Hopper extends SubsystemBase implements Loggable {
    * 
    * @return Encoder position
    */
-  @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
-    public double getEncoderPosition() {
+  // @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
+  public double getEncoderPosition() {
       return hopperMotor.getSelectedSensorPosition();
-  }
-
-  /**
-   * @return Hopper speed in Inches Per Second
-   */
-  @Log(name = "Inches Per Second", rowIndex = 1, columnIndex = 3)
-  public double getHopperSpeed() {
-    return hopperMotor.getSelectedSensorVelocity();
-  }
-
-  /**
-   * 
-   * @return Hopper wheel Rotations Per Minute
-   */
-  @Log(name = "Rotations Per Minute", rowIndex = 1, columnIndex = 4)
-  public double getHopperRPM() {
-    return (hopperMotor.getSelectedSensorVelocity() / TICKS_PER_REV * 600);
   }
 
   @Override

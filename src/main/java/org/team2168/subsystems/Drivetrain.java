@@ -11,11 +11,11 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
+import org.team2168.utils.PigeonHelper;
 import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,7 +30,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
     private static boolean USE_PIGEON_GYRO = true;
-    private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
+    private PigeonHelper pidgey; // Same as normal pigeon; implements wpi methods
     private AHRS navx;
 
     private TalonFXHelper leftMotor1;
@@ -110,7 +110,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         // Instantiate gyro
         if(USE_PIGEON_GYRO) {
-            pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
+            pidgey = new PigeonHelper(CANDevices.PIGEON_IMU);
         } else {
             navx = new AHRS(SPI.Port.kMXP);
         }
@@ -167,13 +167,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
         if(USE_PIGEON_GYRO) {
-            pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 1);  // status frame in ms
+            pidgey.setReducedStatusFramePeriods();
             odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
         } else {
             odometry = new DifferentialDriveOdometry(navx.getRotation2d());
         }
         
         // Reduce can status frame rates
+        leftMotor1.configClosedLoopStatusFrameRates();
+        rightMotor1.configClosedLoopStatusFrameRates();
+
         leftMotor2.configFollowerStatusFrameRates();
         leftMotor3.configFollowerStatusFrameRates();
         rightMotor2.configFollowerStatusFrameRates();

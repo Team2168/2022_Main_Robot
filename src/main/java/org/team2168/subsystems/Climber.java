@@ -120,6 +120,7 @@ public class Climber extends SubsystemBase implements Loggable {
     climbMotorRight.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_LEFT);
     climbMotorRight.setInverted(InvertType.OpposeMaster);
 
+    climbMotorLeft.configClosedLoopStatusFrameRates();
     climbMotorRight.configFollowerStatusFrameRates();
 
     climberSim = new ElevatorSim(
