@@ -7,10 +7,12 @@ package org.team2168.commands.drivetrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class TurnInPlace extends CommandBase {
+
  public org.team2168.subsystems.Drivetrain turnInPlace;
  public boolean whichDirection;
  public boolean right;
  public boolean left;
+ 
   public TurnInPlace(org.team2168.subsystems.Drivetrain turnInPlace, boolean whichDirection) {
     this.whichDirection = whichDirection;
     this.turnInPlace = turnInPlace;
