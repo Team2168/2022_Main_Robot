@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
+
+
 public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
@@ -71,6 +73,7 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         byte[] serialOutput = null;
 
         if (serialPort.getBytesReceived() >= 4) {
+            
             serialOutput = serialPort.read(4);
             // convert values to integers
             var intValue = new int[serialOutput.length];
@@ -133,6 +136,23 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     public double getTimeSinceLastRead() {
         return Timer.getFPGATimestamp() - timestamp;
     }
+
+    @Log(name = "Red Raw Value")
+    public int rawRed() {
+        return data.red;
+    }
+
+    @Log(name = "Blue Raw Value")
+    public int rawBlue() {
+        return data.blue;
+    }
+
+    @Log(name = "Green Raw Value")
+    public int rawGreen() {
+        return data.green;
+    }
+
+    
 
     @Override
     public void periodic() {
