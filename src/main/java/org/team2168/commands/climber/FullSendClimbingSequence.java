@@ -16,6 +16,7 @@ public class FullSendClimbingSequence extends SequentialCommandGroup {
 
   public FullSendClimbingSequence(Climber climber, MonkeyBar monkeyBar) {
     addCommands(
+      new DriveClimberToZero(climber).withTimeout(2.0),
       new HangOnMidBar(climber),
       new ClimbToHighBar(climber, monkeyBar),
       new ClimbToTraverseBar(climber, monkeyBar)

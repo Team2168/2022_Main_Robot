@@ -25,13 +25,21 @@ public class Hood extends SubsystemBase implements Loggable {
   //TODO: make another enum
   //This is for auto shooting
   public enum HoodPosition {
-    //Auto Pos
-    FENDER_LOW(9.0),
-    FENDER_HIGH(5.0),
-    TARMAC_LINE(20.0),
+    AUTO_TARMAC_LINE(23.0),
+    AUTO_LAUNCHPAD(26.7),
+    FENDER_LOW(10.0),
+    FENDER_HIGH(7.0),
+    TARMAC_LINE(23.0),  // 20
     LAUNCHPAD(28.0),
     WALL_SHOT(37.0),
+    TERMINAL(33.0),
     ZERO(0.0);
+//    FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
+//    FENDER_HIGH_COMPBOT(5.0),
+//    TARMAC_LINE_COMPBOT(17),
+//    LAUNCHPAD_COMPBOT(25),
+//    WALL_SHOT_COMPBOT(36),
+//    TERMINAL_COMPBOT(33.0),
 
     public final double position_degrees;
     
@@ -47,7 +55,8 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
-  private static double degreeAdjustment = 0.0; //for bumping up and down
+  private static double setpoint = 0.0;
+
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -117,34 +126,8 @@ public class Hood extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  /**
-   * Bumps the Hood angle up by one degree
-   */
-  public void incrementDegrees() {
-    degreeAdjustment += 1.0;
-  }
-
-  /**
-   * Bumps the Hood angle down one degree
-   */
-  public void decrementDegrees() {
-    degreeAdjustment -= 1.0;
-  }
-
-  /**
-   * Sets the bump amount to zero
-   */
-  public void zeroDegrees() {
-    degreeAdjustment = 0.0;
-  }
-  
-  /**
-   * 
-   * @return the amount the hood is bumped
-   */
-  @Log(name = "degree adjustment", rowIndex = 2, columnIndex = 3)
-  public double getDegreeAdjustment() {
-    return degreeAdjustment;
+  public double getSetpoint() {
+    return setpoint;
   }
 
   /**
@@ -187,7 +170,8 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    var demand = MathUtil.clamp(degrees + degreeAdjustment, MIN_ANGLE, MAX_ANGLE);
+    var demand = MathUtil.clamp(degrees, MIN_ANGLE, MAX_ANGLE);
+    setpoint = degrees;
     hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(demand),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }

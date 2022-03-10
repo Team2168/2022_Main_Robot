@@ -28,7 +28,8 @@ public class BumpShooterSpeedUp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.incrementSpeed();
+    var setpoint = shooter.getSetPoint() + 50.0;
+    shooter.setSpeed(setpoint);
   }
 
   // Called once the command ends or is interrupted.

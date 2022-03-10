@@ -5,9 +5,11 @@
 package org.team2168;
 
 import org.team2168.subsystems.Hood;
+import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import io.github.oblarg.oblog.Logger;
@@ -28,7 +30,7 @@ public class Robot extends TimedRobot {
   private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
 
   public Robot() {
-    //set the default loop period
+    // set the default loop period
     super(Constants.LOOP_TIMESTEP_S);
   }
 
@@ -74,12 +76,28 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    robotContainer.drivetrain.setMotorsCoast();
+    robotContainer.drivetrain.setMotorsBrake();
+    robotContainer.lime.pauseLimelight();
     Hood.getInstance().setMotorCoast();
   }
 
   @Override
   public void disabledPeriodic() {
+    // Check periodically
+    if (robotContainer.brakesEnabled())
+      robotContainer.drivetrain.setMotorsCoast();
+    else
+      robotContainer.drivetrain.setMotorsBrake();
+
+    // Limelight.getInstance().enableLimelight();
+
+    // TODO we probably don't want to do this
+    if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
+      robotContainer.drivetrain.zeroHeading();
+
+    // TODO use shuffleboard here
+    SmartDashboard.putString("The Actual Auto we will be running",
+        robotContainer.getAutonomousCommand().getName());
   }
 
   /**
@@ -88,10 +106,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    robotContainer.drivetrain.setMotorsBrakeAutos();
     Hood.getInstance().setMotorBrake();
     robotContainer.drivetrain.setMotorsBrake();
+    robotContainer.lime.enableLimelight();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
+    Limelight.getInstance().enableLimelight();
+
+    System.out.println("scheduling auto: " + autonomousCommand.getName());
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -107,6 +130,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
+    robotContainer.lime.pauseLimelight();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

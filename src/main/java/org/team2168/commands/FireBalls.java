@@ -4,7 +4,9 @@
 
 package org.team2168.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.team2168.Constants;
+import org.team2168.commands.hopper.DriveHopperUntilNoBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.indexer.DriveIndexerUntilNoBall;
@@ -21,24 +23,18 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class FireBalls extends SequentialCommandGroup {
   /** Creates a new FireBalls. */
-  private Shooter shooter;
-  private Indexer indexer;
-  private Hopper hopper;
 
   public FireBalls(Shooter shooter, Indexer indexer, Hopper hopper) {
-    this.shooter = shooter;
-    this.indexer = indexer;
-    this.hopper = hopper;
 
     addCommands(
       new WaitForShooterAtSpeed(shooter),
-      race(
-        new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
-        new DriveIndexerUntilNoBall(indexer, Constants.MotorSpeeds.INTAKE_SPEED)
-      ),
-      race(
+      race( // Make sure the ball is queued up near the top before starting sequence 
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
         new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
+      ),
+      race( // Run indexer until the ball is gone
+        new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+        new DriveIndexerUntilNoBall(indexer, Constants.MotorSpeeds.INTAKE_SPEED)
       )
     );
   }
