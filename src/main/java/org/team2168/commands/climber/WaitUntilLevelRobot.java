@@ -28,7 +28,7 @@ public class WaitUntilLevelRobot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double current_angle = dt.getPitch();
+    double current_angle = dt.getPitch() - dt.gyroOffset;
 
     safe_to_extend = (current_angle <= safe_angle);
 
