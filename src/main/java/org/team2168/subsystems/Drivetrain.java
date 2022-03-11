@@ -80,6 +80,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
 
+    public double gyroOffset = 0.0;
+
     /**
      * Gets the singleton instance of the drivetrain
      * 
