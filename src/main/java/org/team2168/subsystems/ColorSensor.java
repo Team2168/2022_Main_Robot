@@ -4,6 +4,8 @@
 
 package org.team2168.subsystems;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -112,13 +114,23 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     public Alliance getColor() {
         Alliance color;
         normRaw();      
-       if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
-            color = Alliance.Invalid;
-       else if(rNorm==255)
+    //    if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
+    //         color = Alliance.Invalid;
+    //    else if(rNorm==255)
+    //         color = Alliance.Red;
+    //     else
+    //         color = Alliance.Blue;//   return Alliance.Invalid;
+    //     return color;
+
+        if((rNorm==255) && (bNorm + gNorm) < 200) 
             color = Alliance.Red;
+        else if ((bNorm==255) && (rNorm + gNorm) < 200)
+            color = Alliance.Blue;
         else
-            color = Alliance.Blue;//   return Alliance.Invalid;
+            color = Alliance.Invalid;
         return color;
+    
+        
     }
 
     @Log(name = "Is team color?")

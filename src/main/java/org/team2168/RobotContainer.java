@@ -184,8 +184,8 @@ public class RobotContainer {
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-            .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
-            // .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+            // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+            .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whenPressed(new IntakeLower(intakeRaiseAndLower))
             .whenReleased(new IntakeRaise(intakeRaiseAndLower))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
@@ -238,6 +238,9 @@ public class RobotContainer {
     //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
     // oi.testJoystick.ButtonLeftDPad().whenPressed(new Launchpad(hood, shooter, lime));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
 
   }
 

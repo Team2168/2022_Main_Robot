@@ -10,6 +10,7 @@ import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.pooper.PoopOnColor;
+import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
@@ -29,7 +30,9 @@ public class QueueBallForShot extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
 
     addCommands(
-      race(new SetIntakeSpeed(intakeRoller, MotorSpeeds.INTAKE_SPEED),
+      new PooperUnpoop(pooper),
+      race(
+           new SetIntakeSpeed(intakeRoller, MotorSpeeds.INTAKE_SPEED),
            new DriveHopperUntilBall(hopper, ()->MotorSpeeds.HOPPER_SPEED)
       ),
       new Sleep().withTimeout(0.2), //let the ball color be detected
