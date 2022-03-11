@@ -4,6 +4,7 @@
 
 package org.team2168;
 
+import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
 
@@ -28,6 +29,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer robotContainer;
   private static Compressor compressor = new Compressor(Constants.PneumaticsDevices.MODULE_TYPE);
+
+  public static boolean hasMatchStarted = false;
 
   public Robot() {
     // set the default loop period
@@ -91,6 +94,10 @@ public class Robot extends TimedRobot {
 
     // Limelight.getInstance().enableLimelight();
 
+    if (hasMatchStarted) {
+      robotContainer.drivetrain.gyroOffset = robotContainer.drivetrain.getPitch();
+    }
+
     // TODO we probably don't want to do this
     if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
       robotContainer.drivetrain.zeroHeading();
@@ -113,6 +120,7 @@ public class Robot extends TimedRobot {
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     Limelight.getInstance().enableLimelight();
+    hasMatchStarted = true;
 
     System.out.println("scheduling auto: " + autonomousCommand.getName());
     // schedule the autonomous command (example)
@@ -131,6 +139,7 @@ public class Robot extends TimedRobot {
     Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
     robotContainer.lime.pauseLimelight();
+    hasMatchStarted = true;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
