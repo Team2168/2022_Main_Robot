@@ -4,8 +4,6 @@
 
 package org.team2168.commands.turret;
 
-import javax.lang.model.util.ElementScanner6;
-
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Turret;
 
@@ -98,16 +96,19 @@ public class DriveTurretWithLimelight extends CommandBase {
     else  
       driveLimeTurnSpeed = 0.0;
 
-    //turret.setVelocity();
+    turret.setVelocity(driveLimeTurnSpeed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    turret.setVelocity(0.0);
+    limelight.pauseLimelight();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (withinThresholdLoops >= acceptableLoops);
   }
 }
