@@ -37,7 +37,6 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10.0;
   private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
  
-  //About 260/360 degrees
   private static final int MAX_ROTATION_TICKS = (int) (1.5 * TICKS_PER_TURRET_ROTATION);
 
   private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(5.0 * 360);  // TODO: Change when mechanism is avaialble
@@ -242,6 +241,9 @@ public class Turret extends SubsystemBase implements Loggable {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Only zeros the turret if it is actually at zero and not at 360/-360
+    if (isTurretAtZero() && (getEncoderPosition() < 10) && (getEncoderPosition() > -10))
+      zeroEncoder();
   }
 
   @Override
