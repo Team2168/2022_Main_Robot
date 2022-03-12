@@ -13,11 +13,10 @@ public class ZeroTurret extends CommandBase {
   private Turret turret;
   private double position;
 
-  public ZeroTurret(Turret t) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    turret = t;
+  public ZeroTurret(Turret turret) {
+    this.turret = turret;
 
-    addRequirements(t);
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
@@ -29,10 +28,7 @@ public class ZeroTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (position > 0)
-      turret.setVelocity(-10.0);
-    else if (position < 0) 
-      turret.setVelocity(10.0);
+    turret.setRotationDegrees(-position);
   }
 
   // Called once the command ends or is interrupted.
