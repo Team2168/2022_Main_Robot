@@ -4,7 +4,10 @@
 
 package org.team2168.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
@@ -79,6 +82,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public static final double DEGREES_PER_REV = 360.0;
     public static final double PIGEON_UNITS_PER_DEGREE = PIGEON_UNITS_PER_ROTATION / 360;
     public static final double WHEEL_BASE = 24.0; // distance between wheels (width) in inches
+    double setPointPositionSensorUnits;
+    double setPointPositionMeters;
 
     /**
      * Gets the singleton instance of the drivetrain
@@ -442,6 +447,20 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor3.setNeutralMode(NeutralMode.Coast);
     }
 
+    public void switchGains(boolean straightMode) {
+    }
+
+    public void setPointPosition(double setpoint, double setAngle) {
+    setPointPositionSensorUnits = ticksToInches(setpoint);
+    setPointPositionMeters = ticksToMeters(setAngle);
+
+    rightMotor1.set(ControlMode.MotionMagic, setPointPositionMeters);
+    rightMotor3.follow(rightMotor1);
+    leftMotor1.follow(rightMotor1);
+    leftMotor3.follow(rightMotor1);
+
+    }
+   
   
     }
 
