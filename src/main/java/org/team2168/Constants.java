@@ -93,6 +93,9 @@ public final class Constants {
         public final static int kSlot_Turning = SLOT_1;
         public final static int kSlot_Velocit = SLOT_2;
         public final static int kSlot_MotProf = SLOT_3;
+
+        public final static int kPigeonUnitsPerRotation = 8192;
+
     }
 
     public static final class PneumaticsDevices {

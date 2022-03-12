@@ -62,12 +62,14 @@ public class DriveXDistance extends CommandBase {
   @Override
   public void execute() {
     dt.setSetPointPosition(_targetPos, _targetAngle);
+    dt.feed();
     /* Check if closed loop error is within the threshld */
     if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) {
       ++_withinThresholdLoops;
     } else {
       _withinThresholdLoops = 0;
     }
+    _withinThresholdLoops = 0;
   }
 
   // Called once the command ends or is interrupted.
