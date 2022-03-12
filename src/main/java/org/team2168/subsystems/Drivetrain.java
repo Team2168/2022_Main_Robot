@@ -432,16 +432,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         setPointPosition_sensorUnits = inchesToTicks(setPoint);
         setPointHeading_sensorUnits = degreesToTicks(setAngle);
 
-        System.out.println("setpoint: " + setPointPosition_sensorUnits);
-        System.out.println("heading: " + setPointHeading_sensorUnits);
-
-        var config = new TalonFXConfiguration();
-        leftMotor1.getAllConfigs(config);
-        System.out.println(config.toString("left motor 1"));
-        config = new TalonFXConfiguration();
-        rightMotor1.getAllConfigs(config);
-        System.out.println(config.toString("right motor 1"));
-
         rightMotor1.set(ControlMode.MotionMagic, setPointPosition_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
         rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
         leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);

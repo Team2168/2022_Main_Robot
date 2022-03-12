@@ -45,9 +45,9 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 2.214;
-        public static final double kvVoltSecondsPerMeter = 2.0704;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.2426;
+        public static final double ksVolts = 0.69371;
+        public static final double kvVoltSecondsPerMeter = 0.68559;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.1355;
         public static final double kPDriveVel = 2.7258; // @1.4 m/s max error
 
         public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295/Actual = 0.65563;
@@ -69,11 +69,12 @@ public final class Constants {
          * PID Gains may have to be adjusted based on the responsiveness of control loop.
          * kF: 1023 represents output value to Talon at 100%, 6800 represents Velocity units at 100% output
          * Not all set of Gains are used in this project and may be removed as desired.
-         * 
+         *
+         * 0.21 @ 12v minimum straight output
          * 	                                    			   kP     kI     kD   kF             Iz    PeakOut */
         public final static Gains kGains_Distance = new Gains( 0.125, 0.00, 0.0, 0.0,            120,  0.75 ); //always used for linear path
         public final static Gains kGains_Turning  = new Gains( 0.48, 0.00,  0.0, 0.0,            200,  0.5 ); //used to turn during autos
-        public final static Gains kGains_Turning_Straight = new Gains( 3.9, 0.0, 0.0, 0.0,       300,  0.50 ); //used to maintain heading while auto driving straight
+        public final static Gains kGains_Turning_Straight = new Gains( 1.0208, 0.0, 0.0, 0.69371,       300,  0.50 ); //used to maintain heading while auto driving straight
         public final static Gains kGains_Limelight  = new Gains( 0.55, 0.0, 0.0, 1023.0/6800.0,  200,  0.5 );
 	
         /** ---- Flat constants, you should not need to change these ---- */
