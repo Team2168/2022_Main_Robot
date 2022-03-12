@@ -84,7 +84,6 @@ public class DriveTurretWithLimelight extends CommandBase {
         driveLimeTurn = 0.0;
     }
     
-    //TODO: change this to include errorToleranceAngle
     else {
       driveLimeTurn = - currentPos + turret.amountFromZeroToRotate(targetPos);
     }
