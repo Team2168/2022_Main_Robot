@@ -226,6 +226,10 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setSelectedSensorPosition(0.0);
   }
 
+  public boolean atSoftLimit() {
+    return !(getEncoderPosition() < MAX_ROTATION_TICKS && getEncoderPosition() > -MAX_ROTATION_TICKS);
+  }
+
   /**
    * Calculates how much the turret should turn if the quickest path conflicts with the turret's soft limits
    * @param targetPos the distance away from the target in degrees
@@ -236,6 +240,11 @@ public class Turret extends SubsystemBase implements Loggable {
       return targetPos - 360;
     else
       return targetPos + 360; 
+  }
+
+  public void zeroTurret() {
+    while (!isTurretAtZero())
+      setRotationDegrees(-getEncoderPosition());
   }
 
   @Override
