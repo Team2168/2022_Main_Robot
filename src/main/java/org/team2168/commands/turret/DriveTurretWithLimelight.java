@@ -23,6 +23,9 @@ public class DriveTurretWithLimelight extends CommandBase {
   private int withinThresholdLoops = 0;
   private int acceptableLoops = 10;
 
+  private double currentPosition;
+  private double targetPos = currentPosition + limeXPos;
+
   private static final double MINIMUM_COMMAND = 0.25;  // TODO normalize for battery voltage
   private static final double MAX_INTEGRAL = 1.0;
   
@@ -72,6 +75,8 @@ public class DriveTurretWithLimelight extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    currentPosition = turret.getPositionDegrees();
+
     pid = new PIDController(P, I, D);
     pid.setTolerance(errorToleranceAngle);
     pid.setIntegratorRange(-MAX_INTEGRAL, MAX_INTEGRAL);
@@ -82,21 +87,31 @@ public class DriveTurretWithLimelight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //How far away the target is in degrees
     limeXPos = limelight.getPositionX();
 
-    if (Math.abs(limeXPos) < errorToleranceAngle) 
-      ++ withinThresholdLoops;
-    else
-      withinThresholdLoops = 0;
-
-    if (limeXPos < -errorToleranceAngle)
+    if (-360 < targetPos && targetPos < 360) {
+      if (limeXPos < -errorToleranceAngle)
       driveLimeTurnSpeed = -(pid.calculate(limeXPos) + MINIMUM_COMMAND);
     else if (limeXPos > errorToleranceAngle)
       driveLimeTurnSpeed = -(pid.calculate(limeXPos) - MINIMUM_COMMAND);
     else  
       driveLimeTurnSpeed = 0.0;
+    }
+    
+    //TODO: change this to include errorToleranceAngle
+    else {
+      driveLimeTurnSpeed = - currentPosition + turret.amountFromZeroToRotate(targetPos);
+    }
 
+    
     turret.setVelocity(driveLimeTurnSpeed);
+
+    // should be last thing(?)
+    if (Math.abs(limeXPos) < errorToleranceAngle) 
+      ++ withinThresholdLoops;
+    else
+      withinThresholdLoops = 0;
   }
 
   // Called once the command ends or is interrupted.

@@ -227,6 +227,18 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setSelectedSensorPosition(0.0);
   }
 
+  /**
+   * Calculates how much the turret should turn if the quickest path conflicts with the turret's soft limits
+   * @param targetPos the distance away from the target in degrees
+   * @return the amount from a zero'd turret to rotate
+   */
+  public double amountFromZeroToRotate(double targetPos) {
+    if (targetPos > 0) 
+      return targetPos - 360;
+    else
+      return targetPos + 360; 
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
