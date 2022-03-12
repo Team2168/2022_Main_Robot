@@ -7,7 +7,6 @@ package org.team2168.commands.turret;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Turret;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -16,7 +15,6 @@ public class DriveTurretWithLimelight extends CommandBase {
 
   private Turret turret;
   private Limelight limelight;
-  private PIDController pid;
 
   private double errorToleranceAngle = 1; // in degrees
   private double limeXPos;
@@ -26,17 +24,7 @@ public class DriveTurretWithLimelight extends CommandBase {
   private double currentPos;
   private double targetPos = currentPos + limeXPos;
 
-  private static final double MINIMUM_COMMAND = 0.25;  // TODO normalize for battery voltage
-  private static final double MAX_INTEGRAL = 1.0;
-  
-  //limelight gains
-  private double P;
-  private double I;
-  private double P_FAR = 0.02;
-  private double P_NEAR = 0.01;
-  private double I_FAR = 0.002;
-  private double I_NEAR = 0.001;
-  private double D = 0.0;
+  private static final double MINIMUM_COMMAND = 0.5;  // TODO normalize for battery voltage
 
   boolean isNear = true;
 
@@ -62,19 +50,10 @@ public class DriveTurretWithLimelight extends CommandBase {
    * @param acceptableAngle the distance in degrees the turret is allowed to be off by
    * @param isNear whether the robot is near of far away from the hub
    */
-  public DriveTurretWithLimelight(Turret turret, Limelight limelight, double acceptableAngle, boolean isNear) {
+  public DriveTurretWithLimelight(Turret turret, Limelight limelight, double acceptableAngle) {
     this.turret = turret;
     this.limelight= limelight;
     errorToleranceAngle = acceptableAngle;
-
-    if(isNear) {
-      P = P_NEAR;
-      I = I_NEAR;
-    }
-    else {
-      P = P_FAR;
-      I = I_FAR;
-    }
 
     addRequirements(turret);
   }
@@ -83,10 +62,6 @@ public class DriveTurretWithLimelight extends CommandBase {
   @Override
   public void initialize() {
     currentPos = turret.getPositionDegrees();
-
-    pid = new PIDController(P, I, D);
-    pid.setTolerance(errorToleranceAngle);
-    pid.setIntegratorRange(-MAX_INTEGRAL, MAX_INTEGRAL);
 
     limelight.enableLimelight();
   }
@@ -102,9 +77,9 @@ public class DriveTurretWithLimelight extends CommandBase {
     // if the target is within the soft limits
     if (-360 < targetPos && targetPos < 360) {
       if (limeXPos < -errorToleranceAngle)
-        driveLimeTurn = -(pid.calculate(limeXPos) + MINIMUM_COMMAND);
+        driveLimeTurn = (limeXPos + MINIMUM_COMMAND);
       else if (limeXPos > errorToleranceAngle)
-        driveLimeTurn = -(pid.calculate(limeXPos) - MINIMUM_COMMAND);
+        driveLimeTurn = (limeXPos - MINIMUM_COMMAND);
       else  
         driveLimeTurn = 0.0;
     }
