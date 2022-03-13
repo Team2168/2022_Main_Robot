@@ -48,14 +48,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     private SupplyCurrentLimitConfiguration talonCurrentLimit;
 
-    public static final boolean DT_REVERSE_LEFT1 = false;
-    public static final boolean DT_REVERSE_LEFT2 = false;
-    public static final boolean DT_REVERSE_LEFT3 = false;
-    public static final boolean DT_REVERSE_RIGHT1 = true;
-    public static final boolean DT_REVERSE_RIGHT2 = true;
-    public static final boolean DT_REVERSE_RIGHT3 = true;
-    public static final boolean DT_3_MOTORS_PER_SIDE = true;
-
     /**
      * Invert Directions for Left and Right
      */
@@ -81,6 +73,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     private double setPointPosition_sensorUnits;
     private double setPointHeading_sensorUnits;
+
+    private TalonFXConfiguration straightConfig = new TalonFXConfiguration();
+    private TalonFXConfiguration turnConfig = new TalonFXConfiguration();
 
     /**
      * Gets the singleton instance of the drivetrain
@@ -116,11 +111,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
             navx = new AHRS(SPI.Port.kMXP);
         }
 
-        // Reset the configurations on the motor controllers
         leftMotor1.configFactoryDefault();
         leftMotor2.configFactoryDefault();
         rightMotor1.configFactoryDefault();
         rightMotor2.configFactoryDefault();
+
+        leftMotor1.configFollowerStatusFrameRates();
+        leftMotor2.configFollowerStatusFrameRates();
+        rightMotor1.configClosedLoopStatusFrameRates();
+        rightMotor2.configFollowerStatusFrameRates();
 
         // Create a current limit
         talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
@@ -129,69 +128,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         // Add the current limit to the motor configuration object
         leftConfig.supplyCurrLimit = talonCurrentLimit;
         rightConfig.supplyCurrLimit = talonCurrentLimit;
-
-        // Configure drivetrain to use integrated sensors
-        leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-        rightConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-
-        // leftConfig.neutralDeadband = NEUTRALDEADBAND;
-        // rightConfig.neutralDeadband = NEUTRALDEADBAND;
-
-        // pid for distance
-        rightConfig.slot0.kF = Constants.Drivetrain.kGains_Distance.kF;
-        rightConfig.slot0.kP = Constants.Drivetrain.kGains_Distance.kP;
-        rightConfig.slot0.kI = Constants.Drivetrain.kGains_Distance.kI;
-        rightConfig.slot0.kD = Constants.Drivetrain.kGains_Distance.kD;
-        rightConfig.slot0.integralZone = Constants.Drivetrain.kGains_Distance.kIzone;
-        rightConfig.slot0.closedLoopPeakOutput = Constants.Drivetrain.kGains_Distance.kPeakOutput;
-
-        // heading pid
-        rightConfig.remoteFilter1.remoteSensorDeviceID = pidgey.getDeviceID();    //Pigeon Device ID
-        rightConfig.remoteFilter1.remoteSensorSource = RemoteSensorSource.Pigeon_Yaw; //This is for a Pigeon over CAN
-        rightConfig.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor1; //Set as the Aux Sensor
-        rightConfig.auxiliaryPID.selectedFeedbackCoefficient = 3600.0 / Constants.Drivetrain.kPigeonUnitsPerRotation; //Convert Yaw to tenths of a degree
-
-        /* false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
-         *   This is typical when the master is the right Talon FX and using Pigeon
-         *
-         * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
-         *   This is typical when the master is the left Talon FX and using Pigeon
-         */
-        rightConfig.auxPIDPolarity = false;
-
-        /**
-         * 1ms per loop.  PID loop can be slowed down if need be.
-         * For example,
-         * - if sensor updates are too slow
-         * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
-         * - sensor movement is very slow causing the derivative error to be near zero.
-         */
-        int closedLoopTimeMs = 1;
-        rightMotor1.configClosedLoopPeriod(0, closedLoopTimeMs, TIMEOUT);
-        rightMotor1.configClosedLoopPeriod(1, closedLoopTimeMs, TIMEOUT);
-
-
-
-        leftMotor1.configAllSettings(leftConfig);
-//        leftMotor2.configAllSettings(leftConfig);
-        rightMotor1.configAllSettings(rightConfig);
-//        rightMotor2.configAllSettings(rightConfig);
-
-        rightMotor1.selectProfileSlot(Constants.Drivetrain.kSlot_Distanc, Constants.Drivetrain.PID_PRIMARY);
-        rightMotor1.selectProfileSlot(Constants.Drivetrain.kSlot_Turning, Constants.Drivetrain.PID_TURN);
-
-        leftMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
-        leftMotor1.enableVoltageCompensation(true);
-        rightMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
-        rightMotor1.enableVoltageCompensation(true);
-
-        leftMotor2.follow(leftMotor1);
-        rightMotor2.follow(rightMotor1);
-
-        leftMotor1.setInverted(leftInvert);
-        leftMotor2.setInverted(InvertType.FollowMaster);
-        rightMotor1.setInverted(rightInvert);
-        rightMotor2.setInverted(InvertType.FollowMaster);
 
         setMotorsBrake();
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
@@ -203,13 +139,112 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         } else {
             odometry = new DifferentialDriveOdometry(navx.getRotation2d());
         }
-        
-        // Reduce can status frame rates
-        leftMotor1.configClosedLoopStatusFrameRates();
-        rightMotor1.configClosedLoopStatusFrameRates();
 
-        leftMotor2.configFollowerStatusFrameRates();
-        rightMotor2.configFollowerStatusFrameRates();
+        /* Set Neutral Mode */
+		leftMotor1.setNeutralMode(NeutralMode.Brake);
+		rightMotor1.setNeutralMode(NeutralMode.Brake);
+
+		/* Configure output and sensor direction */
+		leftMotor1.setInverted(leftInvert);
+        leftMotor2.setInverted(leftInvert);
+		rightMotor1.setInverted(rightInvert);
+        rightMotor2.setInverted(rightInvert);
+
+		/* Reset Pigeon Configs */
+		pidgey.configFactoryDefault();
+        pidgey.setReducedStatusFramePeriods();
+
+		/** Feedback Sensor Configuration */
+
+		/** Distance Configs */
+
+		/* Configure the left Talon's selected sensor as integrated sensor */
+		leftConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice(); //Local Feedback Source
+
+		/* Configure the Remote (Left) Talon's selected sensor as a remote sensor for the right Talon */
+		rightConfig.remoteFilter0.remoteSensorDeviceID = leftMotor1.getDeviceID(); //Device ID of Remote Source
+		rightConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.TalonFX_SelectedSensor; //Remote Source Type
+		
+		/* Now that the Left sensor can be used by the master Talon,
+		 * set up the Left (Aux) and Right (Master) distance into a single
+		 * Robot distance as the Master's Selected Sensor 0. */
+		setRobotDistanceConfigs(rightInvert, rightConfig);
+
+		/* FPID for Distance */
+		rightConfig.slot0.kF = Constants.Drivetrain.kGains_Distance.kF;
+		rightConfig.slot0.kP = Constants.Drivetrain.kGains_Distance.kP;
+		rightConfig.slot0.kI = Constants.Drivetrain.kGains_Distance.kI;
+		rightConfig.slot0.kD = Constants.Drivetrain.kGains_Distance.kD;
+		rightConfig.slot0.integralZone = Constants.Drivetrain.kGains_Distance.kIzone;
+		rightConfig.slot0.closedLoopPeakOutput = Constants.Drivetrain.kGains_Distance.kPeakOutput;
+
+		/** Heading Configs */
+		rightConfig.remoteFilter1.remoteSensorDeviceID = pidgey.getDeviceID();    //Pigeon Device ID
+		rightConfig.remoteFilter1.remoteSensorSource = RemoteSensorSource.Pigeon_Yaw; //This is for a Pigeon over CAN
+		rightConfig.auxiliaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.RemoteSensor1.toFeedbackDevice(); //Set as the Aux Sensor
+		rightConfig.auxiliaryPID.selectedFeedbackCoefficient = 3600.0 / Constants.Drivetrain.kPigeonUnitsPerRotation; //Convert Yaw to tenths of a degree
+
+		/* FPID for Heading */
+		rightConfig.slot1.kF = Constants.Drivetrain.kGains_Turning.kF;
+		rightConfig.slot1.kP = Constants.Drivetrain.kGains_Turning.kP;
+		rightConfig.slot1.kI = Constants.Drivetrain.kGains_Turning.kI;
+		rightConfig.slot1.kD = Constants.Drivetrain.kGains_Turning.kD;
+		rightConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning.kIzone;
+		rightConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning.kPeakOutput;
+
+		/* Config the neutral deadband. */
+		leftConfig.neutralDeadband = NEUTRALDEADBAND;
+		rightConfig.neutralDeadband = NEUTRALDEADBAND;
+
+		/**
+		 * 1ms per loop.  PID loop can be slowed down if need be.
+		 * For example,
+		 * - if sensor updates are too slow
+		 * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
+		 * - sensor movement is very slow causing the derivative error to be near zero.
+		 */
+		int closedLoopTimeMs = 1;
+		rightConfig.slot0.closedLoopPeriod = closedLoopTimeMs;
+		rightConfig.slot1.closedLoopPeriod = closedLoopTimeMs;
+		rightConfig.slot2.closedLoopPeriod = closedLoopTimeMs;
+		rightConfig.slot3.closedLoopPeriod = closedLoopTimeMs;
+
+		/* Motion Magic Configs */
+        rightConfig.motionAcceleration = (int) (inchesPerSecToTicksPer100ms(8.0*12.0)); //(distance units per 100 ms) per second
+        rightConfig.motionCruiseVelocity = (int) (inchesPerSecToTicksPer100ms(10.0*12.0));
+		// rightConfig.motionAcceleration = 2000; //(distance units per 100 ms) per second
+		// rightConfig.motionCruiseVelocity = 2000; //distance units per 100 ms
+
+		/* APPLY the config settings */
+		leftMotor1.configAllSettings(leftConfig);
+        leftMotor2.configAllSettings(leftConfig);
+		rightMotor1.configAllSettings(rightConfig);
+        rightMotor2.configAllSettings(rightConfig);
+
+		/* Set status frame periods to ensure we don't have stale data */
+		/* These aren't configs (they're not persistant) so we can set these after the configs.  */
+		rightMotor1.setStatusFramePeriod(StatusFrame.Status_12_Feedback1, 20, TIMEOUT);
+		rightMotor1.setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, 20, TIMEOUT);
+		rightMotor1.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, 20, TIMEOUT);
+		rightMotor1.setStatusFramePeriod(StatusFrame.Status_10_Targets, 10, TIMEOUT);
+		leftMotor1.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 5, TIMEOUT);
+		pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR , 5, TIMEOUT);        
+
+        straightConfig = rightConfig;
+        straightConfig.slot1.kF = Constants.Drivetrain.kGains_Turning_Straight.kF;
+        straightConfig.slot1.kP = Constants.Drivetrain.kGains_Turning_Straight.kP;
+        straightConfig.slot1.kI = Constants.Drivetrain.kGains_Turning_Straight.kI;
+        straightConfig.slot1.kD = Constants.Drivetrain.kGains_Turning_Straight.kD;
+        straightConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning_Straight.kIzone;
+        straightConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning_Straight.kPeakOutput;
+
+        turnConfig = rightConfig;
+        turnConfig.slot1.kF = Constants.Drivetrain.kGains_Turning.kF;
+        turnConfig.slot1.kP = Constants.Drivetrain.kGains_Turning.kP;
+        turnConfig.slot1.kI = Constants.Drivetrain.kGains_Turning.kI;
+        turnConfig.slot1.kD = Constants.Drivetrain.kGains_Turning.kD;
+        turnConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning.kIzone;
+        turnConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning.kPeakOutput;
     }
 
     @Override
@@ -225,101 +260,46 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         // This method will be called once per scheduler run
         odometry.update(rot, getLeftEncoderDistance(), getRightEncoderDistance());
     }
-
-    public void switchGains(boolean straightmode)
-    {
-        if(straightmode) {
-            /* Motion Magic Configs */
-            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second
-            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0*12.0))); //distance units per 100 ms
-            /* FPID for Heading */
-            rightMotor1.config_kF(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kF, TIMEOUT);
-            rightMotor1.config_kP(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kP, TIMEOUT);
-            rightMotor1.config_kI(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kI, TIMEOUT);
-            rightMotor1.config_kD(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kD, TIMEOUT);
-            rightMotor1.config_IntegralZone(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kIzone, TIMEOUT);
-            rightMotor1.configClosedLoopPeakOutput(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kPeakOutput, TIMEOUT);
-
-            rightMotor1.configNominalOutputForward(0.045, TIMEOUT);
-            rightMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-            leftMotor1.configNominalOutputForward(0.045, TIMEOUT);
-            leftMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-        } else {
-            /* Motion Magic Configs */
-            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second
-            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(5.0*12.0))); //distance units per 100 ms
-            rightMotor1.config_kF(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kF,TIMEOUT);
-            rightMotor1.config_kP(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kP,TIMEOUT);
-            rightMotor1.config_kI(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kI,TIMEOUT);
-            rightMotor1.config_kD(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kD,TIMEOUT);
-            rightMotor1.config_IntegralZone(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kIzone, TIMEOUT);
-            rightMotor1.configClosedLoopPeakOutput(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kPeakOutput, TIMEOUT);
-
-            rightMotor1.configNominalOutputForward(0.13, TIMEOUT);
-            rightMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-            leftMotor1.configNominalOutputForward(0.13, TIMEOUT);
-            leftMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-        }
-    }
     
-//    public void switchGains(boolean straightmode) {
-//        final TalonFXConfiguration straightConfig = new TalonFXConfiguration();
-//        straightConfig.slot1.kF = Constants.Drivetrain.kGains_Turning_Straight.kF;
-//        straightConfig.slot1.kP = Constants.Drivetrain.kGains_Turning_Straight.kP;
-//        straightConfig.slot1.kI = Constants.Drivetrain.kGains_Turning_Straight.kI;
-//        straightConfig.slot1.kD = Constants.Drivetrain.kGains_Turning_Straight.kD;
-//        straightConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning_Straight.kIzone;
-//        straightConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning_Straight.kPeakOutput;
-//
-//        final TalonFXConfiguration turnConfig = new TalonFXConfiguration();
-//        turnConfig.slot1.kF = Constants.Drivetrain.kGains_Turning.kF;
-//        turnConfig.slot1.kP = Constants.Drivetrain.kGains_Turning.kP;
-//        turnConfig.slot1.kI = Constants.Drivetrain.kGains_Turning.kI;
-//        turnConfig.slot1.kD = Constants.Drivetrain.kGains_Turning.kD;
-//        turnConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning.kIzone;
-//        turnConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning.kPeakOutput;
-//
-//        if (straightmode) {
-//            /* Motion Magic Configs */
-//            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
-//            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
-//            /* FPID for Heading */
-//            rightMotor1.configAllSettings(straightConfig);
-//
-//            rightMotor1.configNominalOutputForward(0.045, TIMEOUT);
-//            rightMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-//            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//            leftMotor1.configNominalOutputForward(0.045, TIMEOUT);
-//            leftMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-//            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//        } else {
-//            //gains used when turning in place
-//            /* Motion Magic Configs */
-//            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
-//            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(5.0 * 12.0))); //distance units per 100 ms
-//
-//            rightMotor1.configAllSettings(turnConfig);
-//
-//            rightMotor1.configNominalOutputForward(0.13, TIMEOUT);
-//            rightMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-//            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//            leftMotor1.configNominalOutputForward(0.13, TIMEOUT);
-//            leftMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-//            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//        }
-//    }
+   public void switchGains(boolean straightmode) {
+       if (straightmode) {
+           rightMotor1.configAllSettings(straightConfig);
+           /* Motion Magic Configs */
+           rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
+           rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
+           
+           rightMotor1.configNominalOutputForward(0.045, TIMEOUT);
+           rightMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
+           rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
+           rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+           leftMotor1.configNominalOutputForward(0.045, TIMEOUT);
+           leftMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
+           leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
+           leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+       } else {
+           rightMotor1.configAllSettings(turnConfig);
+           //gains used when turning in place
+           /* Motion Magic Configs */
+           rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
+           rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(5.0 * 12.0))); //distance units per 100 ms
+
+           rightMotor1.configNominalOutputForward(0.13, TIMEOUT);
+           rightMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
+           rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
+           rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+           leftMotor1.configNominalOutputForward(0.13, TIMEOUT);
+           leftMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
+           leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
+           leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
+       }
+   }
+
+   public void teleopconfigs() {
+       rightMotor1.configAllSettings(rightConfig);
+       rightMotor1.configAllSettings(rightConfig);
+       leftMotor1.configAllSettings(leftConfig);
+       leftMotor2.configAllSettings(leftConfig);
+   }
 
     /**
      * Gets the odometry pose
@@ -359,7 +339,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     @Log(name = "Gyro Pitch", rowIndex = 2, columnIndex = 2)
     public double getPitch() {
-        return pidgey.getPitch();
+        if (USE_PIGEON_GYRO) {
+            return pidgey.getPitch();
+        } else {
+            return navx.getPitch();
+        }
     }
 
     /**
@@ -433,6 +417,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return ticksToMeters(getRightEncoderDistanceRaw());
     }
 
+    /**
+     * 
+     * @param setPoint distance in inches (fwd positive)
+     * @param setAngle degrees
+     */
     public void setSetPointPosition(double setPoint, double setAngle) {
         setPointPosition_sensorUnits = inchesToTicks(setPoint);
         setPointHeading_sensorUnits = degreesToTicks(setAngle);
@@ -440,7 +429,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.set(ControlMode.MotionMagic, setPointPosition_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
         rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
         leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
-        leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor2.follow(leftMotor1, FollowerType.PercentOutput);
     }
 
     public void setSetPointHeadingTeleop(double speed, double setAngle) {
@@ -459,6 +448,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.feed();
     }
 
+    /**
+     * 
+     * @return error in inches
+     */
     public double getErrorPosition() {
         return ticksToInches(setPointPosition_sensorUnits - rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_PRIMARY));
         //return leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
@@ -474,6 +467,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     public void zeroHeading() {
         if (USE_PIGEON_GYRO) {
             pidgey.reset();
+            pidgey.setYaw(0, TIMEOUT);
+		    pidgey.setAccumZAngle(0, TIMEOUT);
         } else {
             navx.reset();
             ;
@@ -484,6 +479,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * Resets encoders on motors
      */
     public void resetEncoders() {
+        leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, TIMEOUT);
+		rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, TIMEOUT);
+
         leftMotor1.setSelectedSensorPosition(0.0);
         rightMotor1.setSelectedSensorPosition(0.0);
     }
@@ -633,5 +631,69 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.setNeutralMode(NeutralMode.Coast);
         rightMotor2.setNeutralMode(NeutralMode.Coast);
     }
+
+    /** 
+	 * Determines if SensorSum or SensorDiff should be used 
+	 * for combining left/right sensors into Robot Distance.  
+	 * 
+	 * Assumes Aux Position is set as Remote Sensor 0.  
+	 * 
+	 * configAllSettings must still be called on the master config
+	 * after this function modifies the config values. 
+	 * 
+	 * @param masterInvertType Invert of the Master Talon
+	 * @param masterConfig Configuration object to fill
+	 */
+	 void setRobotDistanceConfigs(TalonFXInvertType masterInvertType, TalonFXConfiguration masterConfig){
+		/**
+		 * Determine if we need a Sum or Difference.
+		 * 
+		 * The auxiliary Talon FX will always be positive
+		 * in the forward direction because it's a selected sensor
+		 * over the CAN bus.
+		 * 
+		 * The master's native integrated sensor may not always be positive when forward because
+		 * sensor phase is only applied to *Selected Sensors*, not native
+		 * sensor sources.  And we need the native to be combined with the 
+		 * aux (other side's) distance into a single robot distance.
+		 */
+
+		/* THIS FUNCTION should not need to be modified. 
+		   This setup will work regardless of whether the master
+		   is on the Right or Left side since it only deals with
+		   distance magnitude.  */
+
+		/* Check if we're inverted */
+		if (masterInvertType == TalonFXInvertType.Clockwise){
+			/* 
+				If master is inverted, that means the integrated sensor
+				will be negative in the forward direction.
+				If master is inverted, the final sum/diff result will also be inverted.
+				This is how Talon FX corrects the sensor phase when inverting 
+				the motor direction.  This inversion applies to the *Selected Sensor*,
+				not the native value.
+				Will a sensor sum or difference give us a positive total magnitude?
+				Remember the Master is one side of your drivetrain distance and 
+				Auxiliary is the other side's distance.
+					Phase | Term 0   |   Term 1  | Result
+				Sum:  -((-)Master + (+)Aux   )| NOT OK, will cancel each other out
+				Diff: -((-)Master - (+)Aux   )| OK - This is what we want, magnitude will be correct and positive.
+				Diff: -((+)Aux    - (-)Master)| NOT OK, magnitude will be correct but negative
+			*/
+
+			masterConfig.diff0Term = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice(); //Local Integrated Sensor
+			masterConfig.diff1Term = TalonFXFeedbackDevice.RemoteSensor0.toFeedbackDevice();   //Aux Selected Sensor
+			masterConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.SensorDifference.toFeedbackDevice(); //Diff0 - Diff1
+		} else {
+			/* Master is not inverted, both sides are positive so we can sum them. */
+			masterConfig.sum0Term = TalonFXFeedbackDevice.RemoteSensor0.toFeedbackDevice();    //Aux Selected Sensor
+			masterConfig.sum1Term = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice(); //Local IntegratedSensor
+			masterConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.SensorSum.toFeedbackDevice(); //Sum0 + Sum1
+		}
+
+		/* Since the Distance is the sum of the two sides, divide by 2 so the total isn't double
+		   the real-world value */
+		masterConfig.primaryPID.selectedFeedbackCoefficient = 0.5;
+	 }
 
 }
