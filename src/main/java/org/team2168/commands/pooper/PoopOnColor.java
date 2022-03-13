@@ -24,9 +24,10 @@ public class PoopOnColor extends CommandBase {
 
     @Override
     public void execute() {
-        if (!colorSensor.isTeamColor()) {
-            pooper.extend();
+        if (!colorSensor.isDataStale() && !colorSensor.isTeamColor()){
+                pooper.extend();
         }
+        else pooper.retract();
     }
 
     @Override
