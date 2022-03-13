@@ -14,9 +14,9 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -31,8 +31,8 @@ public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
   /** Creates a new Climber. */
-  private static WPI_TalonFX climbMotorLeft = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
-  private static WPI_TalonFX climbMotorRight = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
+  private static TalonFXHelper climbMotorLeft = new TalonFXHelper(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
+  private static TalonFXHelper climbMotorRight = new TalonFXHelper(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
 
   private static DigitalInput climbHooks = new DigitalInput(Constants.DIO.CLIMBER_HOOK_LIMIT_SWITCH);
 
@@ -119,6 +119,9 @@ public class Climber extends SubsystemBase implements Loggable {
     // and at the same time.
     climbMotorRight.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_LEFT);
     climbMotorRight.setInverted(InvertType.OpposeMaster);
+
+    climbMotorLeft.configClosedLoopStatusFrameRates();
+    climbMotorRight.configFollowerStatusFrameRates();
 
     climberSim = new ElevatorSim(
         DCMotor.getFalcon500(2),

@@ -92,7 +92,7 @@ public final class Constants {
     public static final class MotorSpeeds {
         // Default speeds to input into commands
         public static final double INDEXER_SPEED = 0.3;
-        public static final double HOPPER_SPEED = 0.3;
+        public static final double HOPPER_SPEED = 0.5;
         public static final double INTAKE_SPEED = 0.5;
     }
     

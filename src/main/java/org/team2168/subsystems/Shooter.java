@@ -11,9 +11,9 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
+import org.team2168.utils.TalonFXHelper;
 import org.team2168.utils.Util;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,8 +44,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
   }
 
-  public WPI_TalonFX _motorRight;
-  public WPI_TalonFX _motorLeft;
+  public TalonFXHelper _motorRight;
+  public TalonFXHelper _motorLeft;
 
   private double errorTolerance = 15.0; // Default shooter speed error tolerance +/- target (RPM)
 
@@ -88,14 +88,13 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
 
-  private double setPoint;
-
+  private double setPoint_RPM;
 
   /** Creates a new Shooter. */
   public Shooter() {
 
-    _motorRight = new WPI_TalonFX(CANDevices.SHOOTER_RIGHT_MOTOR);
-    _motorLeft = new WPI_TalonFX(CANDevices.SHOOTER_LEFT_MOTOR);
+    _motorRight = new TalonFXHelper(CANDevices.SHOOTER_RIGHT_MOTOR);
+    _motorLeft = new TalonFXHelper(CANDevices.SHOOTER_LEFT_MOTOR);
 
     /* Factory Default all hardware to prevent unexpected behaviour */
     _motorRight.configFactoryDefault();
@@ -140,7 +139,7 @@ public class Shooter extends SubsystemBase implements Loggable {
     /* Config the Velocity closed loop gains in slot0 */
 
     _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/8570.0, kTimeoutMs);
-//    _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/7512, kTimeoutMs);  // TODO this is compbot
+    // _motorRight.config_kF(kPIDLoopIdx, 0.41*1023.0/7512, kTimeoutMs);  // TODO this is compbot
 
     // feedforward; https://docs.ctre-phoenix.com/en/stable/ch16_ClosedLoop.html#calculating-velocity-feed-forward-gain-kf
     _motorRight.config_kP(kPIDLoopIdx, 0.25, kTimeoutMs);
@@ -149,6 +148,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.config_IntegralZone(kPIDLoopIdx, 300, kTimeoutMs);
     // _motorRight.configMaxIntegralAccumulator(kPIDLoopIdx, iaccum, kTimeoutMs)
 
+    // Reduce can status frame rates
+    _motorLeft.configFollowerStatusFrameRates();
+    _motorRight.configClosedLoopStatusFrameRates();
   }
 
   /**
@@ -158,12 +160,10 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      this.setPoint = setPoint;
+      this.setPoint_RPM = setPoint;
       var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
-
-
 
   /**
    * Convert speed in motor units per 100ms to RPM
@@ -194,8 +194,12 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
+  /**
+   * 
+   * @return target speed in RPM
+   */
   public double getSetPoint() {
-    return setPoint;
+    return setPoint_RPM;
   }
 
   /**
@@ -219,9 +223,8 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public boolean isAtSpeed(double errorTolerance) {
     this.errorTolerance = errorTolerance;
-    return Math.abs(getError()) < errorTolerance;
+    return (Math.abs(getError()) < errorTolerance) && (getSetPoint() != 0.0);
   }
-
 
   /**
    * Checks if the shooter is at speed.
