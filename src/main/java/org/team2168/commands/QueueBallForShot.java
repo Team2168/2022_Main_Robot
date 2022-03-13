@@ -37,8 +37,10 @@ public class QueueBallForShot extends SequentialCommandGroup {
       ),
       new Sleep().withTimeout(0.2), //let the ball color be detected
       new PoopOnColor(colorSensor, pooper).withTimeout(0.25),
+      new Sleep().withTimeout(.25),
       race(new DriveHopperWithPercentOutput(hopper, ()->MotorSpeeds.HOPPER_SPEED),
            new DriveIndexerUntilBall(indexer, ()->MotorSpeeds.INDEXER_SPEED).withTimeout(1.0))
+      
     );
 
   }
