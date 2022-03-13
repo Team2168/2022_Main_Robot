@@ -132,7 +132,7 @@ public class RobotContainer {
                             shooter, pooper, colorSensor,
                             lime));
         autoChooser.addOption("Drive 3 Feet",
-                new DriveXDistance(drivetrain, 3.0 * 12.0, 0.5));
+                new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
 
         // debug autos
         // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
