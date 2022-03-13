@@ -64,7 +64,6 @@ import java.util.function.DoubleFunction;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
@@ -114,25 +113,24 @@ public class RobotContainer {
 
     private void configureAutonomousRoutines() {
         autoChooser.setDefaultOption("Do nothing", new DoNothing());
-//        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-        autoChooser.addOption("2 ball", new TwoBall(
-                drivetrain, intakeRaiseAndLower, intakeRoller,
-                hopper, indexer, hood,
-                shooter, pooper, colorSensor,
-                lime));
-        autoChooser.addOption("3 Ball", new ThreeBall(
-                drivetrain, intakeRaiseAndLower, intakeRoller,
-                hopper, indexer, hood,
-                shooter, pooper, colorSensor,
-                lime));
-        autoChooser.addOption(
-                "4 Ball (ends at Terminal)", new FourBall(
-                            drivetrain, intakeRaiseAndLower, intakeRoller,
-                            hopper, indexer, hood,
-                            shooter, pooper, colorSensor,
-                            lime));
+//        autoChooser.addOption("2 ball", new TwoBall(
+//                drivetrain, intakeRaiseAndLower, intakeRoller,
+//                hopper, indexer, hood,
+//                shooter, pooper, colorSensor,
+//                lime));
+//        autoChooser.addOption("3 Ball", new ThreeBall(
+//                drivetrain, intakeRaiseAndLower, intakeRoller,
+//                hopper, indexer, hood,
+//                shooter, pooper, colorSensor,
+//                lime));
+//        autoChooser.addOption(
+//                "4 Ball (ends at Terminal)", new FourBall(
+//                            drivetrain, intakeRaiseAndLower, intakeRoller,
+//                            hopper, indexer, hood,
+//                            shooter, pooper, colorSensor,
+//                            lime));
         autoChooser.addOption("Drive 3 Feet",
-                new DriveXDistance(drivetrain, 3.0));
+                new DriveXDistance(drivetrain, 36.0));
 
         // debug autos
         // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));

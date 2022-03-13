@@ -153,7 +153,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
          * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
          *   This is typical when the master is the left Talon FX and using Pigeon
          */
-        rightConfig.auxPIDPolarity = false;
+        rightConfig.auxPIDPolarity = true;
 
         /**
          * 1ms per loop.  PID loop can be slowed down if need be.
@@ -205,8 +205,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         odometry.update(pidgey.getRotation2d(), getLeftEncoderDistance(), getRightEncoderDistance());
     }
 
-    public void switchGains(boolean straightmode)
-    {
+    public void switchGains(boolean straightmode) {
         if(straightmode) {
             /* Motion Magic Configs */
             rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second
@@ -248,57 +247,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
             leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
         }
     }
-    
-//    public void switchGains(boolean straightmode) {
-//        final TalonFXConfiguration straightConfig = new TalonFXConfiguration();
-//        straightConfig.slot1.kF = Constants.Drivetrain.kGains_Turning_Straight.kF;
-//        straightConfig.slot1.kP = Constants.Drivetrain.kGains_Turning_Straight.kP;
-//        straightConfig.slot1.kI = Constants.Drivetrain.kGains_Turning_Straight.kI;
-//        straightConfig.slot1.kD = Constants.Drivetrain.kGains_Turning_Straight.kD;
-//        straightConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning_Straight.kIzone;
-//        straightConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning_Straight.kPeakOutput;
-//
-//        final TalonFXConfiguration turnConfig = new TalonFXConfiguration();
-//        turnConfig.slot1.kF = Constants.Drivetrain.kGains_Turning.kF;
-//        turnConfig.slot1.kP = Constants.Drivetrain.kGains_Turning.kP;
-//        turnConfig.slot1.kI = Constants.Drivetrain.kGains_Turning.kI;
-//        turnConfig.slot1.kD = Constants.Drivetrain.kGains_Turning.kD;
-//        turnConfig.slot1.integralZone = Constants.Drivetrain.kGains_Turning.kIzone;
-//        turnConfig.slot1.closedLoopPeakOutput = Constants.Drivetrain.kGains_Turning.kPeakOutput;
-//
-//        if (straightmode) {
-//            /* Motion Magic Configs */
-//            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
-//            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0 * 12.0))); //distance units per 100 ms
-//            /* FPID for Heading */
-//            rightMotor1.configAllSettings(straightConfig);
-//
-//            rightMotor1.configNominalOutputForward(0.045, TIMEOUT);
-//            rightMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-//            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//            leftMotor1.configNominalOutputForward(0.045, TIMEOUT);
-//            leftMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-//            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//        } else {
-//            //gains used when turning in place
-//            /* Motion Magic Configs */
-//            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0 * 12.0))); //(distance units per 100 ms) per second
-//            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(5.0 * 12.0))); //distance units per 100 ms
-//
-//            rightMotor1.configAllSettings(turnConfig);
-//
-//            rightMotor1.configNominalOutputForward(0.13, TIMEOUT);
-//            rightMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-//            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//            leftMotor1.configNominalOutputForward(0.13, TIMEOUT);
-//            leftMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-//            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-//            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-//        }
-//    }
 
     /**
      * Gets the odometry pose
@@ -421,6 +369,13 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
         leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
         leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
+
+    }
+
+    public double[] getMotorOutputs() {
+        return new double[]{
+                rightMotor1.get(), rightMotor2.get(), leftMotor1.get(), leftMotor2.get()
+        };
     }
 
     public void feed() {
