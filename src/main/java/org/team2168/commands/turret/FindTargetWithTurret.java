@@ -19,8 +19,6 @@ public class FindTargetWithTurret extends CommandBase {
   private boolean reachedLimit;
   private boolean targetFound = false;
 
-  private long startTime;
-
   public FindTargetWithTurret(Turret turret, Limelight limelight) {
     this.turret = turret;
     this.limelight = limelight;
@@ -37,8 +35,6 @@ public class FindTargetWithTurret extends CommandBase {
       rotateToRight = false;
     else 
       rotateToRight = true;
-
-    startTime = System.currentTimeMillis();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -60,12 +56,13 @@ public class FindTargetWithTurret extends CommandBase {
         reachedLimit = true;
     }
 
-    while (targetFound == false && reachedLimit == true) {
-      // goes the opposite direction it was going in
+    while (targetFound == false && !turret.isTurretAtZero()) {
+      // goes the opposite direction it was going in until it is at 0
       if (rotateToRight == false) 
         turret.setRotationDegrees(1);
       else 
         turret.setRotationDegrees(-1);
+
       targetFound = limelight.hasTarget();
     }
 
@@ -87,6 +84,6 @@ public class FindTargetWithTurret extends CommandBase {
   @Override
   public boolean isFinished() {
     //if the target is found or it has been longer than 10 seconds
-    return (targetFound || (System.currentTimeMillis() >= startTime + 10 * 1000)); 
+    return (targetFound || turret.isTurretAtZero()); 
   }
 }
