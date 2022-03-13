@@ -35,7 +35,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private TalonFXHelper rightMotor1;
     private TalonFXHelper rightMotor2;
 
-    private DifferentialDrive drive;
+    // private DifferentialDrive drive;
     private DifferentialDriveOdometry odometry;
 
     private static Drivetrain instance = null;
@@ -130,8 +130,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightConfig.supplyCurrLimit = talonCurrentLimit;
 
         setMotorsBrake();
-        drive = new DifferentialDrive(leftMotor1, rightMotor1);
-        drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
+        // drive = new DifferentialDrive(leftMotor1, rightMotor1);
+        // drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
         if(USE_PIGEON_GYRO) {
             pidgey.setReducedStatusFramePeriods();
@@ -441,12 +441,12 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
     }
 
-    public void feed() {
-        rightMotor1.feed();
-        rightMotor2.feed();
-        leftMotor1.feed();
-        rightMotor1.feed();
-    }
+    // public void feed() {
+    //     rightMotor1.feed();
+    //     rightMotor2.feed();
+    //     leftMotor1.feed();
+    //     rightMotor1.feed();
+    // }
 
     /**
      * 
@@ -589,7 +589,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
-        drive.tankDrive(leftSpeed, rightSpeed);
+        // drive.tankDrive(leftSpeed, rightSpeed);
+        leftMotor1.set(leftSpeed);
+        leftMotor2.set(leftSpeed);
+        rightMotor1.set(rightSpeed);
+        rightMotor2.set(rightSpeed);
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -600,7 +604,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     public void arcadeDrive(double xSpeed, double zRotation) {
-        drive.arcadeDrive(xSpeed, zRotation);
+        tankDrive(xSpeed + zRotation, xSpeed - zRotation);
     }
 
     /**

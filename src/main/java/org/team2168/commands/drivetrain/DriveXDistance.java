@@ -74,13 +74,12 @@ public class DriveXDistance extends CommandBase {
     dt.switchGains(true);
     dt.setCruiseVelocity(_maxVel);
     _withinThresholdLoops = 0;
+    dt.setSetPointPosition(_targetPos, _targetAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    dt.setSetPointPosition(_targetPos, _targetAngle);
-    dt.feed();
     /* Check if closed loop error is within the threshld */
     if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) {
       ++_withinThresholdLoops;
