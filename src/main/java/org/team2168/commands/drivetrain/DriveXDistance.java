@@ -26,14 +26,32 @@ public class DriveXDistance extends CommandBase {
   private int _withinThresholdLoops = 0;
 
   /** Creates a new DriveXDisatance. */
+  /**
+   * 
+   * @param dt subsystem instance
+   * @param setPoint the target position in inches
+   */
   public DriveXDistance(Drivetrain dt, double setPoint) {
     this(dt, setPoint, DEFAULT_ERROR_TOLERANCE, DEFAULT_MAX_VEL, DEFAULT_LOOPS_TO_SETTLE);
   }
 
+  /**
+   * 
+   * @param dt subsystem instance
+   * @param setPoint the target position in inches
+   * @param errorTolerancePosition accepatable error in inches
+   */
   public DriveXDistance(Drivetrain dt, double setPoint, double errorTolerancePosition) {
     this(dt, setPoint, errorTolerancePosition, DEFAULT_MAX_VEL, DEFAULT_LOOPS_TO_SETTLE);
   }
 
+  /**
+   * 
+   * @param dt subsystem instance
+   * @param setPoint the target position in inches
+   * @param errorTolerancePosition accepatable error in inches
+   * @param maxVelocity max speed in inches/sec
+   */
   public DriveXDistance(Drivetrain dt, double setPoint, double errorTolerancePosition, double maxVelocity) {
     this(dt, setPoint, errorTolerancePosition, maxVelocity, DEFAULT_LOOPS_TO_SETTLE);
   }
