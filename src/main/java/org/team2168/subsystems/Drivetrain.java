@@ -5,7 +5,6 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.kauailabs.navx.frc.AHRS;
@@ -20,7 +19,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -321,7 +319,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     /**
      * Gets gyro heading
      *
-     * @return gyro heading from -180.0 to 180.0 degrees
+     * @return gyro heading from -180.0 to 180.0 degrees. Positive counterclockwise
      */
     @Log(name = "Gyro Heading", rowIndex = 2, columnIndex = 1)
     public double getHeading() {
