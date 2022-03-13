@@ -8,7 +8,7 @@ import org.team2168.subsystems.Drivetrain;
 public class Drive3Feet extends SequentialCommandGroup {
     public Drive3Feet(Drivetrain drivetrain) {
         addCommands(
-                sequence(new DriveXDistance(drivetrain, 3.28))
+                sequence(new DriveXDistance(drivetrain, 3.0 * 12.0))
         );
     }
 }
