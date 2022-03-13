@@ -115,7 +115,7 @@ public class Turret extends SubsystemBase implements Loggable {
 
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isTurretAtZero() {
-    return hallEffectSensor.isFwdLimitSwitchClosed();
+    return (hallEffectSensor.isFwdLimitSwitchClosed() && getEncoderPosition() < 10 && getEncoderPosition() > -10);
   }
 
   /**
@@ -251,7 +251,7 @@ public class Turret extends SubsystemBase implements Loggable {
   public void periodic() {
     // This method will be called once per scheduler run
     // Only zeros the turret if it is actually at zero and not at 360/-360
-    if (isTurretAtZero() && (getEncoderPosition() < 10) && (getEncoderPosition() > -10))
+    if (isTurretAtZero())
       zeroEncoder();
   }
 
