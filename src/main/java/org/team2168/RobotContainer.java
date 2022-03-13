@@ -27,6 +27,7 @@ import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.StowEverything;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.DoNothing;
+import org.team2168.commands.auto.DriveBackAndShoot;
 import org.team2168.commands.auto.pathplanner.FourBall;
 import org.team2168.commands.auto.pathplanner.Paths;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
@@ -114,33 +115,15 @@ public class RobotContainer {
 
     private void configureAutonomousRoutines() {
         autoChooser.setDefaultOption("Do nothing", new DoNothing());
-//        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-        autoChooser.addOption("2 ball", new TwoBall(
-                drivetrain, intakeRaiseAndLower, intakeRoller,
-                hopper, indexer, hood,
-                shooter, pooper, colorSensor,
-                lime));
-        autoChooser.addOption("3 Ball", new ThreeBall(
-                drivetrain, intakeRaiseAndLower, intakeRoller,
-                hopper, indexer, hood,
-                shooter, pooper, colorSensor,
-                lime));
-        autoChooser.addOption(
-                "4 Ball (ends at Terminal)", new FourBall(
-                            drivetrain, intakeRaiseAndLower, intakeRoller,
-                            hopper, indexer, hood,
-                            shooter, pooper, colorSensor,
-                            lime));
+        autoChooser.addOption("Drive back and shoot",
+                new DriveBackAndShoot(
+                        drivetrain, intakeRaiseAndLower,intakeRoller,
+                        hopper, indexer, hood, shooter, pooper,
+                        colorSensor, lime
+                ));
         autoChooser.addOption("Drive 3 Feet",
                 new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
 
-        // debug autos
-        // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
-        // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-        // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
-        // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
-        // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
-        // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
         SmartDashboard.putData(autoChooser);
     }
   /**
