@@ -72,9 +72,9 @@ public final class Constants {
          *
          * 0.21 @ 12v minimum straight output
          * 	                                        	               kP     kI     kD   kF           Iz    PeakOut */
-        public final static Gains kGains_Distance         = new Gains( 0.125, 0.00, 0.0, 0.0,          120,  0.75 ); //always used for linear path
-        public final static Gains kGains_Turning          = new Gains( 0.48, 0.00,  0.0, 0.0,          200,  0.5 ); //used to turn during autos
-        public final static Gains kGains_Turning_Straight = new Gains( 0.05, 0.0, 0.0, 0.18,           300,  0.50 ); //used to maintain heading while auto driving straight
+        public final static Gains kGains_Distance         = new Gains( 0.125, 0.0, 0.0, 0.0,           120,  0.75 ); //always used for linear path
+        public final static Gains kGains_Turning          = new Gains( 20.0, 0.0, 0.0, 1023 * 0.08,    200,  0.5 );  //used to turn during autos
+        public final static Gains kGains_Turning_Straight = new Gains( 20.0, 1.0, 0.0, 1023 * 0.17,    300,  0.50 ); //used to maintain heading while auto driving straight
         public final static Gains kGains_Limelight        = new Gains( 0.55, 0.0, 0.0, 1023.0/6800.0,  200,  0.5 );
 	
         /** ---- Flat constants, you should not need to change these ---- */
