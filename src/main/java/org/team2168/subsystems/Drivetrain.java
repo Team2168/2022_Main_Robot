@@ -7,14 +7,13 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
-import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.RobotController;
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
+import org.team2168.utils.PigeonHelper;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,13 +27,13 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
     private static boolean USE_PIGEON_GYRO = true;
-    private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
+    private PigeonHelper pidgey; // Same as normal pigeon; implements wpi methods
     private AHRS navx;
 
-    private WPI_TalonFX leftMotor1;
-    private WPI_TalonFX leftMotor2;
-    private WPI_TalonFX rightMotor1;
-    private WPI_TalonFX rightMotor2;
+    private TalonFXHelper leftMotor1;
+    private TalonFXHelper leftMotor2;
+    private TalonFXHelper rightMotor1;
+    private TalonFXHelper rightMotor2;
 
     private DifferentialDrive drive;
     private DifferentialDriveOdometry odometry;
@@ -105,14 +104,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     private Drivetrain() {
         // Instantiate motor objects
-        leftMotor1 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_1);
-        leftMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_LEFT_MOTOR_2);
-        rightMotor1 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_1);
-        rightMotor2 = new WPI_TalonFX(CANDevices.DRIVETRAIN_RIGHT_MOTOR_2);
+        leftMotor1 = new TalonFXHelper(CANDevices.DRIVETRAIN_LEFT_MOTOR_1);
+        leftMotor2 = new TalonFXHelper(CANDevices.DRIVETRAIN_LEFT_MOTOR_2);
+        rightMotor1 = new TalonFXHelper(CANDevices.DRIVETRAIN_RIGHT_MOTOR_1);
+        rightMotor2 = new TalonFXHelper(CANDevices.DRIVETRAIN_RIGHT_MOTOR_2);
 
         // Instantiate gyro
-        if (USE_PIGEON_GYRO) {
-            pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
+        if(USE_PIGEON_GYRO) {
+            pidgey = new PigeonHelper(CANDevices.PIGEON_IMU);
         } else {
             navx = new AHRS(SPI.Port.kMXP);
         }
@@ -198,13 +197,19 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         drive = new DifferentialDrive(leftMotor1, rightMotor1);
         drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
-        if (USE_PIGEON_GYRO) {
-            pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 1);  // status frame in ms
+        if(USE_PIGEON_GYRO) {
+            pidgey.setReducedStatusFramePeriods();
             odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
         } else {
             odometry = new DifferentialDriveOdometry(navx.getRotation2d());
         }
+        
+        // Reduce can status frame rates
+        leftMotor1.configClosedLoopStatusFrameRates();
+        rightMotor1.configClosedLoopStatusFrameRates();
 
+        leftMotor2.configFollowerStatusFrameRates();
+        rightMotor2.configFollowerStatusFrameRates();
     }
 
     @Override
