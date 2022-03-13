@@ -8,6 +8,7 @@ import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,6 +77,13 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+        
+    //Only allow pushing the robot around if we aren't on a real field
+    if (!DriverStation.isFMSAttached())
+      robotContainer.drivetrain.setMotorsCoast();
+    else
+      robotContainer.drivetrain.setMotorsBrake();
+
     robotContainer.drivetrain.setMotorsBrake();
     robotContainer.lime.pauseLimelight();
     Hood.getInstance().setMotorCoast();
@@ -83,14 +91,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // Check periodically
-    if (robotContainer.brakesEnabled())
-      robotContainer.drivetrain.setMotorsCoast();
-    else
-      robotContainer.drivetrain.setMotorsBrake();
-
-    // Limelight.getInstance().enableLimelight();
-
     // TODO we probably don't want to do this
     if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
       robotContainer.drivetrain.zeroHeading();
