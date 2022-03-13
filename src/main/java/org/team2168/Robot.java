@@ -130,6 +130,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
+    robotContainer.drivetrain.teleopconfigs();
     robotContainer.lime.pauseLimelight();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
