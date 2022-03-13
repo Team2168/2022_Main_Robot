@@ -10,11 +10,11 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -32,7 +32,7 @@ public class Hopper extends SubsystemBase implements Loggable {
   /**
    * the hopper motor it moves the hopper
    */
-  private static WPI_TalonFX hopperMotor;
+  private static TalonFXHelper hopperMotor;
   
   /**
    * the hopperLineBreak, its lets the driver know the ball is entering the hopper
@@ -81,19 +81,16 @@ public class Hopper extends SubsystemBase implements Loggable {
    */
   private static FlywheelSim hopperSim;
  
-    public static Hopper getInstance() {
-      if (instance == null)
-        instance = new Hopper();
-      return instance; 
-    }
+  public static Hopper getInstance() {
+    if (instance == null)
+      instance = new Hopper();
+    return instance; 
+  }
 
-
-  
   /** Creates a new Hopper. */
   private Hopper() {
-    hopperMotor = new WPI_TalonFX(CANDevices.HOPPER_MOTOR);
+    hopperMotor = new TalonFXHelper(CANDevices.HOPPER_MOTOR);
     hopperLineBreak = new DigitalInput(DIO.HOPPER_LINE_BREAK);
-    
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
@@ -107,6 +104,8 @@ public class Hopper extends SubsystemBase implements Loggable {
 
     hopperMotor.setInverted(hopperMotorInvert);
 
+    hopperMotor.configOpenLoopStatusFrameRates();
+
     hopperSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
       DCMotor.getFalcon500(1),
@@ -114,14 +113,13 @@ public class Hopper extends SubsystemBase implements Loggable {
     );
 
     hopperMotorSim = hopperMotor.getSimCollection();
+  }
 
-}
-
-/**
- * 
- * @param ticks
- * @return inches
- */
+  /**
+   * 
+   * @param ticks
+   * @return inches
+   */
 
   private static double ticksToInches(double ticks) {
     return ((ticks / TICKS_PER_REV) * GEAR_RATIO * INCHES_PER_REV);
@@ -141,31 +139,15 @@ public class Hopper extends SubsystemBase implements Loggable {
    * 
    * @param speed
    */
-
   public void driveHopper(double speed) {
     hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
   /**
    * 
-   * @param InchesPerSecond
+   * @return If ball enters hopper
    */
-  public void driveHopperVelocity(double InchesPerSecond) {
-    hopperMotor.set(ControlMode.Velocity, inchesToTicks(InchesPerSecond) *  TIME_UNITS_OF_VELOCITY);
-  }
-
-  /**
-   */
-  public void zeroEncoder() {
-    hopperMotor.setSelectedSensorPosition(0.0);
-  }
-
-
-/**
- * 
- * @return If ball enters hopper
- */
- @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
+  @Log(name = "Ball Is Entering Hopper", rowIndex = 1, columnIndex = 1)
     public boolean isBallPresent() {
       return !hopperLineBreak.get();
   }
@@ -174,35 +156,15 @@ public class Hopper extends SubsystemBase implements Loggable {
    * 
    * @return Encoder position
    */
-  @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
-    public double getEncoderPosition() {
+  // @Log(name = "Encoder Position", rowIndex = 1, columnIndex = 2)
+  public double getEncoderPosition() {
       return hopperMotor.getSelectedSensorPosition();
   }
-
-  /**
-   * @return Hopper speed in Inches Per Second
-   */
-@Log(name = "Inches Per Second", rowIndex = 1, columnIndex = 3)
-  public double getHopperSpeed() {
-    return hopperMotor.getSelectedSensorVelocity();
-  }
-
-/**
- * 
- * @return Hopper wheel Rotations Per Minute
- */
-@Log(name = "Rotations Per Minute", rowIndex = 1, columnIndex = 4)
-public double getHopperRPM() {
-  return (hopperMotor.getSelectedSensorVelocity() / TICKS_PER_REV * 600);
-}
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
-
-  
-  
 
   public void simulationPeriodic() {
 

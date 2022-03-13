@@ -8,10 +8,10 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -21,7 +21,7 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Indexer extends SubsystemBase implements Loggable {
   /** Creates a new Indexer. */
   private static DigitalInput detector;
-  private static WPI_TalonFX motor;
+  private static TalonFXHelper motor;
 
   private static SupplyCurrentLimitConfiguration indexerCurrentLimit;
   private static final boolean ENABLE_CURRENT_LIMIT = true;
@@ -33,7 +33,7 @@ public class Indexer extends SubsystemBase implements Loggable {
   private static Indexer instance = null;
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
-    motor = new WPI_TalonFX(CANDevices.INDEXER_MOTOR);
+    motor = new TalonFXHelper(CANDevices.INDEXER_MOTOR);
 
     motor.configFactoryDefault();
     motor.setInverted(indexerInvert);
@@ -41,6 +41,8 @@ public class Indexer extends SubsystemBase implements Loggable {
       CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
     motor.configSupplyCurrentLimit(indexerCurrentLimit);
     motor.setNeutralMode(NeutralMode.Brake);
+
+    motor.configOpenLoopStatusFrameRates();
   }
 
   public static Indexer getInstance() {
