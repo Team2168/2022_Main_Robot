@@ -33,9 +33,7 @@ import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
 import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.drivetrain.DriveWithLimelight;
-import org.team2168.commands.drivetrain.DriveXDistance;
+import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.hood.HoodToAngle;
@@ -133,6 +131,10 @@ public class RobotContainer {
                             lime));
         autoChooser.addOption("Drive 3 Feet",
                 new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
+        autoChooser.addOption("Drive 3 Feet",
+                new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
+        autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
+        autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
 
         // debug autos
         // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
