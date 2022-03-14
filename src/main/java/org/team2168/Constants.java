@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    
+    public static final boolean IS_COMPBOT = new DigitalInput(DIO.PRACTICEBOT_JUMPER).get();
     public static final class Joysticks {
         public static final int DRIVER_JOYSTICK = 0;
         public static final int OPERATOR_JOYSTICK = 1;
@@ -121,14 +123,25 @@ public final class Constants {
         public static final int CLIMBER_HOOK_LIMIT_SWITCH = 1;
         public static final int HOPPER_LINE_BREAK = 2;
         public static final int INDEXER_SENSOR = 3;
-        public static final int PRACTICEBOT_JUMPER = 9;
+        public static final int PRACTICEBOT_JUMPER = 7; //because its easier to reach than 9
     }
 
     public static final class MotorSpeeds {
         // Default speeds to input into commands
-        public static final double INDEXER_SPEED = 0.3;
-        public static final double HOPPER_SPEED = 0.5;
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double INDEXER_SPEED;
+        public static final double HOPPER_SPEED;
+        public static final double INTAKE_SPEED;
+        static {
+            if(IS_COMPBOT) {
+                INDEXER_SPEED = 0.3;
+                HOPPER_SPEED = 0.5;
+                INTAKE_SPEED = 0.9;
+            } else {
+                INDEXER_SPEED = 0.3;
+                HOPPER_SPEED = 0.5;
+                INTAKE_SPEED = 0.5;
+            }
+        }
     }
     
     public static final class LiftPositions {
@@ -148,5 +161,4 @@ public final class Constants {
     }
 
     public static final double LOOP_TIMESTEP_S = 0.02;
-    public static final boolean IS_COMPBOT = new DigitalInput(DIO.PRACTICEBOT_JUMPER).get();
 }
