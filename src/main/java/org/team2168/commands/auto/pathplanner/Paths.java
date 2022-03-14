@@ -1,4 +1,4 @@
-package org.team2168.commands.auto;
+package org.team2168.commands.auto.pathplanner;
 
 import java.io.IOException;
 
