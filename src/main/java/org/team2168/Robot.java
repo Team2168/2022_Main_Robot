@@ -84,7 +84,6 @@ public class Robot extends TimedRobot {
     else
       robotContainer.drivetrain.setMotorsBrake();
 
-    robotContainer.drivetrain.setMotorsBrake();
     robotContainer.lime.pauseLimelight();
     Hood.getInstance().setMotorCoast();
   }

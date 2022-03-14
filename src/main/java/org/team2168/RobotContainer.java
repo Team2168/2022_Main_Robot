@@ -18,19 +18,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-import org.team2168.commands.FireBalls;
+
+import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
-import org.team2168.commands.QueueBallsForShotNoStop;
-import org.team2168.commands.StowEverything;
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.auto.DoNothing;
-import org.team2168.commands.auto.pathplanner.FourBall;
-import org.team2168.commands.auto.pathplanner.Paths;
-import org.team2168.commands.auto.pathplanner.ThreeBall;
-import org.team2168.commands.auto.pathplanner.TwoBall;
+import org.team2168.commands.auto.*;
 import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.*;
@@ -96,7 +92,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   private RobotContainer() {
-    Paths.getInstance();  // Create the instance so paths are generated soon after code execution begins, well before autos
+    // Paths.getInstance();  // Create the instance so paths are generated soon after code execution begins, well before autos
     Logger.configureLoggingAndConfig(this, false);
 
     // Configure the button bindings
@@ -113,28 +109,28 @@ public class RobotContainer {
     private void configureAutonomousRoutines() {
         autoChooser.setDefaultOption("Do nothing", new DoNothing());
 //        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-        autoChooser.addOption("2 ball", new TwoBall(
+        autoChooser.addOption("2 ball", new SimpleTwoBall(
                 drivetrain, intakeRaiseAndLower, intakeRoller,
                 hopper, indexer, hood,
                 shooter, pooper, colorSensor,
                 lime));
-        autoChooser.addOption("3 Ball", new ThreeBall(
-                drivetrain, intakeRaiseAndLower, intakeRoller,
-                hopper, indexer, hood,
-                shooter, pooper, colorSensor,
-                lime));
-        autoChooser.addOption(
-                "4 Ball (ends at Terminal)", new FourBall(
-                            drivetrain, intakeRaiseAndLower, intakeRoller,
-                            hopper, indexer, hood,
-                            shooter, pooper, colorSensor,
-                            lime));
-        autoChooser.addOption("Drive 3 Feet",
-                new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
-        autoChooser.addOption("Drive 3 Feet",
-                new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
-        autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
-        autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
+        // autoChooser.addOption("3 Ball", new ThreeBall(
+        //         drivetrain, intakeRaiseAndLower, intakeRoller,
+        //         hopper, indexer, hood,
+        //         shooter, pooper, colorSensor,
+        //         lime));
+        // autoChooser.addOption(
+        //         "4 Ball (ends at Terminal)", new FourBall(
+        //                     drivetrain, intakeRaiseAndLower, intakeRoller,
+        //                     hopper, indexer, hood,
+        //                     shooter, pooper, colorSensor,
+        //                     lime));
+        // autoChooser.addOption("Drive 3 Feet",
+        //         new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
+        // autoChooser.addOption("Drive 3 Feet",
+        //         new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
+        // autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
+        // autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
 
         // debug autos
         // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
