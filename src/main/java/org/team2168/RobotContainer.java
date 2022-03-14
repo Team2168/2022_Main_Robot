@@ -22,6 +22,7 @@ import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import org.team2168.commands.FireBalls;
+import org.team2168.commands.QueueBallForShot;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.StowEverything;
@@ -46,6 +47,8 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.pooper.PooperPoop;
+import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
@@ -246,8 +249,8 @@ public class RobotContainer {
 
     // oi.testJoystick.ButtonLeftDPad().whenPressed(new Launchpad(hood, shooter, lime));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
-    oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
+    // oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    // oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
 
   }
 
