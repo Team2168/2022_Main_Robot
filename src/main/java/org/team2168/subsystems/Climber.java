@@ -27,6 +27,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 
+
 public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
@@ -50,12 +51,27 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.3;
-  private static final double kI = 0.0;
-  private static final double kD = 0.0;
-  private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.032;
-  private static final int kIzone = 0;
+  private static final double kP;
+  private static final double kI;
+  private static final double kD;
+  private static final double kF;
+  private static final double kArbitraryFeedForward;
+  static {
+    if (Constants.IS_COMPBOT) {
+       kP = 0.3;
+       kI = 0.0;
+       kD = 0.0;
+       kF = 0.0;
+       kArbitraryFeedForward = 0.032;
+    } else {  // Practice bot gains
+      kP = 0.3;
+      kI = 0.0;
+      kD = 0.0;
+      kF = 0.0;
+      kArbitraryFeedForward = 0.032;
+    }
+  }
+  
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.001;
   private static final double ACCELERATION_LIMIT = inchesToTicks(21.68 * 3.0) * TIME_UNITS_OF_VELOCITY;
