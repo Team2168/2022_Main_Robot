@@ -15,6 +15,7 @@ import org.team2168.utils.CanDigitalInput;
 import org.team2168.utils.Gains;
 import org.team2168.utils.TalonFXHelper;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.RobotController;
@@ -32,6 +33,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = (60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
   private static final double TICKS_PER_TURRET_ROTATION = TICKS_PER_REV * GEAR_RATIO;
+  private static double setpoint = 0.0;
 
   private static final double TICKS_PER_SECOND = TICKS_PER_TURRET_ROTATION;
   private static final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10.0;
@@ -120,6 +122,10 @@ public class Turret extends SubsystemBase implements Loggable {
     return (hallEffectSensor.isFwdLimitSwitchClosed() && getEncoderPosition() < 10 && getEncoderPosition() > -10);
   }
 
+  public double getSetpoint() {
+    return setpoint;
+  }
+
   /**
    * Rotates the turret to a position
    * 
@@ -138,7 +144,9 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public void setRotationDegrees(double degrees) {
     //CHECK THIS
-    turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(degrees));
+    var demand = MathUtil.clamp(degrees, -MAX_ROTATION_TICKS, MAX_ROTATION_TICKS);
+    setpoint = degrees;
+    turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(demand));
   }
 
   /**
