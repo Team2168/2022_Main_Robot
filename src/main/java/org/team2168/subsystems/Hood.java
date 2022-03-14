@@ -4,6 +4,7 @@
 
 package org.team2168.subsystems;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -21,12 +22,24 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Hood extends SubsystemBase implements Loggable {
   /** Creates a new Hood. */
 
+  //TODO: make another enum
+  //This is for auto shooting
   public enum HoodPosition {
-    //Auto Pos
-    BACK_OF_TARMAC(10.0),
-    WHITE_LINE(15.0),
-    TERMINAL(20.0),
-    TEST3(89.0);
+    AUTO_TARMAC_LINE(23.0),
+    AUTO_LAUNCHPAD(26.7),
+    FENDER_LOW(10.0),
+    FENDER_HIGH(7.0),
+    TARMAC_LINE(23.0),  // 20
+    LAUNCHPAD(28.0),
+    WALL_SHOT(37.0),
+    TERMINAL(33.0),
+    ZERO(0.0);
+//    FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
+//    FENDER_HIGH_COMPBOT(5.0),
+//    TARMAC_LINE_COMPBOT(17),
+//    LAUNCHPAD_COMPBOT(25),
+//    WALL_SHOT_COMPBOT(36),
+//    TERMINAL_COMPBOT(33.0),
 
     public final double position_degrees;
     
@@ -42,7 +55,8 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 76.5/1.0;
   private static final double MAX_RAISED_POSITION_TICKS = 56000;
-  private static double degreeAdjustment = 0.0;
+  private static double setpoint = 0.0;
+
 
   private static final int kPIDLoopIdx = 0;
   private static final int kTimeoutMs = 30;
@@ -75,6 +89,9 @@ public class Hood extends SubsystemBase implements Loggable {
   private static final double ACCELERATION_LIMIT = ticksToDegrees(13125); // TODO: Change when mechanism is avaialble
   private static final double CRUISE_VELOCITY_LIMIT = ticksToDegrees(30000); // TODO: Change when mechanism is avaialble
   // private static final int S_CURVE_STRENGTH = 0; // determines the shape of the motion magic graph
+
+  public static final double MAX_ANGLE = 40.0;
+  public static final double MIN_ANGLE = 0.0;
 
   // Current limit configuration
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -123,21 +140,8 @@ public class Hood extends SubsystemBase implements Loggable {
     return instance;
   }
 
-  public void incrementDegrees() {
-    degreeAdjustment += 5.0;
-  }
-
-  public void decrementDegrees() {
-    degreeAdjustment -= 5.0;
-  }
-
-  public void zeroDegrees() {
-    degreeAdjustment = 0.0;
-  }
-
-  @Log(name = "degree adjustment", rowIndex = 2, columnIndex = 3)
-  public double getDegreeAdjustment() {
-    return degreeAdjustment;
+  public double getSetpoint() {
+    return setpoint;
   }
 
   /**
@@ -180,7 +184,9 @@ public class Hood extends SubsystemBase implements Loggable {
    * @param degrees the amount of degrees/angles to move the hood to, positive up.
    */
   public void setPosition(double degrees) {
-    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(degrees + degreeAdjustment),
+    var demand = MathUtil.clamp(degrees, MIN_ANGLE, MAX_ANGLE);
+    setpoint = degrees;
+    hoodMotor.set(ControlMode.MotionMagic, degreesToTicks(demand),
         DemandType.ArbitraryFeedForward, kArbitraryFeedForward);
   }
 
@@ -243,6 +249,10 @@ public class Hood extends SubsystemBase implements Loggable {
 
   @Override
   public void periodic() {
+    /**
+     * Will set encoder position to zero if at zero
+     */
+
     if (atZero()) {
       setEncoderPosZero();
     }

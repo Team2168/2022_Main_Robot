@@ -11,10 +11,10 @@ import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
+import org.team2168.utils.TalonFXHelper;
 import org.team2168.utils.Util;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,10 +24,20 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    TEST(700.0),
-    TEST1(750.0),
-    TEST2(800.0),
-    TEST3(850.0);
+    AUTO_TARMAC_LINE(1718.0),
+    AUTO_LAUNCHPAD(2335.0),
+    FENDER_LOW(900.0),
+    FENDER_HIGH(1500.0),
+    TARMAC_LINE(1718.0),  // 1650
+    LAUNCHPAD(2085.0),
+    WALL_SHOT(2750.0),
+    TERMINAL(2300);
+//    FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
+//    FENDER_HIGH_CBOT(1500.0),
+//    TARMAC_LINE_CBOT(1550),//PBot (1650.0),
+//    LAUNCHPAD_CBOT (1870),//PBot(2085.0),
+//    WALL_SHOT_CBOT(2500),//PBot(2750.0);
+//    TERMINAL_CBOT(2300.0);
 
     public final double rpm;
     private ShooterRPM(double rpm) {
@@ -35,8 +45,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     }
   }
 
-  public WPI_TalonFX _motorRight;
-  public WPI_TalonFX _motorLeft;
+  public TalonFXHelper _motorRight;
+  public TalonFXHelper _motorLeft;
+
+  private double errorTolerance = 15.0; // Default shooter speed error tolerance +/- target (RPM)
 
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
@@ -76,7 +88,6 @@ public class Shooter extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_100MS = TICKS_PER_REV / 10.0;
   private static final double GEAR_RATIO = 24.0/18.0;  // motor pulley/shooter wheel pulley
   private static final double SECS_PER_MIN = 60.0;
-  private static double velocityAdjustment = 0.0;
 
   public static final double kF;
   public static final double kP;
@@ -85,26 +96,26 @@ public class Shooter extends SubsystemBase implements Loggable {
   public static final double INTEGRAL_ZONE;
   static {
     if (Constants.IS_COMPBOT) {
-      kF = 0.52*1023.0/11205.0;
-      kP = 1.0;
-      kI = 0.0005;
+      kF = 0.41*1023.0/7512;
+      kP = 0.25;
+      kI = 0.0025;
       kD = 0.0;
       INTEGRAL_ZONE = 300.0;
     } else {
-      kF = 0.52*1023.0/11205.0;
-      kP = 1.0;
-      kI = 0.0005;
+      kF = 0.41*1023.0/8570.0;
+      kP = 0.25;
+      kI = 0.0025;
       kD = 0.0;
       INTEGRAL_ZONE = 300.0;
     }
   }
-
+  private double setPoint_RPM;
 
   /** Creates a new Shooter. */
   public Shooter() {
 
-    _motorRight = new WPI_TalonFX(CANDevices.SHOOTER_RIGHT_MOTOR);
-    _motorLeft = new WPI_TalonFX(CANDevices.SHOOTER_LEFT_MOTOR);
+    _motorRight = new TalonFXHelper(CANDevices.SHOOTER_RIGHT_MOTOR);
+    _motorLeft = new TalonFXHelper(CANDevices.SHOOTER_LEFT_MOTOR);
 
     /* Factory Default all hardware to prevent unexpected behaviour */
     _motorRight.configFactoryDefault();
@@ -153,6 +164,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
     _motorRight.config_IntegralZone(kPIDLoopIdx, INTEGRAL_ZONE, kTimeoutMs);
 
+    // Reduce can status frame rates
+    _motorLeft.configFollowerStatusFrameRates();
+    _motorRight.configClosedLoopStatusFrameRates();
   }
 
   /**
@@ -162,30 +176,10 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(double setPoint)
   {
-      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint + velocityAdjustment);
+      this.setPoint_RPM = setPoint;
+      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
       _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
-
-  public void setVelocityAdjustment(double adjustment) {
-    velocityAdjustment = adjustment;
-  }
-
-  public void adjustVelocity(double delta) {
-    setVelocityAdjustment(velocityAdjustment + delta);
-  }
-
-  public void incrementSpeed() {
-    adjustVelocity(50.0);
-  }
-
-  public void decrementSpeed() {
-    adjustVelocity(-50.0);
-  }
-
-  public void zeroSpeed() {
-    setVelocityAdjustment(0.0);
-  }
-
 
   /**
    * Convert speed in motor units per 100ms to RPM
@@ -216,9 +210,45 @@ public class Shooter extends SubsystemBase implements Loggable {
       return ticks_per_100ms_to_revs_per_minute(_motorRight.getSelectedSensorVelocity(kPIDLoopIdx));
   }
 
+  /**
+   * 
+   * @return target speed in RPM
+   */
+  public double getSetPoint() {
+    return setPoint_RPM;
+  }
+
+  /**
+   * Sets the shooter at a speed
+   * @param d_Speed the speed for the shooter to run at, from 0.0 to 1.0
+   */
   public void shoot(double d_Speed){
     setSpeed(d_Speed);
     _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
+  }
+
+  @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1)
+  public double getError() {
+    return ticks_per_100ms_to_revs_per_minute(_motorRight.getClosedLoopError(kPIDLoopIdx));
+  }
+
+  /**
+   * Checks if the shooter is at speed
+   * @param errorTolerance the allowed error for the shooter
+   * @return whether the shooter is at speed
+   */
+  public boolean isAtSpeed(double errorTolerance) {
+    this.errorTolerance = errorTolerance;
+    return (Math.abs(getError()) < errorTolerance) && (getSetPoint() != 0.0);
+  }
+
+  /**
+   * Checks if the shooter is at speed.
+   * @return true when the shooter is within the errorTolerance specified by the last command
+   */
+  @Log(name = "At Speed?", columnIndex = 1, rowIndex = 1)
+  public boolean isAtSpeed() {
+    return Math.abs(getError()) < errorTolerance;
   }
 
   public static Shooter getInstance(){

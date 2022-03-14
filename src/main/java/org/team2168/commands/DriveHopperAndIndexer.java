@@ -6,6 +6,7 @@ package org.team2168.commands;
 
 import java.util.function.DoubleSupplier;
 
+import org.team2168.Constants;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.subsystems.Hopper;
@@ -23,15 +24,14 @@ public class DriveHopperAndIndexer extends ParallelCommandGroup {
    * 
    * @param hopper Hopper subsystem
    * @param indexer Indexer subsystem
-   * @param speed Doublesupplier for speed value
    */
-  public DriveHopperAndIndexer(Hopper hopper, Indexer indexer, DoubleSupplier speed) {
+  public DriveHopperAndIndexer(Hopper hopper, Indexer indexer) {
 
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new DriveHopperWithPercentOutput(hopper, speed),
-      new DriveIndexer(indexer, speed)
+      new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
+      new DriveIndexer(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED)
     );
   }
 }

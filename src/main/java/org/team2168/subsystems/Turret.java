@@ -9,11 +9,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
 import org.team2168.utils.CanDigitalInput;
 import org.team2168.utils.Gains;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
@@ -26,7 +26,7 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Turret extends SubsystemBase implements Loggable {
   /** Creates a new Turret. */
   private static CanDigitalInput hallEffectSensor;
-  private static WPI_TalonFX turretMotor;
+  private static TalonFXHelper turretMotor;
   private static Turret instance = null;
 
   private static final double TICKS_PER_REV = 2048;
@@ -70,11 +70,11 @@ public class Turret extends SubsystemBase implements Loggable {
   public static final double KV = 0.05;
   public static final double KA= 0.002;
 
-  private static FlywheelSim m_turretSim;
-  private static TalonFXSimCollection m_turretMotorSim;
+  private static FlywheelSim turretSim;
+  private static TalonFXSimCollection turretMotorSim;
 
   private Turret() {
-    turretMotor = new WPI_TalonFX(Constants.CANDevices.TURRET_MOTOR);
+    turretMotor = new TalonFXHelper(Constants.CANDevices.TURRET_MOTOR);
     hallEffectSensor = new CanDigitalInput(turretMotor);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
@@ -100,13 +100,15 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.configMotionAcceleration(ACCELERATION);
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
 
+    turretMotor.configClosedLoopStatusFrameRates();
+
     //Setup simulation
-    m_turretSim = new FlywheelSim(
+    turretSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
       DCMotor.getFalcon500(1),
       GEAR_RATIO
     );
-    m_turretMotorSim = turretMotor.getSimCollection();
+    turretMotorSim = turretMotor.getSimCollection();
     
   }
 
@@ -237,16 +239,16 @@ public class Turret extends SubsystemBase implements Loggable {
   @Override
   public void simulationPeriodic() {
     // Affect motor outputs by main system battery voltage dip 
-    m_turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+    turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
 
     // Pass motor output voltage to physics sim
-    m_turretSim.setInput(m_turretMotorSim.getMotorOutputLeadVoltage());
-    m_turretSim.update(Constants.LOOP_TIMESTEP_S);
+    turretSim.setInput(turretMotorSim.getMotorOutputLeadVoltage());
+    turretSim.update(Constants.LOOP_TIMESTEP_S);
 
     // Update motor sensor states based on physics model
-    double sim_velocity_ticks_per_100ms = m_turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    m_turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    m_turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + 
+    double sim_velocity_ticks_per_100ms = turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() +
       Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
 
   }

@@ -1,0 +1,3 @@
+[submodule "src/main/arduino/colorsensor/TCS34725"]
+	path = src/main/arduino/colorsensor/TCS34725
+	url = https://github.com/hideakitai/TCS34725

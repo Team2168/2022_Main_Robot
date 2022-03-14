@@ -12,6 +12,10 @@ public class BumpHoodAngleUp extends CommandBase {
   /** Creates a new BumpHoodAngleUp. */
   private Hood hood;
 
+  /**
+   * Bumps the hood up
+   * @param h the hood instance
+   */
   public BumpHoodAngleUp(Hood h) {
     hood = h;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -24,7 +28,8 @@ public class BumpHoodAngleUp extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hood.incrementDegrees();
+    var setpoint = hood.getSetpoint() + 1.0;
+    hood.setPosition(setpoint);
   }
 
   // Called once the command ends or is interrupted.

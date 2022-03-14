@@ -12,8 +12,8 @@ public class BumpShooterSpeedDown extends CommandBase {
   /** Creates a new BumpShooterSpeedDown. */
   private Shooter shooter;
   /**
-  * Bumps the Shooter speed down
-  * @param s The Shooter to be used
+  * Bumps the shooter speed down
+  * @param s the shooter instance
   */
   public BumpShooterSpeedDown(Shooter s) {
     shooter = s;
@@ -27,7 +27,8 @@ public class BumpShooterSpeedDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.decrementSpeed();
+    var setpoint = shooter.getSetPoint() - 50.0;
+    shooter.setSpeed(setpoint);
   }
 
   // Called once the command ends or is interrupted.

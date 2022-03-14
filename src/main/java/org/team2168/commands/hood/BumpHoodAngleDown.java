@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class BumpHoodAngleDown extends CommandBase {
   /** Creates a new BumpHoodAngleDown. */
   private Hood hood;
+
+  /**
+   * Bumps the hood down
+   * @param h the hood instance
+   */
   public BumpHoodAngleDown(Hood h) {
     hood = h;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -23,7 +28,8 @@ public class BumpHoodAngleDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    hood.decrementDegrees();
+    var setpoint = hood.getSetpoint() - 1.0;
+    hood.setPosition(setpoint);
   }
 
   // Called once the command ends or is interrupted.
