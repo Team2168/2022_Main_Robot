@@ -133,10 +133,10 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         
     }
 
-    @Log(name = "Is team color?")
+    @Log(name = "Is good?")
     public boolean isTeamColor() {
         Alliance alliance = DriverStation.getAlliance();
-        return alliance == getColor() && alliance != Alliance.Invalid;
+        return alliance == getColor();
     }
 
     @Log(name = "Is data stale?")
@@ -149,7 +149,7 @@ public class ColorSensor extends SubsystemBase implements Loggable {
      * @return true when there's positive indication of another alliances ball present
      */
     public boolean shouldPoopBall(){
-        return (!isTeamColor() && !isDataStale());
+        return !isDataStale() && getColor() != Alliance.Invalid && !isTeamColor();
     }
 
     @Log(name = "time since last read")
