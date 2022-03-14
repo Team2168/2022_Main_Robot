@@ -27,12 +27,10 @@ public class SimpleOppositeSideToTerminal extends SequentialCommandGroup {
     Pooper pooper,
     ColorSensor colorSensor,
     Limelight lime) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SimpleTwoBall(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, pooper, colorSensor, lime),
 
-      new TurnXDegrees(drivetrain, 93.4), //Rotate butt toward Terminal
+      new TurnXDegrees(drivetrain, 92.0), //Rotate butt toward Terminal
       new DriveXDistance(drivetrain, Units.metersToInches(-6.0)) // drive back towards Terminal
     );
   }
