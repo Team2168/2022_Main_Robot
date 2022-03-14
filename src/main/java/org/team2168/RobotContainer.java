@@ -40,6 +40,7 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
@@ -220,9 +221,8 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, 0.0));
 
-    oi.operatorJoystick.ButtonRightTrigger()
-            .whenPressed(new ExtendMonkeyBar(monkeyBar))
-            .whenReleased(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedLeft().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedRight().whenPressed(new RetractMonkeyBar(monkeyBar));
 
 
     //TEST JOYSTICK
