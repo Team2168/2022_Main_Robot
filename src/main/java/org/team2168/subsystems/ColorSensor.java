@@ -144,6 +144,14 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         return getTimeSinceLastRead() > DATA_THRESHOLD;
     }
 
+    /**
+     * 
+     * @return true when there's positive indication of another alliances ball present
+     */
+    public boolean shouldPoopBall(){
+        return (!isTeamColor() && !isDataStale());
+    }
+
     @Log(name = "time since last read")
     public double getTimeSinceLastRead() {
         return Timer.getFPGATimestamp() - timestamp;

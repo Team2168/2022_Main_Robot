@@ -239,8 +239,8 @@ public class RobotContainer {
 
     // oi.testJoystick.ButtonLeftDPad().whenPressed(new Launchpad(hood, shooter, lime));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
-    oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
+    // oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
+    // oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
 
   }
 
