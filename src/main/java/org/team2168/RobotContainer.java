@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-
 import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.SysIDCommand;
@@ -59,7 +58,6 @@ import java.util.function.DoubleFunction;
  * the robot (including
  * subsystems, commands, and button mappings) should be declared here.
  */
-
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
@@ -111,6 +109,7 @@ public class RobotContainer {
       instance = new RobotContainer();
     return instance;
   }
+
 
   private void configureAutonomousRoutines() {
       autoChooser.setDefaultOption("Do nothing", new DoNothing());
