@@ -19,6 +19,11 @@ public class FindTargetWithTurret extends CommandBase {
   private boolean reachedLimit;
   private boolean targetFound = false;
 
+  /**
+   * Rotates the turret until it finds a target
+   * @param turret the turret instance
+   * @param limelight the limelight instance
+   */
   public FindTargetWithTurret(Turret turret, Limelight limelight) {
     this.turret = turret;
     this.limelight = limelight;
@@ -83,7 +88,7 @@ public class FindTargetWithTurret extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //if the target is found or it has been longer than 10 seconds
+    //if the target is found or the turret has done a full rotation
     return (targetFound || turret.isTurretAtZero()); 
   }
 }

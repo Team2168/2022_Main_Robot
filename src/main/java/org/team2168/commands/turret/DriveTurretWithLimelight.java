@@ -24,10 +24,6 @@ public class DriveTurretWithLimelight extends CommandBase {
   private double currentPos;
   private double targetPos = currentPos + limeXPos;
 
-  private static final double MINIMUM_COMMAND = 0.5;  // TODO normalize for battery voltage
-
-  boolean isNear = true;
-
   @Log(name = "Turn Speed")
   private double driveLimeTurn;
 
@@ -48,7 +44,6 @@ public class DriveTurretWithLimelight extends CommandBase {
    * @param turret the turret instance
    * @param limelight the limelight instance
    * @param acceptableAngle the distance in degrees the turret is allowed to be off by
-   * @param isNear whether the robot is near of far away from the hub
    */
   public DriveTurretWithLimelight(Turret turret, Limelight limelight, double acceptableAngle) {
     this.turret = turret;
@@ -76,10 +71,8 @@ public class DriveTurretWithLimelight extends CommandBase {
 
     // if the target is within the soft limits
     if (-360 < targetPos && targetPos < 360) {
-      if (limeXPos < -errorToleranceAngle)
-        driveLimeTurn = (limeXPos + MINIMUM_COMMAND);
-      else if (limeXPos > errorToleranceAngle)
-        driveLimeTurn = (limeXPos - MINIMUM_COMMAND);
+      if (limeXPos < -errorToleranceAngle || limeXPos > errorToleranceAngle)
+        driveLimeTurn = limeXPos;
       else  
         driveLimeTurn = 0.0;
     }
@@ -90,7 +83,6 @@ public class DriveTurretWithLimelight extends CommandBase {
 
     turret.setRotationDegrees(driveLimeTurn);
 
-    // should be last thing(?)
     if (Math.abs(limeXPos) < errorToleranceAngle) 
       ++ withinThresholdLoops;
     else
