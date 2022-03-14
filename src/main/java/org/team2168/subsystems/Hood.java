@@ -64,10 +64,24 @@ public class Hood extends SubsystemBase implements Loggable {
   private static TalonFXInvertType kMotorInvert = TalonFXInvertType.Clockwise; // direction of output shaft rotation when looking at
 
   // Gains
-  private static final double kP = 0.075;
-  private static final double kI = 0.0;
-  private static final double kD = 0.0;
-  private static final double kF = 0.0;
+  private static final double kP;
+  private static final double kI;
+  private static final double kD;
+  private static final double kF;
+  static {
+    if (Constants.IS_COMPBOT) {
+      kP = 0.075;
+      kI = 0.0;
+      kD = 0.0;
+      kF = 0.0;
+    } else {
+      kP = 0.075;
+      kI = 0.0;
+      kD = 0.0;
+      kF = 0.0;
+    }
+  }
+
   private static final double kArbitraryFeedForward = 0.02;
   private static final int kIzone = 0;
   private static final double kPeakOutput = 1.0;

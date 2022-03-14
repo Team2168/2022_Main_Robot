@@ -4,10 +4,26 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
- * Class to encapsulate all F310 functionality. No need to have multiple copies
- * in OI all the time
- *
- * @author kevin
+ * Class to encapsulate helper functions for interfacing with the Logitech F310 / PS2 style controller.
+ * 
+ *        _=====_                               _=====_
+ *       / _LT__ \                             / __RT_ \
+ *     +.-'_LB__'-.---------------------------.-'__RB_'-.+
+ *    /   |     |  '.                       .'  |     |   \
+ *   / ___| /|\ |___ \                     / ___| (Y) |___ \
+ *  / |      |      | ;  __           _   ; |             | ;
+ *  | | <---   ---> | | |__|         |_:> | |(X)       (B)| |
+ *  | |___   |   ___| ;SELECT       START ; |___       ___| ;
+ *  |\    | \|/ |    /  _              _   \    | (A) |    /|
+ *  | \   |_____|  .','" "',        ,'" "', '.  |_____|  .' |
+ *  |  '-.______.-' /       \      /       \  '-._____.-'   |
+ *  |               |   L   |------|   R   |                |
+ *  |              /\       /      \       /\               |
+ *  |             /  '.___.'        '.___.'  \              |
+ *  |            /                            \             |
+ *   \          /                              \           /
+ *    \________/                                \_________/
+ *  
  */
 public class F310 extends Joystick {
 	// Gamepad axis ports
@@ -171,6 +187,38 @@ public class F310 extends Joystick {
 		return ButtonRightTrigger().get();
 	}
 
+	public boolean isPressedLeftStickMovedLeft() {
+		return ButtonLeftStickMovedLeft().get();
+	}
+
+	public boolean isPressedLeftStickMovedRight() {
+		return ButtonLeftStickMovedRight().get();
+	}
+
+	public boolean isPressedLeftStickMovedUp() {
+		return ButtonLeftStickMovedUp().get();
+	}
+
+	public boolean isPressedLeftStickMovedDown() {
+		return ButtonLeftStickMovedDown().get();
+	}
+
+	public boolean isPressedRightStickMovedLeft() {
+		return ButtonRightStickMovedLeft().get();
+	}
+
+	public boolean isPressedRightStickMovedRight() {
+		return ButtonRightStickMovedRight().get();
+	}
+
+	public boolean isPressedRightStickMovedUp() {
+		return ButtonRightStickMovedUp().get();
+	}
+
+	public boolean isPressedRightStickMovedDown() {
+		return ButtonRightStickMovedDown().get();
+	}
+
 	/**
 	 * Returns an object of Button A.
 	 */
@@ -235,20 +283,88 @@ public class F310 extends Joystick {
 		return new JoystickButton(this, BUTTON_SHOULDER_RIGHT_BUMPER);
 	}
 
+	/**
+	 * Button pressed when pushing directly in on the left stick.
+	 */
 	public JoystickButton ButtonLeftStick() {
 		return new JoystickButton(this, BUTTON_LEFT_STICK);
 	}
 
+	/**
+	 * Button pressed when pushing directly in on the left stick.
+	 */
 	public JoystickButton ButtonRightStick() {
 		return new JoystickButton(this, BUTTON_RIGHT_STICK);
 	}
 
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
 	public JoystickAnalogButton ButtonLeftTrigger() {
 		return new JoystickAnalogButton(this, AXIS_Left_SHOULDER_TRIGGER, 0.5);
 	}
 
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
 	public JoystickAnalogButton ButtonRightTrigger() {
 		return new JoystickAnalogButton(this, AXIS_Right_SHOULDER_TRIGGER, 0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonLeftStickMovedLeft() {
+		return new JoystickAnalogButton(this, AXIS_LEFT_X, -0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonLeftStickMovedRight() {
+		return new JoystickAnalogButton(this, AXIS_LEFT_X, 0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonLeftStickMovedUp() {
+		return new JoystickAnalogButton(this, AXIS_LEFT_Y, -0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonLeftStickMovedDown() {
+		return new JoystickAnalogButton(this, AXIS_LEFT_Y, 0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonRightStickMovedLeft() {
+		return new JoystickAnalogButton(this, AXIS_RIGHT_X, -0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonRightStickMovedRight() {
+		return new JoystickAnalogButton(this, AXIS_RIGHT_X, 0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonRightStickMovedUp() {
+		return new JoystickAnalogButton(this, AXIS_RIGHT_Y, -0.5);
+	}
+
+	/**
+	 * Threshold an axis (analog) to work as a button (boolean)
+	 */
+	public JoystickAnalogButton ButtonRightStickMovedDown() {
+		return new JoystickAnalogButton(this, AXIS_RIGHT_Y, 0.5);
 	}
 
 	public JoystickPOVButton ButtonUpDPad() {

@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
+import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.utils.TalonFXHelper;
 
@@ -21,8 +22,14 @@ public class IntakeRoller extends SubsystemBase {
   private static IntakeRoller instance = null;
   private static TalonFXConfiguration intakeRollerOneConfig = new TalonFXConfiguration();
 
-  private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
-  
+  private static TalonFXInvertType intakeInvert;
+  static {
+    if (Constants.IS_COMPBOT) {
+      intakeInvert = TalonFXInvertType.CounterClockwise;
+    } else {
+      intakeInvert = TalonFXInvertType.Clockwise;
+    }
+  }
   private static int intakeTimeoutMs = 30;
   private static double peakOutput = 1.0;
   private SupplyCurrentLimitConfiguration talonCurrentLimit;

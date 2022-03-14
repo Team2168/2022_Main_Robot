@@ -18,25 +18,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-import org.team2168.commands.FireBalls;
-import org.team2168.commands.QueueBallForShot;
+import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
-import org.team2168.commands.QueueBallsForShotNoStop;
-import org.team2168.commands.StowEverything;
 import org.team2168.commands.SysIDCommand;
-import org.team2168.commands.auto.DoNothing;
-import org.team2168.commands.auto.pathplanner.FourBall;
-import org.team2168.commands.auto.pathplanner.Paths;
-import org.team2168.commands.auto.pathplanner.ThreeBall;
-import org.team2168.commands.auto.pathplanner.TwoBall;
+import org.team2168.commands.auto.*;
 import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
-import org.team2168.commands.drivetrain.ArcadeDrive;
-import org.team2168.commands.drivetrain.DriveWithLimelight;
-import org.team2168.commands.drivetrain.DriveXDistance;
+import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.hood.HoodToAngle;
@@ -47,8 +39,7 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
-import org.team2168.commands.pooper.PooperPoop;
-import org.team2168.commands.pooper.PooperUnpoop;
+import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
@@ -100,9 +91,14 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   private RobotContainer() {
-    Paths.getInstance();  // Create the instance so paths are generated soon after code execution begins, well before autos
+    // Paths.getInstance();  // Create the instance so paths are generated soon after code execution begins, well before autos
     Logger.configureLoggingAndConfig(this, false);
 
+    if (Constants.IS_COMPBOT) {
+      System.out.println("DID NOT FIND PRACTICE BOT JUMPER -- USING COMPETITION BOT GAINS");
+    } else {
+      System.out.println("FOUND PRACTICE BOT JUMPER -- CONFIGURING WITH PBOT GAINS");
+    }
     // Configure the button bindings
     configureButtonBindings();
     configureAutonomousRoutines();
@@ -114,36 +110,48 @@ public class RobotContainer {
     return instance;
   }
 
-    private void configureAutonomousRoutines() {
-        autoChooser.setDefaultOption("Do nothing", new DoNothing());
-//        autoChooser.addOption("2 ball", new TwoBall(
-//                drivetrain, intakeRaiseAndLower, intakeRoller,
-//                hopper, indexer, hood,
-//                shooter, pooper, colorSensor,
-//                lime));
-//        autoChooser.addOption("3 Ball", new ThreeBall(
-//                drivetrain, intakeRaiseAndLower, intakeRoller,
-//                hopper, indexer, hood,
-//                shooter, pooper, colorSensor,
-//                lime));
-//        autoChooser.addOption(
-//                "4 Ball (ends at Terminal)", new FourBall(
-//                            drivetrain, intakeRaiseAndLower, intakeRoller,
-//                            hopper, indexer, hood,
-//                            shooter, pooper, colorSensor,
-//                            lime));
-        autoChooser.addOption("Drive 3 Feet",
-                new DriveXDistance(drivetrain, 36.0));
 
-        // debug autos
-        // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
-        // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-        // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
-        // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
-        // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
-        // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
-        SmartDashboard.putData(autoChooser);
-    }
+  private void configureAutonomousRoutines() {
+      autoChooser.setDefaultOption("Do nothing", new DoNothing());
+//        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+      autoChooser.addOption("2 ball", new SimpleTwoBall(
+              drivetrain, intakeRaiseAndLower, intakeRoller,
+              hopper, indexer, hood,
+              shooter, pooper, colorSensor,
+              lime));
+      autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
+              drivetrain, intakeRaiseAndLower, intakeRoller,
+              hopper, indexer, hood,
+              shooter, pooper, colorSensor,
+              lime));
+      // autoChooser.addOption("3 Ball", new ThreeBall(`
+      //         drivetrain, intakeRaiseAndLower, intakeRoller,
+      //         hopper, indexer, hood,
+      //         shooter, pooper, colorSensor,
+      //         lime));
+      // autoChooser.addOption(
+      //         "4 Ball (ends at Terminal)", new FourBall(
+      //                     drivetrain, intakeRaiseAndLower, intakeRoller,
+      //                     hopper, indexer, hood,
+      //                     shooter, pooper, colorSensor,
+      //                     lime));
+      // autoChooser.addOption("Drive 3 Feet",
+      //         new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
+      // autoChooser.addOption("Drive 3 Feet",
+      //         new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
+      // autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
+      // autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
+
+      // debug autos
+      // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
+      // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+      // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
+      // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
+      // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
+      // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
+      SmartDashboard.putData(autoChooser);
+  }
+
   /**
    * Use this method to define your button->command mappings.
    */
@@ -211,6 +219,9 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonLeftTrigger()
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, 0.0));
+
+    oi.operatorJoystick.ButtonRightStickMovedLeft().whenPressed(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedRight().whenPressed(new RetractMonkeyBar(monkeyBar));
 
 
     //TEST JOYSTICK
@@ -377,5 +388,10 @@ public class RobotContainer {
           // RamseteCommand passes volts to the callback
           drivetrain::tankDriveVolts,
           drivetrain);
+  }
+
+  @Log
+  public boolean isCompbot() {
+    return Constants.IS_COMPBOT;
   }
 }

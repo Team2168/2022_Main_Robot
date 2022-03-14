@@ -5,7 +5,6 @@
 package org.team2168.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.SlotConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
 import com.kauailabs.navx.frc.AHRS;
@@ -20,7 +19,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -33,7 +31,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private TalonFXHelper rightMotor1;
     private TalonFXHelper rightMotor2;
 
-    private DifferentialDrive drive;
+    // private DifferentialDrive drive;
     private DifferentialDriveOdometry odometry;
 
     private static Drivetrain instance = null;
@@ -45,14 +43,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     private final static double NEUTRALDEADBAND = 0.001;
 
     private SupplyCurrentLimitConfiguration talonCurrentLimit;
-
-    public static final boolean DT_REVERSE_LEFT1 = false;
-    public static final boolean DT_REVERSE_LEFT2 = false;
-    public static final boolean DT_REVERSE_LEFT3 = false;
-    public static final boolean DT_REVERSE_RIGHT1 = true;
-    public static final boolean DT_REVERSE_RIGHT2 = true;
-    public static final boolean DT_REVERSE_RIGHT3 = true;
-    public static final boolean DT_3_MOTORS_PER_SIDE = true;
 
     /**
      * Invert Directions for Left and Right
@@ -79,6 +69,9 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     private double setPointPosition_sensorUnits;
     private double setPointHeading_sensorUnits;
+
+    private TalonFXConfiguration straightConfig = new TalonFXConfiguration();
+    private TalonFXConfiguration turnConfig = new TalonFXConfiguration();
 
     /**
      * Gets the singleton instance of the drivetrain
@@ -111,11 +104,15 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         pidgey = new PigeonHelper(CANDevices.PIGEON_IMU);
 
 
-        // Reset the configurations on the motor controllers
         leftMotor1.configFactoryDefault();
         leftMotor2.configFactoryDefault();
         rightMotor1.configFactoryDefault();
         rightMotor2.configFactoryDefault();
+
+        leftMotor1.configFollowerStatusFrameRates();
+        leftMotor2.configFollowerStatusFrameRates();
+        rightMotor1.configClosedLoopStatusFrameRates();
+        rightMotor2.configFollowerStatusFrameRates();
 
         // Create a current limit
         talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
@@ -189,13 +186,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor2.setInverted(InvertType.FollowMaster);
 
         setMotorsBrake();
-        drive = new DifferentialDrive(leftMotor1, rightMotor1);
-        drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
+        // drive = new DifferentialDrive(leftMotor1, rightMotor1);
+        // drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
         pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 1);  // status frame in ms
         odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
-
-
     }
 
     @Override
@@ -247,6 +242,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         }
     }
 
+
+   public void teleopconfigs() {
+       rightMotor1.configAllSettings(rightConfig);
+       rightMotor1.configAllSettings(rightConfig);
+       leftMotor1.configAllSettings(leftConfig);
+       leftMotor2.configAllSettings(leftConfig);
+   }
+
     /**
      * Gets the odometry pose
      *
@@ -267,7 +270,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     /**
      * Gets gyro heading
      *
-     * @return gyro heading from -180.0 to 180.0 degrees
+     * @return gyro heading from -180.0 to 180.0 degrees. Positive counterclockwise
      */
     @Log(name = "Gyro Heading", rowIndex = 2, columnIndex = 1)
     public double getHeading() {
@@ -351,6 +354,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return ticksToMeters(getRightEncoderDistanceRaw());
     }
 
+    /**
+     * 
+     * @param setPoint distance in inches (fwd positive)
+     * @param setAngle degrees
+     */
     public void setSetPointPosition(double setPoint, double setAngle) {
         setPointPosition_sensorUnits = inchesToTicks(setPoint);
         setPointHeading_sensorUnits = degreesToTicks(setAngle);
@@ -358,7 +366,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.set(ControlMode.MotionMagic, setPointPosition_sensorUnits, DemandType.AuxPID, setPointHeading_sensorUnits);
         rightMotor2.follow(rightMotor1, FollowerType.PercentOutput);
         leftMotor1.follow(rightMotor1, FollowerType.AuxOutput1);
-        leftMotor2.follow(rightMotor1, FollowerType.AuxOutput1);
+        leftMotor2.follow(leftMotor1, FollowerType.PercentOutput);
     }
 
     public void setSetPointHeadingTeleop(double speed, double setAngle) {
@@ -377,13 +385,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         };
     }
 
-    public void feed() {
-        rightMotor1.feed();
-        rightMotor2.feed();
-        leftMotor1.feed();
-        rightMotor1.feed();
-    }
+    // public void feed() {
+    //     rightMotor1.feed();
+    //     rightMotor2.feed();
+    //     leftMotor1.feed();
+    //     rightMotor1.feed();
+    // }
 
+    /**
+     * 
+     * @return error in inches
+     */
     public double getErrorPosition() {
         return ticksToInches(setPointPosition_sensorUnits - rightMotor1.getSelectedSensorPosition(Constants.Drivetrain.PID_PRIMARY));
         //return leftMotor1.getClosedLoopError(kPIDLoopIdx)/TICKS_PER_REV;--only for nonMotionMagic or nonMotion Profile
@@ -398,12 +410,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     public void zeroHeading() {
         pidgey.reset();
+        pidgey.setYaw(0, TIMEOUT);
+        pidgey.setAccumZAngle(0, TIMEOUT);
     }
 
     /**
      * Resets encoders on motors
      */
     public void resetEncoders() {
+        leftMotor1.getSensorCollection().setIntegratedSensorPosition(0, TIMEOUT);
+		rightMotor1.getSensorCollection().setIntegratedSensorPosition(0, TIMEOUT);
+
         leftMotor1.setSelectedSensorPosition(0.0);
         rightMotor1.setSelectedSensorPosition(0.0);
     }
@@ -505,7 +522,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
-        drive.tankDrive(leftSpeed, rightSpeed);
+        // drive.tankDrive(leftSpeed, rightSpeed);
+        leftMotor1.set(leftSpeed);
+        leftMotor2.set(leftSpeed);
+        rightMotor1.set(rightSpeed);
+        rightMotor2.set(rightSpeed);
     }
 
     public void tankDriveVolts(double leftVolts, double rightVolts) {
@@ -516,7 +537,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     public void arcadeDrive(double xSpeed, double zRotation) {
-        drive.arcadeDrive(xSpeed, zRotation);
+        tankDrive(xSpeed + zRotation, xSpeed - zRotation);
     }
 
     /**
@@ -547,5 +568,69 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor1.setNeutralMode(NeutralMode.Coast);
         rightMotor2.setNeutralMode(NeutralMode.Coast);
     }
+
+    /** 
+	 * Determines if SensorSum or SensorDiff should be used 
+	 * for combining left/right sensors into Robot Distance.  
+	 * 
+	 * Assumes Aux Position is set as Remote Sensor 0.  
+	 * 
+	 * configAllSettings must still be called on the master config
+	 * after this function modifies the config values. 
+	 * 
+	 * @param masterInvertType Invert of the Master Talon
+	 * @param masterConfig Configuration object to fill
+	 */
+	 void setRobotDistanceConfigs(TalonFXInvertType masterInvertType, TalonFXConfiguration masterConfig){
+		/**
+		 * Determine if we need a Sum or Difference.
+		 * 
+		 * The auxiliary Talon FX will always be positive
+		 * in the forward direction because it's a selected sensor
+		 * over the CAN bus.
+		 * 
+		 * The master's native integrated sensor may not always be positive when forward because
+		 * sensor phase is only applied to *Selected Sensors*, not native
+		 * sensor sources.  And we need the native to be combined with the 
+		 * aux (other side's) distance into a single robot distance.
+		 */
+
+		/* THIS FUNCTION should not need to be modified. 
+		   This setup will work regardless of whether the master
+		   is on the Right or Left side since it only deals with
+		   distance magnitude.  */
+
+		/* Check if we're inverted */
+		if (masterInvertType == TalonFXInvertType.Clockwise){
+			/* 
+				If master is inverted, that means the integrated sensor
+				will be negative in the forward direction.
+				If master is inverted, the final sum/diff result will also be inverted.
+				This is how Talon FX corrects the sensor phase when inverting 
+				the motor direction.  This inversion applies to the *Selected Sensor*,
+				not the native value.
+				Will a sensor sum or difference give us a positive total magnitude?
+				Remember the Master is one side of your drivetrain distance and 
+				Auxiliary is the other side's distance.
+					Phase | Term 0   |   Term 1  | Result
+				Sum:  -((-)Master + (+)Aux   )| NOT OK, will cancel each other out
+				Diff: -((-)Master - (+)Aux   )| OK - This is what we want, magnitude will be correct and positive.
+				Diff: -((+)Aux    - (-)Master)| NOT OK, magnitude will be correct but negative
+			*/
+
+			masterConfig.diff0Term = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice(); //Local Integrated Sensor
+			masterConfig.diff1Term = TalonFXFeedbackDevice.RemoteSensor0.toFeedbackDevice();   //Aux Selected Sensor
+			masterConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.SensorDifference.toFeedbackDevice(); //Diff0 - Diff1
+		} else {
+			/* Master is not inverted, both sides are positive so we can sum them. */
+			masterConfig.sum0Term = TalonFXFeedbackDevice.RemoteSensor0.toFeedbackDevice();    //Aux Selected Sensor
+			masterConfig.sum1Term = TalonFXFeedbackDevice.IntegratedSensor.toFeedbackDevice(); //Local IntegratedSensor
+			masterConfig.primaryPID.selectedFeedbackSensor = TalonFXFeedbackDevice.SensorSum.toFeedbackDevice(); //Sum0 + Sum1
+		}
+
+		/* Since the Distance is the sum of the two sides, divide by 2 so the total isn't double
+		   the real-world value */
+		masterConfig.primaryPID.selectedFeedbackCoefficient = 0.5;
+	 }
 
 }
