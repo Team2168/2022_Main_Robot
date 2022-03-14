@@ -119,7 +119,12 @@ public class RobotContainer {
               hopper, indexer, hood,
               shooter, pooper, colorSensor,
               lime));
-      // autoChooser.addOption("3 Ball", new ThreeBall(
+      autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
+              drivetrain, intakeRaiseAndLower, intakeRoller,
+              hopper, indexer, hood,
+              shooter, pooper, colorSensor,
+              lime));
+      // autoChooser.addOption("3 Ball", new ThreeBall(`
       //         drivetrain, intakeRaiseAndLower, intakeRoller,
       //         hopper, indexer, hood,
       //         shooter, pooper, colorSensor,
