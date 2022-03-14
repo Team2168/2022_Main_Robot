@@ -13,6 +13,12 @@ public class BumpTurret extends CommandBase {
   private Turret turret;
   private double degrees;
 
+  /**
+   * Bumps the turret a certain amount of degrees
+   * Negative is left/counterclockwise, positive is right/clockwise
+   * @param turret the turret instance
+   * @param degrees the amount (+/-) to bump the turret
+   */
   public BumpTurret(Turret turret, double degrees) {
     this.turret = turret;
     this.degrees = degrees;

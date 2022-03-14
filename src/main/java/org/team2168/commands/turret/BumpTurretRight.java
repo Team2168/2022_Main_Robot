@@ -13,14 +13,13 @@ public class BumpTurretRight extends CommandBase {
   private Turret turret;
   private double setpoint = 1.0;
 
+  /**
+   * Bumps the turret one degree clockwise/to the right
+   * @param turret the turret instance
+   */
   public BumpTurretRight(Turret turret) {
     this.turret = turret;
     // Use addRequirements() here to declare subsystem dependencies.
-  }
-
-  public BumpTurretRight(Turret turret, double degrees) {
-    this.turret = turret;
-    this.setpoint = degrees;
   }
 
   // Called when the command is initially scheduled.

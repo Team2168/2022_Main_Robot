@@ -11,7 +11,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class BumpTurretLeft extends CommandBase {
   /** Creates a new BumpTurretLeft. */
   private Turret turret;
-  
+
+  /**
+   * Bumps the turret one degree counterclockwise/to the left
+   * @param turret the turret instance
+   */
   public BumpTurretLeft(Turret turret) {
     this.turret = turret;
     // Use addRequirements() here to declare subsystem dependencies.
