@@ -135,7 +135,7 @@ public final class Constants {
             if(IS_COMPBOT) {
                 INDEXER_SPEED = 0.3;
                 HOPPER_SPEED = 0.5;
-                INTAKE_SPEED = 0.9;
+                INTAKE_SPEED = 1.0;
             } else {
                 INDEXER_SPEED = 0.3;
                 HOPPER_SPEED = 0.5;
