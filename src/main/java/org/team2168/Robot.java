@@ -9,6 +9,7 @@ import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,7 +80,13 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    robotContainer.drivetrain.setMotorsBrake();
+        
+    //Only allow pushing the robot around if we aren't on a real field
+    if (!DriverStation.isFMSAttached())
+      robotContainer.drivetrain.setMotorsCoast();
+    else
+      robotContainer.drivetrain.setMotorsBrake();
+
     robotContainer.lime.pauseLimelight();
     Hood.getInstance().setMotorCoast();
   }
@@ -138,6 +145,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     Hood.getInstance().setMotorBrake();;
     robotContainer.drivetrain.setMotorsBrake();
+    robotContainer.drivetrain.teleopconfigs();
     robotContainer.lime.pauseLimelight();
     hasMatchStarted = true;
     // This makes sure that the autonomous stops running when

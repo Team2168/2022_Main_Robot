@@ -4,6 +4,8 @@
 
 package org.team2168.subsystems;
 
+import javax.lang.model.util.ElementScanner6;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -12,6 +14,8 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+
+
 
 public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
@@ -71,6 +75,7 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         byte[] serialOutput = null;
 
         if (serialPort.getBytesReceived() >= 4) {
+            
             serialOutput = serialPort.read(4);
             // convert values to integers
             var intValue = new int[serialOutput.length];
@@ -105,17 +110,27 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     public String getColorName() {
         return getColor().name();
     }
-
+    
     public Alliance getColor() {
-        normRaw();
+        Alliance color;
+        normRaw();      
+    //    if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
+    //         color = Alliance.Invalid;
+    //    else if(rNorm==255)
+    //         color = Alliance.Red;
+    //     else
+    //         color = Alliance.Blue;//   return Alliance.Invalid;
+    //     return color;
 
-        if (rNorm > bNorm)//(data.red > data.blue)
-            return Alliance.Red;
-            //TODO figure out these bottom vals
-        else if(rNorm < 40 && bNorm < 40 && gNorm > 10)
-            return Alliance.Invalid;
+        if((rNorm==255) && (bNorm + gNorm) < 200) 
+            color = Alliance.Red;
+        else if ((bNorm==255) && (rNorm + gNorm) < 200)
+            color = Alliance.Blue;
         else
-            return Alliance.Blue;//   return Alliance.Invalid;
+            color = Alliance.Invalid;
+        return color;
+    
+        
     }
 
     @Log(name = "Is team color?")
@@ -129,10 +144,35 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         return getTimeSinceLastRead() > DATA_THRESHOLD;
     }
 
+    /**
+     * 
+     * @return true when there's positive indication of another alliances ball present
+     */
+    public boolean shouldPoopBall(){
+        return (!isTeamColor() && !isDataStale());
+    }
+
     @Log(name = "time since last read")
     public double getTimeSinceLastRead() {
         return Timer.getFPGATimestamp() - timestamp;
     }
+
+    @Log(name = "Red Raw Value")
+    public int rawRed() {
+        return data.red;
+    }
+
+    @Log(name = "Blue Raw Value")
+    public int rawBlue() {
+        return data.blue;
+    }
+
+    @Log(name = "Green Raw Value")
+    public int rawGreen() {
+        return data.green;
+    }
+
+    
 
     @Override
     public void periodic() {
