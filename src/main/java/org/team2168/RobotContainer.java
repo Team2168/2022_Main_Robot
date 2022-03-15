@@ -169,22 +169,25 @@ public class RobotContainer {
 
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
-    oi.driverJoystick.ButtonLeftStick().whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger));
 
     //// Green button
-    // oi.driverJoystick.ButtonLeftStick()
-    //        .whenPressed(new DriveWithLimelight(drivetrain))
-    //        .whenReleased(new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0));
+    oi.driverJoystick.ButtonLeftStick()
+            .whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger))
+            .whenPressed(new RotateTurret(turret, 0.0));
+    
 
     //// Black button
     oi.driverJoystick.ButtonRightBumper()
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, 0.0))
-            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar));
+            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar))
+            .whenPressed(new RotateTurret(turret, 0.0));
 
-    //// Red button
+    //lower left button ("Forward Fine-Tuning")
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
 
+    //lower right button ("Backward Fine-Tuning")
+    oi.driverJoystick.ButtonY().whenPressed(new DriveTurretWithLimelight(turret, lime));
 
     //OPERATOR CONTROLS
     //// main button cluster
@@ -285,8 +288,8 @@ public class RobotContainer {
     // oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     // oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
 
-    oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
-    oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    // oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
+    // oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
 
   }
 

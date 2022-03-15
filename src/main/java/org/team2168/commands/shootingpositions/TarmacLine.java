@@ -12,7 +12,7 @@ public class TarmacLine extends ParallelCommandGroup {
     public TarmacLine(Hood hood, Shooter shooter, Limelight lime) {
         addCommands(
                 new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees),
-                // new SetShooterSpeed(shooter, Shooter.ShooterRPM.TARMAC_LINE.rpm),
+                new SetShooterSpeed(shooter, Shooter.ShooterRPM.TARMAC_LINE.rpm),
                 new SetPipeline(lime, Limelight.PIPELINE_TARMAC_LINE)
         );
     }
