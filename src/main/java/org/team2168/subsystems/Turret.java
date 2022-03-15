@@ -42,7 +42,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final int MIN_ROTATION_TICKS = -73400;
   private static final int MAX_ROTATION_TICKS = 52200;
 
-  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(360.0 * 3.0); //* 6;  
+  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(360.0 * 4.5);
   private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(360.0 * 2.0);
 
   //gains
@@ -63,8 +63,8 @@ public class Turret extends SubsystemBase implements Loggable {
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
-  private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
-  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amps
+  private final double CONTINUOUS_CURRENT_LIMIT = 30; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 40; //amps
   private final double TRIGGER_THRESHOLD_TIME = 0.02; //seconds
 
   //Simulation objects
