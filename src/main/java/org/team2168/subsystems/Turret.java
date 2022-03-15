@@ -97,8 +97,8 @@ public class Turret extends SubsystemBase implements Loggable {
 
     turretMotor.configForwardSoftLimitThreshold(MAX_ROTATION_TICKS);
     turretMotor.configReverseSoftLimitThreshold(MIN_ROTATION_TICKS);
-    turretMotor.configForwardSoftLimitEnable(true, 0);
-    turretMotor.configReverseSoftLimitEnable(true, 0);
+    turretMotor.configForwardSoftLimitEnable(true);
+    turretMotor.configReverseSoftLimitEnable(true);
 
     turretMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
@@ -153,7 +153,7 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public void setRotationDegrees(double degrees) {
     //CHECK THIS
-    var demand = MathUtil.clamp(degrees, ticksToDegrees(-MAX_ROTATION_TICKS), ticksToDegrees(MAX_ROTATION_TICKS));
+    var demand = MathUtil.clamp(degrees, ticksToDegrees(MIN_ROTATION_TICKS), ticksToDegrees(MAX_ROTATION_TICKS));
     setpoint = degrees;
     turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(demand));
   }
