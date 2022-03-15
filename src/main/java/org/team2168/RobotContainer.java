@@ -285,6 +285,9 @@ public class RobotContainer {
     // oi.testJoystick.ButtonLeftBumper().whenPressed(new PooperPoop(pooper));
     // oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
 
+    oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
+    oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
+
   }
 
   /**

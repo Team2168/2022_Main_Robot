@@ -42,8 +42,8 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final int MIN_ROTATION_TICKS = -73400;
   private static final int MAX_ROTATION_TICKS = 52200;
 
-  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(36.0); //* 6;  // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(36.0); //* 2; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(360.0 * 3.0); //* 6;  
+  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(360.0 * 2.0);
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -153,7 +153,7 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public void setRotationDegrees(double degrees) {
     //CHECK THIS
-    var demand = MathUtil.clamp(degrees, -MAX_ROTATION_TICKS, MAX_ROTATION_TICKS);
+    var demand = MathUtil.clamp(degrees, ticksToDegrees(-MAX_ROTATION_TICKS), ticksToDegrees(MAX_ROTATION_TICKS));
     setpoint = degrees;
     turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(demand));
   }

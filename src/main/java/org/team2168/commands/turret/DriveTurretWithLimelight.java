@@ -25,6 +25,8 @@ public class DriveTurretWithLimelight extends CommandBase {
   private double forwardSoftLimit;
   private double reverseSoftLimit;
 
+  private static final double LIME_KP = 0.65; 
+
   @Log(name = "Turn Speed")
   private double driveLimeTurn;
 
@@ -50,8 +52,6 @@ public class DriveTurretWithLimelight extends CommandBase {
     this.turret = turret;
     this.limelight= limelight;
     errorToleranceAngle = acceptableAngle;
-    forwardSoftLimit = turret.getForwardSoftLimit();
-    reverseSoftLimit = turret.getReverseSoftLimit();
 
     addRequirements(turret);
   }
@@ -60,7 +60,8 @@ public class DriveTurretWithLimelight extends CommandBase {
   @Override
   public void initialize() {
     currentPos = turret.getPositionDegrees();
-
+    forwardSoftLimit = turret.getForwardSoftLimit();
+    reverseSoftLimit = turret.getReverseSoftLimit();
     limelight.enableLimelight();
   }
 
@@ -70,18 +71,15 @@ public class DriveTurretWithLimelight extends CommandBase {
     //How far away the target is horizontally in degrees
     limeXPos = limelight.getPositionX();
     currentPos = turret.getPositionDegrees();
-    targetPos = limeXPos + currentPos;
-
+    targetPos = currentPos + (limeXPos * LIME_KP);
 
     // if the target is within the soft limits
-    if ((reverseSoftLimit < targetPos) && (targetPos < forwardSoftLimit)) {
+    if ((targetPos > reverseSoftLimit) && (targetPos < forwardSoftLimit)) {
       //if (limeXPos < -errorToleranceAngle || limeXPos > errorToleranceAngle)
         driveLimeTurn = targetPos;
       //else  
         //driveLimeTurn = 0.0;
-    }
-    
-    else {
+    } else {
       driveLimeTurn = turret.amountFromZeroToRotate(targetPos);
     }
 
