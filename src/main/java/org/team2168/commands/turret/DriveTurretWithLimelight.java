@@ -18,11 +18,12 @@ public class DriveTurretWithLimelight extends CommandBase {
 
   private double errorToleranceAngle = 1; // in degrees
   private double limeXPos;
-  private int withinThresholdLoops = 0;
-  private int acceptableLoops = 10;
 
   private double currentPos;
-  private double targetPos = currentPos + limeXPos;
+  private double targetPos;
+
+  private double forwardSoftLimit;
+  private double reverseSoftLimit;
 
   @Log(name = "Turn Speed")
   private double driveLimeTurn;
@@ -49,6 +50,8 @@ public class DriveTurretWithLimelight extends CommandBase {
     this.turret = turret;
     this.limelight= limelight;
     errorToleranceAngle = acceptableAngle;
+    forwardSoftLimit = turret.getForwardSoftLimit();
+    reverseSoftLimit = turret.getReverseSoftLimit();
 
     addRequirements(turret);
   }
@@ -67,26 +70,22 @@ public class DriveTurretWithLimelight extends CommandBase {
     //How far away the target is horizontally in degrees
     limeXPos = limelight.getPositionX();
     currentPos = turret.getPositionDegrees();
+    targetPos = limeXPos + currentPos;
 
 
     // if the target is within the soft limits
-    if (-360 < targetPos && targetPos < 360) {
-      if (limeXPos < -errorToleranceAngle || limeXPos > errorToleranceAngle)
-        driveLimeTurn = limeXPos;
-      else  
-        driveLimeTurn = 0.0;
+    if ((reverseSoftLimit < targetPos) && (targetPos < forwardSoftLimit)) {
+      //if (limeXPos < -errorToleranceAngle || limeXPos > errorToleranceAngle)
+        driveLimeTurn = targetPos;
+      //else  
+        //driveLimeTurn = 0.0;
     }
     
     else {
-      driveLimeTurn = - currentPos + turret.amountFromZeroToRotate(targetPos);
+      driveLimeTurn = turret.amountFromZeroToRotate(targetPos);
     }
 
     turret.setRotationDegrees(driveLimeTurn);
-
-    if (Math.abs(limeXPos) < errorToleranceAngle) 
-      ++ withinThresholdLoops;
-    else
-      withinThresholdLoops = 0;
   }
 
   // Called once the command ends or is interrupted.
@@ -99,6 +98,6 @@ public class DriveTurretWithLimelight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (withinThresholdLoops >= acceptableLoops);
+    return false;
   }
 }

@@ -29,6 +29,13 @@ public class ZeroTurret extends CommandBase {
   @Override
   public void execute() {
     turret.setRotationDegrees(-position);
+
+    if(!turret.isTurretAtZero()) {
+      if(turret.getEncoderPosition() > 0)
+        turret.setVelocity(-0.5);
+      else  
+        turret.setVelocity(0.5);
+    }
   }
 
   // Called once the command ends or is interrupted.

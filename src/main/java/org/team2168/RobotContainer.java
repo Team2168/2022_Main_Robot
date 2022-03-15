@@ -45,6 +45,13 @@ import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
+import org.team2168.commands.turret.BumpTurretLeft;
+import org.team2168.commands.turret.BumpTurretRight;
+import org.team2168.commands.turret.DriveTurretWithJoystick;
+import org.team2168.commands.turret.DriveTurretWithLimelight;
+import org.team2168.commands.turret.FindTargetWithTurret;
+import org.team2168.commands.turret.RotateTurret;
+import org.team2168.commands.turret.ZeroTurret;
 import org.team2168.subsystems.*;
 
 import java.util.List;
@@ -75,6 +82,7 @@ public class RobotContainer {
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
   private final ColorSensor colorSensor = ColorSensor.getInstance();
+  private final Turret turret = Turret.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
@@ -226,6 +234,19 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
+    oi.testJoystick.ButtonStart().whenPressed(new FindTargetWithTurret(turret, lime));
+
+    oi.testJoystick.ButtonA().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 60));
+    oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -30));
+    oi.testJoystick.ButtonY().whenPressed(new RotateTurret(turret, -60));
+
+    oi.testJoystick.ButtonBack().whenPressed(new ZeroTurret(turret));
+
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpTurretLeft(turret));
+    oi.testJoystick.ButtonRightBumper().whenPressed(new BumpTurretRight(turret));
+
+    
     // indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
     // oi.testJoystick.ButtonRightStick().whenPressed(new ShootWithController(m_shooter, oi.testJoystick::getRightStickRaw_Y));
     // oi.testJoystick.ButtonRightStick().whenPressed(new DriveClimber(climber, oi.testJoystick::getRightStickRaw_Y));

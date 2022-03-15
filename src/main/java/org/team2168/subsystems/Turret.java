@@ -31,7 +31,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static Turret instance = null;
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
+  private static final double GEAR_RATIO = 280.0/18.0 * 36.0/12.0; //(60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
   private static final double TICKS_PER_TURRET_ROTATION = TICKS_PER_REV * GEAR_RATIO;
   private static double setpoint = 0.0;
 
@@ -39,10 +39,11 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10.0;
   private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
  
-  private static final int MAX_ROTATION_TICKS = (int) (1.5 * TICKS_PER_TURRET_ROTATION);
+  private static final int MIN_ROTATION_TICKS = -73400;
+  private static final int MAX_ROTATION_TICKS = 52200;
 
-  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(5.0 * 360);  // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(2 * 360.0) ; // TODO: Change when mechanism is avaialble
+  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(36.0); //* 6;  // TODO: Change when mechanism is avaialble
+  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(36.0); //* 2; // TODO: Change when mechanism is avaialble
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -83,16 +84,19 @@ public class Turret extends SubsystemBase implements Loggable {
 
     //Configuring the turret motor
     turretMotor.configFactoryDefault();
+
+    turretMotor.configClosedLoopStatusFrameRates();
+
     turretMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
     turretMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     turretMotor.setSensorPhase(kSensorPhase);
     turretMotor.setInverted(kMotorInvert);
     turretMotor.setNeutralMode(NeutralMode.Brake);
-    turretMotor.configNeutralDeadband(0.01);
+    turretMotor.configNeutralDeadband(0.001);
 
     turretMotor.configForwardSoftLimitThreshold(MAX_ROTATION_TICKS);
-    turretMotor.configReverseSoftLimitThreshold(-MAX_ROTATION_TICKS);
+    turretMotor.configReverseSoftLimitThreshold(MIN_ROTATION_TICKS);
     turretMotor.configForwardSoftLimitEnable(true, 0);
     turretMotor.configReverseSoftLimitEnable(true, 0);
 
@@ -105,8 +109,6 @@ public class Turret extends SubsystemBase implements Loggable {
 
     turretMotor.configMotionAcceleration(ACCELERATION);
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
-
-    turretMotor.configClosedLoopStatusFrameRates();
 
     //Setup simulation
     turretSim = new FlywheelSim(
@@ -262,6 +264,14 @@ public class Turret extends SubsystemBase implements Loggable {
   public void zeroTurret() {
     while (!isTurretAtZero())
       setRotationDegrees(-getEncoderPosition());
+  }
+
+  public double getForwardSoftLimit() {
+    return ticksToDegrees(MAX_ROTATION_TICKS);
+  }
+
+  public double getReverseSoftLimit() {
+    return ticksToDegrees(MIN_ROTATION_TICKS);
   }
 
   @Override
