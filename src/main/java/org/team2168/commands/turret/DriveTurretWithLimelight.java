@@ -6,6 +6,7 @@ package org.team2168.commands.turret;
 
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Turret;
+import org.team2168.utils.Util;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import io.github.oblarg.oblog.annotations.Log;
@@ -16,14 +17,19 @@ public class DriveTurretWithLimelight extends CommandBase {
   private Turret turret;
   private Limelight limelight;
 
-  private double errorToleranceAngle = 1; // in degrees
+  private double errorToleranceAngle = 1.0; // in degrees
   private double limeXPos;
+  private double avg_limeXPos;
 
   private double currentPos;
   private double targetPos;
 
   private double forwardSoftLimit;
   private double reverseSoftLimit;
+
+  private boolean unwinding = false;
+  private double unwind_target;
+  private static final double UNWIND_TOLERANCE_DEGREES = 20.0;
 
   private static final double LIME_KP = 0.65; 
 
@@ -62,6 +68,7 @@ public class DriveTurretWithLimelight extends CommandBase {
     currentPos = turret.getPositionDegrees();
     forwardSoftLimit = turret.getForwardSoftLimit();
     reverseSoftLimit = turret.getReverseSoftLimit();
+    avg_limeXPos = 0.0;
     limelight.enableLimelight();
   }
 
@@ -70,19 +77,30 @@ public class DriveTurretWithLimelight extends CommandBase {
   public void execute() {
     //How far away the target is horizontally in degrees
     limeXPos = limelight.getPositionX();
+    avg_limeXPos = Util.runningAverage(limeXPos, avg_limeXPos, 0.2);
     currentPos = turret.getPositionDegrees();
-    targetPos = currentPos + (limeXPos * LIME_KP);
+    targetPos = currentPos + (avg_limeXPos * LIME_KP);
 
-    // if the target is within the soft limits
-    if ((targetPos > reverseSoftLimit) && (targetPos < forwardSoftLimit)) {
-      //if (limeXPos < -errorToleranceAngle || limeXPos > errorToleranceAngle)
+    if(unwinding) {
+      //We are in the middle of rotating a full 360.0 we are going to lose view of the target
+      //  wait till we get where we were going
+      if(Math.abs(unwind_target - currentPos) <= UNWIND_TOLERANCE_DEGREES) {
+        unwinding = false;
+      }
+    } else if ((targetPos > reverseSoftLimit) && (targetPos < forwardSoftLimit)) {
+      // if the target is within the soft limits
+      if (Math.abs(avg_limeXPos) >= errorToleranceAngle) {
         driveLimeTurn = targetPos;
-      //else  
-        //driveLimeTurn = 0.0;
+      } else {  
+        driveLimeTurn = currentPos;
+      }
     } else {
       driveLimeTurn = turret.amountFromZeroToRotate(targetPos);
+      unwind_target = driveLimeTurn;
+      unwinding = true;
     }
 
+    System.out.println("  curr" + currentPos + ", lime:" + avg_limeXPos + ", tgt:" + driveLimeTurn);
     turret.setRotationDegrees(driveLimeTurn);
   }
 
