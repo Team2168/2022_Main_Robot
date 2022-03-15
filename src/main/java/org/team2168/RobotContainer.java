@@ -125,6 +125,8 @@ public class RobotContainer {
               hopper, indexer, hood,
               shooter, pooper, colorSensor,
               lime));
+      autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
+      autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
       // autoChooser.addOption("3 Ball", new ThreeBall(`
       //         drivetrain, intakeRaiseAndLower, intakeRoller,
       //         hopper, indexer, hood,
@@ -177,6 +179,9 @@ public class RobotContainer {
     //// Red button
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
 
+    oi.driverJoystick.ButtonB().whenPressed(new TurnXDegrees(drivetrain, 92.0));
+    oi.driverJoystick.ButtonX().whenPressed(new DriveXDistance(drivetrain, 8.0 * 12.0));
+
 
     //OPERATOR CONTROLS
     //// main button cluster
@@ -201,8 +206,10 @@ public class RobotContainer {
     //// sticks
     oi.operatorJoystick.ButtonLeftStick().whenPressed(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
+
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
+
             // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whenPressed(new IntakeLower(intakeRaiseAndLower))
