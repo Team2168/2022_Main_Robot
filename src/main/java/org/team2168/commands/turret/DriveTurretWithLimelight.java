@@ -77,7 +77,7 @@ public class DriveTurretWithLimelight extends CommandBase {
   public void execute() {
     //How far away the target is horizontally in degrees
     limeXPos = limelight.getPositionX();
-    avg_limeXPos = Util.runningAverage(limeXPos, avg_limeXPos, 0.2);
+    avg_limeXPos = Util.runningAverage(limeXPos, avg_limeXPos, 0.15);
     currentPos = turret.getPositionDegrees();
     targetPos = currentPos + (avg_limeXPos * LIME_KP);
 
@@ -100,7 +100,6 @@ public class DriveTurretWithLimelight extends CommandBase {
       unwinding = true;
     }
 
-    System.out.println("  curr" + currentPos + ", lime:" + avg_limeXPos + ", tgt:" + driveLimeTurn);
     turret.setRotationDegrees(driveLimeTurn);
   }
 
