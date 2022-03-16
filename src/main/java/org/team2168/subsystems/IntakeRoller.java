@@ -7,27 +7,29 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
+import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class IntakeRoller extends SubsystemBase {
 
-
-  private static WPI_TalonFX intakeRollerOne = new WPI_TalonFX(CANDevices.INTAKE_MOTOR); 
+  private static TalonFXHelper intakeRollerOne = new TalonFXHelper(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
  
 
-  private static TalonFXInvertType intakeInvert = TalonFXInvertType.CounterClockwise;
-
-  private static final double kP = 1.0;
-  private static final double kI = 0.0;
-  private static final double kD = 0.0;
-  private static final double kF = 0.0;
-  
+  private static TalonFXInvertType intakeInvert;
+  static {
+    if (Constants.IS_COMPBOT) {
+      intakeInvert = TalonFXInvertType.CounterClockwise;
+    } else {
+      intakeInvert = TalonFXInvertType.Clockwise;
+    }
+  }
   private static int intakeTimeoutMs = 30;
   private static double peakOutput = 1.0;
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
@@ -41,13 +43,9 @@ public class IntakeRoller extends SubsystemBase {
   private final double GEAR_RATIO = 2.82/1.0;
   private double speedRPMFunction;
 
- private IntakeRoller() {
+  private IntakeRoller() {
     intakeRollerOne.configFactoryDefault();
-    intakeRollerOne.config_kP(0, kP);
-    intakeRollerOne.config_kI(0, kI);
-    intakeRollerOne.config_kF(0, kF);
-    intakeRollerOne.config_kD(0, kD);
-     intakeRollerOne.setInverted(intakeInvert);
+    intakeRollerOne.setInverted(intakeInvert);
 
     intakeRollerOne.configNominalOutputForward(0,intakeTimeoutMs);
     intakeRollerOne.configNominalOutputReverse(peakOutput, intakeTimeoutMs);
@@ -60,36 +58,35 @@ public class IntakeRoller extends SubsystemBase {
 
     // intakeRollerOne.configAllSettings(intakeRollerOneConfig);
     
-    }
- public static IntakeRoller getInstance(){
+    intakeRollerOne.configOpenLoopStatusFrameRates();
+  }
+
+  public static IntakeRoller getInstance(){
     if (instance == null){
       instance = new IntakeRoller();
     }
     return instance; 
   }
 
-    public void setRollerSpeed(double speed){
-      intakeRollerOne.set(speed);
-   
+  public void setRollerSpeed(double speed){
+    intakeRollerOne.set(speed);
+  }
 
-      }
+  public void setRollerSpeedVelocity(double speedRPM){
+    intakeRollerOne.set(ControlMode.Velocity, RpmToTicksPerOneHundredMS(speedRPM));
+  }
 
-    public void setRollerSpeedVelocity(double speedRPM){
-      speedRPMFunction = RpmToTicksPerOneHundredMS(speedRPM);
-      intakeRollerOne.set(ControlMode.Velocity, speedRPMFunction);
-    }
+  public double RpmToTicksPerOneHundredMS(double speedRPM){
+    return (speedRPM/minuteInHundredMs) * (TICKS_PER_REV/GEAR_RATIO);
+  }
 
-    public double RpmToTicksPerOneHundredMS(double speedRPM){
-   return (speedRPM / minuteInHundredMs) * TICKS_PER_REV * GEAR_RATIO;
-    }
+  @Log(name = "speed (rotations per minute)", rowIndex = 3, columnIndex = 1)
+  public double getSpeedRPM(){
+    return ticksPerOneHundredMsToRotationsPerMinute(intakeRollerOne.getSelectedSensorVelocity());
+  }
 
-   @Log(name = "speed (rotations per minute)", rowIndex = 3, columnIndex = 1)
-    public double getSpeedRPM(){
-      return ticksPerOneHundredMsToRotationsPerMinute(intakeRollerOne.getSelectedSensorVelocity());
-    }
-
-    public double ticksPerOneHundredMsToRotationsPerMinute(double ticksPerHundredMs){
-    return ((ticksPerHundredMs * minuteInHundredMs) / TICKS_PER_REV) / GEAR_RATIO ;
-    }
+  public double ticksPerOneHundredMsToRotationsPerMinute(double ticksPerHundredMs){
+    return ticksPerHundredMs * (GEAR_RATIO/TICKS_PER_REV) * minuteInHundredMs;
+  }
   
 }
