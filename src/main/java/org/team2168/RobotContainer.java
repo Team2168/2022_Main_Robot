@@ -191,10 +191,14 @@ public class RobotContainer {
 
     //OPERATOR CONTROLS
     //// main button cluster
-    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
+    oi.operatorJoystick.ButtonA()
+            .whenPressed(new ZeroTurret(turret))
+            .whenPressed(new FenderLow(hood, shooter));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
-    oi.operatorJoystick.ButtonY().whenPressed(new FenderHigh(hood, shooter, lime));
+    oi.operatorJoystick.ButtonY()
+            .whenPressed(new ZeroTurret(turret))
+            .whenPressed(new FenderHigh(hood, shooter, lime));
     oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter, lime));
 
     //// start and back
