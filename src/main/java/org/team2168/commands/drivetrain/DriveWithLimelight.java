@@ -4,6 +4,7 @@
 
 package org.team2168.commands.drivetrain;
 
+import org.team2168.Constants;
 import org.team2168.OI;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
@@ -30,16 +31,34 @@ public class DriveWithLimelight extends CommandBase implements Loggable {
   private int withinThresholdLoops = 0;
   private int acceptableLoops = 10;
 
-  private static final double MINIMUM_COMMAND = 0.25;  // TODO normalize for battery voltage
-  private static final double MAX_INTEGRAL = 1.0;
+  private static final double P_FAR;
+  private static final double P_NEAR;
+  private static final double I_FAR;
+  private static final double I_NEAR;
+  private static final double MINIMUM_COMMAND;   // TODO normalize for battery voltage
+  private static final double MAX_INTEGRAL;
   
+  static {
+    if(Constants.IS_COMPBOT) {
+      P_FAR = 0.0021;
+      P_NEAR = 0.0041;
+      I_FAR = 0.001;
+      I_NEAR = 0.001;
+      MINIMUM_COMMAND = 0.05;
+      MAX_INTEGRAL = 1.0;
+    } else {
+      P_FAR = 0.02;
+      P_NEAR = 0.01;
+      I_FAR = 0.002;
+      I_NEAR = 0.001;
+      MINIMUM_COMMAND = 0.25;
+      MAX_INTEGRAL = 1.0;
+    }
+  }
+
   //limelight gains
   private double P;
   private double I;
-  private double P_FAR = 0.02;
-  private double P_NEAR = 0.01;
-  private double I_FAR = 0.002;
-  private double I_NEAR = 0.001;
   private double D = 0.0;
 
   @Config
