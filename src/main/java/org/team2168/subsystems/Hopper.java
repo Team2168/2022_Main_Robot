@@ -62,19 +62,35 @@ public class Hopper extends SubsystemBase implements Loggable {
   public static final double DISTANCE_PER_TICK = ROLLER_CIRCUMFERENCE_INCHES / TICKS_PER_REV;
   public static final double INCHES_PER_REV = ROLLER_DIAMETER_INCHES / 2 * Math.PI;
   public static final double HOPPER_DISTANCE_GEAR_RATIO = GEAR_RATIO * DISTANCE_PER_TICK;
+
+  
   
   //Gains
 
   public static TalonFXInvertType hopperMotorInvert = TalonFXInvertType.CounterClockwise;
-  public static final double KV = 0.02;
-  public static final double KA = 0.002;
+  public static final double kP;
+  public static final double kI;
+  public static final double kD;
+  public static final double kF;
+  public static final double kArbitraryFeedDorward;
+  static {
+    if (Constants.IS_COMPBOT) {
+      kP = 0.2;
+      kI = 0.02;
+      kD = 0.0;
+      kF = 0.0;
+      kArbitraryFeedDorward = 0.022;
+    }
+    else {
+      kP = 0.2;
+      kI = 0.02;
+      kD = 0.0;
+      kF = 0.0;
+      kArbitraryFeedDorward = 0.022;
+    }
+  }
 
-  //Simulation stuff
   
-  /**
-   * the hopper motor sim it simulates the hopper motor
-   */
-  private static TalonFXSimCollection hopperMotorSim;
 
   /**
    * the actual hopper sim it simulates the hopper itself
@@ -97,7 +113,11 @@ public class Hopper extends SubsystemBase implements Loggable {
     
     hopperMotor.configFactoryDefault();
     hopperMotor.configSupplyCurrentLimit(talonCurrentLimit);
-    
+
+    hopperMotor.config_kP(kPIDLoopIdx, kP, kTimeoutMs);
+    hopperMotor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
+    hopperMotor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
+    hopperMotor.config_kF(kPIDLoopIdx, kF, kTimeoutMs);
     hopperMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     hopperMotor.setNeutralMode(NeutralMode.Brake);
     hopperMotor.configNeutralDeadband(0.01);
@@ -105,14 +125,6 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.setInverted(hopperMotorInvert);
 
     hopperMotor.configOpenLoopStatusFrameRates();
-
-    hopperSim = new FlywheelSim(
-      LinearSystemId.identifyVelocitySystem(KV, KA),
-      DCMotor.getFalcon500(1),
-      GEAR_RATIO
-    );
-
-    hopperMotorSim = hopperMotor.getSimCollection();
   }
 
   /**
@@ -143,6 +155,11 @@ public class Hopper extends SubsystemBase implements Loggable {
     hopperMotor.set(ControlMode.PercentOutput, speed);
   }
 
+
+  public void driveHopperWithVelocity(double speed) {
+    hopperMotor.set(ControlMode.Velocity, inchesToTicks(speed) * TIME_UNITS_OF_VELOCITY);
+  }
+
   
 
   /**
@@ -168,21 +185,5 @@ public class Hopper extends SubsystemBase implements Loggable {
     // This method will be called once per scheduler run
   }
 
-  public void simulationPeriodic() {
-
-    hopperMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
-    
-    hopperSim.setInput(hopperMotorSim.getMotorOutputLeadVoltage());
-    hopperSim.update(Constants.LOOP_TIMESTEP_S);
-
-    // double sim_velocity_ticks_per_100ms = hopperSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    // hopperMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    // hopperMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
-
-    double sim_velocity_ticks_per_100_ms = inchesToTicks(Units.metersToInches(hopperSim.getAngularVelocityRPM())) * TIME_UNITS_OF_VELOCITY;
-    hopperMotorSim.setIntegratedSensorRawPosition((int) sim_velocity_ticks_per_100_ms);
-    hopperMotorSim.setIntegratedSensorVelocity((int) (getEncoderPosition() + Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100_ms));
-    
-  }
 }
 
