@@ -7,12 +7,12 @@ package org.team2168.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 
 import org.team2168.Constants;
 import org.team2168.Constants.CANDevices;
 import org.team2168.utils.TalonFXHelper;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -20,6 +20,7 @@ public class IntakeRoller extends SubsystemBase {
 
   private static TalonFXHelper intakeRollerOne = new TalonFXHelper(CANDevices.INTAKE_MOTOR); 
   private static IntakeRoller instance = null;
+ 
  
 
   private static TalonFXInvertType intakeInvert;
@@ -44,6 +45,7 @@ public class IntakeRoller extends SubsystemBase {
   private double speedRPMFunction;
 
   private IntakeRoller() {
+    
     intakeRollerOne.configFactoryDefault();
     intakeRollerOne.setInverted(intakeInvert);
 
