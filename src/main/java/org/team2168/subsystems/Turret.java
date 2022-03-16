@@ -11,13 +11,13 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 
 import org.team2168.Constants;
-import org.team2168.utils.CanDigitalInput;
 import org.team2168.utils.Gains;
 import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,7 +26,7 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Turret extends SubsystemBase implements Loggable {
   /** Creates a new Turret. */
-  private static CanDigitalInput hallEffectSensor;
+  private static AnalogPotentiometer pot;
   private static TalonFXHelper turretMotor;
   private static Turret instance = null;
 
@@ -39,8 +39,13 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10.0;
   private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
  
-  private static final int MIN_ROTATION_TICKS = -73400;
-  private static final int MAX_ROTATION_TICKS = 52200;
+  private static final int MIN_ROTATION_TICKS = -73400; 
+  private static final int MAX_ROTATION_TICKS = 52200; 
+
+  private static final double MIN_ROTATION_DEGREES = ticksToDegrees(-73400); // about 276.4788 degrees
+  private static final double MAX_ROTATION_DEGREES = ticksToDegrees(52200); // about 196.6239 degrees
+  private static final double TOTAL_ROTATION_DEGREES = Math.abs(MIN_ROTATION_DEGREES) + Math.abs(MAX_ROTATION_DEGREES);
+
 
   private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(360.0 * 4.5);
   private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(360.0 * 2.0);
@@ -77,7 +82,7 @@ public class Turret extends SubsystemBase implements Loggable {
 
   private Turret() {
     turretMotor = new TalonFXHelper(Constants.CANDevices.TURRET_MOTOR);
-    hallEffectSensor = new CanDigitalInput(turretMotor);
+    pot = new AnalogPotentiometer(Constants.Analog.TURRET_POTENTIOMETER, TOTAL_ROTATION_DEGREES, Math.abs(MIN_ROTATION_DEGREES));
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
@@ -128,7 +133,11 @@ public class Turret extends SubsystemBase implements Loggable {
 
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isTurretAtZero() {
-    return (hallEffectSensor.isFwdLimitSwitchClosed() && getEncoderPosition() < 10 && getEncoderPosition() > -10);
+    return (pot.get() >= -0.01 && pot.get() <= 0.01);
+  }
+
+  public double getPotPos() {
+    return pot.get();
   }
 
   public double getSetpoint() {
