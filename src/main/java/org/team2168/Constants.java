@@ -6,6 +6,7 @@ package org.team2168;
 
 import org.team2168.utils.Gains;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    
+    public static final boolean IS_COMPBOT = new DigitalInput(DIO.PRACTICEBOT_JUMPER).get();
     public static final class Joysticks {
         public static final int DRIVER_JOYSTICK = 0;
         public static final int OPERATOR_JOYSTICK = 1;
@@ -71,11 +74,11 @@ public final class Constants {
          * Not all set of Gains are used in this project and may be removed as desired.
          *
          * 0.21 @ 12v minimum straight output
-         * 	                                    			   kP     kI     kD   kF             Iz    PeakOut */
-        public final static Gains kGains_Distance = new Gains( 0.125, 0.00, 0.0, 0.0,            120,  0.75 ); //always used for linear path
-        public final static Gains kGains_Turning  = new Gains( 0.48, 0.00,  0.0, 0.0,            200,  0.5 ); //used to turn during autos
-        public final static Gains kGains_Turning_Straight = new Gains( 1.0208, 0.0, 0.0, 0.69371,       300,  0.50 ); //used to maintain heading while auto driving straight
-        public final static Gains kGains_Limelight  = new Gains( 0.55, 0.0, 0.0, 1023.0/6800.0,  200,  0.5 );
+         * 	                                        	               kP     kI     kD   kF           Iz    PeakOut */
+        public final static Gains kGains_Distance         = new Gains( 0.125, 0.0, 0.0, 0.0,           120,  0.75 ); //always used for linear path
+        public final static Gains kGains_Turning          = new Gains( 20.0, 0.0, 0.0, 1023 * 0.08,    200,  0.5 );  //used to turn during autos
+        public final static Gains kGains_Turning_Straight = new Gains( 20.0, 1.0, 0.0, 1023 * 0.17,    300,  0.50 ); //used to maintain heading while auto driving straight
+        public final static Gains kGains_Limelight        = new Gains( 0.55, 0.0, 0.0, 1023.0/6800.0,  200,  0.5 );
 	
         /** ---- Flat constants, you should not need to change these ---- */
         /* We allow either a 0 or 1 when selecting an ordinal for remote devices [You can have up to 2 devices assigned remotely to a talon/victor] */
@@ -120,13 +123,25 @@ public final class Constants {
         public static final int CLIMBER_HOOK_LIMIT_SWITCH = 1;
         public static final int HOPPER_LINE_BREAK = 2;
         public static final int INDEXER_SENSOR = 3;
+        public static final int PRACTICEBOT_JUMPER = 7; //because its easier to reach than 9
     }
 
     public static final class MotorSpeeds {
         // Default speeds to input into commands
-        public static final double INDEXER_SPEED = 0.3;
-        public static final double HOPPER_SPEED = 0.3;
-        public static final double INTAKE_SPEED = 0.5;
+        public static final double INDEXER_SPEED;
+        public static final double HOPPER_SPEED;
+        public static final double INTAKE_SPEED;
+        static {
+            if(IS_COMPBOT) {
+                INDEXER_SPEED = 0.3;
+                HOPPER_SPEED = 0.5;
+                INTAKE_SPEED = 1.0;
+            } else {
+                INDEXER_SPEED = 0.3;
+                HOPPER_SPEED = 0.5;
+                INTAKE_SPEED = 0.5;
+            }
+        }
     }
     
     public static final class LiftPositions {

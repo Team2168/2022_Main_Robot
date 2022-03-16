@@ -14,9 +14,9 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -27,12 +27,13 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 
+
 public class Climber extends SubsystemBase implements Loggable {
   static Climber instance = null;
 
   /** Creates a new Climber. */
-  private static WPI_TalonFX climbMotorLeft = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
-  private static WPI_TalonFX climbMotorRight = new WPI_TalonFX(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
+  private static TalonFXHelper climbMotorLeft = new TalonFXHelper(Constants.CANDevices.CLIMBER_MOTOR_LEFT); //left motor when looking at the output shafts
+  private static TalonFXHelper climbMotorRight = new TalonFXHelper(Constants.CANDevices.CLIMBER_MOTOR_RIGHT); //right motor when looking at the output shafts
 
   private static DigitalInput climbHooks = new DigitalInput(Constants.DIO.CLIMBER_HOOK_LIMIT_SWITCH);
 
@@ -50,12 +51,27 @@ public class Climber extends SubsystemBase implements Loggable {
   private static final double TIME_UNITS_OF_VELOCITY = 0.1; // in seconds
 
   // Gains
-  private static final double kP = 0.3;
-  private static final double kI = 0.0;
-  private static final double kD = 0.0;
-  private static final double kF = 0.0;
-  private static final double kArbitraryFeedForward = 0.032;
-  private static final int kIzone = 0;
+  private static final double kP;
+  private static final double kI;
+  private static final double kD;
+  private static final double kF;
+  private static final double kArbitraryFeedForward;
+  static {
+    if (Constants.IS_COMPBOT) {
+       kP = 0.3;
+       kI = 0.0;
+       kD = 0.0;
+       kF = 0.0;
+       kArbitraryFeedForward = 0.032;
+    } else {  // Practice bot gains
+      kP = 0.3;
+      kI = 0.0;
+      kD = 0.0;
+      kF = 0.0;
+      kArbitraryFeedForward = 0.032;
+    }
+  }
+  
   private static final double kPeakOutput = 1.0;
   private static final double NEUTRAL_DEADBAND = 0.001;
   private static final double ACCELERATION_LIMIT = inchesToTicks(21.68 * 3.0) * TIME_UNITS_OF_VELOCITY;
@@ -119,6 +135,9 @@ public class Climber extends SubsystemBase implements Loggable {
     // and at the same time.
     climbMotorRight.set(ControlMode.Follower, Constants.CANDevices.CLIMBER_MOTOR_LEFT);
     climbMotorRight.setInverted(InvertType.OpposeMaster);
+
+    climbMotorLeft.configClosedLoopStatusFrameRates();
+    climbMotorRight.configFollowerStatusFrameRates();
 
     climberSim = new ElevatorSim(
         DCMotor.getFalcon500(2),
