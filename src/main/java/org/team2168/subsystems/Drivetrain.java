@@ -24,13 +24,9 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class Drivetrain extends SubsystemBase implements Loggable {
-<<<<<<< HEAD
-    private WPI_PigeonIMU pidgey; // Same as normal pigeon; implements wpi methods
-=======
     private static boolean USE_PIGEON_GYRO = true;
     private PigeonHelper pidgey; // Same as normal pigeon; implements wpi methods
     private AHRS navx;
->>>>>>> main
 
     private TalonFXHelper leftMotor1;
     private TalonFXHelper leftMotor2;
@@ -107,16 +103,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         rightMotor2 = new TalonFXHelper(CANDevices.DRIVETRAIN_RIGHT_MOTOR_2);
 
         // Instantiate gyro
-<<<<<<< HEAD
-        pidgey = new WPI_PigeonIMU(CANDevices.PIGEON_IMU);
-
-=======
         if(USE_PIGEON_GYRO) {
             pidgey = new PigeonHelper(CANDevices.PIGEON_IMU);
         } else {
             navx = new AHRS(SPI.Port.kMXP);
         }
->>>>>>> main
 
         leftMotor1.configFactoryDefault();
         leftMotor2.configFactoryDefault();
@@ -136,88 +127,16 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         leftConfig.supplyCurrLimit = talonCurrentLimit;
         rightConfig.supplyCurrLimit = talonCurrentLimit;
 
-<<<<<<< HEAD
-        // Configure drivetrain to use integrated sensors
-        leftConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-        rightConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.IntegratedSensor;
-
-        // leftConfig.neutralDeadband = NEUTRALDEADBAND;
-        // rightConfig.neutralDeadband = NEUTRALDEADBAND;
-
-        // pid for distance
-        rightConfig.slot0.kF = Constants.Drivetrain.kGains_Distance.kF;
-        rightConfig.slot0.kP = Constants.Drivetrain.kGains_Distance.kP;
-        rightConfig.slot0.kI = Constants.Drivetrain.kGains_Distance.kI;
-        rightConfig.slot0.kD = Constants.Drivetrain.kGains_Distance.kD;
-        rightConfig.slot0.integralZone = Constants.Drivetrain.kGains_Distance.kIzone;
-        rightConfig.slot0.closedLoopPeakOutput = Constants.Drivetrain.kGains_Distance.kPeakOutput;
-
-        // heading pid
-        rightConfig.remoteFilter1.remoteSensorDeviceID = pidgey.getDeviceID();    //Pigeon Device ID
-        rightConfig.remoteFilter1.remoteSensorSource = RemoteSensorSource.Pigeon_Yaw; //This is for a Pigeon over CAN
-        rightConfig.auxiliaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor1; //Set as the Aux Sensor
-        rightConfig.auxiliaryPID.selectedFeedbackCoefficient = 3600.0 / Constants.Drivetrain.kPigeonUnitsPerRotation; //Convert Yaw to tenths of a degree
-
-        /* false means talon's local output is PID0 + PID1, and other side Talon is PID0 - PID1
-         *   This is typical when the master is the right Talon FX and using Pigeon
-         *
-         * true means talon's local output is PID0 - PID1, and other side Talon is PID0 + PID1
-         *   This is typical when the master is the left Talon FX and using Pigeon
-         */
-        rightConfig.auxPIDPolarity = true;
-
-        /**
-         * 1ms per loop.  PID loop can be slowed down if need be.
-         * For example,
-         * - if sensor updates are too slow
-         * - sensor deltas are very small per update, so derivative error never gets large enough to be useful.
-         * - sensor movement is very slow causing the derivative error to be near zero.
-         */
-        int closedLoopTimeMs = 1;
-        rightMotor1.configClosedLoopPeriod(0, closedLoopTimeMs, TIMEOUT);
-        rightMotor1.configClosedLoopPeriod(1, closedLoopTimeMs, TIMEOUT);
-
-
-
-        leftMotor1.configAllSettings(leftConfig);
-//        leftMotor2.configAllSettings(leftConfig);
-        rightMotor1.configAllSettings(rightConfig);
-//        rightMotor2.configAllSettings(rightConfig);
-
-        rightMotor1.selectProfileSlot(Constants.Drivetrain.kSlot_Distanc, Constants.Drivetrain.PID_PRIMARY);
-        rightMotor1.selectProfileSlot(Constants.Drivetrain.kSlot_Turning, Constants.Drivetrain.PID_TURN);
-
-        leftMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
-        leftMotor1.enableVoltageCompensation(true);
-        rightMotor1.configVoltageCompSaturation(Constants.Drivetrain.MAX_VOLTAGE);
-        rightMotor1.enableVoltageCompensation(true);
-
-        leftMotor2.follow(leftMotor1);
-        rightMotor2.follow(rightMotor1);
-
-        leftMotor1.setInverted(leftInvert);
-        leftMotor2.setInverted(InvertType.FollowMaster);
-        rightMotor1.setInverted(rightInvert);
-        rightMotor2.setInverted(InvertType.FollowMaster);
-
-=======
->>>>>>> main
         setMotorsBrake();
         // drive = new DifferentialDrive(leftMotor1, rightMotor1);
         // drive.setDeadband(0.0);  // Disable differentialDrive deadband; deadband is handled by the controllers
 
-<<<<<<< HEAD
-        pidgey.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 1);  // status frame in ms
-        odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
-
-=======
         if(USE_PIGEON_GYRO) {
             pidgey.setReducedStatusFramePeriods();
             odometry = new DifferentialDriveOdometry(pidgey.getRotation2d());
         } else {
             odometry = new DifferentialDriveOdometry(navx.getRotation2d());
         }
->>>>>>> main
 
         /* Set Neutral Mode */
 		leftMotor1.setNeutralMode(NeutralMode.Brake);
@@ -331,51 +250,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         // This method will be called once per scheduler run
         odometry.update(pidgey.getRotation2d(), getLeftEncoderDistance(), getRightEncoderDistance());
     }
-<<<<<<< HEAD
-
-    public void switchGains(boolean straightmode) {
-        if(straightmode) {
-            /* Motion Magic Configs */
-            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second
-            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(10.0*12.0))); //distance units per 100 ms
-            /* FPID for Heading */
-            rightMotor1.config_kF(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kF, TIMEOUT);
-            rightMotor1.config_kP(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kP, TIMEOUT);
-            rightMotor1.config_kI(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kI, TIMEOUT);
-            rightMotor1.config_kD(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kD, TIMEOUT);
-            rightMotor1.config_IntegralZone(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kIzone, TIMEOUT);
-            rightMotor1.configClosedLoopPeakOutput(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning_Straight.kPeakOutput, TIMEOUT);
-
-            rightMotor1.configNominalOutputForward(0.045, TIMEOUT);
-            rightMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-            leftMotor1.configNominalOutputForward(0.045, TIMEOUT);
-            leftMotor1.configNominalOutputReverse(-0.045, TIMEOUT);
-            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-        } else {
-            /* Motion Magic Configs */
-            rightMotor1.configMotionAcceleration((int) (inchesPerSecToTicksPer100ms(8.0*12.0))); //(distance units per 100 ms) per second
-            rightMotor1.configMotionCruiseVelocity((int) (inchesPerSecToTicksPer100ms(5.0*12.0))); //distance units per 100 ms
-            rightMotor1.config_kF(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kF,TIMEOUT);
-            rightMotor1.config_kP(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kP,TIMEOUT);
-            rightMotor1.config_kI(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kI,TIMEOUT);
-            rightMotor1.config_kD(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kD,TIMEOUT);
-            rightMotor1.config_IntegralZone(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kIzone, TIMEOUT);
-            rightMotor1.configClosedLoopPeakOutput(Constants.Drivetrain.SLOT_1, Constants.Drivetrain.kGains_Turning.kPeakOutput, TIMEOUT);
-
-            rightMotor1.configNominalOutputForward(0.13, TIMEOUT);
-            rightMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-            rightMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            rightMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-            leftMotor1.configNominalOutputForward(0.13, TIMEOUT);
-            leftMotor1.configNominalOutputReverse(-0.13, TIMEOUT);
-            leftMotor1.configPeakOutputForward(1.0, TIMEOUT);
-            leftMotor1.configPeakOutputReverse(-1.0, TIMEOUT);
-        }
-    }
-=======
     
    public void switchGains(boolean straightmode) {
        if (straightmode) {
@@ -416,7 +290,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
        leftMotor1.configAllSettings(leftConfig);
        leftMotor2.configAllSettings(leftConfig);
    }
->>>>>>> main
 
     /**
      * Gets the odometry pose
@@ -581,9 +454,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      * Zeroes gyro heading
      */
     public void zeroHeading() {
-<<<<<<< HEAD
-        pidgey.reset();
-=======
         if (USE_PIGEON_GYRO) {
             pidgey.reset();
             pidgey.setYaw(0, TIMEOUT);
@@ -592,7 +462,6 @@ public class Drivetrain extends SubsystemBase implements Loggable {
             navx.reset();
             ;
         }
->>>>>>> main
     }
 
     /**
