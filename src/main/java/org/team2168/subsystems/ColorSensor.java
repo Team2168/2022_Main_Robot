@@ -16,12 +16,11 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
 
-
 public class ColorSensor extends SubsystemBase implements Loggable {
     private SerialPort serialPort;
     private static ColorSensor instance = null;
     private static final double DATA_THRESHOLD = 2.0;  // Time after which to consider data stale
-   
+
     static int rNorm = 1; //init to non-zero to avoid divide by zero error when no comms to sensor
     static int gNorm = 1;
     static int bNorm = 1;
@@ -55,7 +54,7 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     /**
      * Constructor for ColorSensor subsystem
-     * 
+     *
      * @return instance of ColorSensor subsystem
      */
     public static ColorSensor getInstance() {
@@ -66,16 +65,15 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     /**
      * A method to get rgb values from the teensy.
-     * 
+     * <p>
      * This will block until it recieves values, so be careful with where you use
      * it.
-     * 
      */
     private void readSensor() {
         byte[] serialOutput = null;
 
         if (serialPort.getBytesReceived() >= 4) {
-            
+
             serialOutput = serialPort.read(4);
             // convert values to integers
             var intValue = new int[serialOutput.length];
@@ -92,45 +90,49 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         }
     }
 
-    private void normRaw(){
+    private void normRaw() {
         int Norm_scale = valScal;
         MaxVal = data.red;
-        if(data.green>MaxVal){
-            MaxVal=data.green;
+        if (data.green > MaxVal) {
+            MaxVal = data.green;
         }
-        if(data.blue>MaxVal){
-            MaxVal=data.blue;
+        if (data.blue > MaxVal) {
+            MaxVal = data.blue;
         }
-       rNorm=(Norm_scale*data.red)/MaxVal;
-       gNorm=(Norm_scale*data.green)/MaxVal;
-       bNorm=(Norm_scale*data.blue)/MaxVal;
+        try {
+            rNorm = (Norm_scale * data.red) / MaxVal;
+            gNorm = (Norm_scale * data.green) / MaxVal;
+            bNorm = (Norm_scale * data.blue) / MaxVal;
+        } catch (ArithmeticException e) {
+            DriverStation.reportError("got dividebyzero error when norming raw colorsensor data!", e.getStackTrace());
+        }
     }
 
     @Log(name = "Color Sensor Alliance")
     public String getColorName() {
         return getColor().name();
     }
-    
+
     public Alliance getColor() {
         Alliance color;
-        normRaw();      
-    //    if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
-    //         color = Alliance.Invalid;
-    //    else if(rNorm==255)
-    //         color = Alliance.Red;
-    //     else
-    //         color = Alliance.Blue;//   return Alliance.Invalid;
-    //     return color;
+        normRaw();
+        //    if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
+        //         color = Alliance.Invalid;
+        //    else if(rNorm==255)
+        //         color = Alliance.Red;
+        //     else
+        //         color = Alliance.Blue;//   return Alliance.Invalid;
+        //     return color;
 
-        if((rNorm==255) && (bNorm + gNorm) < 200) 
+        if ((rNorm == 255) && (bNorm + gNorm) < 200)
             color = Alliance.Red;
-        else if ((bNorm==255) && (rNorm + gNorm) < 200)
+        else if ((bNorm == 255) && (rNorm + gNorm) < 200)
             color = Alliance.Blue;
         else
             color = Alliance.Invalid;
         return color;
-    
-        
+
+
     }
 
     @Log(name = "Is good?")
@@ -145,10 +147,9 @@ public class ColorSensor extends SubsystemBase implements Loggable {
     }
 
     /**
-     * 
      * @return true when there's positive indication of another alliances ball present
      */
-    public boolean shouldPoopBall(){
+    public boolean shouldPoopBall() {
         return !isDataStale() && getColor() != Alliance.Invalid && !isTeamColor();
     }
 
@@ -172,7 +173,6 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         return data.green;
     }
 
-    
 
     @Override
     public void periodic() {
