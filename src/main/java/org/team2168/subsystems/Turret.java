@@ -133,7 +133,8 @@ public class Turret extends SubsystemBase implements Loggable {
 
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isTurretAtZero() {
-    return (pot.get() >= -0.5 && pot.get() <= 0.5);
+    return false;
+    // return (pot.get() >= -0.5 && pot.get() <= 0.5);
   }
 
   @Log(name = "Pot Pos", rowIndex = 2, columnIndex = 0)
@@ -251,9 +252,9 @@ public class Turret extends SubsystemBase implements Loggable {
     return turretMotor.getSelectedSensorPosition();
   }
 
-  public void zeroEncoder() {
-    turretMotor.setSelectedSensorPosition(0.0);
-  }
+  // public void zeroEncoder() {
+  //   turretMotor.setSelectedSensorPosition(0.0);
+  // }
 
   public boolean atSoftLimit() {
     return !(getEncoderPosition() < MAX_ROTATION_TICKS && getEncoderPosition() > -MAX_ROTATION_TICKS);
@@ -288,8 +289,8 @@ public class Turret extends SubsystemBase implements Loggable {
   public void periodic() {
     // This method will be called once per scheduler run
     // Only zeros the turret if it is actually at zero and not at 360/-360
-    if (isTurretAtZero())
-      zeroEncoder();
+    // if (isTurretAtZero())
+    //   zeroEncoder();
   }
 
   @Override
