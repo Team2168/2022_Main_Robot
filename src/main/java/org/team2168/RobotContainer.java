@@ -41,6 +41,7 @@ import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
@@ -209,7 +210,8 @@ public class RobotContainer {
             .whenReleased(new IntakeRaise(intakeRaiseAndLower))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
-            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
+            .whenReleased(new PooperUnpoop(pooper));
 
     oi.operatorJoystick.ButtonRightBumper()
             .whenPressed(new FireBalls(shooter, indexer, hopper))
