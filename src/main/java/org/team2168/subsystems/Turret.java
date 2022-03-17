@@ -271,10 +271,10 @@ public class Turret extends SubsystemBase implements Loggable {
       return targetPos + 360; 
   }
 
-  public void zeroTurret() {
-    while (!isTurretAtZero())
-      setRotationDegrees(-getEncoderPosition());
-  }
+  // public void zeroTurret() {
+  //   while (!isTurretAtZero())
+  //     setRotationDegrees(-getEncoderPosition());
+  // }
 
   public double getForwardSoftLimit() {
     return ticksToDegrees(MAX_ROTATION_TICKS);

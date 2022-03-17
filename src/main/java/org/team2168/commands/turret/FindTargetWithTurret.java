@@ -81,7 +81,7 @@ public class FindTargetWithTurret extends CommandBase {
     if (targetFound)
       turret.setVelocity(0.0);
     else
-      turret.zeroTurret();
+      // turret.zeroTurret();  //TODO: replace logic. Can't use this method as it has a while loop in it
     limelight.pauseLimelight();
   }
 
