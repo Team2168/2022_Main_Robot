@@ -160,5 +160,9 @@ public final class Constants {
         public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
     }
 
+    public static final class Analog {
+        public static final int TURRET_POTENTIOMETER = 0;
+    }
+
     public static final double LOOP_TIMESTEP_S = 0.02;
 }

@@ -74,7 +74,7 @@ public class TurnXDegrees extends CommandBase {
       turnSpeed = 0.0;
     }
 
-    System.out.println("   tgt:" + targetHeading + ", curr:" + currentHeading + ", err:" + error + ", spd:" + turnSpeed);
+    // System.out.println("   tgt:" + targetHeading + ", curr:" + currentHeading + ", err:" + error + ", spd:" + turnSpeed);
     dt.arcadeDrive(0.0, turnSpeed);
   }
 
