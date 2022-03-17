@@ -182,7 +182,7 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, 0.0))
             .whenPressed(new FullSendClimbingSequence(climber, monkeyBar))
-            .whenPressed(new RotateTurret(turret, 0.0));
+            .whenPressed(new RotateTurret(turret, -90.0));
 
     //lower left button ("Forward Fine-Tuning")
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
