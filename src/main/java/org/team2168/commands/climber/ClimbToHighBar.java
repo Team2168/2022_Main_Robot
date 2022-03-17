@@ -5,7 +5,6 @@
 package org.team2168.commands.climber;
 
 import org.team2168.Constants.LiftPositions;
-import org.team2168.commands.Sleep;
 import org.team2168.commands.monkeybar.CheckMonkeyHookAttached;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
 import org.team2168.commands.monkeybar.RetractMonkeyBar;
@@ -28,8 +27,6 @@ public class ClimbToHighBar extends SequentialCommandGroup {
  */
   public ClimbToHighBar(Climber climb, MonkeyBar monkey) {
     addCommands(
-      // new DriveClimberToPosition(climb, LiftPositions.LIFT_ARREST_SING_INCHES),
-      // new Sleep().withTimeout(2.0), //stay connected with the climber bars to slow the swing down
       new DriveClimberToPosition(climb, LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
