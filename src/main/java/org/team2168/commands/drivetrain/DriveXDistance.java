@@ -20,7 +20,7 @@ public class DriveXDistance extends CommandBase {
   private static final double DEFAULT_LOOPS_TO_SETTLE = 5;
 
   private double _errorTolerancePosition; //0.5 inches
-  private double _errorToleranceAngle = 3.0; //1.0 degree of tolerance 
+  private double _errorToleranceAngle = 1.0; //1.0 degree of tolerance
   private double _maxVel;
   private double _loopsToSettle;
   private int _withinThresholdLoops = 0;
