@@ -28,7 +28,7 @@ public class BumpTurretLeft extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var setpoint = turret.getSetpoint() - 1.0;
+    var setpoint = turret.getSetpoint() - 5.0;
     turret.setRotationDegrees(setpoint);
   }
 

@@ -82,7 +82,7 @@ public class Turret extends SubsystemBase implements Loggable {
 
   private Turret() {
     turretMotor = new TalonFXHelper(Constants.CANDevices.TURRET_MOTOR);
-    pot = new AnalogPotentiometer(Constants.Analog.TURRET_POTENTIOMETER, TOTAL_ROTATION_DEGREES, Math.abs(MIN_ROTATION_DEGREES));
+    pot = new AnalogPotentiometer(Constants.Analog.TURRET_POTENTIOMETER, TOTAL_ROTATION_DEGREES, -26.0);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
@@ -133,9 +133,10 @@ public class Turret extends SubsystemBase implements Loggable {
 
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isTurretAtZero() {
-    return (pot.get() >= -0.01 && pot.get() <= 0.01);
+    return (pot.get() >= -0.5 && pot.get() <= 0.5);
   }
 
+  @Log(name = "Pot Pos", rowIndex = 2, columnIndex = 0)
   public double getPotPos() {
     return pot.get();
   }

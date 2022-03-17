@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class BumpTurretRight extends CommandBase {
   /** Creates a new BumpTurretRight. */
   private Turret turret;
-  private double setpoint = 1.0;
+  private double setpoint = 5.0;
 
   /**
    * Bumps the turret one degree clockwise/to the right
