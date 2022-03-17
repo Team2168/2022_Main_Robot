@@ -173,9 +173,8 @@ public class RobotContainer {
 
     //// Green button
     oi.driverJoystick.ButtonLeftStick()
-            .whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger))
-            .whenPressed(new RotateTurret(turret, 0.0));
-    
+            .whenPressed(new RotateTurret(turret, 0.0))
+            .whenHeld(new DriveWithLimelight(drivetrain, lime, oi::getGunStyleTrigger));
 
     //// Black button
     oi.driverJoystick.ButtonRightBumper()
