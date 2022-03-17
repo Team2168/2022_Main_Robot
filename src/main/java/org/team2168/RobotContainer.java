@@ -192,12 +192,12 @@ public class RobotContainer {
     //OPERATOR CONTROLS
     //// main button cluster
     oi.operatorJoystick.ButtonA()
-            .whenPressed(new ZeroTurret(turret))
+            .whenPressed(new RotateTurret(turret, 0.0))
             .whenPressed(new FenderLow(hood, shooter));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
     oi.operatorJoystick.ButtonY()
-            .whenPressed(new ZeroTurret(turret))
+            .whenPressed(new RotateTurret(turret, 0.0))
             .whenPressed(new FenderHigh(hood, shooter, lime));
     oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter, lime));
 
@@ -241,19 +241,19 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
-    turret.setDefaultCommand(new DriveTurretWithJoystick(turret, oi::getTestJoystickX));
+    // turret.setDefaultCommand(new DriveTurretWithJoystick(turret, oi::getTestJoystickX));
 
-    oi.testJoystick.ButtonStart().whenPressed(new FindTargetWithTurret(turret, lime));
+    // oi.testJoystick.ButtonStart().whenPressed(new FindTargetWithTurret(turret, lime));
 
-    oi.testJoystick.ButtonA().whenPressed(new DriveTurretWithLimelight(turret, lime));
-    oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 60));
-    oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -30));
-    oi.testJoystick.ButtonY().whenPressed(new RotateTurret(turret, -60));
+    // oi.testJoystick.ButtonA().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    // oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 60));
+    // oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -30));
+    // oi.testJoystick.ButtonY().whenPressed(new RotateTurret(turret, -60));
 
-    oi.testJoystick.ButtonBack().whenPressed(new ZeroTurret(turret));
+    // oi.testJoystick.ButtonBack().whenPressed(new ZeroTurret(turret));
 
-    oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpTurretLeft(turret));
-    oi.testJoystick.ButtonRightBumper().whenPressed(new BumpTurretRight(turret));
+    // oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpTurretLeft(turret));
+    // oi.testJoystick.ButtonRightBumper().whenPressed(new BumpTurretRight(turret));
 
     
     // indexer.setDefaultCommand(new DriveIndexer(indexer, oi.testJoystick::getLeftStickRaw_X));
