@@ -26,6 +26,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   private static NetworkTableEntry tx;
   private static NetworkTableEntry ty;
   private static NetworkTableEntry ta;
+  private static NetworkTableEntry tv;
   private static NetworkTableEntry tcornxy; // gives x and y coordinates for corners of contour
   private static NetworkTableEntry ledMode;
   private static NetworkTableEntry camMode;
@@ -210,12 +211,18 @@ public class Limelight extends SubsystemBase implements Loggable {
     tx = networkTable.getEntry("tx");
     ty = networkTable.getEntry("ty");
     ta = networkTable.getEntry("ta");
+    tv = networkTable.getEntry("tv");
     camtran = networkTable.getEntry("camtran");
 
     // Variables to set data on Limelight
     ledMode = networkTable.getEntry("ledMode");
     camMode = networkTable.getEntry("camMode");
     pipeline = networkTable.getEntry("pipeline");
+  }
+
+  @Log(name = "Has Target?", rowIndex = 2, columnIndex = 0)
+  public boolean hasTarget() {
+    return tv.getBoolean(false);
   }
 
   /**
