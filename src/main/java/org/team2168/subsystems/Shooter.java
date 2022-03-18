@@ -26,10 +26,10 @@ public class Shooter extends SubsystemBase implements Loggable {
   public enum ShooterRPM {
     AUTO_TARMAC_LINE(1718.0),
     AUTO_LAUNCHPAD(2335.0),
-    FENDER_LOW(900.0),
-    FENDER_HIGH(1500.0),
+    FENDER_LOW(1050),//(900.0),
+    FENDER_HIGH(1600),//(1500.0),
     TARMAC_LINE(1718.0),  // 1650
-    LAUNCHPAD(2085.0),
+    LAUNCHPAD(1880),//(2085.0),
     WALL_SHOT(2750.0),
     TERMINAL(2300);
 //    FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
