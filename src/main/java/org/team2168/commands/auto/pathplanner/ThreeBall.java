@@ -53,7 +53,7 @@ public class ThreeBall extends SequentialCommandGroup {
                             new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new WaitForShooterAtSpeed(shooter),
                             new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
-                            new DriveWithLimelight(drivetrain, lime, 1.5, true),
+                            //new DriveWithLimelight(drivetrain, lime, 1.5, true),
                             new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new FireBalls(shooter, indexer, hopper),
                             new WaitForShooterAtSpeed(shooter),
@@ -66,9 +66,9 @@ public class ThreeBall extends SequentialCommandGroup {
                             race (
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     sequence(
-                                            PathUtil.getPathCommand(paths.path_3Ball_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
+                                            PathUtil.getPathCommand(paths.path_3Ball_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
                                             // PathUtil.getPathCommand(paths.path_3Ball_2, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
-                                            new DriveWithLimelight(drivetrain, lime, 1.5, false)
+                                            //new DriveWithLimelight(drivetrain, lime, 1.5, false)
                                     )
                             ),
 
