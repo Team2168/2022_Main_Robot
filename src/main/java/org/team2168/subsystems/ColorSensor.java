@@ -4,8 +4,6 @@
 
 package org.team2168.subsystems;
 
-import javax.lang.model.util.ElementScanner6;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -99,13 +97,9 @@ public class ColorSensor extends SubsystemBase implements Loggable {
         if (data.blue > MaxVal) {
             MaxVal = data.blue;
         }
-        try {
-            rNorm = (Norm_scale * data.red) / MaxVal;
-            gNorm = (Norm_scale * data.green) / MaxVal;
-            bNorm = (Norm_scale * data.blue) / MaxVal;
-        } catch (ArithmeticException e) {
-            DriverStation.reportError("got dividebyzero error when norming raw colorsensor data!", e.getStackTrace());
-        }
+        rNorm = (Norm_scale * data.red) / MaxVal;
+        gNorm = (Norm_scale * data.green) / MaxVal;
+        bNorm = (Norm_scale * data.blue) / MaxVal;
     }
 
     @Log(name = "Color Sensor Alliance")
@@ -115,7 +109,11 @@ public class ColorSensor extends SubsystemBase implements Loggable {
 
     public Alliance getColor() {
         Alliance color;
-        normRaw();
+        try {
+          normRaw();
+        } catch (ArithmeticException e) {
+          return Alliance.Invalid;
+        }
         //    if ((rNorm==255) && Math.abs(bNorm - gNorm) < 40 && bNorm > 90)
         //         color = Alliance.Invalid;
         //    else if(rNorm==255)
