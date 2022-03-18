@@ -4,16 +4,7 @@
 
 package org.team2168.commands.auto;
 
-import org.team2168.subsystems.ColorSensor;
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Hood;
-import org.team2168.subsystems.Hopper;
-import org.team2168.subsystems.Indexer;
-import org.team2168.subsystems.IntakeRaiseAndLower;
-import org.team2168.subsystems.IntakeRoller;
-import org.team2168.subsystems.Limelight;
-import org.team2168.subsystems.Pooper;
-import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.*;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -30,14 +21,15 @@ public class CrossFieldFourBall extends SequentialCommandGroup {
     Indexer indexer,
     Hood hood,
     Shooter shooter,
+    Turret turret,
     Pooper pooper,
     ColorSensor colorSensor,
     Limelight lime) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SimpleOppositeSideToTerminal(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, pooper, colorSensor, lime),
-      new TerminalToTarmac(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, pooper, colorSensor, lime)
+      new SimpleOppositeSideToTerminal(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, turret, pooper, colorSensor, lime)
+//      new TerminalToTarmac(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, pooper, colorSensor, lime)
     );
   }
 }

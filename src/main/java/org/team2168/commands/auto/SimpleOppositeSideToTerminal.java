@@ -24,13 +24,14 @@ public class SimpleOppositeSideToTerminal extends SequentialCommandGroup {
     Indexer indexer,
     Hood hood,
     Shooter shooter,
+    Turret turret,
     Pooper pooper,
     ColorSensor colorSensor,
     Limelight lime) {
     addCommands(
-      new SimpleTwoBall(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, pooper, colorSensor, lime),
+      new SimpleTwoBall(drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, turret, pooper, colorSensor, lime),
 
-      new TurnXDegrees(drivetrain, 92.0), //Rotate butt toward Terminal
+      new TurnXDegrees(drivetrain, 96.0), //Rotate butt toward Terminal
       new DriveXDistance(drivetrain, Units.metersToInches(-6.0)) // drive back towards Terminal
     );
   }
