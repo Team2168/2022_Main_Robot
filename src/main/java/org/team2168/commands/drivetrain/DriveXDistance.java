@@ -82,7 +82,7 @@ public class DriveXDistance extends CommandBase {
   public void execute() {
     /* Check if closed loop error is within the threshld */
 
-    System.out.println("  posErr: " + dt.getErrorPosition() + "  ang: " + dt.getErrorHeading());
+    // System.out.println("  posErr: " + dt.getErrorPosition() + "  ang: " + dt.getErrorHeading());
 
     if ((Math.abs(dt.getErrorPosition()) < _errorTolerancePosition) && (Math.abs(dt.getErrorHeading()) < _errorToleranceAngle)) {
       ++_withinThresholdLoops;
