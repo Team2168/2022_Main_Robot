@@ -41,6 +41,7 @@ import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.monkeybar.*;
+import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
@@ -181,7 +182,7 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, 0.0))
             .whenPressed(new FullSendClimbingSequence(climber, monkeyBar))
-            .whenPressed(new RotateTurret(turret, 0.0));
+            .whenPressed(new RotateTurret(turret, -90.0));
 
     //lower left button ("Forward Fine-Tuning")
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
@@ -224,7 +225,8 @@ public class RobotContainer {
             .whenReleased(new IntakeRaise(intakeRaiseAndLower))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
-            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
+            .whenReleased(new PooperUnpoop(pooper));
 
     oi.operatorJoystick.ButtonRightBumper()
             .whenPressed(new FireBalls(shooter, indexer, hopper))

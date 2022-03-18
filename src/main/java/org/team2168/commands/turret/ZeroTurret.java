@@ -42,9 +42,9 @@ public class ZeroTurret extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     turret.setVelocity(0);
-    if (!interrupted) {
-      turret.zeroEncoder();
-    }
+    // if (!interrupted) {
+    //   turret.zeroEncoder();
+    // }
   }
 
   // Returns true when the command should end.
