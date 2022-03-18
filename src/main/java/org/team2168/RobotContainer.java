@@ -136,6 +136,11 @@ public class RobotContainer {
               lime));
       autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
       autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
+      autoChooser.addOption("Cross Field 4 Ball", new CrossFieldFourBall(
+        drivetrain, intakeRaiseAndLower, intakeRoller, 
+        hopper, indexer, hood, 
+        shooter, pooper, colorSensor, 
+        lime));
       // autoChooser.addOption("3 Ball", new ThreeBall(`
       //         drivetrain, intakeRaiseAndLower, intakeRoller,
       //         hopper, indexer, hood,
