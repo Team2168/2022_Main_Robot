@@ -12,6 +12,7 @@ import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.Launchpad;
 import org.team2168.commands.shootingpositions.TarmacLine;
@@ -53,7 +54,7 @@ public class ThreeBall extends SequentialCommandGroup {
                             new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new WaitForShooterAtSpeed(shooter),
                             new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
-                            //new DriveWithLimelight(drivetrain, lime, 1.5, true),
+                            new WaitForLimelightInPosition(lime),
                             new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new FireBalls(shooter, indexer, hopper),
                             new WaitForShooterAtSpeed(shooter),
@@ -76,7 +77,10 @@ public class ThreeBall extends SequentialCommandGroup {
                             new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             race (
                                     new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
-                                    new FireBalls(shooter, indexer, hopper)
+                                    sequence (
+                                            new WaitForLimelightInPosition(lime),
+                                            new FireBalls(shooter, indexer, hopper)
+                                    )
                             ),
 
                             new InstantCommand(() -> System.out.println("fired!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
