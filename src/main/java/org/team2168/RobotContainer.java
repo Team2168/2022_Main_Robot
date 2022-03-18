@@ -27,6 +27,8 @@ import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.*;
+import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
+import org.team2168.commands.auto.pathplanner.TwoBall;
 import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.*;
@@ -124,10 +126,10 @@ public class RobotContainer {
   private void configureAutonomousRoutines() {
       autoChooser.setDefaultOption("Do nothing", new DoNothing());
 //        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-      autoChooser.addOption("2 ball", new SimpleTwoBall(
+      autoChooser.addOption("2 ball", new TwoBall(
               drivetrain, intakeRaiseAndLower, intakeRoller,
               hopper, indexer, hood,
-              shooter, pooper, colorSensor,
+              shooter, turret, pooper, colorSensor,
               lime));
       autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
               drivetrain, intakeRaiseAndLower, intakeRoller,
@@ -136,6 +138,7 @@ public class RobotContainer {
               lime));
       autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
       autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
+      autoChooser.addOption("test drive", new DebugPathPlanner(drivetrain, "Drive3Meters"));
       // autoChooser.addOption("3 Ball", new ThreeBall(`
       //         drivetrain, intakeRaiseAndLower, intakeRoller,
       //         hopper, indexer, hood,

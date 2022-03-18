@@ -48,12 +48,12 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 0.69371;
+        public static final double ksVolts = 0.20;
         public static final double kvVoltSecondsPerMeter = 2.3087;
         public static final double kaVoltSecondsSquaredPerMeter = 0.73973;
         public static final double kPDriveVel = 1.7845; // @1.4 m/s max error
 
-        public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295/Actual = 0.65563;
+        public static final double kTrackwidthMeters = 0.67813;//what sysid claims:0.73295/Actual = 0.65563;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
