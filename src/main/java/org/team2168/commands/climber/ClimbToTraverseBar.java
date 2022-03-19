@@ -10,10 +10,8 @@ import org.team2168.commands.Sleep;
 import org.team2168.commands.monkeybar.CheckMonkeyHookAttached;
 import org.team2168.commands.monkeybar.ExtendMonkeyBar;
 import org.team2168.commands.monkeybar.RetractMonkeyBar;
-import org.team2168.commands.turret.StopTurret;
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.MonkeyBar;
-import org.team2168.subsystems.Turret;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -25,10 +23,8 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
  * 
  * Should be used after robot initially climbs the high bar.
  */
-  public ClimbToTraverseBar(Climber climb, MonkeyBar monkey, Turret turret) {
+  public ClimbToTraverseBar(Climber climb, MonkeyBar monkey) {
     addCommands(
-      new StopTurret(turret), // Prevent oscillations while we see excessive shock during climb.
-                              // Turn off position controller and just rely on break mode to keep turret stationary
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARREST_SING_INCHES),
       new Sleep().withTimeout(1.5), //stay connected with the climber bars to slow the swing down
       new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
