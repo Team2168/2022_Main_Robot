@@ -169,7 +169,7 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter, climber));
+    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter, climber, lime));
 
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
