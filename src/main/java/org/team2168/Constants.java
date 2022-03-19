@@ -139,7 +139,7 @@ public final class Constants {
             } else {
                 INDEXER_SPEED = 0.3;
                 HOPPER_SPEED = 0.5;
-                INTAKE_SPEED = 0.5;
+                INTAKE_SPEED = 1.0;
             }
         }
     }
