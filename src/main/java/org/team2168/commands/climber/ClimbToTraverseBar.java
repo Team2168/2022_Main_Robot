@@ -36,6 +36,7 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
       new DriveClimberToPosition(climb, LiftPositions.LIFT_EXTEND_BELOW_NEXT_BAR_INCHES),
+      new Sleep().withTimeout(1), //add time for climber to swing under the traverse bar
       new WaitToExtendLiftWhileSwinging(LiftPositions.SAFE_TRAVERSE_BAR_EXTEND_PITCH),
       new DriveClimberToPosition(climb, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
       new RetractMonkeyBar(monkey),
