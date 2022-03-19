@@ -155,9 +155,9 @@ public final class Constants {
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
         public static final double LIFT_ZERO_INCHES = 0.0;
 
-        public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 40.0;
-        public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 40.0;
-        public static final double TOO_CLOSE_TO_SWING_APEX_PITCH = 30.0;
+        public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 30.0;
+        public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 30.0;
+        public static final double TOO_CLOSE_TO_SWING_APEX_PITCH = 40.0;
         public static final double TOO_CLOSE_TO_SWING_APEX_PITCH_HIGH = 90.0; // there is no minimum value here!
         public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
     }
