@@ -29,19 +29,19 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
     addCommands(
       new StopTurret(turret), // Prevent oscillations while we see excessive shock during climb.
                               // Turn off position controller and just rely on break mode to keep turret stationary
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARREST_SING_INCHES),
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARRESTING_INCHES),
       new Sleep().withTimeout(1.5), //stay connected with the climber bars to slow the swing down
       new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
       new DriveClimberToPosition(climb, LiftPositions.LIFT_EXTEND_BELOW_NEXT_BAR_INCHES),
-      new WaitToExtendLiftWhileSwinging(LiftPositions.SAFE_TRAVERSE_BAR_EXTEND_PITCH),
+      new WaitToExtendLiftWhileSwinging(LiftPositions.SAFE_TRAVERSE_BAR_EXTEND_PITCH, LiftPositions.TOO_CLOSE_TO_SWING_APEX_PITCH),
       new DriveClimberToPosition(climb, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
       new RetractMonkeyBar(monkey),
       new CheckClimberHookAttached(climb, 50),
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES),
-      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARREST_SING_INCHES)
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARRESTING_INCHES)
     );
   }
 }
