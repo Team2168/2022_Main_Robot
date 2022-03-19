@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -28,7 +27,7 @@ import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.*;
-import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
+// import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
 import org.team2168.commands.climber.DriveClimber;
@@ -50,13 +49,7 @@ import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.turret.BumpTurretLeft;
-import org.team2168.commands.turret.BumpTurretRight;
-import org.team2168.commands.turret.DriveTurretWithJoystick;
-import org.team2168.commands.turret.DriveTurretWithLimelight;
-import org.team2168.commands.turret.FindTargetWithTurret;
-import org.team2168.commands.turret.RotateTurret;
-import org.team2168.commands.turret.ZeroTurret;
+import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 
 import java.util.List;
@@ -188,13 +181,10 @@ public class RobotContainer {
 
     //// Black button
     oi.driverJoystick.ButtonRightBumper()
-            .whenPressed(
-                    new SequentialCommandGroup(
-                            new HoodToAngle(hood, 0.0).withTimeout(0.5),
-                            new SetShooterSpeed(shooter, 0.0).withTimeout(0.2),
-                            new FullSendClimbingSequence(climber, monkeyBar, turret),
-                            new RotateTurret(turret, -90.0)
-                    )
+            .whenPressed(new HoodToAngle(hood, 0.0).withTimeout(0.5))
+            .whenPressed(new SetShooterSpeed(shooter, 0.0).withTimeout(0.2))
+            .whenPressed(new RotateTurret(turret, -90.0).withTimeout(0.5)
+                .andThen(new FullSendClimbingSequence(climber, monkeyBar, turret))
             );
 
     //lower left button ("Forward Fine-Tuning")
