@@ -23,28 +23,6 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Shooter extends SubsystemBase implements Loggable {
 
-  public enum ShooterRPM {
-    AUTO_TARMAC_LINE(1900), //(1718.0),
-    AUTO_LAUNCHPAD(2335.0),
-    FENDER_LOW(1050),//(900.0),
-    FENDER_HIGH(1600),//(1500.0),
-    TARMAC_LINE(1718.0),  // 1650
-    LAUNCHPAD(1880),//(2085.0),
-    WALL_SHOT(2750.0),
-    TERMINAL(2300);
-//    FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
-//    FENDER_HIGH_CBOT(1500.0),
-//    TARMAC_LINE_CBOT(1550),//PBot (1650.0),
-//    LAUNCHPAD_CBOT (1870),//PBot(2085.0),
-//    WALL_SHOT_CBOT(2500),//PBot(2750.0);
-//    TERMINAL_CBOT(2300.0);
-
-    public final double rpm;
-    private ShooterRPM(double rpm) {
-      this.rpm = rpm;
-    }
-  }
-
   public TalonFXHelper _motorRight;
   public TalonFXHelper _motorLeft;
 
@@ -109,6 +87,41 @@ public class Shooter extends SubsystemBase implements Loggable {
       INTEGRAL_ZONE = 300.0;
     }
   }
+
+  public enum ShooterRPM {
+    //To override kF, supply a 2nd parameter. e.g.:
+    //    WALL_SHOT(2750.0, 0.41*1023.0/8570.0),
+    //and then from commandgroup, pass the ShooterRPM instance into the overloaded setSpeed method
+    //    new SetShooterSpeed(shooter, Shooter.ShooterRPM.FENDER_HIGH),
+
+    AUTO_TARMAC_LINE(1900), //(1718.0),
+    AUTO_LAUNCHPAD(2335.0),
+    FENDER_LOW(1050),//(900.0),
+    FENDER_HIGH(1600),//(1500.0),
+    TARMAC_LINE(1718.0),  // 1650
+    LAUNCHPAD(1880),//(2085.0),
+    WALL_SHOT(2750.0),
+    TERMINAL(2300);
+    // FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
+    // FENDER_HIGH_CBOT(1500.0),
+    // TARMAC_LINE_CBOT(1550),//PBot (1650.0),
+    // LAUNCHPAD_CBOT (1870),//PBot(2085.0),
+    // WALL_SHOT_CBOT(2500),//PBot(2750.0);
+    // TERMINAL_CBOT(2300.0);
+
+    public final double rpm;
+    public final double kF;
+
+    private ShooterRPM(double rpm) {
+      this(rpm, getKf());
+    }
+
+    private ShooterRPM(double rpm, double kF) {
+      this.rpm = rpm;
+      this.kF = kF;
+    }
+  }
+
   private double setPoint_RPM;
 
   /** Creates a new Shooter. */
@@ -170,15 +183,32 @@ public class Shooter extends SubsystemBase implements Loggable {
   }
 
   /**
-   * Sets the closed loop shooter speed.
-   * 
-   * @param setPoint speed in RPM
+   * Sets an RPM and feedforward gain for the specified shot location
+   * @param shotLocation
    */
-  public void setSpeed(double setPoint)
-  {
-      this.setPoint_RPM = setPoint;
-      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
-      _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+  public void setSpeed(ShooterRPM shotLocation) {
+    setSpeed(shotLocation.rpm, shotLocation.kF);
+  }
+
+  /**
+   * 
+   * @param setPoint target speed in RPM
+   * @param feedForwardGain shooter feedforward gain
+   */
+  public void setSpeed(double setPoint, double feedForwardGain) {
+    this.setPoint_RPM = setPoint;
+    var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
+    _motorRight.config_kF(kPIDLoopIdx, feedForwardGain, kTimeoutMs);
+    _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+  }
+
+  /**
+   * Sets the closed loop shooter speed. Using the default feedforward gain
+   * 
+   * @param setPoint target speed in RPM
+   */
+  public void setSpeed(double setPoint) {
+    setSpeed(setPoint, kF);
   }
 
   /**
@@ -256,5 +286,9 @@ public class Shooter extends SubsystemBase implements Loggable {
       _instance = new Shooter();
     }
     return _instance;
+  }
+
+  private static double getKf() {
+    return kF;
   }
 }
