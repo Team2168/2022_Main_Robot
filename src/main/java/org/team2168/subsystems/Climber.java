@@ -16,7 +16,9 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 
 import org.team2168.Constants;
+import org.team2168.Constants.LiftPositions;
 import org.team2168.utils.TalonFXHelper;
+import org.team2168.utils.Util;
 
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -124,6 +126,8 @@ public class Climber extends SubsystemBase implements Loggable {
 
     // climbMotor1.configReverseSoftLimitThreshold(Util.min(Constants.LiftPositions.LIFT_RETRACTION_INCHES, 0.0));
     // climbMotor1.configReverseSoftLimitEnable(true);
+    climbMotorLeft.configReverseSoftLimitThreshold(Util.max(LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES, LiftPositions.LIF_MAX_EXTEND_INCHES));
+    climbMotorLeft.configForwardSoftLimitEnable(true);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
         CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
