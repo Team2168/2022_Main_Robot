@@ -185,7 +185,8 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0).withTimeout(0.5))
             .whenPressed(new SetShooterSpeed(shooter, 0.0).withTimeout(0.2))
             .whenPressed(new RotateTurret(turret, -90.0).withTimeout(0.5)
-                .andThen(new FullSendClimbingSequence(climber, monkeyBar, turret))
+                .andThen(new StopTurret(turret))
+                .andThen(new FullSendClimbingSequence(climber, monkeyBar))
             );
 
     //lower left button ("Forward Fine-Tuning")
