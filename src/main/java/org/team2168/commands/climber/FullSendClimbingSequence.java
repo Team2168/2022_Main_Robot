@@ -6,6 +6,7 @@ package org.team2168.commands.climber;
 
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.MonkeyBar;
+import org.team2168.subsystems.Turret;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -14,12 +15,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class FullSendClimbingSequence extends SequentialCommandGroup {
 
-  public FullSendClimbingSequence(Climber climber, MonkeyBar monkeyBar) {
+  public FullSendClimbingSequence(Climber climber, MonkeyBar monkeyBar, Turret turret) {
     addCommands(
       new DriveClimberToZero(climber).withTimeout(2.0),
       new HangOnMidBar(climber),
       new ClimbToHighBar(climber, monkeyBar),
-      new ClimbToTraverseBar(climber, monkeyBar)
+      new ClimbToTraverseBar(climber, monkeyBar, turret)
     );
   }
 }
