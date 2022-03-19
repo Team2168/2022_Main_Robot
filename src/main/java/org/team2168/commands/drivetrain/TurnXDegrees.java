@@ -24,9 +24,9 @@ public class TurnXDegrees extends CommandBase {
   private static final double MAX_INTEGRAL = 0.1;
   
   //limelight gains
-  private double P = 0.0041;
+  private double P = 0.003;
   private double I = 0.001;
-  private double D = 0.0;
+  private double D = 0.001;
 
   private double turnSpeed;
 
