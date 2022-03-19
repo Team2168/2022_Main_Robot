@@ -30,7 +30,7 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
       new StopTurret(turret), // Prevent oscillations while we see excessive shock during climb.
                               // Turn off position controller and just rely on break mode to keep turret stationary
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARRESTING_INCHES),
-      new Sleep().withTimeout(1.5), //stay connected with the climber bars to slow the swing down
+      new Sleep().withTimeout(0.5), //stay connected with the climber bars to slow the swing down
       new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
