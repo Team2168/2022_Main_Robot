@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -187,10 +188,14 @@ public class RobotContainer {
 
     //// Black button
     oi.driverJoystick.ButtonRightBumper()
-            .whenPressed(new HoodToAngle(hood, 0.0))
-            .whenPressed(new SetShooterSpeed(shooter, 0.0))
-            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar, turret))
-            .whenPressed(new RotateTurret(turret, -90.0));
+            .whenPressed(
+                    new SequentialCommandGroup(
+                            new HoodToAngle(hood, 0.0).withTimeout(0.5),
+                            new SetShooterSpeed(shooter, 0.0).withTimeout(0.2),
+                            new FullSendClimbingSequence(climber, monkeyBar, turret),
+                            new RotateTurret(turret, -90.0)
+                    )
+            );
 
     //lower left button ("Forward Fine-Tuning")
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
