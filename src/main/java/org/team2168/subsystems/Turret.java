@@ -56,13 +56,13 @@ public class Turret extends SubsystemBase implements Loggable {
   public static boolean kSensorPhase = true;
   public static boolean kMotorInvert = false;
 
-  //                                     P,   I,   D,   F,  I zone, and Peak output
+  //                         P,   I,   D,   F,  I zone, and Peak output
   private static final Gains kGains;
   static {
     if (Constants.IS_COMPBOT) {
-      kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+      kGains = new Gains(0.085, 0.0005, 0.0, 0.0, 550, 1.0);
     } else {
-      kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+      kGains = new Gains(0.085, 0.0005, 0.0, 0.0, 550, 1.0);
     }
   }
 
@@ -100,8 +100,8 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.configNeutralDeadband(0.001);
 
-    turretMotor.configForwardSoftLimitThreshold(MAX_ROTATION_TICKS);
-    turretMotor.configReverseSoftLimitThreshold(MIN_ROTATION_TICKS);
+    turretMotor.configForwardSoftLimitThreshold(degreesToEncoderTicks(MAX_ROTATION_DEGREES));
+    turretMotor.configReverseSoftLimitThreshold(degreesToEncoderTicks(MIN_ROTATION_DEGREES));
     turretMotor.configForwardSoftLimitEnable(true);
     turretMotor.configReverseSoftLimitEnable(true);
 
