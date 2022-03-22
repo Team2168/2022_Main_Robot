@@ -103,8 +103,8 @@ public class Shooter extends SubsystemBase implements Loggable {
       INTEGRAL_ZONE = 300.0;
     } else {
       kF = 0.41*1023.0/8570.0;
-      kP = 0.25;
-      kI = 0.0025;
+      kP = .11;//0.25;
+      kI = 0.001;//0.0025;
       kD = 0.0;
       INTEGRAL_ZONE = 300.0;
     }
