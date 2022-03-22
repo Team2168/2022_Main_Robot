@@ -2,25 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package org.team2168.commands.shooter;
-
-import org.team2168.subsystems.Shooter;
+package org.team2168.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class SetSpeed extends CommandBase {
-  Shooter shooter;
-  double target_speed;
-
+public class Sleep extends CommandBase {
   /**
-   * 
-   * @param s the shooter instance
-   * @param speed_rpm target speed in RPMs
+   * Never ends, use a timeout to delay subsequent execution of sequential tasks
    */
-  public SetSpeed(Shooter s, double speed_rpm) {
-    shooter = s;
-    target_speed = speed_rpm;
-    addRequirements(shooter);
+  public Sleep() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -29,9 +20,7 @@ public class SetSpeed extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    shooter.setSpeed(target_speed);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

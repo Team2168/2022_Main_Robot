@@ -7,16 +7,16 @@ package org.team2168.subsystems;
 import org.team2168.Constants.PneumaticsDevices;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
+import io.github.oblarg.oblog.Loggable;
 
-public class IntakeRaiseAndLower extends SubsystemBase {
+public class IntakeRaiseAndLower extends SubsystemBase implements Loggable {
   /** Creates a new IntakeRaiseAndLower. */
   private DoubleSolenoid upAndDown;
   private static IntakeRaiseAndLower _instance = null;
   private IntakeRaiseAndLower() {
-    upAndDown = new DoubleSolenoid(PneumaticsModuleType.REVPH, PneumaticsDevices.INTAKE_LOWER,
+    upAndDown = new DoubleSolenoid(PneumaticsDevices.MODULE_TYPE, PneumaticsDevices.INTAKE_LOWER,
                                    PneumaticsDevices.INTAKE_RAISE);
   }
 
@@ -35,12 +35,14 @@ public class IntakeRaiseAndLower extends SubsystemBase {
     upAndDown.set(DoubleSolenoid.Value.kReverse);
   }
 
+  @Log(name = "Intake Lowered?")
   public boolean isIntakeLowered() {
-    return upAndDown.get() == Value.kForward;
+    return upAndDown.get() == DoubleSolenoid.Value.kForward;
   }
 
+  @Log(name = "Intake Raised?")
   public boolean isIntakeRaised() {
-    return upAndDown.get() == Value.kReverse;
+    return upAndDown.get() == DoubleSolenoid.Value.kReverse;
   }
 
   @Override

@@ -9,14 +9,15 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants;
-import org.team2168.utils.CanDigitalInput;
 import org.team2168.utils.Gains;
+import org.team2168.utils.TalonFXHelper;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,23 +26,29 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class Turret extends SubsystemBase implements Loggable {
   /** Creates a new Turret. */
-  private static CanDigitalInput hallEffectSensor;
-  private static WPI_TalonFX turretMotor;
+  private static AnalogPotentiometer pot;
+  private static TalonFXHelper turretMotor;
   private static Turret instance = null;
 
   private static final double TICKS_PER_REV = 2048;
-  private static final double GEAR_RATIO = (60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
+  private static final double GEAR_RATIO = 280.0/18.0 * 36.0/12.0; //(60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
   private static final double TICKS_PER_TURRET_ROTATION = TICKS_PER_REV * GEAR_RATIO;
+  private static double setpoint = 0.0;
 
   private static final double TICKS_PER_SECOND = TICKS_PER_TURRET_ROTATION;
   private static final double TICKS_PER_100_MS = TICKS_PER_SECOND / 10.0;
   private static final double ONE_HUNDRED_MS_PER_MINUTE = 100.0 / 60.0;
  
-  //About 260/360 degrees
-  private static final int MAX_ROTATION_TICKS = (int) (1.5 * TICKS_PER_TURRET_ROTATION);
+  private static final int MIN_ROTATION_TICKS = -73400; 
+  private static final int MAX_ROTATION_TICKS = 52200; 
 
-  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(5.0 * 360);  // TODO: Change when mechanism is avaialble
-  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(2 * 360.0) ; // TODO: Change when mechanism is avaialble
+  private static final double MIN_ROTATION_DEGREES = ticksToDegrees(-73400); // about 276.4788 degrees
+  private static final double MAX_ROTATION_DEGREES = ticksToDegrees(52200); // about 196.6239 degrees
+  private static final double TOTAL_ROTATION_DEGREES = Math.abs(MIN_ROTATION_DEGREES) + Math.abs(MAX_ROTATION_DEGREES);
+
+
+  private static final double ACCELERATION = degreesPerSecondToTicksPer100ms(360.0 * 4.5);
+  private static final double CRUISE_VELOCITY = degreesPerSecondToTicksPer100ms(360.0 * 2.0);
 
   //gains
   public static final int kPIDLoopIdx = 0;
@@ -49,13 +56,20 @@ public class Turret extends SubsystemBase implements Loggable {
   public static boolean kSensorPhase = true;
   public static boolean kMotorInvert = false;
 
-  //                                     P,   I,   D,   F,  I zone, and Peak output
-  static final Gains kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+  //                         P,   I,   D,   F,  I zone, and Peak output
+  private static final Gains kGains;
+  static {
+    if (Constants.IS_COMPBOT) {
+      kGains = new Gains(0.085, 0.0005, 0.0, 0.0, 550, 1.0);
+    } else {
+      kGains = new Gains(0.085, 0.0005, 0.0, 0.0, 550, 1.0);
+    }
+  }
 
   private SupplyCurrentLimitConfiguration talonCurrentLimit;
   private final boolean ENABLE_CURRENT_LIMIT = true;
-  private final double CONTINUOUS_CURRENT_LIMIT = 20; //amps
-  private final double TRIGGER_THRESHOLD_LIMIT = 30; //amps
+  private final double CONTINUOUS_CURRENT_LIMIT = 30; //amps
+  private final double TRIGGER_THRESHOLD_LIMIT = 40; //amps
   private final double TRIGGER_THRESHOLD_TIME = 0.02; //seconds
 
   //Simulation objects
@@ -63,25 +77,33 @@ public class Turret extends SubsystemBase implements Loggable {
   public static final double KV = 0.05;
   public static final double KA= 0.002;
 
-  private static FlywheelSim m_turretSim;
-  private static TalonFXSimCollection m_turretMotorSim;
+  private static FlywheelSim turretSim;
+  private static TalonFXSimCollection turretMotorSim;
 
   private Turret() {
-    turretMotor = new WPI_TalonFX(Constants.CANDevices.TURRET_MOTOR);
-    hallEffectSensor = new CanDigitalInput(turretMotor);
+    turretMotor = new TalonFXHelper(Constants.CANDevices.TURRET_MOTOR);
+    pot = new AnalogPotentiometer(Constants.Analog.TURRET_POTENTIOMETER, TOTAL_ROTATION_DEGREES, -26.0);
 
     talonCurrentLimit = new SupplyCurrentLimitConfiguration(ENABLE_CURRENT_LIMIT,
     CONTINUOUS_CURRENT_LIMIT, TRIGGER_THRESHOLD_LIMIT, TRIGGER_THRESHOLD_TIME);
 
     //Configuring the turret motor
     turretMotor.configFactoryDefault();
+
+    turretMotor.configClosedLoopStatusFrameRates();
+
     turretMotor.configSupplyCurrentLimit(talonCurrentLimit);
 
     turretMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, kPIDLoopIdx, kTimeoutMs);
     turretMotor.setSensorPhase(kSensorPhase);
     turretMotor.setInverted(kMotorInvert);
     turretMotor.setNeutralMode(NeutralMode.Brake);
-    turretMotor.configNeutralDeadband(0.01);
+    turretMotor.configNeutralDeadband(0.001);
+
+    turretMotor.configForwardSoftLimitThreshold(degreesToEncoderTicks(MAX_ROTATION_DEGREES));
+    turretMotor.configReverseSoftLimitThreshold(degreesToEncoderTicks(MIN_ROTATION_DEGREES));
+    turretMotor.configForwardSoftLimitEnable(true);
+    turretMotor.configReverseSoftLimitEnable(true);
 
     turretMotor.configAllowableClosedloopError(0, kPIDLoopIdx, kTimeoutMs);
 
@@ -94,12 +116,12 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
 
     //Setup simulation
-    m_turretSim = new FlywheelSim(
+    turretSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
       DCMotor.getFalcon500(1),
       GEAR_RATIO
     );
-    m_turretMotorSim = turretMotor.getSimCollection();
+    turretMotorSim = turretMotor.getSimCollection();
     
   }
 
@@ -111,7 +133,17 @@ public class Turret extends SubsystemBase implements Loggable {
 
   @Log (name = "At Zero", rowIndex = 3, columnIndex = 0)
   public boolean isTurretAtZero() {
-    return hallEffectSensor.isFwdLimitSwitchClosed();
+    return false;
+    // return (pot.get() >= -0.5 && pot.get() <= 0.5);
+  }
+
+  @Log(name = "Pot Pos", rowIndex = 2, columnIndex = 0)
+  public double getPotPos() {
+    return pot.get();
+  }
+
+  public double getSetpoint() {
+    return setpoint;
   }
 
   /**
@@ -132,7 +164,9 @@ public class Turret extends SubsystemBase implements Loggable {
    */
   public void setRotationDegrees(double degrees) {
     //CHECK THIS
-    turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(degrees));
+    var demand = MathUtil.clamp(degrees, ticksToDegrees(MIN_ROTATION_TICKS), ticksToDegrees(MAX_ROTATION_TICKS));
+    setpoint = degrees;
+    turretMotor.set(ControlMode.MotionMagic, degreesToEncoderTicks(demand));
   }
 
   /**
@@ -218,28 +252,60 @@ public class Turret extends SubsystemBase implements Loggable {
     return turretMotor.getSelectedSensorPosition();
   }
 
-  public void zeroEncoder() {
-    turretMotor.setSelectedSensorPosition(0.0);
+  // public void zeroEncoder() {
+  //   turretMotor.setSelectedSensorPosition(0.0);
+  // }
+
+  public boolean atSoftLimit() {
+    return !(getEncoderPosition() < MAX_ROTATION_TICKS && getEncoderPosition() > -MAX_ROTATION_TICKS);
+  }
+
+  /**
+   * Calculates how much the turret should turn if the quickest path conflicts with the turret's soft limits
+   * @param targetPos the distance away from the target in degrees
+   * @return the amount from a zero'd turret to rotate
+   */
+  public double amountFromZeroToRotate(double targetPos) {
+    if (targetPos > 0) 
+      return targetPos - 360;
+    else
+      return targetPos + 360; 
+  }
+
+  // public void zeroTurret() {
+  //   while (!isTurretAtZero())
+  //     setRotationDegrees(-getEncoderPosition());
+  // }
+
+  public double getForwardSoftLimit() {
+    return ticksToDegrees(MAX_ROTATION_TICKS);
+  }
+
+  public double getReverseSoftLimit() {
+    return ticksToDegrees(MIN_ROTATION_TICKS);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Only zeros the turret if it is actually at zero and not at 360/-360
+    // if (isTurretAtZero())
+    //   zeroEncoder();
   }
 
   @Override
   public void simulationPeriodic() {
     // Affect motor outputs by main system battery voltage dip 
-    m_turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
+    turretMotorSim.setBusVoltage(RobotController.getBatteryVoltage());
 
     // Pass motor output voltage to physics sim
-    m_turretSim.setInput(m_turretMotorSim.getMotorOutputLeadVoltage());
-    m_turretSim.update(Constants.LOOP_TIMESTEP_S);
+    turretSim.setInput(turretMotorSim.getMotorOutputLeadVoltage());
+    turretSim.update(Constants.LOOP_TIMESTEP_S);
 
     // Update motor sensor states based on physics model
-    double sim_velocity_ticks_per_100ms = m_turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
-    m_turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
-    m_turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() + 
+    double sim_velocity_ticks_per_100ms = turretSim.getAngularVelocityRPM() * ONE_HUNDRED_MS_PER_MINUTE;
+    turretMotorSim.setIntegratedSensorVelocity((int) sim_velocity_ticks_per_100ms);
+    turretMotorSim.setIntegratedSensorRawPosition((int) (getEncoderPosition() +
       Constants.LOOP_TIMESTEP_S * sim_velocity_ticks_per_100ms));
 
   }

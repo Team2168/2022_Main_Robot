@@ -4,34 +4,30 @@
 
 package org.team2168.commands.indexer;
 
-import java.util.function.DoubleSupplier;
-
 import org.team2168.subsystems.Indexer;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class DriveIndexerWithJoystick extends CommandBase {
-  /** Creates a new DriveIndexerWithJoystick. */
+public class DriveIndexerUntilNoBall extends CommandBase {
+  /** Creates a new DriveUntilNoBall. */
   private Indexer indexer;
-  private DoubleSupplier speed;
+  private double indexerSpeed;
 
-
-  public DriveIndexerWithJoystick(Indexer indexer, DoubleSupplier speed) {
+  public DriveIndexerUntilNoBall(Indexer indexer, double speed) {
     this.indexer = indexer;
-    this.speed = speed;
+    indexerSpeed = speed;
+
     addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-   
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexer.drive(speed.getAsDouble());
+    indexer.drive(indexerSpeed);
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +39,7 @@ public class DriveIndexerWithJoystick extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    //Waits until there is no ball
+    return !indexer.isBallPresent();
   }
 }

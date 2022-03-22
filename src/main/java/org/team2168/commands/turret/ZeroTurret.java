@@ -11,31 +11,40 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class ZeroTurret extends CommandBase {
   /** Creates a new ZeroTurret. */
   private Turret turret;
+  private double position;
 
-  public ZeroTurret(Turret t) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    turret = t;
+  public ZeroTurret(Turret turret) {
+    this.turret = turret;
 
-    addRequirements(t);
+    addRequirements(turret);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    position = turret.getEncoderPosition();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      turret.setVelocity(10.0);
+    turret.setRotationDegrees(-position);
+
+    if(!turret.isTurretAtZero()) {
+      if(turret.getEncoderPosition() > 0)
+        turret.setVelocity(-0.5);
+      else  
+        turret.setVelocity(0.5);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     turret.setVelocity(0);
-    if (!interrupted) {
-      turret.zeroEncoder();
-    }
+    // if (!interrupted) {
+    //   turret.zeroEncoder();
+    // }
   }
 
   // Returns true when the command should end.

@@ -12,6 +12,12 @@ public class HoodToAngle extends CommandBase {
   /** Creates a new HoodToAngle. */
   private Hood hood;
   private double angle;
+
+  /**
+   * Sets the hood to an angle
+   * @param h the hood instance
+   * @param a the angle to go to
+   */
   public HoodToAngle(Hood h, double a) {
     hood = h;
     angle = a;
@@ -32,14 +38,11 @@ public class HoodToAngle extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(interrupted) {
-      hood.setPercentOutput(0.0);
-    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

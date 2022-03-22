@@ -8,26 +8,28 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import org.team2168.Constants.CANDevices;
 import org.team2168.Constants.DIO;
+import org.team2168.utils.TalonFXHelper;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
-public class Indexer extends SubsystemBase {
+public class Indexer extends SubsystemBase implements Loggable {
   /** Creates a new Indexer. */
   private static DigitalInput detector;
-  private static Indexer instance = null;
-  private static WPI_TalonFX motor;
+  private static TalonFXHelper motor;
+
   private static SupplyCurrentLimitConfiguration indexerCurrentLimit;
   private static final boolean ENABLE_CURRENT_LIMIT = true;
   private static final double CONTINUOUS_CURRENT_LIMIT = 20;
   private static final double TRIGGER_THRESHOLD_LIMIT = 30;
   private static final double TRIGGER_THRESHOLD_TIME = 0.02;
-  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.CounterClockwise;
+
+  private static final TalonFXInvertType indexerInvert = TalonFXInvertType.Clockwise;
 
   private static final double TICKS_PER_REV = 2048.0;
   private static final double TIME_UNITS_VELOCITY_SECS = 0.1;
@@ -40,10 +42,12 @@ public class Indexer extends SubsystemBase {
   private final double kI = 0.0;
   private final double kD = 0.0;
   private final double kF = 0.0;
-
+  
+  private static Indexer instance = null;
+  
   private Indexer() {
     detector = new DigitalInput(DIO.INDEXER_SENSOR);
-    motor = new WPI_TalonFX(CANDevices.INDEXER_MOTOR);
+    motor = new TalonFXHelper(CANDevices.INDEXER_MOTOR);
 
     motor.configFactoryDefault();
     motor.setInverted(indexerInvert);
@@ -56,12 +60,13 @@ public class Indexer extends SubsystemBase {
     motor.config_kI(0, kI);
     motor.config_kD(0, kD);
     motor.config_kF(0, kF);
+    
+    motor.configOpenLoopStatusFrameRates();
   }
 
   public static Indexer getInstance() {
-    if (instance == null) {
+    if (instance == null)
       instance = new Indexer();
-    }
     return instance;
   }
 
@@ -103,6 +108,7 @@ public class Indexer extends SubsystemBase {
    * 
    * @return boolean is meant to detect the presence of a ball in the indexer
    */
+  @Log(name = "Is ball present?")
   public boolean isBallPresent() {
     return !detector.get();
   }
