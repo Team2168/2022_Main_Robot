@@ -12,7 +12,7 @@ public class Launchpad extends ParallelCommandGroup {
     public Launchpad(Hood hood, Shooter shooter, Limelight lime) {
         addCommands(
                 new HoodToAngle(hood, Hood.HoodPosition.LAUNCHPAD.position_degrees),
-                new SetShooterSpeed(shooter, Shooter.ShooterRPM.LAUNCHPAD.rpm),
+                new SetShooterSpeed(shooter, Shooter.ShooterRPM.LAUNCHPAD),
                 new SetPipeline(lime, Limelight.PIPELINE_LAUNCHPAD_LINE)
         );
     }

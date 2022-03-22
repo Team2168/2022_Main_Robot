@@ -52,6 +52,7 @@ import org.team2168.commands.shootingpositions.*;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
+import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import java.util.List;
 import java.util.function.DoubleFunction;
@@ -183,7 +184,7 @@ public class RobotContainer {
     //// Black button
     oi.driverJoystick.ButtonRightBumper()
             .whenPressed(new HoodToAngle(hood, 0.0).withTimeout(0.5))
-            .whenPressed(new SetShooterSpeed(shooter, 0.0).withTimeout(0.2))
+            .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP).withTimeout(0.2))
             .whenPressed(new RotateTurret(turret, -90.0).withTimeout(0.5)
                 .andThen(new StopTurret(turret))
                 .andThen(new FullSendClimbingSequence(climber, monkeyBar))
@@ -236,14 +237,15 @@ public class RobotContainer {
             .whenReleased(new PooperUnpoop(pooper));
 
     oi.operatorJoystick.ButtonRightBumper()
-            .whenPressed(new FireBalls(shooter, indexer, hopper))
+            .whileHeld(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new FireBalls(shooter, indexer, hopper))
             //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
             .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
             .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
     oi.operatorJoystick.ButtonLeftTrigger()
             .whenPressed(new HoodToAngle(hood, 0.0))
-            .whenPressed(new SetShooterSpeed(shooter, 0.0));
+            .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP));
 
     oi.operatorJoystick.ButtonRightStickMovedLeft().whenPressed(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonRightStickMovedRight().whenPressed(new RetractMonkeyBar(monkeyBar));
@@ -382,5 +384,9 @@ public class RobotContainer {
   @Log
   public boolean isCompbot() {
     return Constants.IS_COMPBOT;
+  }
+  @Log 
+  public boolean isFiring(){
+    return oi.operatorJoystick.isPressedButtonRightBumper();
   }
 }

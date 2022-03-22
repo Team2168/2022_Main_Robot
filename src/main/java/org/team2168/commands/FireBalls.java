@@ -4,6 +4,7 @@
 
 package org.team2168.commands;
 
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import org.team2168.Constants;
 import org.team2168.commands.hopper.DriveHopperUntilNoBall;
@@ -16,6 +17,7 @@ import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -25,9 +27,10 @@ public class FireBalls extends SequentialCommandGroup {
   /** Creates a new FireBalls. */
 
   public FireBalls(Shooter shooter, Indexer indexer, Hopper hopper) {
-
+      
     addCommands(
-      new WaitForShooterAtSpeed(shooter),
+      new ConditionalCommand(
+          new WaitForShooterAtSpeed(shooter), new PrintCommand("No Wait"), shooter::shouldWaitForShooterAtSpeed),
       race( // Make sure the ball is queued up near the top before starting sequence 
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
         new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
@@ -38,4 +41,5 @@ public class FireBalls extends SequentialCommandGroup {
       )
     );
   }
+
 }
