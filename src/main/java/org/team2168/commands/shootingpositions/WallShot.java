@@ -12,7 +12,7 @@ public class WallShot extends ParallelCommandGroup {
     public WallShot(Hood hood, Shooter shooter, Limelight lime) {
         addCommands(
                 new HoodToAngle(hood, Hood.HoodPosition.WALL_SHOT.position_degrees),
-                new SetShooterSpeed(shooter, Shooter.ShooterRPM.WALL_SHOT.rpm),
+                new SetShooterSpeed(shooter, Shooter.ShooterRPM.WALL_SHOT),
                 new SetPipeline(lime, Limelight.PIPELINE_DEFAULT_DRIVE)
         );
     }

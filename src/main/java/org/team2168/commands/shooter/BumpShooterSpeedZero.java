@@ -5,6 +5,7 @@
 package org.team2168.commands.shooter;
 
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -28,7 +29,7 @@ public class BumpShooterSpeedZero extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.setSpeed(0.0);
+    shooter.setSpeed(ShooterRPM.STOP);
   }
 
   // Called once the command ends or is interrupted.

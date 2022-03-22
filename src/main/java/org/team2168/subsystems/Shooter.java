@@ -24,31 +24,34 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    AUTO_TARMAC_LINE(1743.0), //(1900.0),
-    AUTO_LAUNCHPAD(2335.0),
-    FENDER_LOW(1050),//(900.0),
-    FENDER_HIGH(1600),//(1500.0),
-    TARMAC_LINE(1743.0),  // 1650
-    LAUNCHPAD(1880),//(2085.0),
-    WALL_SHOT(2750.0),
-    TERMINAL(2300);
-//    FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
-//    FENDER_HIGH_CBOT(1500.0),
-//    TARMAC_LINE_CBOT(1550),//PBot (1650.0),
-//    LAUNCHPAD_CBOT (1870),//PBot(2085.0),
-//    WALL_SHOT_CBOT(2500),//PBot(2750.0);
-//    TERMINAL_CBOT(2300.0);
+    AUTO_TARMAC_LINE(1768.0, true), //(1900.0),
+    AUTO_LAUNCHPAD(2335.0, true),
+    FENDER_LOW(800.0, false),//(1050),//(900.0),
+    FENDER_HIGH(1600, false),//(1500.0),
+    TARMAC_LINE(1818.0, false),  // 1650
+    LAUNCHPAD(1880.0, true),//(2085.0),
+    WALL_SHOT(2750.0, true),
+    TERMINAL(2300.0, true),
+    STOP(0.0, true);
+    // FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
+    // FENDER_HIGH_CBOT(1500.0),
+    // TARMAC_LINE_CBOT(1550),//PBot (1650.0),
+    // LAUNCHPAD_CBOT (1870),//PBot(2085.0),
+    // WALL_SHOT_CBOT(2500),//PBot(2750.0);
+    // TERMINAL_CBOT(2300.0);
 
     public final double rpm;
-    private ShooterRPM(double rpm) {
+    public final boolean waitForShpooterAtSpeed;
+    private ShooterRPM(double rpm, boolean waitForShooterAtSpeed) {
       this.rpm = rpm;
+      this.waitForShpooterAtSpeed = waitForShooterAtSpeed;
     }
   }
 
   public TalonFXHelper _motorRight;
   public TalonFXHelper _motorLeft;
 
-  private double errorTolerance = 15.0; // Default shooter speed error tolerance +/- target (RPM)
+  private double errorTolerance = 5.0; // Default shooter speed error tolerance +/- target (RPM)
 
   private StatorCurrentLimitConfiguration talonCurrentLimitStator;
   private final boolean ENABLE_CURRENT_LIMIT_STATOR = true;
@@ -103,13 +106,15 @@ public class Shooter extends SubsystemBase implements Loggable {
       INTEGRAL_ZONE = 300.0;
     } else {
       kF = 0.41*1023.0/8570.0;
-      kP = 0.25;
-      kI = 0.0025;
+      kP = .11;//0.25;
+      kI = 0.001;//0.0025;
       kD = 0.0;
       INTEGRAL_ZONE = 300.0;
     }
   }
-  private double setPoint_RPM;
+  // private double setPoint_RPM;
+  private double setpoint = 0.0;
+  private boolean waitForShpooterAtSpeed = true;
 
   /** Creates a new Shooter. */
   public Shooter() {
@@ -172,13 +177,19 @@ public class Shooter extends SubsystemBase implements Loggable {
   /**
    * Sets the closed loop shooter speed.
    * 
-   * @param setPoint speed in RPM
+   * @param setPoint speed preset
    */
-  public void setSpeed(double setPoint)
-  {
-      this.setPoint_RPM = setPoint;
-      var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setPoint);
-      _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+  public void setSpeed(ShooterRPM setPoint) {
+    this.setpoint = setPoint.rpm;
+    this.waitForShpooterAtSpeed = setPoint.waitForShpooterAtSpeed;
+    var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setpoint);
+    _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
+  }
+
+  public void setSpeed(double speed) {
+    this.setpoint = speed;
+    var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setpoint);
+    _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
 
   /**
@@ -215,16 +226,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    * @return target speed in RPM
    */
   public double getSetPoint() {
-    return setPoint_RPM;
-  }
-
-  /**
-   * Sets the shooter at a speed
-   * @param d_Speed the speed for the shooter to run at, from 0.0 to 1.0
-   */
-  public void shoot(double d_Speed){
-    setSpeed(d_Speed);
-    _motorRight.set(ControlMode.PercentOutput, Util.max(d_Speed, 0.0)); //prevent negative speeds from being commanded
+    return setpoint;
   }
 
   @Log(name = "Error (RPM)", columnIndex = 2, rowIndex = 1)
@@ -240,6 +242,10 @@ public class Shooter extends SubsystemBase implements Loggable {
   public boolean isAtSpeed(double errorTolerance) {
     this.errorTolerance = errorTolerance;
     return (Math.abs(getError()) < errorTolerance) && (getSetPoint() != 0.0);
+  }
+
+  public boolean shouldWaitForShooterAtSpeed() {
+    return waitForShpooterAtSpeed;
   }
 
   /**
