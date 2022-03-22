@@ -28,13 +28,13 @@ public class ShootWithController extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.shoot(speed.getAsDouble());
+    shooter.setSpeed(speed.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.shoot(0);
+    shooter.setSpeed(0.0);
   }
 
   // Returns true when the command should end.

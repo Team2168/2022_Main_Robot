@@ -14,7 +14,7 @@ public class FenderHigh extends ParallelCommandGroup {
 
         addCommands(
                 new HoodToAngle(hood, Hood.HoodPosition.FENDER_HIGH.position_degrees),
-                new SetShooterSpeed(shooter, Shooter.ShooterRPM.FENDER_HIGH.rpm),
+                new SetShooterSpeed(shooter, Shooter.ShooterRPM.FENDER_HIGH),
                 new SetPipeline(lime, Limelight.PIPELINE_DEFAULT_DRIVE)
         );
     }
