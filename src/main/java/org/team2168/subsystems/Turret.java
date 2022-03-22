@@ -42,8 +42,8 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final int MIN_ROTATION_TICKS = -73400; 
   private static final int MAX_ROTATION_TICKS = 52200; 
 
-  private static final double MIN_ROTATION_DEGREES = ticksToDegrees(-73400); // about 276.4788 degrees
-  private static final double MAX_ROTATION_DEGREES = ticksToDegrees(52200); // about 196.6239 degrees
+  private static final double MIN_ROTATION_DEGREES = -180; //ticksToDegrees(-73400); // about 276.4788 degrees
+  private static final double MAX_ROTATION_DEGREES = 180; //ticksToDegrees(52200); // about 196.6239 degrees
   private static final double TOTAL_ROTATION_DEGREES = Math.abs(MIN_ROTATION_DEGREES) + Math.abs(MAX_ROTATION_DEGREES);
 
 
@@ -60,7 +60,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static final Gains kGains;
   static {
     if (Constants.IS_COMPBOT) {
-      kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+      kGains = new Gains(0.085, 0.0005, 0.0, 0.0, 550, 1.0);
     } else {
       kGains = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
     }
@@ -100,8 +100,8 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.setNeutralMode(NeutralMode.Brake);
     turretMotor.configNeutralDeadband(0.001);
 
-    turretMotor.configForwardSoftLimitThreshold(MAX_ROTATION_TICKS);
-    turretMotor.configReverseSoftLimitThreshold(MIN_ROTATION_TICKS);
+    turretMotor.configForwardSoftLimitThreshold(degreesToEncoderTicks(MAX_ROTATION_DEGREES));
+    turretMotor.configReverseSoftLimitThreshold(degreesToEncoderTicks(MIN_ROTATION_DEGREES));
     turretMotor.configForwardSoftLimitEnable(true);
     turretMotor.configReverseSoftLimitEnable(true);
 

@@ -253,6 +253,9 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
+    oi.testJoystick.ButtonA().whenPressed(new RotateTurret(turret, 0.0));
+    oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 180));
+    oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -180));
     // turret.setDefaultCommand(new DriveTurretWithJoystick(turret, oi::getTestJoystickX));
 
     // oi.testJoystick.ButtonStart().whenPressed(new FindTargetWithTurret(turret, lime));
