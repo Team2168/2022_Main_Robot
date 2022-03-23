@@ -11,7 +11,7 @@ public class FenderLow extends ParallelCommandGroup {
     public FenderLow(Hood hood, Shooter shooter) {
         addCommands(
                 new HoodToAngle(hood, Hood.HoodPosition.FENDER_LOW.position_degrees),
-                new SetShooterSpeed(shooter, Shooter.ShooterRPM.FENDER_LOW.rpm)
+                new SetShooterSpeed(shooter, Shooter.ShooterRPM.FENDER_LOW)
         );
     }
 }

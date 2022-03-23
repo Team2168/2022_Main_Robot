@@ -23,14 +23,8 @@ public class IntakeRoller extends SubsystemBase {
  
  
 
-  private static TalonFXInvertType intakeInvert;
-  static {
-    if (Constants.IS_COMPBOT) {
-      intakeInvert = TalonFXInvertType.CounterClockwise;
-    } else {
-      intakeInvert = TalonFXInvertType.Clockwise;
-    }
-  }
+  private static TalonFXInvertType intakeInvert = TalonFXInvertType.Clockwise;
+  
   private static int intakeTimeoutMs = 30;
   private static double peakOutput = 1.0;
   private SupplyCurrentLimitConfiguration talonCurrentLimit;

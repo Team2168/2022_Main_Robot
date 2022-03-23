@@ -13,6 +13,7 @@ public class OI {
     private LinearInterpolator operatorJoystickInterpolator;
     private LinearInterpolator gunStyleXInterpolator;
     private LinearInterpolator gunStyleYInterpolator;
+    private LinearInterpolator testJoystickXInterpolator;
     private static OI instance = null;
     
     
@@ -44,11 +45,19 @@ public class OI {
         {+1.00, +1.00}  
     };
 
+    private double[][] testJoystickInterpolation = {
+        {-1.00, -0.50},
+        {-0.01, 0.00},
+        {+0.01, 0.00},
+        {+1.00, +0.50}
+    };
+
     private OI() {
         driverJoystickInterpolator = new LinearInterpolator(driverJoystickInterpolation);
         gunStyleXInterpolator = new LinearInterpolator(gunStyleXInterpolation);
         gunStyleYInterpolator = new LinearInterpolator(gunStyleYInterpolation);
         operatorJoystickInterpolator = new LinearInterpolator(operatorJoystickInterpolation);
+        testJoystickXInterpolator = new LinearInterpolator(testJoystickInterpolation);
     }
 
     public static OI getInstance() {
@@ -83,6 +92,10 @@ public class OI {
 
     public double getOperatorJoystickY() {
         return operatorJoystickInterpolator.interpolate(operatorJoystick.getLeftStickRaw_Y());
+    }
+
+    public double getTestJoystickX() {
+        return testJoystickXInterpolator.interpolate(testJoystick.getLeftStickRaw_X());
     }
     
 }

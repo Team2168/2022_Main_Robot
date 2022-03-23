@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
@@ -368,6 +369,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return (getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0;
     }
 
+    @Log(name = "Average Encoder Distance (in)", rowIndex = 4, columnIndex = 3)
+    public double getAverageEncoderDistanceIn() {
+        return Units.metersToInches((getLeftEncoderDistance() + getRightEncoderDistance()) / 2.0);
+    }
     /**
      * Gets wheel speeds in meters per second
      *
@@ -396,6 +401,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return ticksToMeters(getLeftEncoderDistanceRaw());
     }
 
+    @Log(name = "Left Encoder Distance (in)", rowIndex = 4, columnIndex = 7)
+    public double getLeftEncoderDistanceIn() {
+        return Units.metersToInches(ticksToMeters(getLeftEncoderDistanceRaw()));
+    }
+
     /**
      * Gets right encoder distance in raw sensor ticks
      *
@@ -413,6 +423,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     @Log(name = "Right Encoder Distance (m)", rowIndex = 1, columnIndex = 2)
     public double getRightEncoderDistance() {
         return ticksToMeters(getRightEncoderDistanceRaw());
+    }
+
+    @Log(name = "Right Encoder Distance (in)", rowIndex = 4, columnIndex = 6)
+    public double getRightEncoderDistanceIn() {
+        return Units.metersToInches(getRightEncoderDistance());
     }
 
     /**
