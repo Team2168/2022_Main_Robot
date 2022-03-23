@@ -12,13 +12,19 @@ public class WaitToExtendLiftWhileSwinging extends CommandBase {
   private Drivetrain dt;
   private double last_angle;
   private double safe_angle;
+  private double too_close_to_apex_angle;
   private boolean safe_to_extend = false;
 
-  /** Creates a new ExtendLiftWhileSwinging. */
-  public WaitToExtendLiftWhileSwinging(double angle) {
+  /**
+   * 
+   * @param safeAngle pitch angle above which we should try to extend the lift fully, if we're swinging away from the bar
+   * @param apexAngle angle above which we shouldn't attempt to extend (e.g. we're too close to the swing apex and will soon start traveling back towards the next bar)
+   */
+  public WaitToExtendLiftWhileSwinging(double safeAngle, double apexAngle) {
     // Use addRequirements() here to declare subsystem dependencies.
     dt = Drivetrain.getInstance();
-    safe_angle = angle;
+    too_close_to_apex_angle = apexAngle;
+    safe_angle = safeAngle;
     last_angle = safe_angle;
   }
 
@@ -32,7 +38,8 @@ public class WaitToExtendLiftWhileSwinging extends CommandBase {
     double current_angle = dt.getPitch();
     boolean swinging_away_from_bar = last_angle < current_angle;
 
-    safe_to_extend = (current_angle >= safe_angle) && swinging_away_from_bar;
+    safe_to_extend = (current_angle >= safe_angle) && swinging_away_from_bar
+                      && current_angle < too_close_to_apex_angle;
 
     last_angle = current_angle;
   }

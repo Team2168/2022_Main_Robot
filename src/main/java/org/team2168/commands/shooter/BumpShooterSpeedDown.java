@@ -27,7 +27,7 @@ public class BumpShooterSpeedDown extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    var setpoint = shooter.getSetPoint() - 50.0;
+    var setpoint = shooter.getSetPoint() - 25.0;
     shooter.setSpeed(setpoint);
   }
 

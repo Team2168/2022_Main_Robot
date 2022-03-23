@@ -48,12 +48,12 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
-        public static final double ksVolts = 0.69371;
-        public static final double kvVoltSecondsPerMeter = 0.68559;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.1355;
-        public static final double kPDriveVel = 2.7258; // @1.4 m/s max error
+        public static final double ksVolts = 0.20;
+        public static final double kvVoltSecondsPerMeter = 2.3087;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.73973;
+        public static final double kPDriveVel = 1.7845; // @1.4 m/s max error
 
-        public static final double kTrackwidthMeters = 0.73295;//what sysid claims:0.73295/Actual = 0.65563;
+        public static final double kTrackwidthMeters = 0.67813;//what sysid claims:0.73295/Actual = 0.65563;
         public static final DifferentialDriveKinematics kDriveKinematics =
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
@@ -139,25 +139,31 @@ public final class Constants {
             } else {
                 INDEXER_SPEED = 0.3;
                 HOPPER_SPEED = 0.5;
-                INTAKE_SPEED = 0.5;
+                INTAKE_SPEED = 1.0;
             }
         }
     }
     
     public static final class LiftPositions {
         public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
-        public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.67;
+        public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.0;
         public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 19.0;
 
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
-        public static final double LIFT_ARREST_SING_INCHES = 1.8;
+        public static final double LIFT_ARRESTING_INCHES = 1.8;
         public static final double LIFT_RETRACTION_INCHES = -0.2168/1.678;  // lower position to engage into the monkey bars
                                                                             // currently need to lower past zero to take up backlash and in gears when under load    
         public static final double LIFT_ZERO_INCHES = 0.0;
 
-        public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 45.0;
-        public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 40.0;
+        public static final double SAFE_TRAVERSE_BAR_EXTEND_PITCH = 30.0;
+        public static final double SAFE_HIGH_BAR_EXTEND_PITCH = 30.0;
+        public static final double TOO_CLOSE_TO_SWING_APEX_PITCH = 40.0;
+        public static final double TOO_CLOSE_TO_SWING_APEX_PITCH_HIGH = 90.0; // there is no minimum value here!
         public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
+    }
+
+    public static final class Analog {
+        public static final int TURRET_POTENTIOMETER = 0;
     }
 
     public static final double LOOP_TIMESTEP_S = 0.02;

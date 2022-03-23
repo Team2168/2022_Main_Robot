@@ -5,19 +5,20 @@
 package org.team2168.commands.shooter;
 
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class SetShooterSpeed extends CommandBase {
   Shooter shooter;
-  double target_speed;
+  ShooterRPM target_speed;
 
   /**
    * 
    * @param s the shooter instance
    * @param speed_rpm target speed in RPMs
    */
-  public SetShooterSpeed(Shooter s, double speed_rpm) {
+  public SetShooterSpeed(Shooter s, ShooterRPM speed_rpm) {
     shooter = s;
     target_speed = speed_rpm;
     addRequirements(shooter);
