@@ -38,6 +38,8 @@ import org.team2168.commands.hood.BumpHoodAngleUp;
 import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
+import org.team2168.commands.indexer.BumpIndexerRPMDown;
+import org.team2168.commands.indexer.BumpIndexerRPMUp;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
@@ -250,6 +252,9 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
+    oi.testJoystick.ButtonA().whenPressed(new DriveIndexer(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
+    oi.testJoystick.ButtonLeftBumper().whenPressed(new BumpIndexerRPMDown(indexer));
+    oi.testJoystick.ButtonRightBumper().whenPressed(new BumpIndexerRPMUp(indexer));
     // oi.testJoystick.ButtonA().whenPressed(new RotateTurret(turret, 0.0));
     // oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 180));
     // oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -180));

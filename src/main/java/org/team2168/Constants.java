@@ -133,7 +133,7 @@ public final class Constants {
         public static final double INTAKE_SPEED;
         static {
             if(IS_COMPBOT) {
-                INDEXER_SPEED = 0.3;
+                INDEXER_SPEED = 3700; //ticks per 100 ms
                 HOPPER_SPEED = 0.5;
                 INTAKE_SPEED = 1.0;
             } else {
