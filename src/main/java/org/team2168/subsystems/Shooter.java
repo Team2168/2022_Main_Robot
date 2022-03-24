@@ -41,10 +41,10 @@ public class Shooter extends SubsystemBase implements Loggable {
     // TERMINAL_CBOT(2300.0);
 
     public final double rpm;
-    public final boolean waitForShpooterAtSpeed;
+    public final boolean waitForShooterAtSpeed;
     private ShooterRPM(double rpm, boolean waitForShooterAtSpeed) {
       this.rpm = rpm;
-      this.waitForShpooterAtSpeed = waitForShooterAtSpeed;
+      this.waitForShooterAtSpeed = waitForShooterAtSpeed;
     }
   }
 
@@ -181,7 +181,7 @@ public class Shooter extends SubsystemBase implements Loggable {
    */
   public void setSpeed(ShooterRPM setPoint) {
     this.setpoint = setPoint.rpm;
-    this.waitForShooterAtSpeed = setPoint.waitForShpooterAtSpeed;
+    this.waitForShooterAtSpeed = setPoint.waitForShooterAtSpeed;
     var setPointVelocity_sensorUnits = revs_per_minute_to_ticks_per_100ms(setpoint);
     _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
