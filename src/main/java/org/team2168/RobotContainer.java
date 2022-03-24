@@ -200,8 +200,8 @@ public class RobotContainer {
     //lower left button ("Forward Fine-Tuning")
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
 
-    //lower right button ("Backward Fine-Tuning")
-    oi.driverJoystick.ButtonY().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    //red button
+    oi.driverJoystick.ButtonLeftBumper().whenPressed(new DriveTurretWithLimelight(turret, lime));
 
     //OPERATOR CONTROLS
     //// main button cluster
