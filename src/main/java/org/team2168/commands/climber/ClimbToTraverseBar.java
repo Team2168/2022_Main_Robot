@@ -14,6 +14,7 @@ import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.MonkeyBar;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class ClimbToTraverseBar extends SequentialCommandGroup {
 
@@ -36,6 +37,8 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
       new DriveClimberToPosition(climb, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
       new RetractMonkeyBar(monkey),
       new CheckClimberHookAttached(climb, 50),
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACT_TO_MINIMIZE_TRAVESE_SWING_INCHES),
+      new WaitCommand(4.0),//swing low sweet chariot
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES),
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARRESTING_INCHES)
     );
