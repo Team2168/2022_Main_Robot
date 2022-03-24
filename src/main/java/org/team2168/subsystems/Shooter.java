@@ -24,7 +24,9 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    AUTO_TARMAC_LINE(1768.0, true), //(1900.0),
+    AUTO_LOADING_ZONE(2600,false),
+    AUTO_TARMAC_LINE(1820.0, false), //(1900.0),
+    AUTO_BALL3(1893, false),
     AUTO_LAUNCHPAD(2335.0, true),
     FENDER_LOW(800.0, false),//(1050),//(900.0),
     FENDER_HIGH(1600, false),//(1500.0),
@@ -109,7 +111,7 @@ public class Shooter extends SubsystemBase implements Loggable {
       kP = .11;//0.25;
       kI = 0.001;//0.0025;
       kD = 0.0;
-      INTEGRAL_ZONE = 300.0;
+      INTEGRAL_ZONE = 600;//300.0;
     }
   }
   // private double setPoint_RPM;
@@ -246,6 +248,10 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public boolean shouldWaitForShooterAtSpeed() {
     return waitForShpooterAtSpeed;
+  }
+
+  public void setWaitForShooterAtSpeed(boolean wait) {
+    waitForShpooterAtSpeed = wait;
   }
 
   /**

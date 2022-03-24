@@ -27,6 +27,7 @@ import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.*;
+import org.team2168.commands.auto.pathplanner.FourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
@@ -132,6 +133,12 @@ public class RobotContainer {
                hopper, indexer, hood,
                shooter, turret, pooper, colorSensor,
                lime));
+
+        autoChooser.addOption("4 Ball", new FourBall(
+          drivetrain, intakeRaiseAndLower, intakeRoller,
+          hopper, indexer, hood,
+          shooter, turret, pooper, colorSensor,
+          lime));
 
       //    autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
       //    autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));

@@ -39,6 +39,7 @@ public class ThreeBall extends SequentialCommandGroup {
         Paths paths = Paths.getInstance();
         addCommands(
                 new RotateTurret(turret, 0.0).withTimeout(0.2),
+                new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
                 parallel(
                         new DriveTurretWithLimelight(turret, lime),
                         sequence(
@@ -51,13 +52,9 @@ public class ThreeBall extends SequentialCommandGroup {
                             // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                             new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
 
-                            new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                            new WaitForShooterAtSpeed(shooter),
-                            new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
                             new WaitForLimelightInPosition(lime),
                             new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new FireBalls(shooter, indexer, hopper),
-                            new WaitForShooterAtSpeed(shooter),
                             new FireBalls(shooter, indexer, hopper),
 
 
@@ -67,7 +64,7 @@ public class ThreeBall extends SequentialCommandGroup {
                             race (
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     sequence(
-                                            PathUtil.getPathCommand(paths.path_3Ball_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+                                            PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
                                             // PathUtil.getPathCommand(paths.path_3Ball_2, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
                                             //new DriveWithLimelight(drivetrain, lime, 1.5, false)
                                     )
@@ -87,7 +84,7 @@ public class ThreeBall extends SequentialCommandGroup {
                             race (
                                     new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
                                     new FireBalls(shooter, indexer, hopper)
-                    )
+                                )
                 )
                 )
         );
