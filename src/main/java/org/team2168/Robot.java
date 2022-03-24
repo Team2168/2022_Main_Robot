@@ -110,6 +110,8 @@ public class Robot extends TimedRobot {
     robotContainer.drivetrain.setMotorsBrake();
     robotContainer.lime.enableLimelight();
     autonomousCommand = robotContainer.getAutonomousCommand();
+    compressor.disable();
+
 
     Limelight.getInstance().enableLimelight();
 
@@ -131,6 +133,7 @@ public class Robot extends TimedRobot {
     robotContainer.drivetrain.setMotorsBrake();
     robotContainer.drivetrain.teleopconfigs();
     robotContainer.lime.pauseLimelight();
+    compressor.enableDigital();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
