@@ -23,6 +23,8 @@ public class Indexer extends SubsystemBase implements Loggable {
   private static DigitalInput detector;
   private static TalonFXHelper motor;
 
+  private double setpointRPM = 0.0;
+
   private static SupplyCurrentLimitConfiguration indexerCurrentLimit;
   private static final boolean ENABLE_CURRENT_LIMIT = true;
   private static final double CONTINUOUS_CURRENT_LIMIT = 20;
@@ -60,7 +62,7 @@ public class Indexer extends SubsystemBase implements Loggable {
     motor.config_kI(0, kI);
     motor.config_kD(0, kD);
     motor.config_kF(0, kF);
-    
+
     motor.configOpenLoopStatusFrameRates();
   }
 
@@ -72,6 +74,10 @@ public class Indexer extends SubsystemBase implements Loggable {
 
   private double inchesToTicks(double inches) {
     return (inches/INCHES_PER_REV) * TICKS_PER_REV * GEAR_RATIO;
+  }
+
+  public double getSetpoint() {
+    return setpointRPM;
   }
   
   /**
@@ -88,7 +94,9 @@ public class Indexer extends SubsystemBase implements Loggable {
    * @param speedRPM the speed in RPM the indexer motor is set to.
    */
   public void driveVelocity(double speedRPM) {
-    motor.set(TalonFXControlMode.Velocity, revs_1min_to_ticks_100ms(speedRPM));
+    setpointRPM = speedRPM;
+    var setPointVelocity = revs_1min_to_ticks_100ms(speedRPM);
+    motor.set(TalonFXControlMode.Velocity, setPointVelocity);
   }
 
   private double ticks_100ms_to_revs_1min(double ticks) {
