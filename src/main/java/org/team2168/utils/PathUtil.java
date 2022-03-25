@@ -111,8 +111,8 @@ public class PathUtil {
         return PathUtil.getPathPlannerCommand(pathName, drivetrain, InitialPathState.DISCARDHEADING, true);
     }
 
-    public static Trajectory getPathPlannerTrajectory(String pathName, boolean reverse) throws IOException {
-        var path = PathPlanner.loadPath(pathName, Constants.Drivetrain.MAX_VELOCITY, Constants.Drivetrain.MAX_ACCEL, reverse);
+    public static Trajectory getPathPlannerTrajectory(String pathName, boolean reverse, double maxVel, double maxAccel) throws IOException {
+        var path = PathPlanner.loadPath(pathName, maxVel, maxAccel, reverse);
         if (path == null) {
             // PathPlanner doesn't throw an error if it can't load a path; instead it fails
             // silently and returns null which is bad
@@ -120,6 +120,9 @@ public class PathUtil {
             throw new IOException(String.format(error, pathName));
         }
         return path;
+    }
+    public static Trajectory getPathPlannerTrajectory(String pathName, boolean reverse) throws IOException {
+        return PathUtil.getPathPlannerTrajectory(pathName, reverse, Constants.Drivetrain.kMaxSpeedMetersPerSecond, Constants.Drivetrain.kMaxAccelerationMetersPerSecondSquared);
     }
 
     /**
