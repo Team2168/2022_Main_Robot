@@ -43,7 +43,7 @@ public class FourBall extends SequentialCommandGroup {
         addCommands(
                 new RotateTurret(turret, 0.0).withTimeout(0.2),
                 new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
-                parallel(
+                race(
                         new DriveTurretWithLimelight(turret, lime),
                         sequence(
                                 new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
