@@ -47,7 +47,7 @@ public class ThreeBall extends SequentialCommandGroup {
                             new IntakeLower(intakeRaiseAndLower),
                             race (  // run group until path ends
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                    PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
+                                    PathUtil.getPathCommand(paths.path_3BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
                             ),
                             // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                             new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
@@ -64,7 +64,7 @@ public class ThreeBall extends SequentialCommandGroup {
                             race (
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     sequence(
-                                            PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+                                            PathUtil.getPathCommand(paths.path_3BALL_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
                                             // PathUtil.getPathCommand(paths.path_3Ball_2, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
                                             //new DriveWithLimelight(drivetrain, lime, 1.5, false)
                                     )
