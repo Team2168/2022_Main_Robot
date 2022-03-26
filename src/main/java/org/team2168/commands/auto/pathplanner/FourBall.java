@@ -25,105 +25,108 @@ import org.team2168.utils.PathUtil;
 
 public class FourBall extends SequentialCommandGroup {
 
-  public FourBall(
-      Drivetrain drivetrain,
-      IntakeRaiseAndLower intakeRaiseAndLower,
-      IntakeRoller intakeRoller,
-      Hopper hopper,
-      Indexer indexer,
-      Hood hood,
-      Shooter shooter,
-      Turret turret,
-      Pooper pooper,
-      ColorSensor colorSensor,
-      Limelight lime) {
+    public FourBall(
+            Drivetrain drivetrain,
+            IntakeRaiseAndLower intakeRaiseAndLower,
+            IntakeRoller intakeRoller,
+            Hopper hopper,
+            Indexer indexer,
+            Hood hood,
+            Shooter shooter,
+            Turret turret,
+            Pooper pooper,
+            ColorSensor colorSensor,
+            Limelight lime) {
 
-    Paths paths = Paths.getInstance();
+        Paths paths = Paths.getInstance();
 
-    addCommands(
-        new RotateTurret(turret, 0.0).withTimeout(0.2),
-        new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
-        parallel(
-            new DriveTurretWithLimelight(turret, lime),
-            sequence(
-                new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
-                new IntakeLower(intakeRaiseAndLower),
-                race( // run group until path ends
-                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                    PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)),
-                // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+        addCommands(
+                new RotateTurret(turret, 0.0).withTimeout(0.2),
+                new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
                 parallel(
-                  new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
-                  new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
-                  new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
-                  new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))
-                ).withTimeout(0.1),
+                        new DriveTurretWithLimelight(turret, lime),
+                        sequence(
+                                new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
+                                new IntakeLower(intakeRaiseAndLower),
+                                race( // run group until path ends
+                                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                        PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain,
+                                                PathUtil.InitialPathState.DISCARDHEADING)),
+                                // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                                parallel(
+                                        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
+                                        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+                                        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
+                                        new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))).withTimeout(0.1),
 
-                parallel(
-                    new WaitForShooterAtSpeed(shooter, 5),
-                    new WaitForLimelightInPosition(lime)),
-                new FireBalls(shooter, indexer, hopper),
-                new FireBalls(shooter, indexer, hopper),
+                                parallel(
+                                        new WaitForShooterAtSpeed(shooter, 5),
+                                        new WaitForLimelightInPosition(lime)),
+                                new FireBalls(shooter, indexer, hopper),
+                                new FireBalls(shooter, indexer, hopper),
 
+                                new IntakeLower(intakeRaiseAndLower),
+                                // new Launchpad(hood, shooter, lime),
+                                new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
+                                race(
+                                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                        sequence(
+                                                PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain,
+                                                        PathUtil.InitialPathState.PRESERVEODOMETRY))),
+                                parallel(
+                                        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
+                                        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+                                        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
+                                        new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))).withTimeout(0.1),
+
+                                parallel(
+                                        new WaitForShooterAtSpeed(shooter, 10),
+                                        new WaitForLimelightInPosition(lime)),
+                                new FireBalls(shooter, indexer, hopper),
+                                new SetShooterSpeed(shooter, ShooterRPM.AUTO_LOADING_ZONE),
+                                new HoodToAngle(hood, HoodPosition.AUTO_LOADING_ZONE.position_degrees))
+                ),
+                new RotateTurret(turret, 0.0).withTimeout(0.2),
                 new IntakeLower(intakeRaiseAndLower),
-                // new Launchpad(hood, shooter, lime),
-                new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
                 race(
-                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                    sequence(
-                        PathUtil.getPathCommand(paths.path_4BALL_1, drivetrain,
-                            PathUtil.InitialPathState.PRESERVEODOMETRY))),
-                            parallel(
-                                new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
-                                new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
-                                new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
-                                new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))
-                              ).withTimeout(0.1),
-
-                parallel(
-                    new WaitForShooterAtSpeed(shooter, 10),
-                    new WaitForLimelightInPosition(lime)),
-                new FireBalls(shooter, indexer, hopper),
-                new SetShooterSpeed(shooter, ShooterRPM.AUTO_LOADING_ZONE),
-                new HoodToAngle(hood, HoodPosition.AUTO_LOADING_ZONE.position_degrees),
-
-                new IntakeLower(intakeRaiseAndLower),
-                race(
-                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                    sequence(
-                        PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain,
-                            PathUtil.InitialPathState.PRESERVEODOMETRY) // new DriveWithLimelight(drivetrain, lime, 1.5,
-                                                                        // false)
-                    )),
-                    
+                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                        sequence(
+                                PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain,
+                                        PathUtil.InitialPathState.PRESERVEODOMETRY) // new
+                                                                                    // DriveWithLimelight(drivetrain,
+                                                                                    // lime, 1.5,
+                                                                                    // false)
+                        )),
 
                 // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                 new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                
-                   // new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
-                sequence(
-                    race(
-                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                        new WaitUntilCommand(indexer::isBallPresent)),
-                    parallel(
-                        new DriveHopperWithPercentOutput(hopper, () -> 0.0),
-                        new DriveIndexer(indexer, () -> 0.0),
-                        new SetIntakeSpeed(intakeRoller, 0.0),
-                        new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0)
-                        ).withTimeout(0.1),
-                    new WaitForShooterAtSpeed(shooter,20),
-                    new WaitForLimelightInPosition(lime),
-                    new FireBalls(shooter, indexer, hopper),
-                    race(
-                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                        new WaitUntilCommand(indexer::isBallPresent)),
-                    parallel(
-                        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
-                        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
-                        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
-                        new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))
-                        ).withTimeout(0.1),
-                    new WaitForShooterAtSpeed(shooter, 10),
-                    new FireBalls(shooter, indexer, hopper)))));
+
+                // new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
+                parallel(
+                        new DriveTurretWithLimelight(turret, lime),
+                        sequence(
+                                race(
+                                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                        new WaitUntilCommand(indexer::isBallPresent)),
+                                parallel(
+                                        new DriveHopperWithPercentOutput(hopper, () -> 0.0),
+                                        new DriveIndexer(indexer, () -> 0.0),
+                                        new SetIntakeSpeed(intakeRoller, 0.0),
+                                        new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1),
+                                new WaitForShooterAtSpeed(shooter, 20),
+                                new WaitForLimelightInPosition(lime),
+                                new FireBalls(shooter, indexer, hopper),
+                                race(
+                                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                        new WaitUntilCommand(indexer::isBallPresent)),
+                                parallel(
+                                        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
+                                        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+                                        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
+                                        new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))).withTimeout(0.1),
+                                new WaitForShooterAtSpeed(shooter, 10),
+                                new FireBalls(shooter, indexer, hopper))
+                )
+        );
     }
 }
