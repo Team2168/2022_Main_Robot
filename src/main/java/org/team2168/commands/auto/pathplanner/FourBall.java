@@ -18,6 +18,7 @@ import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
+import org.team2168.commands.turret.RotateTurretNoFinish;
 import org.team2168.subsystems.*;
 import org.team2168.subsystems.Hood.HoodPosition;
 import org.team2168.subsystems.Shooter.ShooterRPM;
@@ -87,7 +88,7 @@ public class FourBall extends SequentialCommandGroup {
                                 new HoodToAngle(hood, HoodPosition.AUTO_LOADING_ZONE.position_degrees))
                 ),
                 race(
-                    new RotateTurret(turret, 0.0),
+                    new RotateTurretNoFinish(turret, 0.0),
                     sequence(
                         new IntakeLower(intakeRaiseAndLower),
                         race(
