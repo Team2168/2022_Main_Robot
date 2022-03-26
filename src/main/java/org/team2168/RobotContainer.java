@@ -44,6 +44,7 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
@@ -316,7 +317,11 @@ public class RobotContainer {
     // oi.testJoystick.ButtonRightBumper().whenPressed(new PooperUnpoop(pooper));
 
     // oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
-    // oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    // oi.testJoystick.ButtonB().whenPressed(new SetPipeline(lime, Limelight.PIPELINE_TARMAC_LINE));
+    // oi.testJoystick.ButtonA().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.LAUNCHPAD.position_degrees));
+    // oi.testJoystick.ButtonA().whenPressed(new SetPipeline(lime, Limelight.PIPELINE_LAUNCHPAD_LINE));
+    // oi.testJoystick.ButtonX().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TERMINAL.position_degrees));
+    // oi.testJoystick.ButtonX().whenPressed(new SetPipeline(lime, Limelight.PIPELINE_TERMINAL));
 
   }
 
