@@ -86,22 +86,27 @@ public class FourBall extends SequentialCommandGroup {
                                 new SetShooterSpeed(shooter, ShooterRPM.AUTO_LOADING_ZONE),
                                 new HoodToAngle(hood, HoodPosition.AUTO_LOADING_ZONE.position_degrees))
                 ),
-                new RotateTurret(turret, 0.0).withTimeout(0.2),
-                new IntakeLower(intakeRaiseAndLower),
                 race(
-                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                        sequence(
-                                PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain,
-                                        PathUtil.InitialPathState.PRESERVEODOMETRY) // new
-                                                                                    // DriveWithLimelight(drivetrain,
-                                                                                    // lime, 1.5,
-                                                                                    // false)
-                        )),
+                    new RotateTurret(turret, 0.0),
+                    sequence(
+                        new IntakeLower(intakeRaiseAndLower),
+                        race(
+                                new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                sequence(
+                                        PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain,
+                                                PathUtil.InitialPathState.PRESERVEODOMETRY) // new
+                                                                                            // DriveWithLimelight(drivetrain,
+                                                                                            // lime, 1.5,
+                                                                                            // false)
+                                )),
 
-                // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
-                new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
+                        // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                        new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"))
 
-                // new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
+                        // new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
+                    )
+                ),
+
                 parallel(
                         new DriveTurretWithLimelight(turret, lime),
                         sequence(
