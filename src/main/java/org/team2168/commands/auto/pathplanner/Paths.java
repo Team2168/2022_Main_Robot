@@ -2,6 +2,7 @@ package org.team2168.commands.auto.pathplanner;
 
 import java.io.IOException;
 
+import org.team2168.Constants;
 import org.team2168.utils.PathUtil;
 
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -21,7 +22,8 @@ public class Paths {
     public final Trajectory path_4BALL_3;
     public final Trajectory path_4BALL_AIO;
     public final Trajectory path_2BALL_1;
-    public final Trajectory path_3Ball_1;
+    public final Trajectory path_3BALL_0;
+    public final Trajectory path_3BALL_1;
     public final Trajectory path_Drive1Meter;
     public final Trajectory path_Drive3Meters;
 
@@ -37,7 +39,8 @@ public class Paths {
         path_4BALL_3 = getTrajectory("4BALL_3", false);
         path_4BALL_AIO = getTrajectory("4BALL_AIO", true);
         path_2BALL_1 = getTrajectory("2BALL_1", true);
-        path_3Ball_1 = getTrajectory("3BALL_1", true);
+        path_3BALL_0 = getTrajectory("4BALL_0", true, 3.7, 0.7);
+        path_3BALL_1 = getTrajectory("3BALL_1", true, 3.7, 0.7);
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
 
@@ -46,8 +49,11 @@ public class Paths {
     }
 
     private Trajectory getTrajectory(String pathName, boolean reversed) {
+        return this.getTrajectory(pathName, reversed, Constants.Drivetrain.kMaxSpeedMetersPerSecond, Constants.Drivetrain.kMaxAccelerationMetersPerSecondSquared);
+    }
+    private Trajectory getTrajectory(String pathName, boolean reversed, double vel, double accel) {
         try {
-            return PathUtil.getPathPlannerTrajectory(pathName, reversed);
+            return PathUtil.getPathPlannerTrajectory(pathName, reversed, vel, accel);
         } catch (IOException e) {
             final String ERRORMESSAGE = "Failed to read path %s!  Check the file name.  Falling back to empty trajectory.";
             DriverStation.reportError(String.format(ERRORMESSAGE, pathName), e.getStackTrace());

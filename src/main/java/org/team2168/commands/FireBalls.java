@@ -28,7 +28,11 @@ public class FireBalls extends SequentialCommandGroup {
 
   public FireBalls(Shooter shooter, Indexer indexer, Hopper hopper) {
       
+    // if (shooter.shouldWaitForShooterAtSpeed()) {
+    //   addCommands(new WaitForShooterAtSpeed(shooter));
+    // }
     addCommands(
+      new InstantCommand(() -> System.out.println(shooter.shouldWaitForShooterAtSpeed())),
       new ConditionalCommand(
           new WaitForShooterAtSpeed(shooter), new PrintCommand("No Wait"), shooter::shouldWaitForShooterAtSpeed),
       race( // Make sure the ball is queued up near the top before starting sequence 
