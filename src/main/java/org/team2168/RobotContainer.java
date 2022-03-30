@@ -122,7 +122,7 @@ public class RobotContainer {
 
   private void configureAutonomousRoutines() {
     var twoBall = new SequentialCommandGroup(
-      new Sleep().withTimeout(6.0),
+      new Sleep().withTimeout(0.0),
       new TwoBall(
               drivetrain, intakeRaiseAndLower, intakeRoller,
               hopper, indexer, hood,
