@@ -14,7 +14,7 @@ public class Terminal extends ParallelCommandGroup {
         addCommands(
                 new HoodToAngle(hood, Hood.HoodPosition.TERMINAL.position_degrees),
                 new SetShooterSpeed(shooter, Shooter.ShooterRPM.TERMINAL),
-                new SetPipeline(lime, Limelight.PIPELINE_DEFAULT_DRIVE)
+                new SetPipeline(lime, Limelight.PIPELINE_TERMINAL)
         );
     }
 }

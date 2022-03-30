@@ -44,7 +44,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   // TODO create new pipelines
   public static final int PIPELINE_LAUNCHPAD_LINE = 0;
   public static final int PIPELINE_TARMAC_LINE = 1;
-  public static final int PIPELINE_BACK_TRENCH_BLUE = 2;
+  public static final int PIPELINE_TERMINAL = 2;
   public static final int PIPELINE_BACK_TRENCH_RED = 3;
   public static final int PIPELINE_DRIVER_VIEW = 4;
   public static final int PIPELINE_DEFAULT_DRIVE = 5;

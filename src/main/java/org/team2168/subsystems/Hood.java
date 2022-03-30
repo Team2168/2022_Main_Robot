@@ -25,13 +25,13 @@ public class Hood extends SubsystemBase implements Loggable {
   //TODO: make another enum
   //This is for auto shooting
   public enum HoodPosition {
-    AUTO_LOADING_ZONE (36.85),
+    AUTO_LOADING_ZONE (41.85),
     AUTO_TARMAC_LINE(25.0),
     AUTO_LAUNCHPAD(26.7),
     FENDER_LOW(29),//(12.0),
-    FENDER_HIGH(11),//(7.0),
+    FENDER_HIGH(9.0),//(7.0),
     TARMAC_LINE(23.0),  // 20
-    LAUNCHPAD(32.0),
+    LAUNCHPAD(29.0),
     WALL_SHOT(37.0),
     TERMINAL(33.0),
     ZERO(0.0);

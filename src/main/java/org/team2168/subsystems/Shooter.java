@@ -24,14 +24,14 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    AUTO_LOADING_ZONE(2600,false),
-    AUTO_TARMAC_LINE(1820.0, false), //(1900.0),
+    AUTO_LOADING_ZONE(2450.0,false),
+    AUTO_TARMAC_LINE(1745.0, false), //(1900.0),
     AUTO_BALL3(1893, false),
     AUTO_LAUNCHPAD(2335.0, true),
     FENDER_LOW(800.0, false),//(1050),//(900.0),
-    FENDER_HIGH(1600, true),//(1500.0),
-    TARMAC_LINE(1818.0, false),  // 1650
-    LAUNCHPAD(2075.0, true),//(2085.0),
+    FENDER_HIGH(1625.0, true),//(1500.0),
+    TARMAC_LINE(1770.0, false),  // 1650
+    LAUNCHPAD(2000.0, true),//(2085.0),
     WALL_SHOT(2750.0, true),
     TERMINAL(2300.0, true),
     STOP(0.0, true);
