@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
+import org.team2168.Constants;
 import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import edu.wpi.first.networktables.NetworkTable;
@@ -55,8 +56,10 @@ public class Limelight extends SubsystemBase implements Loggable {
   private static LEDMode desiredLEDMode = LEDMode.PIPELINE;
   private static int desiredPipeline = 0;
 
-  public double MAX_POSITIVE_ANGLE = 27.0;
-  public double MIN_NEGATIVE_ANGLE = -27.0;
+  public double MAX_POSITIVE_ANGLE = 29.8;
+  public double MIN_NEGATIVE_ANGLE = -29.8;
+
+  public static double limelightMountAngle = 25.0;
 
   //Camera Controls (Use Enums to prevent invalid inputs)
   public enum LEDMode {
@@ -159,6 +162,11 @@ public class Limelight extends SubsystemBase implements Loggable {
   public void setPipeline(int pipelineNumber) {
     pipeline.setNumber(pipelineNumber);
     desiredPipeline = pipelineNumber;
+  }
+
+  @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
+  public double calcDistanceIn() {
+    return (Constants.Heights.UPPER_HUB_HEIGHT_IN - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_IN)/Math.tan(limelightMountAngle + ty.getDouble(0));
   }
 
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)

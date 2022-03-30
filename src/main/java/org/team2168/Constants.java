@@ -163,6 +163,11 @@ public final class Constants {
         public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
     }
 
+    public static final class Heights {
+        public static final double ROBOT_LIMELIGHT_HEIGHT_IN = 42.0; // approximate value/placeholder
+        public static final double UPPER_HUB_HEIGHT_IN = 104.0;
+    }
+
     public static final class Analog {
         public static final int TURRET_POTENTIOMETER = 0;
     }
