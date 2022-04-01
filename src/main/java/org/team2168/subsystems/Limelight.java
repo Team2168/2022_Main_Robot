@@ -13,7 +13,9 @@ import io.github.oblarg.oblog.annotations.Log;
 
 import org.team2168.Constants;
 import org.team2168.subsystems.Shooter.ShooterRPM;
+import org.team2168.utils.Util;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -59,7 +61,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   public double MAX_POSITIVE_ANGLE = 29.8;
   public double MIN_NEGATIVE_ANGLE = -29.8;
 
-  public static double limelightMountAngle = 25.0;
+  public static double limelightMountAngle = 30.0;
 
   //Camera Controls (Use Enums to prevent invalid inputs)
   public enum LEDMode {
@@ -165,8 +167,8 @@ public class Limelight extends SubsystemBase implements Loggable {
   }
 
   @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
-  public double calcDistanceIn() {
-    return (Constants.Heights.UPPER_HUB_HEIGHT_IN - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_IN)/Math.tan(limelightMountAngle + ty.getDouble(0));
+  public double calcDistanceMeters() {
+    return (Units.inchesToMeters(Constants.Heights.UPPER_HUB_HEIGHT_IN - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_IN))/Math.tan(limelightMountAngle + ty.getDouble(0));
   }
 
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)

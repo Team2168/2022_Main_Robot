@@ -164,7 +164,7 @@ public final class Constants {
     }
 
     public static final class Heights {
-        public static final double ROBOT_LIMELIGHT_HEIGHT_IN = 42.0; // approximate value/placeholder
+        public static final double ROBOT_LIMELIGHT_HEIGHT_IN = 39.7; // approximate value/placeholder
         public static final double UPPER_HUB_HEIGHT_IN = 104.0;
     }
 
