@@ -43,6 +43,7 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
@@ -209,9 +210,10 @@ public class RobotContainer {
 
     //OPERATOR CONTROLS
     //// main button cluster
-    oi.operatorJoystick.ButtonA()
-            .whenPressed(new RotateTurret(turret, 0.0))
-            .whenPressed(new FenderLow(hood, shooter));
+    // oi.operatorJoystick.ButtonA()
+    //         .whenPressed(new RotateTurret(turret, 0.0))
+    //         .whenPressed(new FenderLow(hood, shooter));
+    oi.operatorJoystick.ButtonA().whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
     oi.operatorJoystick.ButtonY()
@@ -320,6 +322,7 @@ public class RobotContainer {
 
     // oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
     // oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    oi.testJoystick.ButtonA().whenPressed(new SetPipeline(lime, Limelight.PIPELINE_TARMAC_LINE));
 
   }
 

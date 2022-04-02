@@ -168,7 +168,15 @@ public class Limelight extends SubsystemBase implements Loggable {
 
   @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
   public double calcDistanceMeters() {
-    return (Units.inchesToMeters(Constants.Heights.UPPER_HUB_HEIGHT_IN - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_IN))/Math.tan(limelightMountAngle + ty.getDouble(0));
+    return (Units.inchesToMeters(Constants.Heights.UPPER_HUB_HEIGHT_IN - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_IN))/Math.tan(convertDegreesToRadians(limelightMountAngle + ty.getDouble(0)));
+  }
+
+  public double getRPMfromDistance(double meters) {
+    return (1629.0 - (1191.0 * meters) + (2153.0 * Math.pow(meters, 2)) - (1309.0 * Math.pow(meters, 3)) + (362.0 * Math.pow(meters, 4)) - (45.8 * Math.pow(meters, 5)) + (2.16 * Math.pow(meters, 6)));
+  }
+
+  public double getHoodAnglefromDistance(double meters) {
+    return (9.08 + 6.44*meters + 9.31*Math.pow(meters, 2)  - 8.94*Math.pow(meters, 3) + 2.96*Math.pow(meters, 4) - 0.415*Math.pow(meters, 5) + 0.0208*Math.pow(meters, 6));
   }
 
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)
@@ -257,6 +265,10 @@ public class Limelight extends SubsystemBase implements Loggable {
   private void setCamMode(int camModeNumber) {
     camMode.setNumber(camModeNumber);
     desiredCamMode = camModeNumber;
+  }
+
+  private double convertDegreesToRadians(double degrees) {
+    return degrees * (Math.PI/180.0);
   }
 
   @Override
