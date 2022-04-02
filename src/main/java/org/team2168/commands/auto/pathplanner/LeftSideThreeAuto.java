@@ -61,17 +61,17 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       new TwoBall(drivetrain,intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, turret, pooper, colorSensor, limelight),
       new BumpHoodAngleZero(hood),
       PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
-      
+
       parallel(
       new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller),
-      new DriveHopperUntilBall(hopper, ()-> MotorSpeeds.HOPPER_SPEED),
-      new DriveIndexerUntilBall(indexer, ()-> MotorSpeeds.INDEXER_SPEED)
+      new DriveHopperUntilBall(hopper, () -> MotorSpeeds.HOPPER_SPEED),
+      new DriveIndexerUntilBall(indexer, () -> MotorSpeeds.INDEXER_SPEED)
       ),
 
       new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller));
       
       race(
-      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
+      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
       );
       
       sequence(
