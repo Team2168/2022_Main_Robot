@@ -26,6 +26,8 @@ public class Paths {
     public final Trajectory path_3BALL_1;
     public final Trajectory path_Drive1Meter;
     public final Trajectory path_Drive3Meters;
+    public final Trajectory path_LineThreeSetupAuto;
+    public final Trajectory path_ReversedThreeSetupAuto;
 
     private static Paths instance = null;
 
@@ -43,7 +45,8 @@ public class Paths {
         path_3BALL_1 = getTrajectory("3BALL_1", true, 3.7, 0.7);
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
-
+        path_LineThreeSetupAuto = getTrajectory("LineThreeSetupAuto", true);
+        path_ReversedThreeSetupAuto = getTrajectory("ReversedThreeSetupAuto", true);
         
         System.out.println("******* Finish generating autos *******");
     }
