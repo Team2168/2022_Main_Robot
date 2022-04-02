@@ -22,6 +22,8 @@ import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
+import org.team2168.commands.turret.FindTargetAndCenterTurret;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hood;
@@ -60,6 +62,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
     addCommands(
       new TwoBall(drivetrain,intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, turret, pooper, colorSensor, limelight),
       new BumpHoodAngleZero(hood),
+
+      
       PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
 
       parallel(
@@ -76,6 +80,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       
       sequence(
       new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
+      new AutoTarmacLine(hood, shooter, limelight),
+      new FindTargetAndCenterTurret(turret, limelight),
       new WaitUntilFireBalls(shooter, limelight),
       new FireBalls(shooter, indexer, hopper)
       );
