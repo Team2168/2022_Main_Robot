@@ -6,22 +6,15 @@ package org.team2168.commands.auto.pathplanner;
 
 
 
-import java.util.function.DoubleSupplier;
-
-
 import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.LowerAndRunIntake;
 import org.team2168.commands.QueueBallForShot;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.WaitUntilFireBalls;
-import org.team2168.commands.auto.pathplanner.Paths;
-import org.team2168.commands.auto.pathplanner.TwoBall;
 import org.team2168.commands.hood.BumpHoodAngleZero;
 import org.team2168.commands.hopper.DriveHopperUntilBall;
-import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
-import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.FindTargetAndCenterTurret;
 import org.team2168.subsystems.ColorSensor;
@@ -60,7 +53,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       Paths path = Paths.getInstance();
   
     addCommands(
-      new TwoBall(drivetrain,intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, shooter, turret, pooper, colorSensor, limelight),
+      new TwoBall(drivetrain,intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, 
+      shooter, turret, pooper, colorSensor, limelight),
       new BumpHoodAngleZero(hood),
 
       
