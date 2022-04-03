@@ -31,7 +31,7 @@ public class Hood extends SubsystemBase implements Loggable {
     FENDER_LOW(29),//(12.0),
     FENDER_HIGH(9.0),//(7.0),
     TARMAC_LINE(23.0),  // 20
-    LAUNCHPAD(29.0),
+    LAUNCHPAD(31.0),
     WALL_SHOT(37.0),
     TERMINAL(33.0),
     ZERO(0.0);
