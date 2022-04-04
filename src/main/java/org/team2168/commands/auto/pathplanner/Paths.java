@@ -26,13 +26,6 @@ public class Paths {
     public final Trajectory path_3BALL_1;
     public final Trajectory path_Drive1Meter;
     public final Trajectory path_Drive3Meters;
-    public final Trajectory path_Disturb_1;
-    public final Trajectory path_Disturb_2;
-    public final Trajectory path_Disturb_3;
-    public final Trajectory path_Disturb_4;
-    public final Trajectory path_Disturb_5;
-    public final Trajectory path_Disturb_6;
-    public final Trajectory path_Disturb_7;
 
     private static Paths instance = null;
 
@@ -50,13 +43,6 @@ public class Paths {
         path_3BALL_1 = getTrajectory("3BALL_1", true, 3.7, 0.7);
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
-        path_Disturb_1 = getTrajectory("Disturb_1", true);
-        path_Disturb_2 = getTrajectory("Disturb_2", false);
-        path_Disturb_3 = getTrajectory("Disturb_3", true);
-        path_Disturb_4 = getTrajectory("Disturb_4", true);
-        path_Disturb_5 = getTrajectory("Disturb_5", true);
-        path_Disturb_6 = getTrajectory("Disturb_6", true);
-        path_Disturb_7 = getTrajectory("Distub_7", false);
 
         
         System.out.println("******* Finish generating autos *******");
