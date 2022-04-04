@@ -14,9 +14,13 @@ import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.WaitUntilFireBalls;
 import org.team2168.commands.hood.BumpHoodAngleZero;
 import org.team2168.commands.hopper.DriveHopperUntilBall;
+import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
+import org.team2168.commands.limelight.SetPipeline;
+import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.FindTargetAndCenterTurret;
+import org.team2168.commands.turret.StopTurret;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hood;
@@ -28,6 +32,7 @@ import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Pooper;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Turret;
+import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.utils.PathUtil;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -77,7 +82,14 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       new AutoTarmacLine(hood, shooter, limelight),
       new FindTargetAndCenterTurret(turret, limelight),
       new WaitUntilFireBalls(shooter, limelight),
+      new FireBalls(shooter, indexer, hopper),
       new FireBalls(shooter, indexer, hopper)
+      );
+
+      parallel(
+    new SetShooterSpeed(shooter,ShooterRPM.STOP),
+    new StopTurret(turret),
+    new DriveIndexer(indexer,() -> 0.0)
       );
       
 

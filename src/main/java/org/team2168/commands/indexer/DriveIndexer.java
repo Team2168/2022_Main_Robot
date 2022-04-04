@@ -19,9 +19,9 @@ public class DriveIndexer extends CommandBase {
   private DoubleSupplier speed;
 
 
-  public DriveIndexer(Indexer indexer, DoubleSupplier speed2) {
+  public DriveIndexer(Indexer indexer, DoubleSupplier speed) {
     this.indexer = indexer;
-    this.speed = speed2;
+    this.speed = speed;
     addRequirements(indexer);
   }
 
