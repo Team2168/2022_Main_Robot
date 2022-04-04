@@ -24,28 +24,30 @@ import io.github.oblarg.oblog.annotations.Log;
 public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
-    AUTO_LOADING_ZONE(2450.0,false),
-    AUTO_TARMAC_LINE(1745.0, false), //(1900.0),
-    AUTO_BALL3(1893, false),
-    AUTO_LAUNCHPAD(2335.0, true),
-    FENDER_LOW(800.0, false),//(1050),//(900.0),
-    FENDER_HIGH(1625.0, true),//(1500.0),
-    TARMAC_LINE(1770.0, false),  // 1650
-    LAUNCHPAD(2000.0, true),//(2085.0),
-    WALL_SHOT(2750.0, true),
-    TERMINAL(2300.0, true),
-    STOP(0.0, true);
-    // FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
-    // FENDER_HIGH_CBOT(1500.0),
-    // TARMAC_LINE_CBOT(1550),//PBot (1650.0),
-    // LAUNCHPAD_CBOT (1870),//PBot(2085.0),
-    // WALL_SHOT_CBOT(2500),//PBot(2750.0);
-    // TERMINAL_CBOT(2300.0);
+        AUTO_LOADING_ZONE(2450.0, 2300.0, false),
+        AUTO_TARMAC_LINE(1745.0, 1660.0, false), //(1900.0),
+        AUTO_BALL3(1893.0, 1893.0, false),
+        AUTO_LAUNCHPAD(2335.0, 1870.0, true),
+        FENDER_LOW(800.0, 1100.0, false),//(1050),//(900.0),
+        FENDER_HIGH(1625.0, 1500.0, true),//(1500.0),
+        TARMAC_LINE(1770.0, 1550.0, false),  // 1650
+        LAUNCHPAD(2000.0, 1870.0, true),//(2085.0),
+        WALL_SHOT(2750.0, 2500.0, true),
+        TERMINAL(2300.0, 2300.0, true),
+        STOP(0.0, 0.0, true);
+    
+
 
     public final double rpm;
     public final boolean waitForShpooterAtSpeed;
-    private ShooterRPM(double rpm, boolean waitForShooterAtSpeed) {
-      this.rpm = rpm;
+
+    private ShooterRPM(double pbot_rpm, double cbot_rpm, boolean waitForShooterAtSpeed) {
+      if (Constants.IS_COMPBOT) {
+        rpm = cbot_rpm;
+      }
+      else  {
+        rpm = pbot_rpm;
+      }
       this.waitForShpooterAtSpeed = waitForShooterAtSpeed;
     }
   }

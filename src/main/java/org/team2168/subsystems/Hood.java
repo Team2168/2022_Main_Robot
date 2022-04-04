@@ -25,27 +25,26 @@ public class Hood extends SubsystemBase implements Loggable {
   //TODO: make another enum
   //This is for auto shooting
   public enum HoodPosition {
-    AUTO_LOADING_ZONE (41.85),
-    AUTO_TARMAC_LINE(25.0),
-    AUTO_LAUNCHPAD(26.7),
-    FENDER_LOW(29),//(12.0),
-    FENDER_HIGH(9.0),//(7.0),
-    TARMAC_LINE(23.0),  // 20
-    LAUNCHPAD(29.0),
-    WALL_SHOT(37.0),
-    TERMINAL(33.0),
-    ZERO(0.0);
-//    FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
-//    FENDER_HIGH_COMPBOT(5.0),
-//    TARMAC_LINE_COMPBOT(17),
-//    LAUNCHPAD_COMPBOT(25),
-//    WALL_SHOT_COMPBOT(36),
-//    TERMINAL_COMPBOT(33.0),
+    AUTO_LOADING_ZONE (41.85, 41.85),
+    AUTO_TARMAC_LINE(25.0, 21.0),
+    AUTO_LAUNCHPAD(26.7, 25.0),
+    FENDER_LOW(29.0, 9.0),//(12.0),
+    FENDER_HIGH(9.0, 5.0),//(7.0),
+    TARMAC_LINE(23.0, 17.0),  // 20
+    LAUNCHPAD(29.0, 25.0),
+    WALL_SHOT(37.0, 36.0),
+    TERMINAL(33.0, 33.0),
+    ZERO(0.0, 0.0);
 
     public final double position_degrees;
     
-    private HoodPosition(double position_degrees) {
-        this.position_degrees = position_degrees;
+    private HoodPosition(double pBot_degrees, double cBot_degrees) {
+        if (Constants.IS_COMPBOT) {
+          position_degrees = cBot_degrees;
+        }
+        else {
+          position_degrees = pBot_degrees;
+        }
   }
 }
 
