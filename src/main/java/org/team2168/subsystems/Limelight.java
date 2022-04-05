@@ -172,11 +172,21 @@ public class Limelight extends SubsystemBase implements Loggable {
   }
 
   public double getRPMfromDistance(double meters) {
-    return (1629.0 - (1191.0 * meters) + (2153.0 * Math.pow(meters, 2)) - (1309.0 * Math.pow(meters, 3)) + (362.0 * Math.pow(meters, 4)) - (45.8 * Math.pow(meters, 5)) + (2.16 * Math.pow(meters, 6)));
+    if (Constants.IS_COMPBOT) {
+      return (1490.0 + 39.3*meters + 21.8*Math.pow(meters, 2));
+    }
+    else {
+      return (1624.0 - 25.8*meters + 91.8*Math.pow(meters, 2) - 14.0*Math.pow(meters, 3));
+    }
   }
 
   public double getHoodAnglefromDistance(double meters) {
-    return (9.08 + 6.44*meters + 9.31*Math.pow(meters, 2)  - 8.94*Math.pow(meters, 3) + 2.96*Math.pow(meters, 4) - 0.415*Math.pow(meters, 5) + 0.0208*Math.pow(meters, 6));
+    if (Constants.IS_COMPBOT) {
+      return (5.01 + 14.2*meters + -3.34*Math.pow(meters, 2) + 0.306*Math.pow(meters, 3));
+    }
+    else {
+      return (9.29 + 9.64*meters + -0.955*Math.pow(meters, 2));
+    }
   }
 
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)
