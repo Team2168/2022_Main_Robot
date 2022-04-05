@@ -28,7 +28,7 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
     addCommands(
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARRESTING_INCHES),
       // new Sleep().withTimeout(0.5), //stay connected with the climber bars to slow the swing down
-      new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
+      // new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
       new DriveClimberToPosition(climb, LiftPositions.LIFT_EXTEND_BELOW_NEXT_BAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
