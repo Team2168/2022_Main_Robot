@@ -12,6 +12,7 @@ import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
@@ -84,6 +85,7 @@ public class FourBall extends SequentialCommandGroup {
                                         new WaitForShooterAtSpeed(shooter, 10),
                                         new WaitForLimelightInPosition(lime)),
                                 new FireBalls(shooter, indexer, hopper),
+                                new SetPipeline(lime, Limelight.PIPELINE_TERMINAL),
                                 new SetShooterSpeed(shooter, ShooterRPM.AUTO_LOADING_ZONE),
                                 new HoodToAngle(hood, HoodPosition.AUTO_LOADING_ZONE.position_degrees))
                 ),
