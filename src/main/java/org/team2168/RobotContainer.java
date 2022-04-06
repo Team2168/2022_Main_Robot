@@ -18,14 +18,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
-import org.team2168.commands.SysIDCommand;
 import org.team2168.commands.auto.*;
 import org.team2168.commands.auto.pathplanner.FourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
@@ -128,12 +127,17 @@ public class RobotContainer {
   }
 
   private void configureAutonomousRoutines() {
-      autoChooser.setDefaultOption("Do nothing", new DoNothing());
-      autoChooser.addOption("2 ball", new TwoBall(
+    var twoBall = new SequentialCommandGroup(
+      new Sleep().withTimeout(0.0),
+      new TwoBall(
               drivetrain, intakeRaiseAndLower, intakeRoller,
               hopper, indexer, hood,
               shooter, turret, pooper, colorSensor,
-              lime));
+              lime)
+    );
+
+      autoChooser.setDefaultOption("Do nothing", new DoNothing());
+      autoChooser.addOption("2 ball", twoBall);
        autoChooser.addOption("3 Ball", new ThreeBall(
                drivetrain, intakeRaiseAndLower, intakeRoller,
                hopper, indexer, hood,
