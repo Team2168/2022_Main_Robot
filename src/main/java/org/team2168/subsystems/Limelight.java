@@ -168,7 +168,7 @@ public class Limelight extends SubsystemBase implements Loggable {
 
   @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
   public double calcDistanceMeters() {
-    return (Units.inchesToMeters(Constants.Heights.UPPER_HUB_HEIGHT_IN - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_IN))/Math.tan(convertDegreesToRadians(limelightMountAngle + ty.getDouble(0)));
+    return (Constants.Heights.UPPER_HUB_HEIGHT_METERS - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_METERS)/Math.tan(convertDegreesToRadians(limelightMountAngle + ty.getDouble(0))) - Constants.Distances.LIMELIGHT_OFFSET_METERS;
   }
 
   public double getRPMfromDistance(double meters) {

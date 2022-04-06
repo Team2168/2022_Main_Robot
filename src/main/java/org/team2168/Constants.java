@@ -164,8 +164,12 @@ public final class Constants {
     }
 
     public static final class Heights {
-        public static final double ROBOT_LIMELIGHT_HEIGHT_IN = 39.7; // approximate value/placeholder
-        public static final double UPPER_HUB_HEIGHT_IN = 104.0;
+        public static final double ROBOT_LIMELIGHT_HEIGHT_METERS = 1.00838; // 39.7 in.
+        public static final double UPPER_HUB_HEIGHT_METERS = 2.6416; // 104 in.
+    }
+
+    public static final class Distances {
+        public static final double LIMELIGHT_OFFSET_METERS = 0.36195; // 14.25 in.
     }
 
     public static final class Analog {
