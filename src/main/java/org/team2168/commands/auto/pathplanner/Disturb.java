@@ -6,10 +6,14 @@ package org.team2168.commands.auto.pathplanner;
 
 import java.nio.file.Path;
 
+import org.team2168.Constants;
 import org.team2168.commands.FireBalls;
+import org.team2168.commands.QueueBallForShot;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.drivetrain.TankDrive;
+import org.team2168.commands.drivetrain.TurnXDegrees;
 import org.team2168.commands.hood.HoodToAngle;
+import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
@@ -94,11 +98,43 @@ public class Disturb extends SequentialCommandGroup {
         // Collects oppo. ball and poops it in hangar pt 1
         sequence(
           PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
-          race(
-            
-          )
+          // Picks up ball
+          parallel(
+            PathUtil.getPathCommand(paths.path_Disturb_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
+            sequence(
+             race(
+              new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+              new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED)),
+
+              parallel(
+              new DriveHopperWithPercentOutput(hopper, () -> 0.0),
+              new DriveIndexer(indexer, () -> 0.0),
+              new SetIntakeSpeed(intakeRoller, 0.0)).withTimeout(0.1)
+            )),
+          PathUtil.getPathCommand(paths.path_Disturb_4, drivetrain, InitialPathState.PRESERVEODOMETRY),
+          // Ball is pooped!
+          new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller)
         ),
         // Collects oppo. ball and poops it in hangar pt 2
-        sequence());
+        sequence(
+          new TurnXDegrees(drivetrain, 180),
+          parallel(
+            PathUtil.getPathCommand(paths.path_Disturb_5, drivetrain, InitialPathState.PRESERVEODOMETRY),
+            sequence(
+             race(
+              new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+              new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED)),
+
+              parallel(
+              new DriveHopperWithPercentOutput(hopper, () -> 0.0),
+              new DriveIndexer(indexer, () -> 0.0),
+              new SetIntakeSpeed(intakeRoller, 0.0)).withTimeout(0.1)
+            )),
+          new TurnXDegrees(drivetrain, 180),
+          PathUtil.getPathCommand(paths.path_Disturb_6, drivetrain, InitialPathState.PRESERVEODOMETRY),
+          new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
+          PathUtil.getPathCommand(paths.path_Disturb_7, drivetrain, InitialPathState.PRESERVEODOMETRY)
+            )
+        );
   }
 }
