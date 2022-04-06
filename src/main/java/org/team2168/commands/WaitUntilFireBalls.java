@@ -9,10 +9,11 @@ import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 
-public class WaitUntilFireBalls extends SequentialCommandGroup {
+
+public class WaitUntilFireBalls extends ParallelCommandGroup {
  
   public WaitUntilFireBalls(Shooter shooter, Limelight limelight) {
     

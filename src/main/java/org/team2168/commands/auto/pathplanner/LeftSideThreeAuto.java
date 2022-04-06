@@ -19,6 +19,7 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
+import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.FindTargetAndCenterTurret;
 import org.team2168.commands.turret.StopTurret;
 import org.team2168.subsystems.ColorSensor;
@@ -35,6 +36,7 @@ import org.team2168.subsystems.Turret;
 import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.utils.PathUtil;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -58,6 +60,10 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       Paths path = Paths.getInstance();
   
     addCommands(
+
+    new DriveTurretWithLimelight(turret, limelight),
+    
+
       new TwoBall(drivetrain,intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, 
       shooter, turret, pooper, colorSensor, limelight),
       new BumpHoodAngleZero(hood),
@@ -80,6 +86,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       sequence(
       new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
       new AutoTarmacLine(hood, shooter, limelight),
+      new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
       new FindTargetAndCenterTurret(turret, limelight),
       new WaitUntilFireBalls(shooter, limelight),
       new FireBalls(shooter, indexer, hopper),
