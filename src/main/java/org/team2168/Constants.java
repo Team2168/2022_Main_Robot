@@ -169,7 +169,7 @@ public final class Constants {
     }
 
     public static final class Distances {
-        public static final double LIMELIGHT_OFFSET_METERS = 0.36195; // 14.25 in.
+        public static final double LIMELIGHT_OFFSET_METERS = 0.76195; // 14.25 in. + extra offset to give accurate distances
     }
 
     public static final class Analog {
