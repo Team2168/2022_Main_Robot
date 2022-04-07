@@ -10,6 +10,7 @@ import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.LowerAndRunIntake;
 import org.team2168.commands.QueueBallForShot;
+import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.WaitUntilFireBalls;
 import org.team2168.commands.drivetrain.DriveWithLimelight;
@@ -18,6 +19,8 @@ import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
+import org.team2168.commands.intakeraiseandlower.IntakeLower;
+import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
@@ -71,25 +74,26 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       new TwoBall(drivetrain,intakeRaiseAndLower, intakeRoller, hopper, indexer, hood, 
       shooter, turret, pooper, colorSensor, limelight),
       new BumpHoodAngleZero(hood),
+       
+      new IntakeLower(intakeRaiseAndLower),
 
       race(
-      PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+        
+      PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
+      new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)
       ),
-      parallel(
-      new LowerAndRunIntake(intakeRaiseAndLower, intakeRoller),
-      new DriveHopperUntilBall(hopper, () -> MotorSpeeds.HOPPER_SPEED),
-      new DriveIndexerUntilBall(indexer, () -> MotorSpeeds.INDEXER_SPEED)
-      ).withTimeout(0.15),
+      
      
       parallel(
       new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller),
       new DriveHopperWithPercentOutput(hopper, () -> 0.0),
-      new DriveIndexer(indexer, () -> 0.0)
+      new DriveIndexer(indexer, () -> 0.0),
+      new IntakeRaise(intakeRaiseAndLower)
     ).withTimeout(0.2),
 
-      race(
-      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
-      ),
+      
+      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
+      
       
       sequence(
         new DriveTurretWithLimelight(turret, limelight),
