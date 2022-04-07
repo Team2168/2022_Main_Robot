@@ -90,16 +90,15 @@ public class FourBall extends SequentialCommandGroup {
                                 new FireBalls(shooter, indexer, hopper))
                 ),
                 //gets fourth ball at terminal
-                parallel(
+                race(
                     new RotateTurretNoFinish(turret, 0.0),
                     sequence(
                         new IntakeLower(intakeRaiseAndLower),
                         race(
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                sequence(
-                                        PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain,
-                                                PathUtil.InitialPathState.PRESERVEODOMETRY)
-                                )),
+                                PathUtil.getPathCommand(paths.path_4BALL_2, drivetrain,
+                                        PathUtil.InitialPathState.PRESERVEODOMETRY)
+                        ),
                         // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                         new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"))
 
@@ -114,16 +113,22 @@ public class FourBall extends SequentialCommandGroup {
                                 new DriveTurretWithLimelight(turret, lime),
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),                                                                                            
                                 //drives up to edge of tarmac
-                                PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)),
-                                
-                        sequence(
-                                 parallel(
-                                        new WaitForShooterAtSpeed(shooter, 20),
-                                        new WaitForLimelightInPosition(lime)),
-                                
-                                new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(0.1),
-                                new FireBalls(shooter, indexer, hopper),
-                                new FireBalls(shooter, indexer, hopper))
+                                PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
+                        ),
+                            
+                        parallel(
+                                new DriveTurretWithLimelight(turret, lime),
+                                sequence(
+                                        parallel(
+                                                new WaitForShooterAtSpeed(shooter, 20),
+                                                new WaitForLimelightInPosition(lime)
+                                        ),
+                                        
+                                        new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(0.1),
+                                        new FireBalls(shooter, indexer, hopper),
+                                        new FireBalls(shooter, indexer, hopper)
+                                )
+                        )
         );
     }
 }
