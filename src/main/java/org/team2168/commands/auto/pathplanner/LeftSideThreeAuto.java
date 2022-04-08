@@ -75,7 +75,6 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
         new AutoTarmacLine(hood, shooter, limelight),
     new IntakeLower(intakeRaiseAndLower)
       ),
-
       race(
         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
@@ -110,7 +109,6 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       race(
       PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
-
       sequence(
       sequence(
         race(
@@ -130,13 +128,11 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       new WaitUntilFireBalls(shooter, limelight),
       new FireBalls(shooter, indexer, hopper),
       new FireBalls(shooter, indexer, hopper)
-        
-      ),
+         ),
      parallel(
     new SetShooterSpeed(shooter,ShooterRPM.STOP),
     new StopTurret(turret)
-
-      ));
+));
 
       }
 
