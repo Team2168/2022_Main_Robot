@@ -322,7 +322,15 @@ public class RobotContainer {
 
     // oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
     // oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
-    oi.testJoystick.ButtonA().whenPressed(new SetPipeline(lime, Limelight.PIPELINE_TARMAC_LINE));
+    // oi.testJoystick.ButtonA()
+    // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TWO_METER_FROM_HUB.position_degrees))
+    // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.TWO_METER_FROM_HUB));
+    // oi.testJoystick.ButtonB()
+    // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.THREE_METER_FROM_HUB.position_degrees))
+    // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.THREE_METER_FROM_HUB));
+    // oi.testJoystick.ButtonY()
+    // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.FOUR_METER_FROM_HUB.position_degrees))
+    // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.FOUR_METER_FROM_HUB));
 
   }
 
