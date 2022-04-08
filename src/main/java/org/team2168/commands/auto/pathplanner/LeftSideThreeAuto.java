@@ -116,8 +116,10 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
         ),
         parallel(
       new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
+      race(
       new AutoTarmacLine(hood, shooter, limelight),
       new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)
+      )
         ).withTimeout(0.2),
 
       new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
