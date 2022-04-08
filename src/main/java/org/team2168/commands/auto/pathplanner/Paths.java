@@ -24,6 +24,9 @@ public class Paths {
     public final Trajectory path_2BALL_1;
     public final Trajectory path_3BALL_0;
     public final Trajectory path_3BALL_1;
+    public final Trajectory path_MIDFIELD_0;
+    public final Trajectory path_MIDFIELD_1;
+    public final Trajectory path_MIDFIELD_2;
     public final Trajectory path_Drive1Meter;
     public final Trajectory path_Drive3Meters;
 
@@ -41,6 +44,9 @@ public class Paths {
         path_2BALL_1 = getTrajectory("2BALL_1", true);
         path_3BALL_0 = getTrajectory("4BALL_0", true, 3.7, 0.7);
         path_3BALL_1 = getTrajectory("3BALL_1", true, 3.7, 0.7);
+        path_MIDFIELD_0 = getTrajectory("MIDFIELD_0", true);
+        path_MIDFIELD_1 = getTrajectory("MIDFIELD_1", true);
+        path_MIDFIELD_2 = getTrajectory("MIDFIELD_2", true);
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
 
