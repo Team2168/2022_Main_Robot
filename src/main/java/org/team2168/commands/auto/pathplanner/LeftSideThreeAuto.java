@@ -45,6 +45,7 @@ import org.team2168.utils.PathUtil;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -109,23 +110,27 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       race(
       PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
+
+      sequence(
       sequence(
         race(
         new DriveTurretWithLimelight(turret, limelight),
         new FindTargetAndCenterTurret(turret, limelight)
         ),
         parallel(
-      new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
       race(
       new AutoTarmacLine(hood, shooter, limelight),
       new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)
       )
         ).withTimeout(0.2),
-
+      race(
+        new WaitUntilCommand(indexer::isBallPresent))
+      ),
       new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
       new WaitUntilFireBalls(shooter, limelight),
       new FireBalls(shooter, indexer, hopper),
       new FireBalls(shooter, indexer, hopper)
+        
       ),
      parallel(
     new SetShooterSpeed(shooter,ShooterRPM.STOP),
