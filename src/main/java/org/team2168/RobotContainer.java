@@ -146,7 +146,8 @@ public class RobotContainer {
           hopper, indexer, hood,
           shooter, turret, pooper, colorSensor,
           lime));
-          autoChooser.addOption("Left Side Auto 3 ball", new LeftSideThreeAuto(drivetrain, intakeRaiseAndLower, intakeRoller, 
+          autoChooser.addOption("Left Side Auto 3 ball", new LeftSideThreeAuto(drivetrain, intakeRaiseAndLower, 
+          intakeRoller, 
           hopper, indexer, hood, 
           shooter, turret, pooper, 
           colorSensor, lime));
