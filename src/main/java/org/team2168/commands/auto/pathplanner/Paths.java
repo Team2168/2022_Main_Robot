@@ -28,7 +28,8 @@ public class Paths {
     public final Trajectory path_Drive3Meters;
     public final Trajectory path_LineThreeSetupAuto;
     public final Trajectory path_ReversedThreeSetupAuto;
-
+    public final Trajectory path_TwoBallLeft;
+    public final Trajectory path_ReverseTwoBallLeft;
     private static Paths instance = null;
 
     private Paths() {
@@ -47,6 +48,9 @@ public class Paths {
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
         path_LineThreeSetupAuto = getTrajectory("LineThreeSetupAuto", true);
         path_ReversedThreeSetupAuto = getTrajectory("ReversedThreeSetupAuto", true);
+        path_TwoBallLeft = getTrajectory("TwoBallLeft", true);
+        path_ReverseTwoBallLeft = getTrajectory("ReverseTwoBallLeft", true);
+        
         
         System.out.println("******* Finish generating autos *******");
     }
