@@ -75,15 +75,17 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
         new AutoTarmacLine(hood, shooter, limelight),
     new IntakeLower(intakeRaiseAndLower)
       ),
-      race(
+race(
         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-    PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+    PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, 
+    PathUtil.InitialPathState.PRESERVEODOMETRY)
 ).withTimeout(0.1),
       parallel(
     new DriveIndexer(indexer, () -> 0.0),
     new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller),
     race(
-      PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+      PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain, 
+      PathUtil.InitialPathState.PRESERVEODOMETRY)
     )
       ),
      parallel(
@@ -96,7 +98,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
        new StopMechanisms(hopper, indexer, intakeRoller, drivetrain)
      ),
     race(
-        PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+        PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, 
+        PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
      parallel(
        new IntakeLower(intakeRaiseAndLower),
@@ -107,7 +110,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       new IntakeRaise(intakeRaiseAndLower)
     ).withTimeout(0.2),
       race(
-      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, 
+      PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
       sequence(
       sequence(
@@ -133,8 +137,5 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
     new SetShooterSpeed(shooter,ShooterRPM.STOP),
     new StopTurret(turret)
 ));
-
-      }
-
-    
+    }
 }
