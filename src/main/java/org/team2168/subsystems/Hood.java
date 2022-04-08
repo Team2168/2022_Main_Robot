@@ -35,9 +35,9 @@ public class Hood extends SubsystemBase implements Loggable {
     WALL_SHOT(37.0),
     TERMINAL(33.0),
     ONE_METER_FROM_HUB(19.0),
-    TWO_METER_FROM_HUB(22.0),
-    THREE_METER_FROM_HUB(28.0),
-    FOUR_METER_FROM_HUB(32.0),
+    TWO_METER_FROM_HUB(23.0), // PBOT 22.0
+    THREE_METER_FROM_HUB(25.0), // PBOT 28.0
+    FOUR_METER_FROM_HUB(27.0), // PBOT 32.0
     FIVE_METER_FROM_HUB(39.0),
     ZERO(0.0);
 //    FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
