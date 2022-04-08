@@ -41,7 +41,7 @@ public class QueueBallForShot extends SequentialCommandGroup {
            new SetIntakeSpeed(intakeRoller, MotorSpeeds.INTAKE_SPEED),
            new DriveHopperUntilBall(hopper, ()->MotorSpeeds.HOPPER_SPEED)
       ),
-      new Sleep().withTimeout(0.2), //let the ball color be detected
+      new Sleep().withTimeout(0.06), //let the ball color be detected
 
       new ConditionalCommand(
         new PooperPoop(pooper).andThen(new Sleep().withTimeout(0.25)).andThen(new PooperUnpoop(pooper)),      
