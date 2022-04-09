@@ -34,5 +34,7 @@ public class StopMechanisms extends ParallelCommandGroup {
       new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
       new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))
     );
+
+    addRequirements(hopper, indexer, intakeRoller, drivetrain);
   }
 }

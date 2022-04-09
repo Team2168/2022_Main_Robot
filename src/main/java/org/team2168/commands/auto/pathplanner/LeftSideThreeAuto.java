@@ -61,6 +61,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
     addCommands(
 
       new RotateTurret(turret, 0.0).withTimeout(0.2),
+      parallel(
       new DriveTurretWithLimelight(turret, limelight),
       
     sequence(
@@ -71,11 +72,11 @@ race(
         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, 
     PathUtil.InitialPathState.PRESERVEODOMETRY)
-).withTimeout(0.1),
+).withTimeout(0.1)),
 
       parallel(
-    new DriveIndexer(indexer, () -> 0.0),
-    new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller),
+        
+    new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
     race(
       PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain, 
       PathUtil.InitialPathState.PRESERVEODOMETRY)
@@ -88,29 +89,30 @@ race(
        new FireBalls(shooter, indexer, hopper)
      ).withTimeout(0.15),
      
-     parallel(
-       new StopMechanisms(hopper, indexer, intakeRoller, drivetrain)
-     ),
+     
+       new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
+     
 
+    parallel(
+      new IntakeLower(intakeRaiseAndLower),
+    
     race(
+      new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
         PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, 
         PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
-sequence(
-     parallel(
-       new IntakeLower(intakeRaiseAndLower),
-      new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)
-     ),
+
+       
+      
+     
 
      parallel(
      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
-      new IntakeRaise(intakeRaiseAndLower)
-    ).withTimeout(0.2)
-),
+      new IntakeRaise(intakeRaiseAndLower).withTimeout(0.1),
       race(
       PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, 
       PathUtil.InitialPathState.PRESERVEODOMETRY)
-      ),
+      ).withTimeout(0.2)),
 
       sequence(
       sequence(
@@ -137,6 +139,6 @@ sequence(
      parallel(
     new SetShooterSpeed(shooter,ShooterRPM.STOP),
     new StopTurret(turret)
-));
+)));
     }
 }
