@@ -173,7 +173,7 @@ public class Limelight extends SubsystemBase implements Loggable {
 
   public double getRPMfromDistance(double meters) {
     if (Constants.IS_COMPBOT) {
-      return (183*meters + 1359);
+      return (150*meters + 1483); // old func: 183*meters + 1359
     }
     else {
       return (1624.0 - 25.8*meters + 91.8*Math.pow(meters, 2) - 14.0*Math.pow(meters, 3));
@@ -182,7 +182,7 @@ public class Limelight extends SubsystemBase implements Loggable {
 
   public double getHoodAnglefromDistance(double meters) {
     if (Constants.IS_COMPBOT) {
-      return (2.08*meters + 18.7);
+      return (2*meters + 19); // old func: 2.08*meters + 18.7
     }
     else {
       return (9.29 + 9.64*meters + -0.955*Math.pow(meters, 2));
