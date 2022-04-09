@@ -19,6 +19,7 @@ public class ShootBasedOnDistance extends CommandBase {
   OI oi;
 
   double limelightDistance;
+  double pastLimelightDist = 0.0;
   double shooterRPM;
   double hoodAngle;
   public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime, OI oi) {
