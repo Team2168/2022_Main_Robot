@@ -96,7 +96,8 @@ public class SimpleFourBall extends SequentialCommandGroup {
           race(
             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
             new WaitUntilCommand(hopper::isBallPresent)).withTimeout(3.0), //2 seconds for a 2nd ball to be rolled in
-          new AutoTarmacLine(hood, shooter, limelight),
+          new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
+          new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
           PathUtil.getPathCommand(paths.path_simple_4_ball_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
           parallel(
