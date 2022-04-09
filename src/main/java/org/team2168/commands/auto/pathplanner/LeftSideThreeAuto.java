@@ -6,20 +6,12 @@ package org.team2168.commands.auto.pathplanner;
 
 
 
-import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.FireBalls;
-import org.team2168.commands.LowerAndRunIntake;
-import org.team2168.commands.QueueBallForShot;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.StopMechanisms;
 import org.team2168.commands.WaitUntilFireBalls;
-import org.team2168.commands.drivetrain.DriveWithLimelight;
-import org.team2168.commands.hood.BumpHoodAngleZero;
-import org.team2168.commands.hopper.DriveHopperUntilBall;
-import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
-import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.limelight.SetPipeline;
@@ -39,11 +31,10 @@ import org.team2168.subsystems.IntakeRoller;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Pooper;
 import org.team2168.subsystems.Shooter;
-import org.team2168.subsystems.Turret;
 import org.team2168.subsystems.Shooter.ShooterRPM;
+import org.team2168.subsystems.Turret;
 import org.team2168.utils.PathUtil;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
