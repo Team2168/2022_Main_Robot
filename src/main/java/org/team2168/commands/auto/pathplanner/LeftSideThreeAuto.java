@@ -62,6 +62,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
 
       new RotateTurret(turret, 0.0).withTimeout(0.2),
       new DriveTurretWithLimelight(turret, limelight),
+      
     sequence(
         new AutoTarmacLine(hood, shooter, limelight),
     new IntakeLower(intakeRaiseAndLower)
@@ -71,6 +72,7 @@ race(
     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, 
     PathUtil.InitialPathState.PRESERVEODOMETRY)
 ).withTimeout(0.1),
+
       parallel(
     new DriveIndexer(indexer, () -> 0.0),
     new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller),
@@ -79,6 +81,7 @@ race(
       PathUtil.InitialPathState.PRESERVEODOMETRY)
     )
       ),
+
      parallel(
        new WaitUntilFireBalls(shooter, limelight),
        new FireBalls(shooter, indexer, hopper),
@@ -88,28 +91,34 @@ race(
      parallel(
        new StopMechanisms(hopper, indexer, intakeRoller, drivetrain)
      ),
+
     race(
         PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, 
         PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
+sequence(
      parallel(
        new IntakeLower(intakeRaiseAndLower),
       new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)
      ),
+
      parallel(
      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
       new IntakeRaise(intakeRaiseAndLower)
-    ).withTimeout(0.2),
+    ).withTimeout(0.2)
+),
       race(
       PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, 
       PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
+
       sequence(
       sequence(
         race(
         new DriveTurretWithLimelight(turret, limelight),
         new FindTargetAndCenterTurret(turret, limelight)
         ),
+
         parallel(
       race(
       new AutoTarmacLine(hood, shooter, limelight),
@@ -124,6 +133,7 @@ race(
       new FireBalls(shooter, indexer, hopper),
       new FireBalls(shooter, indexer, hopper)
          ),
+
      parallel(
     new SetShooterSpeed(shooter,ShooterRPM.STOP),
     new StopTurret(turret)
