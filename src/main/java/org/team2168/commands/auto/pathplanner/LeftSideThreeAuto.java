@@ -89,11 +89,9 @@ race(
        new FireBalls(shooter, indexer, hopper)
      ).withTimeout(0.15),
      
+     new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
      
-       new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
-     
-
-    parallel(
+     parallel(
       new IntakeLower(intakeRaiseAndLower),
     
     race(
