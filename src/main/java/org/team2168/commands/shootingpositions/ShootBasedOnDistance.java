@@ -4,6 +4,7 @@
 
 package org.team2168.commands.shootingpositions;
 
+import org.team2168.OI;
 import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
@@ -15,16 +16,18 @@ public class ShootBasedOnDistance extends CommandBase {
   Limelight lime;
   Shooter shooter;
   Hood hood;
+  OI oi;
 
   double limelightDistance;
   double shooterRPM;
   double hoodAngle;
-  public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime) {
+  public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime, OI oi) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter, hood);
     this.lime = lime;
     this.shooter = shooter;
     this.hood = hood;
+    this.oi = oi;
   }
 
   // Called when the command is initially scheduled.
@@ -48,8 +51,11 @@ public class ShootBasedOnDistance extends CommandBase {
       lime.setPipeline(Limelight.PIPELINE_TERMINAL);
     }
 
-    shooter.setSpeed(shooterRPM);
-    hood.setPosition(hoodAngle);
+    if (!oi.operatorJoystick.isPressedButtonRightBumper()) {
+      shooter.setSpeed(shooterRPM);
+      hood.setPosition(hoodAngle);
+    }
+    shooter.setWaitForShooterAtSpeed(true);
   }
 
   // Called once the command ends or is interrupted.

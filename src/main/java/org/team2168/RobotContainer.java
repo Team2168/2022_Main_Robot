@@ -213,7 +213,7 @@ public class RobotContainer {
     // oi.operatorJoystick.ButtonA()
     //         .whenPressed(new RotateTurret(turret, 0.0))
     //         .whenPressed(new FenderLow(hood, shooter));
-    oi.operatorJoystick.ButtonA().whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
+    oi.operatorJoystick.ButtonA().whenPressed(new ShootBasedOnDistance(shooter, hood, lime, oi));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
     oi.operatorJoystick.ButtonY()
