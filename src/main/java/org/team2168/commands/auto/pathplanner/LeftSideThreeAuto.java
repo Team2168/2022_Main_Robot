@@ -102,11 +102,7 @@ race(
         PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
 
-       
-      
-     
-
-     parallel(
+       parallel(
      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
       new IntakeRaise(intakeRaiseAndLower).withTimeout(0.1),
       race(
