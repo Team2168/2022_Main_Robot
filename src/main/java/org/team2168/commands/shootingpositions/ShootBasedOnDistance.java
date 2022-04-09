@@ -17,8 +17,10 @@ public class ShootBasedOnDistance extends CommandBase {
   Hood hood;
 
   double limelightDistance;
+  double pastLimelightDist = 0.0;
   double shooterRPM;
   double hoodAngle;
+  final double DISTANCE_ERROR_TOLERANCE = 0.05; // in meters
   public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter, hood);
@@ -35,8 +37,10 @@ public class ShootBasedOnDistance extends CommandBase {
   @Override
   public void execute() {
     limelightDistance = lime.calcDistanceMeters();
-    shooterRPM = lime.getRPMfromDistance(limelightDistance);
-    hoodAngle = lime.getHoodAnglefromDistance(limelightDistance);
+    if (limelightDistance < (pastLimelightDist - DISTANCE_ERROR_TOLERANCE) || limelightDistance > (pastLimelightDist + DISTANCE_ERROR_TOLERANCE)) {
+      shooterRPM = lime.getRPMfromDistance(limelightDistance);
+      hoodAngle = lime.getHoodAnglefromDistance(limelightDistance);
+    }
 
     if (limelightDistance < 4.0) {
       lime.setPipeline(Limelight.PIPELINE_TARMAC_LINE);
@@ -49,7 +53,10 @@ public class ShootBasedOnDistance extends CommandBase {
     }
 
     shooter.setSpeed(shooterRPM);
+    shooter.setWaitForShooterAtSpeed(true);
     hood.setPosition(hoodAngle);
+
+    pastLimelightDist = limelightDistance;
   }
 
   // Called once the command ends or is interrupted.
