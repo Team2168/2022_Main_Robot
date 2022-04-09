@@ -56,7 +56,7 @@ public class ShootBasedOnDistance extends CommandBase {
       shooter.setSpeed(shooterRPM);
       hood.setPosition(hoodAngle);
     }
-    shooter.setWaitForShooterAtSpeed(true);
+    shooter.setWaitForShooterAtSpeed(false);
   }
 
   // Called once the command ends or is interrupted.
