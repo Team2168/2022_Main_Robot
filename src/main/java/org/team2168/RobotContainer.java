@@ -31,7 +31,6 @@ import org.team2168.commands.auto.pathplanner.SimpleFourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
-import org.team2168.commands.auto.pathplanner.test_simple_4_ball;
 import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.*;
@@ -150,9 +149,6 @@ public class RobotContainer {
           hopper, indexer, hood,
           shooter, turret, pooper, colorSensor,
           lime));
-      autoChooser.addOption("test simple 4 ball", new test_simple_4_ball(
-        drivetrain, intakeRaiseAndLower, intakeRoller, hopper, indexer, 
-        turret, hood, shooter, lime, pooper, colorSensor));
 
       //    autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
       //    autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
@@ -207,8 +203,8 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0).withTimeout(0.5))
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP).withTimeout(0.2))
             .whenPressed(new RotateTurret(turret, -90.0).withTimeout(0.5)
-                .andThen(new StopTurret(turret)))
-            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar)
+                .andThen(new StopTurret(turret))
+                .andThen(new FullSendClimbingSequence(climber, monkeyBar))
             );
 
     //lower left button ("Forward Fine-Tuning")
@@ -273,34 +269,34 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
-    oi.testJoystick.ButtonLeftBumper()
+    // oi.testJoystick.ButtonLeftBumper()
 
-            // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
-            .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
-            .whenPressed(new IntakeLower(intakeRaiseAndLower))
-            .whenReleased(new IntakeRaise(intakeRaiseAndLower))
-            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
-            .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
-            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
-            .whenReleased(new PooperUnpoop(pooper));
+    //         // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whenPressed(new IntakeLower(intakeRaiseAndLower))
+    //         .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
+    //         .whenReleased(new PooperUnpoop(pooper));
 
-    oi.testJoystick.ButtonRightBumper()
-            .whileHeld(new FireBalls(shooter, indexer, hopper))
-            //.whenPressed(new FireBalls(shooter, indexer, hopper))
-            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
-            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
-            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+    // oi.testJoystick.ButtonRightBumper()
+    //         .whileHeld(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
 
-    oi.testJoystick.ButtonY().whenPressed(new BumpHoodAngleZero(hood));
+    // oi.testJoystick.ButtonY().whenPressed(new BumpHoodAngleZero(hood));
     
-    oi.testJoystick.ButtonX().whenPressed(new BumpHoodAngleDown(hood));
-    oi.testJoystick.ButtonB().whenPressed(new BumpHoodAngleUp(hood));
+    // oi.testJoystick.ButtonX().whenPressed(new BumpHoodAngleDown(hood));
+    // oi.testJoystick.ButtonB().whenPressed(new BumpHoodAngleUp(hood));
 
-    oi.testJoystick.ButtonLeftDPad().whenPressed(new BumpShooterSpeedDown(shooter));
-    oi.testJoystick.ButtonRightDPad().whenPressed(new BumpShooterSpeedUp(shooter));
+    // oi.testJoystick.ButtonLeftDPad().whenPressed(new BumpShooterSpeedDown(shooter));
+    // oi.testJoystick.ButtonRightDPad().whenPressed(new BumpShooterSpeedUp(shooter));
 
-    oi.testJoystick.ButtonA().whenPressed(new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees))
-                             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL));
+    // oi.testJoystick.ButtonA().whenPressed(new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees))
+    //                          .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL));
     // oi.testJoystick.ButtonA().whenPressed(new RotateTurret(turret, 0.0));
     // oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 180));
     // oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -180));
