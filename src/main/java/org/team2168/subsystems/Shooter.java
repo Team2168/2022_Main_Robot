@@ -28,6 +28,8 @@ public class Shooter extends SubsystemBase implements Loggable {
     AUTO_TARMAC_LINE(1745.0, false), //(1900.0),
     AUTO_BALL3(1893, false),
     AUTO_LAUNCHPAD(2335.0, true),
+    AUTO_SIMPLE_4_BALL(1930, false),
+    AUTO_SIMPLE_4_BALL1(1968, false),
     FENDER_LOW(800.0, false),//(1050),//(900.0),
     FENDER_HIGH(1625.0, true),//(1500.0),
     TARMAC_LINE(1770.0, false),  // 1650

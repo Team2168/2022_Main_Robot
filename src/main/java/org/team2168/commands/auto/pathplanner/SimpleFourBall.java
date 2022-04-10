@@ -37,6 +37,7 @@ import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -65,7 +66,7 @@ public class SimpleFourBall extends SequentialCommandGroup {
         new DriveTurretWithLimelight(turret, limelight),
         sequence(
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-          new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
+          new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
           new IntakeLower(intakeRaiseAndLower),
           race(
@@ -80,7 +81,7 @@ public class SimpleFourBall extends SequentialCommandGroup {
             new WaitForShooterAtSpeed(shooter),
             new WaitForLimelightInPosition(limelight)),
           new FireBalls(shooter, indexer, hopper),
-          new WaitForShooterAtSpeed(shooter),
+          new WaitCommand(0.5),
           new FireBalls(shooter, indexer, hopper), //shoots two balls
 
           parallel(
@@ -97,7 +98,7 @@ public class SimpleFourBall extends SequentialCommandGroup {
             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
             new WaitUntilCommand(hopper::isBallPresent)).withTimeout(3.0), //2 seconds for a 2nd ball to be rolled in
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-          new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
+          new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
           PathUtil.getPathCommand(paths.path_simple_4_ball_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
           parallel(
@@ -109,7 +110,6 @@ public class SimpleFourBall extends SequentialCommandGroup {
             new WaitForShooterAtSpeed(shooter),
             new WaitForLimelightInPosition(limelight)),
           new FireBalls(shooter, indexer, hopper),
-          new WaitForShooterAtSpeed(shooter),
           new FireBalls(shooter, indexer, hopper)
           ))                
     );

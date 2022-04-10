@@ -47,8 +47,8 @@ public class Paths {
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
         path_simple_4_ball_1 = getTrajectory("simple_4_ball_1", true);
-        path_simple_4_ball_2 = getTrajectory("simple_4_ball_2", true);
-        path_simple_4_ball_3 = getTrajectory("simple_4_ball_3", false);
+        path_simple_4_ball_2 = getTrajectory("simple_4_ball_2", true, 5.0, 2.0);
+        path_simple_4_ball_3 = getTrajectory("simple_4_ball_3", false, 5.0, 2.0);
 
         
         System.out.println("******* Finish generating autos *******");
