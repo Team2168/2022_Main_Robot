@@ -138,7 +138,7 @@ public class RobotContainer {
                shooter, turret, pooper, colorSensor,
                lime));
 
-        autoChooser.addOption("4 Ball", new FourBall(
+        autoChooser.addOption("5 Ball", new FourBall(
           drivetrain, intakeRaiseAndLower, intakeRoller,
           hopper, indexer, hood,
           shooter, turret, pooper, colorSensor,
