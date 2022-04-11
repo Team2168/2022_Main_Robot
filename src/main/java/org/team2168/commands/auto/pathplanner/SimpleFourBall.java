@@ -16,7 +16,6 @@ import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
 import org.team2168.subsystems.ColorSensor;
@@ -62,9 +61,9 @@ public class SimpleFourBall extends SequentialCommandGroup {
       new RotateTurret(turret, 0.0).withTimeout(0.2),
       new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
 
-      race(
+      race( //constantly tracks the hub
         new DriveTurretWithLimelight(turret, limelight),
-        sequence(
+        sequence( // shoots preloaded ball and one behind it
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
           new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
@@ -82,25 +81,28 @@ public class SimpleFourBall extends SequentialCommandGroup {
             new WaitForLimelightInPosition(limelight)),
           new FireBalls(shooter, indexer, hopper),
           new WaitCommand(0.5),
-          new FireBalls(shooter, indexer, hopper), //shoots two balls
+          new FireBalls(shooter, indexer, hopper), 
 
-          parallel(
+          parallel( 
+          //gets 1-2 balls at the terminal
             new HoodToAngle(hood, HoodPosition.ZERO.position_degrees),
             new SetShooterSpeed(shooter, ShooterRPM.STOP)).withTimeout(0.1),
-          new SetPipeline(limelight, Limelight.PIPELINE_TERMINAL),
+          new SetPipeline(limelight, Limelight.PIPELINE_TERMINAL), //changes pipeline to keep track of hub while at terminal
+          // runs intake until it is at the terminal, then runs until it has a ball, then waits for a set time for a second ball
           race(
             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
             PathUtil.getPathCommand(paths.path_simple_4_ball_2, drivetrain, InitialPathState.PRESERVEODOMETRY)),
           race(
             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-            new WaitUntilCommand(indexer::isBallPresent)),
+            new WaitUntilCommand(indexer::isBallPresent)), //waits until it has one ball
           race(
             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-            new WaitUntilCommand(hopper::isBallPresent)).withTimeout(3.0), //2 seconds for a 2nd ball to be rolled in
+            new WaitUntilCommand(hopper::isBallPresent)).withTimeout(3.0), //waits for second ball to be rolled in
+          //gets ready for shooting, changes pipline back
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
           new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
-          PathUtil.getPathCommand(paths.path_simple_4_ball_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
+          PathUtil.getPathCommand(paths.path_simple_4_ball_3, drivetrain, InitialPathState.PRESERVEODOMETRY), //drives up to tarmac
           parallel(
             new DriveHopperWithPercentOutput(hopper, () -> 0.0),
             new DriveIndexer(indexer, () -> 0.0),
@@ -109,7 +111,7 @@ public class SimpleFourBall extends SequentialCommandGroup {
           parallel(
             new WaitForShooterAtSpeed(shooter),
             new WaitForLimelightInPosition(limelight)),
-          new FireBalls(shooter, indexer, hopper),
+          new FireBalls(shooter, indexer, hopper), //shooooots
           new FireBalls(shooter, indexer, hopper)
           ))                
     );
