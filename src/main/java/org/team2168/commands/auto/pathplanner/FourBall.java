@@ -65,7 +65,7 @@ public class FourBall extends SequentialCommandGroup {
         new DriveTurretWithLimelight(turret, limelight),
         sequence( // shoots preloaded ball and one behind it
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-          new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL),
+          new SetShooterSpeed(shooter, ShooterRPM.AUTO_4_BALL),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
           new IntakeLower(intakeRaiseAndLower),
           race(
@@ -100,7 +100,7 @@ public class FourBall extends SequentialCommandGroup {
             new WaitUntilCommand(hopper::isBallPresent)).withTimeout(3.0), //waits for second ball to be rolled in
           //gets ready for shooting, changes pipline back
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-          new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL),
+          new SetShooterSpeed(shooter, ShooterRPM.AUTO_4_BALL),
           new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE),
           PathUtil.getPathCommand(paths.path_simple_4_ball_3, drivetrain, InitialPathState.PRESERVEODOMETRY), //drives up to tarmac
           parallel(
