@@ -26,8 +26,8 @@ import io.github.oblarg.oblog.annotations.Log;
 import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.auto.*;
+import org.team2168.commands.auto.pathplanner.FiveBall;
 import org.team2168.commands.auto.pathplanner.FourBall;
-import org.team2168.commands.auto.pathplanner.SimpleFourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
@@ -36,7 +36,6 @@ import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.BumpHoodAngleDown;
 import org.team2168.commands.hood.BumpHoodAngleUp;
-import org.team2168.commands.hood.BumpHoodAngleZero;
 import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
@@ -51,10 +50,8 @@ import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
-import org.team2168.subsystems.Hood.HoodPosition;
 import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import java.util.List;
@@ -140,11 +137,11 @@ public class RobotContainer {
                hopper, indexer, hood,
                shooter, turret, pooper, colorSensor,
                lime));
-      autoChooser.addOption("Simple 4 ball", new SimpleFourBall(
+      autoChooser.addOption("4 ball", new FourBall(
         drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
         indexer, turret, hood, shooter, lime, pooper, colorSensor));
 
-        autoChooser.addOption("4 Ball", new FourBall(
+        autoChooser.addOption("5 Ball", new FiveBall(
           drivetrain, intakeRaiseAndLower, intakeRoller,
           hopper, indexer, hood,
           shooter, turret, pooper, colorSensor,
