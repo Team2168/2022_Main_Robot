@@ -213,10 +213,6 @@ public class RobotContainer {
 
     //OPERATOR CONTROLS
     //// main button cluster
-    // oi.operatorJoystick.ButtonA()
-    //         .whenPressed(new RotateTurret(turret, 0.0))
-    //         .whenPressed(new FenderLow(hood, shooter));
-
     oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
@@ -229,10 +225,8 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonBack().whenPressed(new BumpShooterSpeedDown(shooter));
 
     //// dpad
-    // oi.operatorJoystick.ButtonUpDPad().whenPressed(new ManuallyStageBall(indexer)); // TODO implement manual staging
     oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
     oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED));
-    // oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
     oi.operatorJoystick.ButtonLeftDPad().whenPressed(new BumpHoodAngleDown(hood));
     oi.operatorJoystick.ButtonRightDPad().whenPressed(new BumpHoodAngleUp(hood));
 
@@ -273,7 +267,6 @@ public class RobotContainer {
 
     //TEST JOYSTICK
     // oi.testJoystick.ButtonLeftBumper()
-
     //         // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
     //         .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
     //         .whenPressed(new IntakeLower(intakeRaiseAndLower))
