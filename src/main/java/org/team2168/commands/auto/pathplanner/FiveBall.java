@@ -74,6 +74,7 @@ public class FiveBall extends SequentialCommandGroup {
                                     new IntakeLower(intakeRaiseAndLower),
                                     // new Launchpad(hood, shooter, lime),
                                     new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
+                                    new HoodToAngle(hood, HoodPosition.AUTO_BALL3.position_degrees),
                                     race(
                                             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                             sequence(
@@ -106,12 +107,12 @@ public class FiveBall extends SequentialCommandGroup {
                         )
                     ),
                             
-                    new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
-                    new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),               
+                    new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL4),
+                    new HoodToAngle(hood, HoodPosition.AUTO_BALL4.position_degrees),
     
                             race(
                                     new DriveTurretWithLimelight(turret, lime),
-                                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),                                                                                            
+                                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     //drives up to edge of tarmac
                                     PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
                             ),

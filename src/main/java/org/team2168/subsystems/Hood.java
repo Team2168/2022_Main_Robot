@@ -26,7 +26,9 @@ public class Hood extends SubsystemBase implements Loggable {
   //This is for auto shooting
   public enum HoodPosition {
     AUTO_LOADING_ZONE (41.85),
-    AUTO_TARMAC_LINE(23.0),
+    AUTO_TARMAC_LINE(23.0), // 2.65 meters from hub
+    AUTO_BALL3(24.3),       // ?? meters from hub
+    AUTO_BALL4(25.9),       // 3.45 meters from hub
     AUTO_LAUNCHPAD(26.7),
     FENDER_LOW(29),//(12.0),
     FENDER_HIGH(9.0),//(7.0),
@@ -34,18 +36,18 @@ public class Hood extends SubsystemBase implements Loggable {
     LAUNCHPAD(29.0),
     WALL_SHOT(37.0),
     TERMINAL(33.0),
-    ONE_METER_FROM_HUB(19.0),
-    TWO_METER_FROM_HUB(23.0), // PBOT 22.0
-    THREE_METER_FROM_HUB(25.0), // PBOT 28.0
-    FOUR_METER_FROM_HUB(27.0), // PBOT 32.0
-    FIVE_METER_FROM_HUB(39.0),
+    // ONE_METER_FROM_HUB(19.0),
+    // TWO_METER_FROM_HUB(23.0), // PBOT 22.0
+    // THREE_METER_FROM_HUB(25.0), // PBOT 28.0
+    // FOUR_METER_FROM_HUB(27.0), // PBOT 32.0
+    // FIVE_METER_FROM_HUB(39.0),
     ZERO(0.0);
-//    FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
-//    FENDER_HIGH_COMPBOT(5.0),
-//    TARMAC_LINE_COMPBOT(17),
-//    LAUNCHPAD_COMPBOT(25),
-//    WALL_SHOT_COMPBOT(36),
-//    TERMINAL_COMPBOT(33.0),
+  //  FENDER_LOW_COMPBOT(9.0),  // TODO fix this once pbot jumper is a thin
+  //  FENDER_HIGH_COMPBOT(5.0),
+  //  TARMAC_LINE_COMPBOT(17),
+  //  LAUNCHPAD_COMPBOT(25),
+  //  WALL_SHOT_COMPBOT(36),
+  //  TERMINAL_COMPBOT(33.0),
 
     public final double position_degrees;
     
@@ -212,6 +214,15 @@ public class Hood extends SubsystemBase implements Loggable {
   @Log(name = "Position (ticks)", rowIndex = 3, columnIndex = 1)
   public double getPositionTicks() {
     return hoodMotor.getSelectedSensorPosition();
+  }
+
+  public double getHoodAnglefromDistance(double meters) {
+    if (Constants.IS_COMPBOT) {
+      return (2*meters + 19); // old func: 2.08*meters + 18.7
+    }
+    else {
+      return (9.29 + 9.64*meters + -0.955*Math.pow(meters, 2));
+    }
   }
 
   /**

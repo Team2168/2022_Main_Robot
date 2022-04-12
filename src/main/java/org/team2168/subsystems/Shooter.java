@@ -25,8 +25,9 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public enum ShooterRPM {
     AUTO_LOADING_ZONE(2450.0,false),
-    AUTO_TARMAC_LINE(1745.0, false), //(1900.0),
-    AUTO_BALL3(1893, false),
+    AUTO_TARMAC_LINE(1745.0, false), // 2.65 meters from hub
+    AUTO_BALL3(1893, false),         // ?? meters from hub
+    AUTO_BALL4(2000.5, false),       // 3.45 meters from hub
     AUTO_LAUNCHPAD(2335.0, true),
     AUTO_4_BALL(1850, false),
     FENDER_LOW(800.0, false),//(1050),//(900.0),
@@ -35,11 +36,11 @@ public class Shooter extends SubsystemBase implements Loggable {
     LAUNCHPAD(2000.0, true),//(2085.0),
     WALL_SHOT(2750.0, true),
     TERMINAL(2300.0, true),
-    ONE_METER_FROM_HUB(1625.0, true),
-    TWO_METER_FROM_HUB(1775.0, true), // PBOT 1840.0, true
-    THREE_METER_FROM_HUB(1950.0, true), // PBOT 1920.0, true
-    FOUR_METER_FROM_HUB(2075.0, true), // PBOT 2080.0, true
-    FIVE_METER_FROM_HUB(2575.0, true), // PBOT 2575.0, true
+    // ONE_METER_FROM_HUB(1625.0, true),
+    // TWO_METER_FROM_HUB(1775.0, true), // PBOT 1840.0, true
+    // THREE_METER_FROM_HUB(1950.0, true), // PBOT 1920.0, true
+    // FOUR_METER_FROM_HUB(2075.0, true), // PBOT 2080.0, true
+    // FIVE_METER_FROM_HUB(2575.0, true), // PBOT 2575.0, true
     STOP(0.0, true);
     // FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged
     // FENDER_HIGH_CBOT(1500.0),
