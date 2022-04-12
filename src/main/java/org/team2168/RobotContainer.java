@@ -26,6 +26,7 @@ import io.github.oblarg.oblog.annotations.Log;
 import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.auto.*;
+import org.team2168.commands.auto.pathplanner.FiveBall;
 import org.team2168.commands.auto.pathplanner.FourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
@@ -50,7 +51,6 @@ import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 import org.team2168.subsystems.Shooter.ShooterRPM;
@@ -138,8 +138,11 @@ public class RobotContainer {
                hopper, indexer, hood,
                shooter, turret, pooper, colorSensor,
                lime));
+      autoChooser.addOption("4 ball", new FourBall(
+        drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
+        indexer, turret, hood, shooter, lime, pooper, colorSensor));
 
-        autoChooser.addOption("4 Ball", new FourBall(
+        autoChooser.addOption("5 Ball", new FiveBall(
           drivetrain, intakeRaiseAndLower, intakeRoller,
           hopper, indexer, hood,
           shooter, turret, pooper, colorSensor,
@@ -198,8 +201,8 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0).withTimeout(0.5))
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP).withTimeout(0.2))
             .whenPressed(new RotateTurret(turret, -90.0).withTimeout(0.5)
-                .andThen(new StopTurret(turret)))
-            .whenPressed(new FullSendClimbingSequence(climber, monkeyBar)
+                .andThen(new StopTurret(turret))
+                .andThen(new FullSendClimbingSequence(climber, monkeyBar))
             );
 
     //lower left button ("Forward Fine-Tuning")
@@ -264,6 +267,34 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
+    // oi.testJoystick.ButtonLeftBumper()
+
+    //         // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whenPressed(new IntakeLower(intakeRaiseAndLower))
+    //         .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
+    //         .whenReleased(new PooperUnpoop(pooper));
+
+    // oi.testJoystick.ButtonRightBumper()
+    //         .whileHeld(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+
+    // oi.testJoystick.ButtonY().whenPressed(new BumpHoodAngleZero(hood));
+    
+    // oi.testJoystick.ButtonX().whenPressed(new BumpHoodAngleDown(hood));
+    // oi.testJoystick.ButtonB().whenPressed(new BumpHoodAngleUp(hood));
+
+    // oi.testJoystick.ButtonLeftDPad().whenPressed(new BumpShooterSpeedDown(shooter));
+    // oi.testJoystick.ButtonRightDPad().whenPressed(new BumpShooterSpeedUp(shooter));
+
+    // oi.testJoystick.ButtonA().whenPressed(new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees))
+    //                          .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL));
     // oi.testJoystick.ButtonA().whenPressed(new RotateTurret(turret, 0.0));
     // oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 180));
     // oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -180));
