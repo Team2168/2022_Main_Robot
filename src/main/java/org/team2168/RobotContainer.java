@@ -239,6 +239,11 @@ public class RobotContainer {
     //// sticks
     oi.operatorJoystick.ButtonLeftStick().whenPressed(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
+    oi.operatorJoystick.ButtonRightStickMovedLeft().and(oi.operatorJoystick.ButtonRightStick()).whenActive(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedRight().and(oi.operatorJoystick.ButtonRightStick()).whenActive(new RetractMonkeyBar(monkeyBar));
+
+    oi.operatorJoystick.ButtonRightStickMovedUp()
+      .whenActive(new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime)));
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
@@ -261,9 +266,6 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonLeftTrigger()
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP));
-
-    oi.operatorJoystick.ButtonRightStickMovedLeft().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonRightStickMovedRight().whenPressed(new RetractMonkeyBar(monkeyBar));
 
 
     //TEST JOYSTICK
