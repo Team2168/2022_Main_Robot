@@ -236,8 +236,10 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightStickMovedLeft().whenActive(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonRightStickMovedRight().whenActive(new RetractMonkeyBar(monkeyBar));
 
+    SequentialCommandGroup zeroTurretAndResumeLimelightTracking = new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime));
     oi.operatorJoystick.ButtonRightStick()
-      .whenPressed(new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime)));
+      .cancelWhenPressed(zeroTurretAndResumeLimelightTracking)
+      .whenReleased(zeroTurretAndResumeLimelightTracking);
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
