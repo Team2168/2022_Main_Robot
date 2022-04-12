@@ -131,54 +131,54 @@ public class RobotContainer {
               lime)
     );
 
-      autoChooser.setDefaultOption("Do nothing", new DoNothing());
-      autoChooser.addOption("2 ball", twoBall);
-       autoChooser.addOption("3 Ball", new ThreeBall(
-               drivetrain, intakeRaiseAndLower, intakeRoller,
-               hopper, indexer, hood,
-               shooter, turret, pooper, colorSensor,
-               lime));
-      autoChooser.addOption("4 ball", new FourBall(
-        drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
-        indexer, turret, hood, shooter, lime, pooper, colorSensor));
+    autoChooser.setDefaultOption("Do nothing", new DoNothing());
+    autoChooser.addOption("2 ball", twoBall);
+      autoChooser.addOption("3 Ball", new ThreeBall(
+              drivetrain, intakeRaiseAndLower, intakeRoller,
+              hopper, indexer, hood,
+              shooter, turret, pooper, colorSensor,
+              lime));
+    autoChooser.addOption("4 ball", new FourBall(
+      drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
+      indexer, turret, hood, shooter, lime, pooper, colorSensor));
 
-        autoChooser.addOption("5 Ball", new FiveBall(
-          drivetrain, intakeRaiseAndLower, intakeRoller,
-          hopper, indexer, hood,
-          shooter, turret, pooper, colorSensor,
-          lime));
+    autoChooser.addOption("5 Ball", new FiveBall(
+      drivetrain, intakeRaiseAndLower, intakeRoller,
+      hopper, indexer, hood,
+      shooter, turret, pooper, colorSensor,
+      lime));
 
-      //    autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
-      //    autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
-      //    autoChooser.addOption("test drive", new DebugPathPlanner(drivetrain, "Drive3Meters"));
-      //        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-      //      autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
-      //              drivetrain, intakeRaiseAndLower, intakeRoller,
-      //              hopper, indexer, hood,
-      //              shooter, pooper, colorSensor,
-      //              lime));
-      // autoChooser.addOption(
-      //         "4 Ball (ends at Terminal)", new FourBall(
-      //                     drivetrain, intakeRaiseAndLower, intakeRoller,
-      //                     hopper, indexer, hood,
-      //                     shooter, pooper, colorSensor,
-      //                     lime));
-      // autoChooser.addOption("Drive 3 Feet",
-      //         new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
-      // autoChooser.addOption("Drive 3 Feet",
-      //         new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
-      // autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
-      // autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
+    // autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
+    // autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
+    // autoChooser.addOption("test drive", new DebugPathPlanner(drivetrain, "Drive3Meters"));
+    //     autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+    //   autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
+    //           drivetrain, intakeRaiseAndLower, intakeRoller,
+    //           hopper, indexer, hood,
+    //           shooter, pooper, colorSensor,
+    //           lime));
+    // autoChooser.addOption(
+    //         "4 Ball (ends at Terminal)", new FourBall(
+    //                     drivetrain, intakeRaiseAndLower, intakeRoller,
+    //                     hopper, indexer, hood,
+    //                     shooter, pooper, colorSensor,
+    //                     lime));
+    // autoChooser.addOption("Drive 3 Feet",
+    //         new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
+    // autoChooser.addOption("Drive 3 Feet",
+    //         new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
+    // autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
+    // autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
 
-      // debug autos
-      // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
-      // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-      // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
-      // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
-      // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
-      // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
-    
-      SmartDashboard.putData(autoChooser);
+    // debug autos
+    // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
+    // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+    // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
+    // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
+    // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
+    // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
+  
+    SmartDashboard.putData(autoChooser);
   }
 
   /**
