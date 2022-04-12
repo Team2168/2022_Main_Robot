@@ -239,8 +239,8 @@ public class RobotContainer {
     //// sticks
     oi.operatorJoystick.ButtonLeftStick().whenPressed(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
-    oi.operatorJoystick.ButtonRightStickMovedLeft().and(oi.operatorJoystick.ButtonRightStick()).whenActive(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonRightStickMovedRight().and(oi.operatorJoystick.ButtonRightStick()).whenActive(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedLeft().whenActive(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedRight().whenActive(new RetractMonkeyBar(monkeyBar));
 
     oi.operatorJoystick.ButtonRightStickMovedUp()
       .whenPressed(new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime)));
