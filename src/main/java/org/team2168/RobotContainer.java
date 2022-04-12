@@ -213,13 +213,13 @@ public class RobotContainer {
     // oi.operatorJoystick.ButtonA()
     //         .whenPressed(new RotateTurret(turret, 0.0))
     //         .whenPressed(new FenderLow(hood, shooter));
-    oi.operatorJoystick.ButtonA().whenPressed(new ShootBasedOnDistance(shooter, hood, lime, oi));
+    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
     oi.operatorJoystick.ButtonY()
             .whenPressed(new RotateTurret(turret, 0.0))
             .whenPressed(new FenderHigh(hood, shooter, lime));
-    oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter, lime));
+    oi.operatorJoystick.ButtonRightTrigger().whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
 
     //// start and back
     oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
