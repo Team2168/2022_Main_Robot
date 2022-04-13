@@ -31,8 +31,6 @@ public class Paths {
     public final Trajectory path_Disturb_3;
     public final Trajectory path_Disturb_4;
     public final Trajectory path_Disturb_5;
-    public final Trajectory path_Disturb_6;
-    public final Trajectory path_Disturb_7;
 
     private static Paths instance = null;
 
@@ -55,8 +53,6 @@ public class Paths {
         path_Disturb_3 = getTrajectory("Disturb_3", true);
         path_Disturb_4 = getTrajectory("Disturb_4", true);
         path_Disturb_5 = getTrajectory("Disturb_5", true);
-        path_Disturb_6 = getTrajectory("Disturb_6", true);
-        path_Disturb_7 = getTrajectory("Distub_7", false);
 
         
         System.out.println("******* Finish generating autos *******");

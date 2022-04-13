@@ -4,22 +4,15 @@
 
 package org.team2168.commands.auto.pathplanner;
 
-import java.nio.file.Path;
-
-import org.team2168.Constants;
 import org.team2168.commands.FireBalls;
-import org.team2168.commands.QueueBallForShot;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.drivetrain.TankDrive;
-import org.team2168.commands.drivetrain.TurnXDegrees;
-import org.team2168.commands.hood.HoodToAngle;
-import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
-import org.team2168.commands.shooter.SetShooterSpeed;
+import org.team2168.commands.pooper.PooperPoop;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
@@ -35,8 +28,6 @@ import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Pooper;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Turret;
-import org.team2168.subsystems.Hood.HoodPosition;
-import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.utils.PathUtil;
 import org.team2168.utils.PathUtil.InitialPathState;
 
@@ -66,75 +57,56 @@ public class Disturb extends SequentialCommandGroup {
     addCommands(
         new RotateTurret(turret, 0.0).withTimeout(0.1),
         new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
-        // Collects ball and shoots it and preloaded ball
-          race(
-              new DriveTurretWithLimelight(turret, limelight),
-              sequence(
-                  new AutoTarmacLine(hood, shooter, limelight),
-                  new IntakeLower(intakeRaiseAndLower),
-                  race(
-                      new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                      PathUtil.getPathCommand(paths.path_Disturb_1, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)),
-                  // Hopper, indexer, intake, and drivtrain have 0.1 seconds to stop
-                  parallel(
-                      new DriveHopperWithPercentOutput(hopper, () -> 0.0),
-                      new DriveIndexer(indexer, () -> 0.0),
-                      new SetIntakeSpeed(intakeRoller, 0.0),
-                      new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1),
-                  parallel(
-                      new WaitForShooterAtSpeed(shooter),
-                      new WaitForLimelightInPosition(limelight)),
 
-                  new FireBalls(shooter, indexer, hopper),
-                  new FireBalls(shooter, indexer, hopper),
-
-                  parallel(
-                      new SetShooterSpeed(shooter, ShooterRPM.STOP),
-                      new HoodToAngle(hood, HoodPosition.ZERO.position_degrees),
-                      new RotateTurret(turret, 0.0),
-                      new DriveHopperWithPercentOutput(hopper, () -> 0.0),
-                      new DriveIndexer(indexer, () -> 0.0)).withTimeout(0.1))),
-
-        // Collects oppo. ball and poops it in hangar pt 1
-        sequence(
-          PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
-          // Picks up ball
-          parallel(
-            PathUtil.getPathCommand(paths.path_Disturb_3, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            sequence(
-             race(
-              new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-              new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED)),
-
-              parallel(
+        race( 
+          new DriveTurretWithLimelight(turret, limelight),
+          sequence( //shoots preloaded ball, collects and poops opposite's ball
+            new AutoTarmacLine(hood, shooter, limelight).withTimeout(0.2),
+            new IntakeLower(intakeRaiseAndLower),
+            parallel(
+              PathUtil.getPathCommand(paths.path_Disturb_1, drivetrain, InitialPathState.DISCARDHEADING),
+                new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)),
+            parallel(
+              new SetIntakeSpeed(intakeRoller, 0.0),
               new DriveHopperWithPercentOutput(hopper, () -> 0.0),
               new DriveIndexer(indexer, () -> 0.0),
-              new SetIntakeSpeed(intakeRoller, 0.0)).withTimeout(0.1)
-            )),
-          PathUtil.getPathCommand(paths.path_Disturb_4, drivetrain, InitialPathState.PRESERVEODOMETRY),
-          // Ball is pooped!
-          new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller)
-        ),
-        // Collects oppo. ball and poops it in hangar pt 2
-        sequence(
-          new TurnXDegrees(drivetrain, 180),
-          parallel(
+              new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1),
+            parallel(
+              new WaitForLimelightInPosition(limelight),
+              new WaitForShooterAtSpeed(shooter)),
+            new FireBalls(shooter, indexer, hopper),
+
+            PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
+            new PooperPoop(pooper),
+
+            //Collects and shoots another ball
+            parallel(
+              new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+              PathUtil.getPathCommand(paths.path_Disturb_3, drivetrain, InitialPathState.PRESERVEODOMETRY)),
+            parallel(
+              new SetIntakeSpeed(intakeRoller, 0.0),
+              new DriveHopperWithPercentOutput(hopper, () -> 0.0),
+              new DriveIndexer(indexer, () -> 0.0),
+              new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1),
+            parallel(
+              new WaitForShooterAtSpeed(shooter),
+              new WaitForLimelightInPosition(limelight)),
+            
+            new FireBalls(shooter, indexer, hopper),
+
+            //Collects and poops opponent's ball
+            parallel(
+              new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+              PathUtil.getPathCommand(paths.path_Disturb_4, drivetrain, InitialPathState.PRESERVEODOMETRY)),
+
+            parallel(
+              new SetIntakeSpeed(intakeRoller, 0.0),
+              new DriveHopperWithPercentOutput(hopper, () -> 0.0),
+              new DriveIndexer(indexer, () -> 0.0),
+              new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1)),
+
             PathUtil.getPathCommand(paths.path_Disturb_5, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            sequence(
-             race(
-              new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-              new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED)),
-
-              parallel(
-              new DriveHopperWithPercentOutput(hopper, () -> 0.0),
-              new DriveIndexer(indexer, () -> 0.0),
-              new SetIntakeSpeed(intakeRoller, 0.0)).withTimeout(0.1)
-            )),
-          new TurnXDegrees(drivetrain, 180),
-          PathUtil.getPathCommand(paths.path_Disturb_6, drivetrain, InitialPathState.PRESERVEODOMETRY),
-          new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller),
-          PathUtil.getPathCommand(paths.path_Disturb_7, drivetrain, InitialPathState.PRESERVEODOMETRY)
-            )
-        );
+            new PooperPoop(pooper)
+    ));
   }
 }
