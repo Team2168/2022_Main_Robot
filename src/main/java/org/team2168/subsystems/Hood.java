@@ -218,7 +218,7 @@ public class Hood extends SubsystemBase implements Loggable {
 
   public double getHoodAnglefromDistance(double meters) {
     if (Constants.IS_COMPBOT) {
-      return (4.0 * meters + 13.3); // old func: 2.08*meters + 18.7
+      return (2.5 * meters + 17.8); // new balls
     } else {
       return (3.0*meters + 19.0);
     }

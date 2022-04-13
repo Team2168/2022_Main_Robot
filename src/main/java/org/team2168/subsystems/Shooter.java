@@ -203,7 +203,7 @@ public class Shooter extends SubsystemBase implements Loggable {
 
   public double getRPMfromDistance(double meters) {
     if (Constants.IS_COMPBOT) {
-      return (150*meters + 1367); // old func: 183*meters + 1359
+      return (178*meters + 1306); // w/ new balls
     }
     else {
       return (153*meters + 1483);
