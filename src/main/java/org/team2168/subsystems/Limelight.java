@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
+import org.team2168.Constants;
 import org.team2168.subsystems.Shooter.ShooterRPM;
+import org.team2168.utils.Util;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -55,8 +58,10 @@ public class Limelight extends SubsystemBase implements Loggable {
   private static LEDMode desiredLEDMode = LEDMode.PIPELINE;
   private static int desiredPipeline = 0;
 
-  public double MAX_POSITIVE_ANGLE = 27.0;
-  public double MIN_NEGATIVE_ANGLE = -27.0;
+  public double MAX_POSITIVE_ANGLE = 29.8;
+  public double MIN_NEGATIVE_ANGLE = -29.8;
+
+  public static double limelightMountAngle = 30.0;
 
   //Camera Controls (Use Enums to prevent invalid inputs)
   public enum LEDMode {
@@ -161,6 +166,29 @@ public class Limelight extends SubsystemBase implements Loggable {
     desiredPipeline = pipelineNumber;
   }
 
+  @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
+  public double calcDistanceMeters() {
+    return (Constants.Heights.UPPER_HUB_HEIGHT_METERS - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_METERS)/Math.tan(convertDegreesToRadians(limelightMountAngle + ty.getDouble(0))) - (Constants.Distances.LIMELIGHT_OFFSET_METERS + Constants.Distances.HUB_OFFSET_FENDER_METERS);
+  }
+
+  public double getRPMfromDistance(double meters) {
+    if (Constants.IS_COMPBOT) {
+      return (150*meters + 1483); // old func: 183*meters + 1359
+    }
+    else {
+      return (1624.0 - 25.8*meters + 91.8*Math.pow(meters, 2) - 14.0*Math.pow(meters, 3));
+    }
+  }
+
+  public double getHoodAnglefromDistance(double meters) {
+    if (Constants.IS_COMPBOT) {
+      return (2*meters + 19); // old func: 2.08*meters + 18.7
+    }
+    else {
+      return (9.29 + 9.64*meters + -0.955*Math.pow(meters, 2));
+    }
+  }
+
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)
   public int getPipeline() {
     if (this.connectionEstablished()) {
@@ -247,6 +275,10 @@ public class Limelight extends SubsystemBase implements Loggable {
   private void setCamMode(int camModeNumber) {
     camMode.setNumber(camModeNumber);
     desiredCamMode = camModeNumber;
+  }
+
+  private double convertDegreesToRadians(double degrees) {
+    return degrees * (Math.PI/180.0);
   }
 
   @Override
