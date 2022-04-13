@@ -40,16 +40,6 @@ public class ShootBasedOnDistance extends CommandBase {
     shooterRPM = shooter.getRPMfromDistance(limelightDistance);
     hoodAngle = hood.getHoodAnglefromDistance(limelightDistance);
 
-    if (limelightDistance < 4.0) {
-      lime.setPipeline(Limelight.PIPELINE_TARMAC_LINE);
-    }
-    else if (limelightDistance >= 4.0 && limelightDistance < 6.0) {
-      lime.setPipeline(Limelight.PIPELINE_LAUNCHPAD_LINE);
-    }
-    else {
-      lime.setPipeline(Limelight.PIPELINE_TERMINAL);
-    }
-
     if (!RobotContainer.getInstance().isFiring()) {
       shooter.setSpeed(shooterRPM);
       hood.setPosition(hoodAngle);

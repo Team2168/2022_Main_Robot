@@ -270,6 +270,16 @@ public class Limelight extends SubsystemBase implements Loggable {
       pauseLimelight();
     }
 
+    if (isLimelightEnabled && calcDistanceMeters() < 4.0) {
+      setPipeline(PIPELINE_TARMAC_LINE);
+    }
+    else if (isLimelightEnabled && calcDistanceMeters() >= 4.0 && calcDistanceMeters() < 6.0) {
+      setPipeline(PIPELINE_LAUNCHPAD_LINE);
+    }
+    else if (isLimelightEnabled && calcDistanceMeters() >= 6.0) {
+      setPipeline(PIPELINE_TERMINAL);
+    }
+
     // Sets the camera controls
     ledMode.setNumber(desiredLEDMode.val);
     camMode.setNumber(desiredCamMode);
