@@ -201,6 +201,15 @@ public class Shooter extends SubsystemBase implements Loggable {
     _motorRight.set(ControlMode.Velocity, setPointVelocity_sensorUnits);
   }
 
+  public double getRPMfromDistance(double meters) {
+    if (Constants.IS_COMPBOT) {
+      return (178*meters + 1306); // w/ new balls
+    }
+    else {
+      return (153*meters + 1483);
+    }
+  }
+
   /**
    * Convert speed in motor units per 100ms to RPM
    * 
