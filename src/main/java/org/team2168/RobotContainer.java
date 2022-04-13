@@ -26,6 +26,7 @@ import io.github.oblarg.oblog.annotations.Log;
 import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.auto.*;
+import org.team2168.commands.auto.pathplanner.FiveBall;
 import org.team2168.commands.auto.pathplanner.FourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
@@ -43,13 +44,13 @@ import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
+import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.monkeybar.*;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 import org.team2168.subsystems.Shooter.ShooterRPM;
@@ -130,51 +131,54 @@ public class RobotContainer {
               lime)
     );
 
-      autoChooser.setDefaultOption("Do nothing", new DoNothing());
-      autoChooser.addOption("2 ball", twoBall);
-       autoChooser.addOption("3 Ball", new ThreeBall(
-               drivetrain, intakeRaiseAndLower, intakeRoller,
-               hopper, indexer, hood,
-               shooter, turret, pooper, colorSensor,
-               lime));
+    autoChooser.setDefaultOption("Do nothing", new DoNothing());
+    autoChooser.addOption("2 ball", twoBall);
+      autoChooser.addOption("3 Ball", new ThreeBall(
+              drivetrain, intakeRaiseAndLower, intakeRoller,
+              hopper, indexer, hood,
+              shooter, turret, pooper, colorSensor,
+              lime));
+    autoChooser.addOption("4 ball", new FourBall(
+      drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
+      indexer, turret, hood, shooter, lime, pooper, colorSensor));
 
-        autoChooser.addOption("4 Ball", new FourBall(
-          drivetrain, intakeRaiseAndLower, intakeRoller,
-          hopper, indexer, hood,
-          shooter, turret, pooper, colorSensor,
-          lime));
+    autoChooser.addOption("5 Ball", new FiveBall(
+      drivetrain, intakeRaiseAndLower, intakeRoller,
+      hopper, indexer, hood,
+      shooter, turret, pooper, colorSensor,
+      lime));
 
-      //    autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
-      //    autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
-      //    autoChooser.addOption("test drive", new DebugPathPlanner(drivetrain, "Drive3Meters"));
-      //        autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
-      //      autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
-      //              drivetrain, intakeRaiseAndLower, intakeRoller,
-      //              hopper, indexer, hood,
-      //              shooter, pooper, colorSensor,
-      //              lime));
-      // autoChooser.addOption(
-      //         "4 Ball (ends at Terminal)", new FourBall(
-      //                     drivetrain, intakeRaiseAndLower, intakeRoller,
-      //                     hopper, indexer, hood,
-      //                     shooter, pooper, colorSensor,
-      //                     lime));
-      // autoChooser.addOption("Drive 3 Feet",
-      //         new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
-      // autoChooser.addOption("Drive 3 Feet",
-      //         new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
-      // autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
-      // autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
+    // autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
+    // autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
+    // autoChooser.addOption("test drive", new DebugPathPlanner(drivetrain, "Drive3Meters"));
+    //     autoChooser.addOption("2 Ball Top to Terminal", new TwoballTopToTerm(drivetrain));
+    //   autoChooser.addOption("OppositeSideToTerminal", new SimpleOppositeSideToTerminal(
+    //           drivetrain, intakeRaiseAndLower, intakeRoller,
+    //           hopper, indexer, hood,
+    //           shooter, pooper, colorSensor,
+    //           lime));
+    // autoChooser.addOption(
+    //         "4 Ball (ends at Terminal)", new FourBall(
+    //                     drivetrain, intakeRaiseAndLower, intakeRoller,
+    //                     hopper, indexer, hood,
+    //                     shooter, pooper, colorSensor,
+    //                     lime));
+    // autoChooser.addOption("Drive 3 Feet",
+    //         new DriveXDistance(drivetrain, Units.metersToInches(1.0)));
+    // autoChooser.addOption("Drive 3 Feet",
+    //         new DriveXDistance(drivetrain, Units.metersToInches(-1.0)));
+    // autoChooser.addOption("rotate35", new TurnXDegrees(drivetrain, 35.0));
+    // autoChooser.addOption("rotate-35", new TurnXDegrees(drivetrain, -35.0));
 
-      // debug autos
-      // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
-      // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
-      // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
-      // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
-      // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
-      // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
-    
-      SmartDashboard.putData(autoChooser);
+    // debug autos
+    // autoChooser.addOption("Drive 1 Meter", new Drive1Meter(drivetrain));
+    // autoChooser.addOption("Drive 3 Meters", new Drive3Meters(drivetrain));
+    // autoChooser.addOption("Debug drive 1 meter", new DebugPathPlanner(drivetrain, "Drive1Meter"));
+    // autoChooser.addOption("Test Trajectory Command", getExampleTrajectoryCommand());
+    // autoChooser.addOption("Debug auto", new DebugPathWeaver(drivetrain, "Drive3Meters"));
+    // autoChooser.addOption("Squiggles", new Squiggles(drivetrain));
+  
+    SmartDashboard.putData(autoChooser);
   }
 
   /**
@@ -209,35 +213,36 @@ public class RobotContainer {
 
     //OPERATOR CONTROLS
     //// main button cluster
-    oi.operatorJoystick.ButtonA()
-            .whenPressed(new RotateTurret(turret, 0.0))
-            .whenPressed(new FenderLow(hood, shooter));
+    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
     oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
     oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
     oi.operatorJoystick.ButtonY()
             .whenPressed(new RotateTurret(turret, 0.0))
             .whenPressed(new FenderHigh(hood, shooter, lime));
-    oi.operatorJoystick.ButtonRightTrigger().whenPressed(new WallShot(hood, shooter, lime));
 
     //// start and back
     oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
     oi.operatorJoystick.ButtonBack().whenPressed(new BumpShooterSpeedDown(shooter));
 
     //// dpad
-    // oi.operatorJoystick.ButtonUpDPad().whenPressed(new ManuallyStageBall(indexer)); // TODO implement manual staging
     oi.operatorJoystick.ButtonUpDPad().whenPressed(new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INDEXER_SPEED));
     oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED));
-    // oi.operatorJoystick.ButtonDownDPad().whenPressed(new DriveClimberToZero(climber));
     oi.operatorJoystick.ButtonLeftDPad().whenPressed(new BumpHoodAngleDown(hood));
     oi.operatorJoystick.ButtonRightDPad().whenPressed(new BumpHoodAngleUp(hood));
 
     //// sticks
     oi.operatorJoystick.ButtonLeftStick().whenPressed(new DriveClimber(climber, oi.operatorJoystick::getLeftStickRaw_Y));
 
+    oi.operatorJoystick.ButtonRightStickMovedLeft().whenActive(new ExtendMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightStickMovedRight().whenActive(new RetractMonkeyBar(monkeyBar));
+
+    SequentialCommandGroup zeroTurretAndResumeLimelightTracking = new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime));
+    oi.operatorJoystick.ButtonRightStick()
+      .cancelWhenPressed(zeroTurretAndResumeLimelightTracking)
+      .whenReleased(zeroTurretAndResumeLimelightTracking);
 
     //// Trigger cluster
     oi.operatorJoystick.ButtonLeftBumper()
-
             // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
             .whenPressed(new IntakeLower(intakeRaiseAndLower))
@@ -258,11 +263,38 @@ public class RobotContainer {
             .whenPressed(new HoodToAngle(hood, 0.0))
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP));
 
-    oi.operatorJoystick.ButtonRightStickMovedLeft().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonRightStickMovedRight().whenPressed(new RetractMonkeyBar(monkeyBar));
+    oi.operatorJoystick.ButtonRightTrigger()
+            .whenPressed(new ShootBasedOnDistance(shooter, hood, lime, oi));
 
 
     //TEST JOYSTICK
+    // oi.testJoystick.ButtonLeftBumper()
+    //         // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+    //         .whenPressed(new IntakeLower(intakeRaiseAndLower))
+    //         .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
+    //         .whenReleased(new PooperUnpoop(pooper));
+
+    // oi.testJoystick.ButtonRightBumper()
+    //         .whileHeld(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new FireBalls(shooter, indexer, hopper))
+    //         //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+    //         .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    //         .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+
+    // oi.testJoystick.ButtonY().whenPressed(new BumpHoodAngleZero(hood));
+    
+    // oi.testJoystick.ButtonX().whenPressed(new BumpHoodAngleDown(hood));
+    // oi.testJoystick.ButtonB().whenPressed(new BumpHoodAngleUp(hood));
+
+    // oi.testJoystick.ButtonLeftDPad().whenPressed(new BumpShooterSpeedDown(shooter));
+    // oi.testJoystick.ButtonRightDPad().whenPressed(new BumpShooterSpeedUp(shooter));
+
+    // oi.testJoystick.ButtonA().whenPressed(new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees))
+    //                          .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.AUTO_SIMPLE_4_BALL));
     // oi.testJoystick.ButtonA().whenPressed(new RotateTurret(turret, 0.0));
     // oi.testJoystick.ButtonB().whenPressed(new RotateTurret(turret, 180));
     // oi.testJoystick.ButtonX().whenPressed(new RotateTurret(turret, -180));
@@ -321,6 +353,15 @@ public class RobotContainer {
 
     // oi.testJoystick.ButtonB().whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TARMAC_LINE.position_degrees));
     // oi.testJoystick.ButtonB().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    // oi.testJoystick.ButtonA()
+    // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.TWO_METER_FROM_HUB.position_degrees))
+    // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.TWO_METER_FROM_HUB));
+    // oi.testJoystick.ButtonB()
+    // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.THREE_METER_FROM_HUB.position_degrees))
+    // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.THREE_METER_FROM_HUB));
+    // oi.testJoystick.ButtonY()
+    // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.FOUR_METER_FROM_HUB.position_degrees))
+    // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.FOUR_METER_FROM_HUB));
 
   }
 
