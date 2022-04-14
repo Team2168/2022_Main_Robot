@@ -14,6 +14,7 @@ import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
+import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
@@ -47,10 +48,10 @@ public class FiveBall extends SequentialCommandGroup {
                     new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
                     race(
                             new DriveTurretWithLimelight(turret, lime),
+                            new ShootBasedOnDistance(shooter, hood, lime),
                             sequence(
                                     //two ball auto
                                     //collects balls
-                                    new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
                                     new IntakeLower(intakeRaiseAndLower),
                                     race( // run group until path ends
                                             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
@@ -67,14 +68,13 @@ public class FiveBall extends SequentialCommandGroup {
                                     parallel(
                                             new WaitForShooterAtSpeed(shooter, 5),
                                             new WaitForLimelightInPosition(lime)),
-                                    new FireBalls(shooter, indexer, hopper),
-                                    new FireBalls(shooter, indexer, hopper),
+                                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                new FireBalls(shooter, indexer, hopper),
+                                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                new FireBalls(shooter, indexer, hopper),
     
                                     //gets third ball and shoots it
                                     new IntakeLower(intakeRaiseAndLower),
-                                    // new Launchpad(hood, shooter, lime),
-                                    new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL3),
-                                    new HoodToAngle(hood, HoodPosition.AUTO_BALL3.position_degrees),
                                     race(
                                             new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                             sequence(
@@ -88,6 +88,8 @@ public class FiveBall extends SequentialCommandGroup {
                                     parallel(
                                             new WaitForShooterAtSpeed(shooter, 10),
                                             new WaitForLimelightInPosition(lime)),
+                                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+
                                     new FireBalls(shooter, indexer, hopper))
                     ),
                     //gets fourth ball at terminal
@@ -106,30 +108,29 @@ public class FiveBall extends SequentialCommandGroup {
                             // new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
                         )
                     ),
-                            
-                    new SetShooterSpeed(shooter, ShooterRPM.AUTO_BALL4),
-                    new HoodToAngle(hood, HoodPosition.AUTO_BALL4.position_degrees),
     
-                            race(
-                                    new DriveTurretWithLimelight(turret, lime),
-                                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                    //drives up to edge of tarmac
-                                    PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
-                            ),
-                                
-                            parallel(
-                                    new DriveTurretWithLimelight(turret, lime),
-                                    sequence(
-                                            parallel(
-                                                    new WaitForShooterAtSpeed(shooter, 20),
-                                                    new WaitForLimelightInPosition(lime)
-                                            ),
-                                            
-                                            new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(0.1),
-                                            new FireBalls(shooter, indexer, hopper),
-                                            new FireBalls(shooter, indexer, hopper)
-                                    )
-                            )
+                        race(
+                                new DriveTurretWithLimelight(turret, lime),
+                                new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                //drives up to edge of tarmac
+                                PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
+                        ),
+                        
+                        parallel(
+                                new DriveTurretWithLimelight(turret, lime),
+                                sequence(
+                                        parallel(
+                                                new WaitForShooterAtSpeed(shooter, 20),
+                                                new WaitForLimelightInPosition(lime)
+                                        ),
+                                        
+                                        new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(0.1),
+                                        new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                        new FireBalls(shooter, indexer, hopper),
+                                        new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                        new FireBalls(shooter, indexer, hopper)
+                                )
+                        )
             );
         }
 }

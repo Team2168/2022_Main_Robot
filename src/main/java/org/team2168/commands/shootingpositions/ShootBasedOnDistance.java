@@ -31,7 +31,9 @@ public class ShootBasedOnDistance extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    shooter.setWaitForShooterAtSpeed(false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -44,7 +46,6 @@ public class ShootBasedOnDistance extends CommandBase {
       shooter.setSpeed(shooterRPM);
       hood.setPosition(hoodAngle);
     }
-    shooter.setWaitForShooterAtSpeed(false);
   }
 
   // Called once the command ends or is interrupted.
