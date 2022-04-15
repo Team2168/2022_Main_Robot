@@ -173,6 +173,11 @@ public final class Constants {
         public static final double HUB_OFFSET_FENDER_METERS = 0.37; // hub from fender dist + the average distance of the 5 tracked points
     }
 
+    public static final class FieldPositions {
+        public static final double HUB_X_METERS = 8.2296;
+        public static final double HUB_Y_METERS = 4.1148;
+    }
+
     public static final class Analog {
         public static final int TURRET_POTENTIOMETER = 0;
     }
