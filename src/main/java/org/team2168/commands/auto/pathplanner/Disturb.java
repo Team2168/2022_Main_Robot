@@ -14,7 +14,7 @@ import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
-import org.team2168.commands.pooper.PoopOnColor;
+import org.team2168.commands.pooper.AutoPoopOnColor;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
@@ -72,7 +72,7 @@ public class Disturb extends SequentialCommandGroup {
               new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)),
 
             PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            new PoopOnColor(colorSensor, pooper, hopper),
+            new AutoPoopOnColor(colorSensor, pooper, hopper),
             new PooperUnpoop(pooper),
 
             //Collects and shoots another ball
@@ -108,7 +108,7 @@ public class Disturb extends SequentialCommandGroup {
               new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1),
 
             PathUtil.getPathCommand(paths.path_Disturb_5, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            new PoopOnColor(colorSensor, pooper, hopper)
+            new AutoPoopOnColor(colorSensor, pooper, hopper)
             )
     ));
   }

@@ -71,7 +71,7 @@ public class DisturbShort extends SequentialCommandGroup {
               new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)),
 
             PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            new PoopOnColor(colorSensor, pooper, hopper),
+            new PoopOnColor(colorSensor, pooper),
             new PooperUnpoop(pooper),
 
             //Collects and shoots another ball
