@@ -46,7 +46,7 @@ public class FiveBall extends SequentialCommandGroup {
                     new RotateTurret(turret, 0.0).withTimeout(0.2),
                     new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
                     race(
-                            new DriveTurretWithLimelight(turret, lime),
+                            new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood),
                             sequence(
                                     //two ball auto
                                     //collects balls
@@ -111,14 +111,14 @@ public class FiveBall extends SequentialCommandGroup {
                     new HoodToAngle(hood, HoodPosition.AUTO_BALL4.position_degrees),
     
                             race(
-                                    new DriveTurretWithLimelight(turret, lime),
+                                    new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood),
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     //drives up to edge of tarmac
                                     PathUtil.getPathCommand(paths.path_4BALL_3, drivetrain, InitialPathState.PRESERVEODOMETRY)
                             ),
                                 
                             parallel(
-                                    new DriveTurretWithLimelight(turret, lime),
+                                    new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood),
                                     sequence(
                                             parallel(
                                                     new WaitForShooterAtSpeed(shooter, 20),

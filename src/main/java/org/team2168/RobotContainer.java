@@ -209,7 +209,7 @@ public class RobotContainer {
     oi.driverJoystick.ButtonA().whenPressed(new StowEverything(hood, shooter));
 
     //red button
-    oi.driverJoystick.ButtonLeftBumper().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    oi.driverJoystick.ButtonLeftBumper().whenPressed(new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood));
 
     //OPERATOR CONTROLS
     //// main button cluster
@@ -236,7 +236,7 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightStickMovedLeft().whenActive(new ExtendMonkeyBar(monkeyBar));
     oi.operatorJoystick.ButtonRightStickMovedRight().whenActive(new RetractMonkeyBar(monkeyBar));
 
-    SequentialCommandGroup zeroTurretAndResumeLimelightTracking = new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime));
+    SequentialCommandGroup zeroTurretAndResumeLimelightTracking = new RotateTurret(turret, 0.0).andThen(new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood));
     oi.operatorJoystick.ButtonRightStick()
       .cancelWhenPressed(zeroTurretAndResumeLimelightTracking)
       .whenReleased(zeroTurretAndResumeLimelightTracking);

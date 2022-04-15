@@ -41,7 +41,7 @@ public class ThreeBall extends SequentialCommandGroup {
                 new RotateTurret(turret, 0.0).withTimeout(0.2),
                 new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
                 parallel(
-                        new DriveTurretWithLimelight(turret, lime),
+                        new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood),
                         sequence(
                             new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
                             new IntakeLower(intakeRaiseAndLower),

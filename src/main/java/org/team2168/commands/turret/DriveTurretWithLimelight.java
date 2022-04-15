@@ -4,10 +4,15 @@
 
 package org.team2168.commands.turret;
 
+import org.team2168.Constants;
+import org.team2168.subsystems.Drivetrain;
+import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
+import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Turret;
 import org.team2168.utils.Util;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -16,6 +21,9 @@ public class DriveTurretWithLimelight extends CommandBase {
 
   private Turret turret;
   private Limelight limelight;
+  private Drivetrain drivetrain;
+  private Shooter shooter;
+  private Hood hood;
 
   private double errorToleranceAngle = 1.0; // in degrees
   private double limeXPos;
@@ -31,7 +39,14 @@ public class DriveTurretWithLimelight extends CommandBase {
   private double unwind_target;
   private static final double UNWIND_TOLERANCE_DEGREES = 20.0;
 
-  private static final double LIME_KP = 0.65; 
+  private static final double LIME_KP = 0.65;
+
+  private Pose2d currentPose;
+  private Pose2d lastPose;
+
+  private double predictedTravelPerSecY = 0.0;
+  private double predictedTravelPerSecX = 0.0;
+  private double predictVelFromHub = 0.0;
 
   @Log(name = "Turn Speed")
   private double driveLimeTurn;
@@ -41,9 +56,12 @@ public class DriveTurretWithLimelight extends CommandBase {
    * @param turret the turret instance
    * @param limelight the limelight instance
    */
-  public DriveTurretWithLimelight(Turret turret, Limelight limelight) {
+  public DriveTurretWithLimelight(Turret turret, Limelight limelight, Drivetrain drivetrain, Shooter shooter, Hood hood) {
     this.turret = turret;
     this.limelight = limelight;
+    this.drivetrain = drivetrain;
+    this.shooter = shooter;
+    this.hood = hood;
 
     addRequirements(turret);
   }
@@ -54,9 +72,12 @@ public class DriveTurretWithLimelight extends CommandBase {
    * @param limelight the limelight instance
    * @param acceptableAngle the distance in degrees the turret is allowed to be off by
    */
-  public DriveTurretWithLimelight(Turret turret, Limelight limelight, double acceptableAngle) {
+  public DriveTurretWithLimelight(Turret turret, Limelight limelight, Drivetrain drivetrain, Shooter shooter, Hood hood, double acceptableAngle) {
     this.turret = turret;
     this.limelight= limelight;
+    this.drivetrain = drivetrain;
+    this.shooter = shooter;
+    this.hood = hood;
     errorToleranceAngle = acceptableAngle;
 
     addRequirements(turret);
@@ -70,15 +91,23 @@ public class DriveTurretWithLimelight extends CommandBase {
     reverseSoftLimit = turret.getReverseSoftLimit();
     avg_limeXPos = 0.0;
     limelight.enableLimelight();
+    currentPose = drivetrain.getPose();
+    lastPose = drivetrain.getPose();
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    currentPose = drivetrain.getPose();
     //How far away the target is horizontally in degrees
     limeXPos = limelight.getPositionX();
     avg_limeXPos = Util.runningAverage(limeXPos, avg_limeXPos, 0.15);
     currentPos = turret.getPositionDegrees();
+
+    predictedTravelPerSecY = ((currentPose.getY() - Constants.FieldPositions.HUB_Y_METERS) - (lastPose.getY() - Constants.FieldPositions.HUB_Y_METERS))/(Constants.LOOP_TIME_SECS);
+    predictedTravelPerSecX = ((currentPose.getX() - Constants.FieldPositions.HUB_X_METERS) - (lastPose.getX() - Constants.FieldPositions.HUB_X_METERS))/(Constants.LOOP_TIME_SECS);
+
     targetPos = currentPos + (avg_limeXPos * LIME_KP);
 
     if(unwinding) {
@@ -101,6 +130,7 @@ public class DriveTurretWithLimelight extends CommandBase {
     }
 
     turret.setRotationDegrees(driveLimeTurn);
+    lastPose = currentPose;
   }
 
   // Called once the command ends or is interrupted.

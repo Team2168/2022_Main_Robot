@@ -35,7 +35,6 @@ public class ShootBasedOnDistance extends CommandBase {
   double shooterRPM;
   double hoodAngle;
 
-  final double LOOP_TIME_SECS = 0.02;
   final double SHOT_TAKEN_TIME = 0.1;
   public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime, Drivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -55,11 +54,9 @@ public class ShootBasedOnDistance extends CommandBase {
   public void execute() {
     currentPose = drive.getPose();
     limelightDistance = lime.calcDistanceMeters();
-    shooterRPM = shooter.getRPMfromDistance(limelightDistance + predictAddedDistFromHub);
-    hoodAngle = hood.getHoodAnglefromDistance(limelightDistance + predictAddedDistFromHub);
 
-    predictedTravelDistY = (currentPose.getY() - pastPose.getY()) * (SHOT_TAKEN_TIME/LOOP_TIME_SECS);
-    predictedTravelDistX = (currentPose.getX() - pastPose.getX()) * (SHOT_TAKEN_TIME/LOOP_TIME_SECS);
+    predictedTravelDistY = (currentPose.getY() - pastPose.getY()) * (SHOT_TAKEN_TIME/Constants.LOOP_TIME_SECS);
+    predictedTravelDistX = (currentPose.getX() - pastPose.getX()) * (SHOT_TAKEN_TIME/Constants.LOOP_TIME_SECS);
 
     if (Math.abs(currentPose.getY() + predictedTravelDistY - Constants.FieldPositions.HUB_Y_METERS) >= Math.abs(currentPose.getY() - Constants.FieldPositions.HUB_Y_METERS)) {
       signOfDistanceChangeY = 1.0;
@@ -76,6 +73,8 @@ public class ShootBasedOnDistance extends CommandBase {
     }
 
     predictAddedDistFromHub = Math.sqrt((Math.pow(predictedTravelDistY, 2) * signOfDistanceChangeY) + (Math.pow(predictedTravelDistX , 2) * signofDistanceChangeX));
+    shooterRPM = shooter.getRPMfromDistance(limelightDistance + predictAddedDistFromHub);
+    hoodAngle = hood.getHoodAnglefromDistance(limelightDistance + predictAddedDistFromHub);
 
     if (!RobotContainer.getInstance().isFiring()) {
       shooter.setSpeed(shooterRPM);
