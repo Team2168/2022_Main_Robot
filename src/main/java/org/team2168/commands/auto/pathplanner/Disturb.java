@@ -15,7 +15,6 @@ import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.pooper.PoopOnColor;
-import org.team2168.commands.pooper.PoopWithColorSensor;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
@@ -37,7 +36,6 @@ import org.team2168.utils.PathUtil.InitialPathState;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

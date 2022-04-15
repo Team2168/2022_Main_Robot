@@ -4,18 +4,15 @@
 
 package org.team2168.commands.auto.pathplanner;
 
-import org.team2168.Constants;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.drivetrain.TankDrive;
-import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.pooper.PoopOnColor;
-import org.team2168.commands.pooper.PoopWithColorSensor;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
