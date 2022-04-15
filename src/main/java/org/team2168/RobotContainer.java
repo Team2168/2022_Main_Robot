@@ -264,7 +264,7 @@ public class RobotContainer {
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP));
 
     oi.operatorJoystick.ButtonRightTrigger()
-            .whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
+            .whenPressed(new ShootBasedOnDistance(shooter, hood, lime, drivetrain));
 
 
     //TEST JOYSTICK
