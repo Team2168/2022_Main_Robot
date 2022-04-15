@@ -66,11 +66,10 @@ public class FiveBall extends SequentialCommandGroup {
                                             new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
                                             new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))).withTimeout(0.1),
                                     parallel(
-                                            new WaitForShooterAtSpeed(shooter, 5),
                                             new WaitForLimelightInPosition(lime)),
                                 new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
                                 new FireBalls(shooter, indexer, hopper),
-                                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                new WaitForShooterAtSpeed(shooter).withTimeout(0.2),
                                 new FireBalls(shooter, indexer, hopper),
     
                                     //gets third ball and shoots it
@@ -86,9 +85,8 @@ public class FiveBall extends SequentialCommandGroup {
                                             new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
                                             new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))).withTimeout(0.1),
                                     parallel(
-                                            new WaitForShooterAtSpeed(shooter, 10),
                                             new WaitForLimelightInPosition(lime)),
-                                new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                new WaitForShooterAtSpeed(shooter, 10).withTimeout(0.5),
 
                                     new FireBalls(shooter, indexer, hopper))
                     ),
@@ -120,14 +118,13 @@ public class FiveBall extends SequentialCommandGroup {
                                 new DriveTurretWithLimelight(turret, lime),
                                 sequence(
                                         parallel(
-                                                new WaitForShooterAtSpeed(shooter, 20),
                                                 new WaitForLimelightInPosition(lime)
                                         ),
                                         
                                         new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0).withTimeout(0.1),
-                                        new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                        new WaitForShooterAtSpeed(shooter, 20).withTimeout(0.5),
                                         new FireBalls(shooter, indexer, hopper),
-                                        new WaitForShooterAtSpeed(shooter).withTimeout(0.5),
+                                        new WaitForShooterAtSpeed(shooter, 20).withTimeout(0.5),
                                         new FireBalls(shooter, indexer, hopper)
                                 )
                         )
