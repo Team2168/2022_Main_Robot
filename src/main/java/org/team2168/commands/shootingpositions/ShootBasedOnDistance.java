@@ -4,6 +4,7 @@
 
 package org.team2168.commands.shootingpositions;
 
+import org.team2168.Constants;
 import org.team2168.RobotContainer;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hood;
@@ -22,11 +23,20 @@ public class ShootBasedOnDistance extends CommandBase {
 
   double limelightDistance;
   double pastLimelightDist = 0.0;
+  double predictedTravelDistY = 0.0;
+  double predictedTravelDistX = 0.0;
+  double predictAddedDistFromHub = 0.0;
+  double signOfDistanceChangeY = 1.0;
+  double signofDistanceChangeX = 1.0;
+
   Pose2d pastPose;
   Pose2d currentPose;
 
   double shooterRPM;
   double hoodAngle;
+
+  final double LOOP_TIME_SECS = 0.02;
+  final double SHOT_TAKEN_TIME = 0.1;
   public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime, Drivetrain drive) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter, hood);
@@ -45,8 +55,27 @@ public class ShootBasedOnDistance extends CommandBase {
   public void execute() {
     currentPose = drive.getPose();
     limelightDistance = lime.calcDistanceMeters();
-    shooterRPM = shooter.getRPMfromDistance(limelightDistance);
-    hoodAngle = hood.getHoodAnglefromDistance(limelightDistance);
+    shooterRPM = shooter.getRPMfromDistance(limelightDistance + predictAddedDistFromHub);
+    hoodAngle = hood.getHoodAnglefromDistance(limelightDistance + predictAddedDistFromHub);
+
+    predictedTravelDistY = (currentPose.getY() - pastPose.getY()) * (SHOT_TAKEN_TIME/LOOP_TIME_SECS);
+    predictedTravelDistX = (currentPose.getX() - pastPose.getX()) * (SHOT_TAKEN_TIME/LOOP_TIME_SECS);
+
+    if (Math.abs(currentPose.getY() + predictedTravelDistY - Constants.FieldPositions.HUB_Y_METERS) >= Math.abs(currentPose.getY() - Constants.FieldPositions.HUB_Y_METERS)) {
+      signOfDistanceChangeY = 1.0;
+    }
+    else {
+      signOfDistanceChangeY = -1.0;
+    }
+
+    if (Math.abs(currentPose.getX() + predictedTravelDistX - Constants.FieldPositions.HUB_X_METERS) >= Math.abs(currentPose.getX() - Constants.FieldPositions.HUB_X_METERS)) {
+      signofDistanceChangeX = 1.0;
+    }
+    else {
+      signofDistanceChangeX = -1.0;
+    }
+
+    predictAddedDistFromHub = Math.sqrt((Math.pow(predictedTravelDistY, 2) * signOfDistanceChangeY) + (Math.pow(predictedTravelDistX , 2) * signofDistanceChangeX));
 
     if (!RobotContainer.getInstance().isFiring()) {
       shooter.setSpeed(shooterRPM);
