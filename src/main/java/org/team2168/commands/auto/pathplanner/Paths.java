@@ -52,7 +52,7 @@ public class Paths {
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
         path_Disturb_1 = getTrajectory("Disturb_1", true);
-        path_Disturb_2 = getTrajectory("Disturb_2", false);
+        path_Disturb_2 = getTrajectory("Disturb_2", true);
         path_Disturb_3 = getTrajectory("Disturb_3", true);
         path_Disturb_4 = getTrajectory("Disturb_4", true);
         path_Disturb_5 = getTrajectory("Disturb_5", true);

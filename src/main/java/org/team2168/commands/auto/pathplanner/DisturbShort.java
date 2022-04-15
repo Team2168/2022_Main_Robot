@@ -42,9 +42,9 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Disturb extends SequentialCommandGroup {
+public class DisturbShort extends SequentialCommandGroup {
   /** Creates a new Disturb. */
-  public Disturb(
+  public DisturbShort(
       Drivetrain drivetrain,
       IntakeRaiseAndLower intakeRaiseAndLower,
       IntakeRoller intakeRoller,
@@ -94,23 +94,7 @@ public class Disturb extends SequentialCommandGroup {
             parallel(
               new WaitForShooterAtSpeed(shooter),
               new WaitForLimelightInPosition(limelight)).withTimeout(1.0),
-            new FireBalls(shooter, indexer, hopper),
-
-            // Collects and poops opponent's ball
-            parallel(
-              PathUtil.getPathCommand(paths.path_Disturb_4, drivetrain, InitialPathState.PRESERVEODOMETRY),
-              race(
-                new DriveHopperUntilBall(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
-                new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED))),
-
-            parallel(
-              new SetIntakeSpeed(intakeRoller, 0.0),
-              new DriveHopperWithPercentOutput(hopper, () -> 0.0),
-              new DriveIndexer(indexer, () -> 0.0),
-              new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1),
-
-            PathUtil.getPathCommand(paths.path_Disturb_5, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            new PoopOnColor(colorSensor, pooper, hopper)
+            new FireBalls(shooter, indexer, hopper)
             )
     ));
   }

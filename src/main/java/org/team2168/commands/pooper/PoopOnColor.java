@@ -11,9 +11,10 @@ public class PoopOnColor extends CommandBase {
     ColorSensor colorSensor;
     Pooper pooper;
 
-    public PoopOnColor(ColorSensor colorSensor, Pooper pooper) {
+    public PoopOnColor(ColorSensor colorSensor, Pooper pooper, Hopper hopper) {
         this.colorSensor = colorSensor;
         this.pooper = pooper;
+        this.hopper = hopper;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
         addRequirements(pooper);
@@ -32,7 +33,7 @@ public class PoopOnColor extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !hopper.isBallPresent();
     }
 
     @Override
