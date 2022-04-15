@@ -13,8 +13,9 @@ import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.pooper.PooperPoop;
+import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
+import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
 import org.team2168.subsystems.ColorSensor;
@@ -60,8 +61,8 @@ public class Disturb extends SequentialCommandGroup {
 
         race( 
           new DriveTurretWithLimelight(turret, limelight),
+          new ShootBasedOnDistance(shooter, hood, limelight),
           sequence( //shoots preloaded ball, collects and poops opposite's ball
-            new AutoTarmacLine(hood, shooter, limelight).withTimeout(0.2),
             new IntakeLower(intakeRaiseAndLower),
             parallel(
               PathUtil.getPathCommand(paths.path_Disturb_1, drivetrain, InitialPathState.DISCARDHEADING),
@@ -78,6 +79,7 @@ public class Disturb extends SequentialCommandGroup {
 
             PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
             new PooperPoop(pooper),
+            new PooperUnpoop(pooper),
 
             //Collects and shoots another ball
             parallel(
@@ -106,7 +108,8 @@ public class Disturb extends SequentialCommandGroup {
               new TankDrive(drivetrain, () -> 0.0, () -> 0.0)).withTimeout(0.1)),
 
             PathUtil.getPathCommand(paths.path_Disturb_5, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            new PooperPoop(pooper)
+            new PooperPoop(pooper),
+            new PooperUnpoop(pooper)
     ));
   }
 }
