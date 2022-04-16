@@ -4,7 +4,7 @@
 
 package org.team2168.commands.shootingpositions;
 
-import org.team2168.OI;
+import org.team2168.RobotContainer;
 import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
@@ -16,47 +16,36 @@ public class ShootBasedOnDistance extends CommandBase {
   Limelight lime;
   Shooter shooter;
   Hood hood;
-  OI oi;
 
   double limelightDistance;
   double pastLimelightDist = 0.0;
   double shooterRPM;
   double hoodAngle;
-  public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime, OI oi) {
+  public ShootBasedOnDistance(Shooter shooter, Hood hood, Limelight lime) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter, hood);
     this.lime = lime;
     this.shooter = shooter;
     this.hood = hood;
-    this.oi = oi;
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    shooter.setWaitForShooterAtSpeed(false);
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     limelightDistance = lime.calcDistanceMeters();
-    shooterRPM = lime.getRPMfromDistance(limelightDistance);
-    hoodAngle = lime.getHoodAnglefromDistance(limelightDistance);
+    shooterRPM = shooter.getRPMfromDistance(limelightDistance);
+    hoodAngle = hood.getHoodAnglefromDistance(limelightDistance);
 
-    if (limelightDistance < 4.0) {
-      lime.setPipeline(Limelight.PIPELINE_TARMAC_LINE);
-    }
-    else if (limelightDistance >= 4.0 && limelightDistance < 6.0) {
-      lime.setPipeline(Limelight.PIPELINE_LAUNCHPAD_LINE);
-    }
-    else {
-      lime.setPipeline(Limelight.PIPELINE_TERMINAL);
-    }
-
-    if (!oi.operatorJoystick.isPressedButtonRightBumper()) {
+    if (!RobotContainer.getInstance().isFiring()) {
       shooter.setSpeed(shooterRPM);
       hood.setPosition(hoodAngle);
     }
-    shooter.setWaitForShooterAtSpeed(false);
   }
 
   // Called once the command ends or is interrupted.
