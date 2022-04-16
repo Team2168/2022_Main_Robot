@@ -12,6 +12,7 @@ import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
+import org.team2168.commands.pooper.AutoPoopOnColor;
 import org.team2168.commands.pooper.PoopOnColor;
 import org.team2168.commands.pooper.PooperUnpoop;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
@@ -71,7 +72,7 @@ public class DisturbShort extends SequentialCommandGroup {
               new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller)),
 
             PathUtil.getPathCommand(paths.path_Disturb_2, drivetrain, InitialPathState.PRESERVEODOMETRY),
-            new PoopOnColor(colorSensor, pooper),
+            new AutoPoopOnColor(colorSensor, pooper, hopper).withTimeout(3.0),
             new PooperUnpoop(pooper),
 
             //Collects and shoots another ball
