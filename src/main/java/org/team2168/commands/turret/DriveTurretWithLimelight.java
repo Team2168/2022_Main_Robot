@@ -105,8 +105,8 @@ public class DriveTurretWithLimelight extends CommandBase {
     avg_limeXPos = Util.runningAverage(limeXPos, avg_limeXPos, 0.15);
     currentPos = turret.getPositionDegrees();
 
-    predictedTravelPerSecY = ((currentPose.getY() - Constants.FieldPositions.HUB_Y_METERS) - (lastPose.getY() - Constants.FieldPositions.HUB_Y_METERS))/(Constants.LOOP_TIME_SECS);
-    predictedTravelPerSecX = ((currentPose.getX() - Constants.FieldPositions.HUB_X_METERS) - (lastPose.getX() - Constants.FieldPositions.HUB_X_METERS))/(Constants.LOOP_TIME_SECS);
+    predictedTravelPerSecY = (currentPose.getY() - lastPose.getY())/(Constants.LOOP_TIME_SECS);
+    predictedTravelPerSecX = (currentPose.getX() - lastPose.getX())/(Constants.LOOP_TIME_SECS);
 
     targetPos = currentPos + (avg_limeXPos * LIME_KP);
 
