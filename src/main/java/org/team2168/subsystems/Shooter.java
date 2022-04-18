@@ -37,9 +37,9 @@ public class Shooter extends SubsystemBase implements Loggable {
     WALL_SHOT(2750.0, true),
     TERMINAL(2300.0, true),
     // ONE_METER_FROM_HUB(1625.0, true),
-    // TWO_METER_FROM_HUB(1775.0, true), // PBOT 1840.0, true
-    // THREE_METER_FROM_HUB(1950.0, true), // PBOT 1920.0, true
-    // FOUR_METER_FROM_HUB(2075.0, true), // PBOT 2080.0, true
+    TWO_METER_FROM_HUB(1670, true), // PBOT 1840.0, true
+    THREE_METER_FROM_HUB(1820.0, true), // PBOT 1920.0, true
+    FOUR_METER_FROM_HUB(2025.0, true), // PBOT 2080.0, true
     // FIVE_METER_FROM_HUB(2575.0, true), // PBOT 2575.0, true
     STOP(0.0, true);
     // FENDER_LOW_CBOT(1100.0),  // TODO fix this once we have pbot jumper merged

@@ -53,6 +53,7 @@ import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
+import org.team2168.subsystems.Hood.HoodPosition;
 import org.team2168.subsystems.Shooter.ShooterRPM;
 
 import java.util.List;
@@ -213,9 +214,18 @@ public class RobotContainer {
 
     //OPERATOR CONTROLS
     //// main button cluster
-    oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
-    oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
-    oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
+    // oi.operatorJoystick.ButtonA().whenPressed(new FenderLow(hood, shooter));
+    oi.operatorJoystick.ButtonA()
+      .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.TWO_METER_FROM_HUB))
+      .whenPressed(new HoodToAngle(hood, 23.0));
+    // oi.operatorJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
+    oi.operatorJoystick.ButtonB()
+    .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.THREE_METER_FROM_HUB))
+    .whenPressed(new HoodToAngle(hood, 25.0));
+    // oi.operatorJoystick.ButtonX().whenPressed(new Launchpad(hood, shooter, lime));
+    oi.operatorJoystick.ButtonX()
+    .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.FOUR_METER_FROM_HUB))
+    .whenPressed(new HoodToAngle(hood, 28.0));
     oi.operatorJoystick.ButtonY()
             .whenPressed(new RotateTurret(turret, 0.0))
             .whenPressed(new FenderHigh(hood, shooter, lime));
