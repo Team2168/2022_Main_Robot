@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -153,16 +154,14 @@ public final class Constants {
          */
         public static double getAboveBarExtension() {
             System.out.println("************************** alliance is " + DriverStation.getAlliance());
-            switch (DriverStation.getAlliance()) {
-                case Red:
-                    System.out.println("USING RED EXTENSION!");
-                    return 29.0;
-                case Blue:
-                    System.out.println("USING BLUE EXTENSION!");
-                    return 29.8;
-                default:
-                    System.out.println("Alliance isn't set?");
-                    return LIFT_ABOVE_BAR_FROM_AIR_INCHES;
+            if (DriverStation.getAlliance() == Alliance.Blue) {
+                return ABOVE_NEXT_BAR_BLUE;
+            }
+            else if (DriverStation.getAlliance() == Alliance.Red) {
+                return ABOVE_NEXT_BAR_RED;
+            }
+            else {
+                return LIFT_ABOVE_BAR_FROM_AIR_INCHES;
             }
         }
         public static final double ABOVE_NEXT_BAR_RED = 29.0;
@@ -176,17 +175,12 @@ public final class Constants {
          */
         public static double getBelowNextBar() {
             System.out.println("************************** alliance is " + DriverStation.getAlliance());
-            switch (DriverStation.getAlliance()) {
-                case Red:
-                    System.out.println("USING RED EXTENSION!");
-                    return 17.75;
-                case Blue:
-                    System.out.println("USING BLUE EXTENSION!");
-                    return 18.5;
-                default:
-                    System.out.println("Alliance isn't set?");
-                    return LIFT_EXTEND_BELOW_NEXT_BAR_INCHES;
-            }
+            if  (DriverStation.getAlliance() == Alliance.Blue) 
+                return BELOW_NEXT_BAR_BLUE;
+            else if (DriverStation.getAlliance() == Alliance.Red)
+                return BELOW_NEXT_BAR_RED;
+            else
+                return LIFT_EXTEND_BELOW_NEXT_BAR_INCHES;
         }
         public static final double BELOW_NEXT_BAR_RED = 17.75;
         public static final double BELOW_NEXT_BAR_BLUE = 18.5;
