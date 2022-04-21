@@ -6,8 +6,9 @@ package org.team2168;
 
 import org.team2168.utils.Gains;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
@@ -145,9 +146,49 @@ public final class Constants {
     }
     
     public static final class LiftPositions {
-        public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 28.8;
+        /**
+         * Gets extension distance based on alliance color.
+         * This is useful when the bars are extremely different for each side
+         * @return extension distance to get above the next bar.
+         */
+        public static double getAboveBarExtension() {
+            switch (DriverStation.getAlliance()) {
+                case Red:
+                    System.out.println("USING RED EXTENSION!");
+                    return 29.0;
+                case Blue:
+                    System.out.println("USING BLUE EXTENSION!");
+                    return 29.8;
+                default:
+                    System.out.println("Alliance isn't set?");
+                    return LIFT_ABOVE_BAR_FROM_AIR_INCHES;
+            }
+        }
+
+        /**
+         * Gets extension distance based on alliance color.
+         * This is useful when the bars are extremely different for each side
+         * @return extension distance to get just below the next bar.
+         */
+        public static double getBelowNextBar() {
+            switch (DriverStation.getAlliance()) {
+                case Red:
+                    System.out.println("USING RED EXTENSION!");
+                    return 17.75;
+                case Blue:
+                    System.out.println("USING BLUE EXTENSION!");
+                    return 18.5;
+                default:
+                    System.out.println("Alliance isn't set?");
+                    return LIFT_EXTEND_BELOW_NEXT_BAR_INCHES;
+            }
+        }
+
+        // public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.0;
+        public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
         public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.0;
-        public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 18.0;
+        // public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 18.0;
+        public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 19.0;
         public static final double LIFT_RETRACT_TO_MINIMIZE_TRAVESE_SWING_INCHES = 19.0;
 
         public static final double LIFT_UNLOAD_TO_MBAR_INCHES = 4.5;        // raise lift to clear bar prior to mbar tilt
