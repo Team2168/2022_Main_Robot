@@ -27,11 +27,11 @@ public class ClimbToHighBar extends SequentialCommandGroup {
  */
   public ClimbToHighBar(Climber climb, MonkeyBar monkey) {
     addCommands(
-      new DriveClimberToPosition(climb, LiftPositions.getBelowNextBar()),
+      new DriveClimberToPosition(climb, LiftPositions.BELOW_NEXT_BAR),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
       new WaitToExtendLiftWhileSwinging(LiftPositions.SAFE_HIGH_BAR_EXTEND_PITCH, LiftPositions.TOO_CLOSE_TO_SWING_APEX_PITCH_HIGH),
-      new DriveClimberToPosition(climb, LiftPositions.getAboveBarExtension()),
+      new DriveClimberToPosition(climb, LiftPositions.ABOVE_NEXT_BAR),
       new RetractMonkeyBar(monkey),
       new CheckClimberHookAttached(climb, 10),
       new DriveClimberToPosition(climb, LiftPositions.LIFT_RETRACTION_INCHES));

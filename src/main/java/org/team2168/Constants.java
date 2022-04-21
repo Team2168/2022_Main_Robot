@@ -152,6 +152,7 @@ public final class Constants {
          * @return extension distance to get above the next bar.
          */
         public static double getAboveBarExtension() {
+            System.out.println("************************** alliance is " + DriverStation.getAlliance());
             switch (DriverStation.getAlliance()) {
                 case Red:
                     System.out.println("USING RED EXTENSION!");
@@ -164,6 +165,9 @@ public final class Constants {
                     return LIFT_ABOVE_BAR_FROM_AIR_INCHES;
             }
         }
+        public static final double ABOVE_NEXT_BAR_RED = 29.0;
+        public static final double ABOVE_NEXT_BAR_BLUE = 29.8;
+        public static final double ABOVE_NEXT_BAR = ABOVE_NEXT_BAR_RED;
 
         /**
          * Gets extension distance based on alliance color.
@@ -171,6 +175,7 @@ public final class Constants {
          * @return extension distance to get just below the next bar.
          */
         public static double getBelowNextBar() {
+            System.out.println("************************** alliance is " + DriverStation.getAlliance());
             switch (DriverStation.getAlliance()) {
                 case Red:
                     System.out.println("USING RED EXTENSION!");
@@ -183,6 +188,9 @@ public final class Constants {
                     return LIFT_EXTEND_BELOW_NEXT_BAR_INCHES;
             }
         }
+        public static final double BELOW_NEXT_BAR_RED = 17.75;
+        public static final double BELOW_NEXT_BAR_BLUE = 18.5;
+        public static final double BELOW_NEXT_BAR = BELOW_NEXT_BAR_RED;
 
         // public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.0;
         public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
