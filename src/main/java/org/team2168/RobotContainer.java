@@ -227,8 +227,7 @@ public class RobotContainer {
     .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.FOUR_METER_FROM_HUB))
     .whenPressed(new HoodToAngle(hood, 28.0));
     oi.operatorJoystick.ButtonY()
-            .whenPressed(new RotateTurret(turret, 0.0))
-            .whenPressed(new FenderHigh(hood, shooter, lime));
+            .whenPressed(new SetPipeline(lime, Limelight.PIPELINE_TARMAC_LINE));
 
     //// start and back
     oi.operatorJoystick.ButtonStart().whenPressed(new BumpShooterSpeedUp(shooter));
