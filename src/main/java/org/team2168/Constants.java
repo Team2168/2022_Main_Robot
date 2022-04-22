@@ -146,52 +146,19 @@ public final class Constants {
     }
     
     public static final class LiftPositions {
-        /**
-         * Gets extension distance based on alliance color.
-         * This is useful when the bars are extremely different for each side
-         * @return extension distance to get above the next bar.
-         */
-        public static double getAboveBarExtension() {
-            System.out.println("************************** alliance is " + DriverStation.getAlliance());
-            switch (DriverStation.getAlliance()) {
-                case Red:
-                    System.out.println("USING RED EXTENSION!");
-                    return 29.0;
-                case Blue:
-                    System.out.println("USING BLUE EXTENSION!");
-                    return 29.8;
-                default:
-                    System.out.println("Alliance isn't set?");
-                    return LIFT_ABOVE_BAR_FROM_AIR_INCHES;
-            }
-        }
+
+        // First pass (under bar)
         public static final double ABOVE_NEXT_BAR_RED = 29.0;
-        public static final double ABOVE_NEXT_BAR_BLUE = 29.8;
+        // public static final double ABOVE_NEXT_BAR_BLUE = 29.8;
         public static final double ABOVE_NEXT_BAR = ABOVE_NEXT_BAR_RED;
 
-        /**
-         * Gets extension distance based on alliance color.
-         * This is useful when the bars are extremely different for each side
-         * @return extension distance to get just below the next bar.
-         */
-        public static double getBelowNextBar() {
-            System.out.println("************************** alliance is " + DriverStation.getAlliance());
-            switch (DriverStation.getAlliance()) {
-                case Red:
-                    System.out.println("USING RED EXTENSION!");
-                    return 17.75;
-                case Blue:
-                    System.out.println("USING BLUE EXTENSION!");
-                    return 18.5;
-                default:
-                    System.out.println("Alliance isn't set?");
-                    return LIFT_EXTEND_BELOW_NEXT_BAR_INCHES;
-            }
-        }
+        //Second pass (actual climb)
         public static final double BELOW_NEXT_BAR_RED = 17.75;
-        public static final double BELOW_NEXT_BAR_BLUE = 18.5;
+        // public static final double BELOW_NEXT_BAR_BLUE = 18.5;
         public static final double BELOW_NEXT_BAR = BELOW_NEXT_BAR_RED;
 
+
+        
         // public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.0;
         public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
         public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.0;
