@@ -149,13 +149,13 @@ public final class Constants {
 
         // First pass (under bar)
         public static final double ABOVE_NEXT_BAR_RED = 29.0;
-        // public static final double ABOVE_NEXT_BAR_BLUE = 29.8;
-        public static final double ABOVE_NEXT_BAR = ABOVE_NEXT_BAR_RED;
+        public static final double ABOVE_NEXT_BAR_BLUE = 29.4;
+        public static final double ABOVE_NEXT_BAR = ABOVE_NEXT_BAR_BLUE;
 
         //Second pass (actual climb)
         public static final double BELOW_NEXT_BAR_RED = 17.75;
-        // public static final double BELOW_NEXT_BAR_BLUE = 18.5;
-        public static final double BELOW_NEXT_BAR = BELOW_NEXT_BAR_RED;
+        public static final double BELOW_NEXT_BAR_BLUE = 18.175;
+        public static final double BELOW_NEXT_BAR = BELOW_NEXT_BAR_BLUE;
 
 
         
