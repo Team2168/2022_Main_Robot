@@ -48,6 +48,8 @@ public class DriveTurretWithLimelight extends CommandBase {
   private double predictedTravelPerSecX = 0.0;
   private double predictVelFromHub = 0.0;
 
+  private double predictedHeadingOfBall;
+
   @Log(name = "Turn Speed")
   private double driveLimeTurn;
 
@@ -107,6 +109,8 @@ public class DriveTurretWithLimelight extends CommandBase {
 
     predictedTravelPerSecY = (currentPose.getY() - lastPose.getY())/(Constants.LOOP_TIME_SECS);
     predictedTravelPerSecX = (currentPose.getX() - lastPose.getX())/(Constants.LOOP_TIME_SECS);
+
+    predictedHeadingOfBall = Math.atan(predictedTravelPerSecY/predictedTravelPerSecX);
 
     targetPos = currentPos + (avg_limeXPos * LIME_KP);
 
