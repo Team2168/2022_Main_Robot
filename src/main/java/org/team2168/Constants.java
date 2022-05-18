@@ -58,7 +58,7 @@ public final class Constants {
             new DifferentialDriveKinematics(kTrackwidthMeters);
 
         public static final double kMaxSpeedMetersPerSecond = 3.2;  // 3.7
-        public static final double kMaxAccelerationMetersPerSecondSquared = 1.4;  // 4.0 is feasable?
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.7;  // 4.0 is feasable?
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2.0;//worked for 1m/s = 8.0;// stock 2;
@@ -161,6 +161,16 @@ public final class Constants {
         public static final double TOO_CLOSE_TO_SWING_APEX_PITCH = 40.0;
         public static final double TOO_CLOSE_TO_SWING_APEX_PITCH_HIGH = 90.0; // there is no minimum value here!
         public static final double LIFT_UNLOAD_TO_MBAR_PITCH = 15.0;
+    }
+
+    public static final class Heights {
+        public static final double ROBOT_LIMELIGHT_HEIGHT_METERS = 1.00838; // 39.7 in.
+        public static final double UPPER_HUB_HEIGHT_METERS = 2.6416; // 104 in.
+    }
+
+    public static final class Distances {
+        public static final double LIMELIGHT_OFFSET_METERS = 0.36195; // 14.25 ins, horizontal dist from bumpers to limelight
+        public static final double HUB_OFFSET_FENDER_METERS = 0.37; // hub from fender dist + the average distance of the 5 tracked points
     }
 
     public static final class Analog {

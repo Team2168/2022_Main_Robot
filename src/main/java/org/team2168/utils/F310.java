@@ -315,56 +315,56 @@ public class F310 extends Joystick {
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonLeftStickMovedLeft() {
-		return new JoystickAnalogButton(this, AXIS_LEFT_X, -0.5);
+		return new JoystickAnalogButton(this, AXIS_LEFT_X, -0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonLeftStickMovedRight() {
-		return new JoystickAnalogButton(this, AXIS_LEFT_X, 0.5);
+		return new JoystickAnalogButton(this, AXIS_LEFT_X, 0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonLeftStickMovedUp() {
-		return new JoystickAnalogButton(this, AXIS_LEFT_Y, -0.5);
+		return new JoystickAnalogButton(this, AXIS_LEFT_Y, -0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonLeftStickMovedDown() {
-		return new JoystickAnalogButton(this, AXIS_LEFT_Y, 0.5);
+		return new JoystickAnalogButton(this, AXIS_LEFT_Y, 0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonRightStickMovedLeft() {
-		return new JoystickAnalogButton(this, AXIS_RIGHT_X, -0.5);
+		return new JoystickAnalogButton(this, AXIS_RIGHT_X, -0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonRightStickMovedRight() {
-		return new JoystickAnalogButton(this, AXIS_RIGHT_X, 0.5);
+		return new JoystickAnalogButton(this, AXIS_RIGHT_X, 0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonRightStickMovedUp() {
-		return new JoystickAnalogButton(this, AXIS_RIGHT_Y, -0.5);
+		return new JoystickAnalogButton(this, AXIS_RIGHT_Y, -0.8);
 	}
 
 	/**
 	 * Threshold an axis (analog) to work as a button (boolean)
 	 */
 	public JoystickAnalogButton ButtonRightStickMovedDown() {
-		return new JoystickAnalogButton(this, AXIS_RIGHT_Y, 0.5);
+		return new JoystickAnalogButton(this, AXIS_RIGHT_Y, 0.8);
 	}
 
 	public JoystickPOVButton ButtonUpDPad() {

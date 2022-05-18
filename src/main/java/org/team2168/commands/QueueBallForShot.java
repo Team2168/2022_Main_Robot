@@ -7,6 +7,7 @@ package org.team2168.commands;
 import org.team2168.Constants.MotorSpeeds;
 import org.team2168.commands.hopper.DriveHopperUntilBall;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
+import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.pooper.PoopOnColor;
@@ -41,12 +42,17 @@ public class QueueBallForShot extends SequentialCommandGroup {
            new SetIntakeSpeed(intakeRoller, MotorSpeeds.INTAKE_SPEED),
            new DriveHopperUntilBall(hopper, ()->MotorSpeeds.HOPPER_SPEED)
       ),
-      new Sleep().withTimeout(0.06), //let the ball color be detected
 
+      new Sleep().withTimeout(0.05), //let the ball color be detected
+
+      // Poop the ball if we should,
+      // otherwise run the hopper and indexer until there's a ball at the indexer
       new ConditionalCommand(
-        new PooperPoop(pooper).andThen(new Sleep().withTimeout(0.25)).andThen(new PooperUnpoop(pooper)),      
-        race(new DriveHopperWithPercentOutput(hopper, ()->MotorSpeeds.HOPPER_SPEED),
-          new DriveIndexerUntilBall(indexer, ()->MotorSpeeds.INDEXER_SPEED).withTimeout(1.0)),
+        new PooperPoop(pooper).andThen(new Sleep().withTimeout(0.25)).andThen(new PooperUnpoop(pooper)),
+        new ConditionalCommand(new DriveIndexer(indexer, ()->0.0).andThen(new DriveHopperWithPercentOutput(hopper, ()->0.0)),
+                               race(new DriveHopperWithPercentOutput(hopper, ()->MotorSpeeds.HOPPER_SPEED),
+                                    new DriveIndexerUntilBall(indexer, ()->MotorSpeeds.INDEXER_SPEED).withTimeout(1.0)),
+                               indexer::isBallPresent),
         colorSensor::shouldPoopBall)
     );
   }
