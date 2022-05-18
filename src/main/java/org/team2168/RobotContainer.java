@@ -24,6 +24,9 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import org.team2168.commands.*;
+import org.team2168.commands.LEDs.SetBlueLED;
+import org.team2168.commands.LEDs.SetGreenLED;
+import org.team2168.commands.LEDs.SetRedLED;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.auto.*;
 import org.team2168.commands.auto.pathplanner.Disturb;
@@ -276,6 +279,12 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
+    oi.testJoystick.ButtonX().whileHeld(new SetBlueLED(leds, true))
+                    .whenReleased(new SetBlueLED(leds, false));
+    oi.testJoystick.ButtonA().whileHeld(new SetGreenLED(leds, true))
+                    .whenReleased(new SetGreenLED(leds, false));
+    oi.testJoystick.ButtonB().whileHeld(new SetRedLED(leds, true))
+                    .whenReleased(new SetRedLED(leds, false));
     // oi.testJoystick.ButtonLeftBumper()
     //         // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
     //         .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))

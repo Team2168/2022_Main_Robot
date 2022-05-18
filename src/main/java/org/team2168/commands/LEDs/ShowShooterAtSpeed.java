@@ -36,15 +36,15 @@ public class ShowShooterAtSpeed extends CommandBase {
       leds.red(false);
       leds.green(false);
       leds.blue(true);
-    } else if (shooter.isAtSpeed()) {
-      leds.red(false);
-      leds.green(true);
-      leds.blue(false);
-    } else {
-      leds.red(true);
-      leds.blue(false);
-      leds.green(false);
-    }
+    // } else if (shooter.isAtSpeed()) {
+    //   leds.red(false);
+    //   leds.green(true);
+    //   leds.blue(false);
+    // } else {
+    //   leds.red(true);
+    //   leds.blue(false);
+    //   leds.green(false);
+     }
   }
 
   // Called once the command ends or is interrupted.
