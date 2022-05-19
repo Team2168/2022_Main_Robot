@@ -27,7 +27,7 @@ import org.team2168.commands.*;
 import org.team2168.commands.LEDs.SetBlueLED;
 import org.team2168.commands.LEDs.SetGreenLED;
 import org.team2168.commands.LEDs.SetRedLED;
-import org.team2168.commands.LEDs.ShowShooterAtSpeed;
+import org.team2168.commands.LEDs.LEDStatus;
 import org.team2168.commands.auto.*;
 import org.team2168.commands.auto.pathplanner.Disturb;
 import org.team2168.commands.auto.pathplanner.DisturbShort;
@@ -196,7 +196,7 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    leds.setDefaultCommand(new ShowShooterAtSpeed(leds, shooter, climber));
+    leds.setDefaultCommand(new LEDStatus(leds, shooter, climber, lime));
 
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
@@ -279,12 +279,6 @@ public class RobotContainer {
 
 
     //TEST JOYSTICK
-    oi.testJoystick.ButtonX().whileHeld(new SetBlueLED(leds, true))
-                    .whenReleased(new SetBlueLED(leds, false));
-    oi.testJoystick.ButtonA().whileHeld(new SetGreenLED(leds, true))
-                    .whenReleased(new SetGreenLED(leds, false));
-    oi.testJoystick.ButtonB().whileHeld(new SetRedLED(leds, true))
-                    .whenReleased(new SetRedLED(leds, false));
     // oi.testJoystick.ButtonLeftBumper()
     //         // .whileHeld(new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller))
     //         .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
