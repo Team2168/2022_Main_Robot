@@ -6,15 +6,16 @@ import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Pooper;
 
 
-public class PoopOnColor extends CommandBase {
+public class AutoPoopOnColor extends CommandBase {
+    Hopper hopper;
     ColorSensor colorSensor;
     Pooper pooper;
 
-    public PoopOnColor(ColorSensor colorSensor, Pooper pooper) {
+    public AutoPoopOnColor(ColorSensor colorSensor, Pooper pooper, Hopper hopper) {
         this.colorSensor = colorSensor;
         this.pooper = pooper;
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
+        this.hopper = hopper;
+        
         addRequirements(pooper);
     }
 
@@ -31,7 +32,7 @@ public class PoopOnColor extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        return !hopper.isBallPresent();
     }
 
     @Override

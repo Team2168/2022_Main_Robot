@@ -11,6 +11,7 @@ import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
+import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
 import org.team2168.commands.shootingpositions.TarmacLine;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
@@ -33,32 +34,35 @@ public class TwoBall extends SequentialCommandGroup {
             Limelight lime) {
         Paths paths = Paths.getInstance();
         addCommands(
-                new RotateTurret(turret, 0.0).withTimeout(0.5),
-                new InstantCommand(() -> System.out.println("done turning turret")),
-                parallel(
-                        new DriveTurretWithLimelight(turret, lime),
-                        new InstantCommand(() -> System.out.println("beginning sequence")),
-                        sequence(
-                            new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
-                            new IntakeLower(intakeRaiseAndLower),
-                            race (  // run group until path ends
-                                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                    PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
-                            ),
-                            // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
-                            new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+            race(
+                new ShootBasedOnDistance(shooter, hood, lime),
+                    sequence(
+                    new RotateTurret(turret, 0.0).withTimeout(0.5),
+                    new InstantCommand(() -> System.out.println("done turning turret")),
+                    parallel(
+                            new DriveTurretWithLimelight(turret, lime),
+                            new InstantCommand(() -> System.out.println("beginning sequence")),
+                            
+                            sequence(
+                                new IntakeLower(intakeRaiseAndLower),
+                                race (  // run group until path ends
+                                        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                        PathUtil.getPathCommand(paths.path_4BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
+                                ),
+                                // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
+                                new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
 
-                            new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                            new WaitForShooterAtSpeed(shooter),
-                            new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
-                            new WaitForLimelightInPosition(lime),
-                            new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                            new FireBalls(shooter, indexer, hopper),
-                            new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
-                            new WaitForShooterAtSpeed(shooter),
-                            new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
-                            new FireBalls(shooter, indexer, hopper)
-                        ))
+                                new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
+                                new WaitForShooterAtSpeed(shooter),
+                                new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
+                                new WaitForLimelightInPosition(lime),
+                                new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
+                                new FireBalls(shooter, indexer, hopper),
+                                new InstantCommand(() -> System.out.println("reving up shooter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
+                                new WaitForShooterAtSpeed(shooter),
+                                new InstantCommand(() -> System.out.println("shooter done!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11")),
+                                new FireBalls(shooter, indexer, hopper)
+                            ))))
         );
     }
 }

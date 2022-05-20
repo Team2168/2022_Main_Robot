@@ -26,6 +26,8 @@ import io.github.oblarg.oblog.annotations.Log;
 import org.team2168.commands.*;
 import org.team2168.commands.LEDs.ShowShooterAtSpeed;
 import org.team2168.commands.auto.*;
+import org.team2168.commands.auto.pathplanner.Disturb;
+import org.team2168.commands.auto.pathplanner.DisturbShort;
 import org.team2168.commands.auto.pathplanner.FiveBall;
 import org.team2168.commands.auto.pathplanner.FourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
@@ -140,7 +142,7 @@ public class RobotContainer {
 
     autoChooser.setDefaultOption("Do nothing", new DoNothing());
     autoChooser.addOption("2 ball", twoBall);
-      autoChooser.addOption("3 Ball", new ThreeBall(
+    autoChooser.addOption("3 Ball", new ThreeBall(
               drivetrain, intakeRaiseAndLower, intakeRoller,
               hopper, indexer, hood,
               shooter, turret, pooper, colorSensor,
@@ -154,6 +156,12 @@ public class RobotContainer {
       hopper, indexer, hood,
       shooter, turret, pooper, colorSensor,
       lime));
+    autoChooser.addOption("Defensive", new Disturb(
+      drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
+      indexer, hood, shooter, turret, pooper, colorSensor, lime));
+      autoChooser.addOption("Defensive Short", new DisturbShort(
+        drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
+        indexer, hood, shooter, turret, pooper, colorSensor, lime));
 
     // autoChooser.addOption("TestTurn", new TurnXDegrees(drivetrain, 92.0));
     // autoChooser.addOption("TestDriveStraight", new DriveXDistance(drivetrain, 8.0 * 12.0));
@@ -285,7 +293,7 @@ public class RobotContainer {
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP));
 
     oi.operatorJoystick.ButtonRightTrigger()
-            .whenPressed(new ShootBasedOnDistance(shooter, hood, lime, oi));
+            .whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
 
 
     //TEST JOYSTICK
