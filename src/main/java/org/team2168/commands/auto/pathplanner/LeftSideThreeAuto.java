@@ -74,7 +74,7 @@ race(
     PathUtil.InitialPathState.PRESERVEODOMETRY)
 ).withTimeout(0.1)),
 
-      parallel(
+      sequence(
         
     new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
     race(
@@ -83,11 +83,11 @@ race(
     )
       ),
 
-     parallel(
+    sequence(
        new WaitUntilFireBalls(shooter, limelight),
        new FireBalls(shooter, indexer, hopper),
        new FireBalls(shooter, indexer, hopper)
-     ).withTimeout(0.15),
+    ).withTimeout(0.15),
      
      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
      
