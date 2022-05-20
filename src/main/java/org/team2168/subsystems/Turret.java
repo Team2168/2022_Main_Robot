@@ -137,7 +137,7 @@ public class Turret extends SubsystemBase implements Loggable {
     // return (pot.get() >= -0.5 && pot.get() <= 0.5);
   }
 
-  @Log(name = "Pot Pos", rowIndex = 2, columnIndex = 0)
+  // @Log(name = "Pot Pos", rowIndex = 2, columnIndex = 0)
   public double getPotPos() {
     return pot.get();
   }
@@ -217,7 +217,7 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2)
+ // @Log(name = "Error (deg)", rowIndex = 4, columnIndex = 2)
   /**
    * @return the current position error in degrees
    */
@@ -247,7 +247,7 @@ public class Turret extends SubsystemBase implements Loggable {
    * 
    * @return The internal sensor's position
    */
-  @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4)
+  // @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4)
   public double getEncoderPosition() {
     return turretMotor.getSelectedSensorPosition();
   }

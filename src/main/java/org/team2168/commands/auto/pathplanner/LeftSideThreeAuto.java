@@ -8,10 +8,8 @@ package org.team2168.commands.auto.pathplanner;
 
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
-import org.team2168.commands.RetractAndStopIntake;
 import org.team2168.commands.StopMechanisms;
 import org.team2168.commands.WaitUntilFireBalls;
-import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.limelight.SetPipeline;
@@ -35,6 +33,7 @@ import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.subsystems.Turret;
 import org.team2168.utils.PathUtil;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
@@ -61,6 +60,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
     addCommands(
 
       new RotateTurret(turret, 0.0).withTimeout(0.2),
+      new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
       parallel(
       new DriveTurretWithLimelight(turret, limelight),
       
