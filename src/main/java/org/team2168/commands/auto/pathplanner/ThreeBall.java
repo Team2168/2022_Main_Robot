@@ -15,6 +15,7 @@ import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
 import org.team2168.commands.shootingpositions.Launchpad;
+import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
 import org.team2168.commands.shootingpositions.TarmacLine;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
@@ -42,8 +43,8 @@ public class ThreeBall extends SequentialCommandGroup {
                 new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
                 parallel(
                         new DriveTurretWithLimelight(turret, lime),
+                        new ShootBasedOnDistance(shooter, hood, lime),
                         sequence(
-                            new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
                             new IntakeLower(intakeRaiseAndLower),
                             race (  // run group until path ends
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
@@ -55,12 +56,11 @@ public class ThreeBall extends SequentialCommandGroup {
                             new WaitForLimelightInPosition(lime),
                             new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new FireBalls(shooter, indexer, hopper),
+                            new WaitForShooterAtSpeed(shooter),
                             new FireBalls(shooter, indexer, hopper),
 
 
                             new IntakeLower(intakeRaiseAndLower),
-                            // new Launchpad(hood, shooter, lime),
-                            new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),
                             race (
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     sequence(

@@ -11,8 +11,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 
+import org.team2168.Constants;
 import org.team2168.subsystems.Shooter.ShooterRPM;
+import org.team2168.utils.Util;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -43,7 +46,7 @@ public class Limelight extends SubsystemBase implements Loggable {
   // TODO create new pipelines
   public static final int PIPELINE_LAUNCHPAD_LINE = 0;
   public static final int PIPELINE_TARMAC_LINE = 1;
-  public static final int PIPELINE_BACK_TRENCH_BLUE = 2;
+  public static final int PIPELINE_TERMINAL = 2;
   public static final int PIPELINE_BACK_TRENCH_RED = 3;
   public static final int PIPELINE_DRIVER_VIEW = 4;
   public static final int PIPELINE_DEFAULT_DRIVE = 5;
@@ -55,8 +58,10 @@ public class Limelight extends SubsystemBase implements Loggable {
   private static LEDMode desiredLEDMode = LEDMode.PIPELINE;
   private static int desiredPipeline = 0;
 
-  public double MAX_POSITIVE_ANGLE = 27.0;
-  public double MIN_NEGATIVE_ANGLE = -27.0;
+  public double MAX_POSITIVE_ANGLE = 29.8;
+  public double MIN_NEGATIVE_ANGLE = -29.8;
+
+  public static double limelightMountAngle = 30.0;
 
   //Camera Controls (Use Enums to prevent invalid inputs)
   public enum LEDMode {
@@ -161,6 +166,11 @@ public class Limelight extends SubsystemBase implements Loggable {
     desiredPipeline = pipelineNumber;
   }
 
+  @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
+  public double calcDistanceMeters() {
+    return (Constants.Heights.UPPER_HUB_HEIGHT_METERS - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_METERS)/Math.tan(Units.degreesToRadians(limelightMountAngle + ty.getDouble(0))) - (Constants.Distances.LIMELIGHT_OFFSET_METERS + Constants.Distances.HUB_OFFSET_FENDER_METERS);
+  }
+
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)
   public int getPipeline() {
     if (this.connectionEstablished()) {
@@ -258,6 +268,16 @@ public class Limelight extends SubsystemBase implements Loggable {
 
     if (!isLimelightEnabled) {
       pauseLimelight();
+    }
+
+    if (isLimelightEnabled && calcDistanceMeters() < 4.0) {
+      setPipeline(PIPELINE_TARMAC_LINE);
+    }
+    else if (isLimelightEnabled && calcDistanceMeters() >= 4.0 && calcDistanceMeters() < 6.0) {
+      setPipeline(PIPELINE_LAUNCHPAD_LINE);
+    }
+    else if (isLimelightEnabled && calcDistanceMeters() >= 6.0) {
+      setPipeline(PIPELINE_TERMINAL);
     }
 
     // Sets the camera controls

@@ -30,6 +30,15 @@ public class Paths {
     public final Trajectory path_ReversedThreeSetupAuto;
     public final Trajectory path_TwoBallLeft;
     public final Trajectory path_ReverseTwoBallLeft;
+    public final Trajectory path_Disturb_1;
+    public final Trajectory path_Disturb_2;
+    public final Trajectory path_Disturb_3;
+    public final Trajectory path_Disturb_4;
+    public final Trajectory path_Disturb_5;
+    public final Trajectory path_simple_4_ball_1;
+    public final Trajectory path_simple_4_ball_2;
+    public final Trajectory path_simple_4_ball_3;
+
     private static Paths instance = null;
 
     private Paths() {
@@ -51,6 +60,15 @@ public class Paths {
         path_TwoBallLeft = getTrajectory("TwoBallLeft", true);
         path_ReverseTwoBallLeft = getTrajectory("ReverseTwoBallLeft", true);
         
+        path_Disturb_1 = getTrajectory("Disturb_1", true);
+        path_Disturb_2 = getTrajectory("Disturb_2", true);
+        path_Disturb_3 = getTrajectory("Disturb_3", true);
+        path_Disturb_4 = getTrajectory("Disturb_4", true);
+        path_Disturb_5 = getTrajectory("Disturb_5", true);
+        path_simple_4_ball_1 = getTrajectory("simple_4_ball_1", true);
+        path_simple_4_ball_2 = getTrajectory("simple_4_ball_2", true, 5.0, 2.0);
+        path_simple_4_ball_3 = getTrajectory("simple_4_ball_3", false, 5.0, 2.0);
+
         
         System.out.println("******* Finish generating autos *******");
     }
