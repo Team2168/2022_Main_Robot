@@ -4,10 +4,8 @@
 
 package org.team2168.subsystems;
 
-import org.team2168.Constants;
 import org.team2168.Constants.PneumaticsDevices;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.annotations.Log;

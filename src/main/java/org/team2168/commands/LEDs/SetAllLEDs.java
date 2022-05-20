@@ -21,11 +21,11 @@ public class SetAllLEDs extends CommandBase {
  * @param blueOn whether the blue LED should be on
  * @param greenOn whether the green LED should be on
  */
-  public SetAllLEDs(LEDs leds, boolean redOn, boolean blueOn, boolean greenOn) {
+  public SetAllLEDs(LEDs leds, boolean redOn, boolean greenOn, boolean blueOn) {
     this.leds = leds;
     this.redOn = redOn;
-    this.blueOn = blueOn;
     this.greenOn = greenOn;
+    this.blueOn = blueOn;
 
     addRequirements(leds);
   }
@@ -38,8 +38,8 @@ public class SetAllLEDs extends CommandBase {
   @Override
   public void execute() {
     leds.red(redOn);
-    leds.blue(blueOn);
     leds.green(greenOn);
+    leds.blue(blueOn);
   }
 
   // Called once the command ends or is interrupted.
