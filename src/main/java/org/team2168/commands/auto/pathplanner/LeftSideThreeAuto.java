@@ -10,13 +10,14 @@ import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.StopMechanisms;
 import org.team2168.commands.WaitUntilFireBalls;
+import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.limelight.SetPipeline;
+import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
-import org.team2168.commands.turret.FindTargetAndCenterTurret;
 import org.team2168.commands.turret.RotateTurret;
 import org.team2168.commands.turret.StopTurret;
 import org.team2168.subsystems.ColorSensor;
@@ -31,6 +32,7 @@ import org.team2168.subsystems.Pooper;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.subsystems.Turret;
+import org.team2168.subsystems.Hood.HoodPosition;
 import org.team2168.utils.PathUtil;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -59,20 +61,22 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
   
     addCommands(
 
-      new RotateTurret(turret, 0.0).withTimeout(0.2),
-      new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
-      parallel(
+     parallel(
       new DriveTurretWithLimelight(turret, limelight),
-      
-    sequence(
-        new AutoTarmacLine(hood, shooter, limelight),
-    new IntakeLower(intakeRaiseAndLower)
-      ),
-race(
+
+    
+     
+       new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
+       new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
+        new IntakeLower(intakeRaiseAndLower)));
+
+
+       
+       race(
         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, 
-    PathUtil.InitialPathState.PRESERVEODOMETRY)
-).withTimeout(0.1)),
+    PathUtil.InitialPathState.DISCARDHEADING
+));
 
       sequence(
         
@@ -81,17 +85,17 @@ race(
       PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain, 
       PathUtil.InitialPathState.PRESERVEODOMETRY)
     )
-      ),
+      );
 
     sequence(
        new WaitUntilFireBalls(shooter, limelight),
        new FireBalls(shooter, indexer, hopper),
        new FireBalls(shooter, indexer, hopper)
-    ).withTimeout(0.15),
+    ,
      
      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
      
-     parallel(
+     sequence(
       new IntakeLower(intakeRaiseAndLower),
     
     race(
@@ -100,30 +104,23 @@ race(
         PathUtil.InitialPathState.PRESERVEODOMETRY)
       ),
 
-       parallel(
+       sequence(
      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
       new IntakeRaise(intakeRaiseAndLower).withTimeout(0.1),
       race(
       PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, 
       PathUtil.InitialPathState.PRESERVEODOMETRY)
-      ).withTimeout(0.2)),
+      ),
 
       sequence(
-      sequence(
-        race(
-        new DriveTurretWithLimelight(turret, limelight),
-        new FindTargetAndCenterTurret(turret, limelight)
-        ),
-
         parallel(
       race(
-      new AutoTarmacLine(hood, shooter, limelight),
+        new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
+        new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
       new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)
       )
-        ).withTimeout(0.2),
-      race(
-        new WaitUntilCommand(indexer::isBallPresent))
-      ),
+        ).withTimeout(0.5),
+
       new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
       new WaitUntilFireBalls(shooter, limelight),
       new FireBalls(shooter, indexer, hopper),
@@ -133,6 +130,8 @@ race(
      parallel(
     new SetShooterSpeed(shooter,ShooterRPM.STOP),
     new StopTurret(turret)
+
+     )
 )));
     }
 }
