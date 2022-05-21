@@ -20,6 +20,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
@@ -36,6 +38,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
     // private DifferentialDrive drive;
     private DifferentialDriveOdometry odometry;
+    private final Field2d field = new Field2d();
 
     private static Drivetrain instance = null;
 
@@ -109,6 +112,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         } else {
             navx = new AHRS(SPI.Port.kMXP);
         }
+
+        SmartDashboard.putData("Field", field);
 
         leftMotor1.configFactoryDefault();
         leftMotor2.configFactoryDefault();
@@ -258,6 +263,8 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         // This method will be called once per scheduler run
         odometry.update(rot, getLeftEncoderDistance(), getRightEncoderDistance());
+
+        field.setRobotPose(getPose());
     }
     
    public void switchGains(boolean straightmode) {
@@ -310,6 +317,21 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         return odometry.getPoseMeters();
     }
 
+    @Log(name = "X Pose")
+    public double getPoseX() {
+        return getPose().getX();
+    }
+
+    @Log(name = "Y Pose")
+    public double getPoseY() {
+        return getPose().getY();
+    }
+
+    @Log(name = "Pose Rotation")
+    public double getPoseDegrees() {
+        return getPose().getRotation().getDegrees();
+    }
+
     /**
      * @param vel set the cruise velocity (in/sec)
      */
@@ -320,7 +342,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     /**
      * Gets gyro heading
      *
-     * @return gyro heading from -180.0 to 180.0 degrees. Positive counterclockwise
+     * @return gyro heading in degrees. Positive counterclockwise
      */
     @Log(name = "Gyro Heading", rowIndex = 2, columnIndex = 1)
     public double getHeading() {
@@ -527,6 +549,14 @@ public class Drivetrain extends SubsystemBase implements Loggable {
      */
     public void resetOdometry(Pose2d pose) {
         this.resetOdometry(pose, false);
+    }
+
+    @Log(name = "Hub Relative Heading")
+    public double getHubHeadingFromRobot() {
+        double diffX = Constants.FieldPositions.HUB_X_METERS - getPose().getX();
+        double diffY = Constants.FieldPositions.HUB_Y_METERS - getPose().getY();
+
+        return -(Units.radiansToDegrees(Math.atan(diffY/diffX)) - getPose().getRotation().getDegrees());
     }
 
     /**
