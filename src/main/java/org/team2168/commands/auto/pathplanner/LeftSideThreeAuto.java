@@ -4,8 +4,6 @@
 
 package org.team2168.commands.auto.pathplanner;
 
-
-
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.StopMechanisms;
@@ -45,7 +43,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class LeftSideThreeAuto extends SequentialCommandGroup {
 
-    public LeftSideThreeAuto(
+  public LeftSideThreeAuto(
       Drivetrain drivetrain,
       IntakeRaiseAndLower intakeRaiseAndLower,
       IntakeRoller intakeRoller,
@@ -56,83 +54,81 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       Turret turret,
       Pooper pooper,
       ColorSensor colorSensor,
-      Limelight limelight)
-     {
-      Paths path = Paths.getInstance();
-  
+      Limelight limelight) {
+    Paths path = Paths.getInstance();
+
     addCommands(
-       
-      new RotateTurret(turret, 0.0).withTimeout(0.2),
-      new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
+     // Resets the turret and prevents shooter from waiting to reach speed, precautions before starting auto
+        new RotateTurret(turret, 0.0).withTimeout(0.2),
+        new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
 
-     race(
-      new DriveTurretWithLimelight(turret, limelight),
-      new ShootBasedOnDistance(shooter, hood, limelight),
-    
-      sequence(
-       new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-       new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
-        new IntakeLower(intakeRaiseAndLower),
-     race(
-        new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-    PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, 
-    PathUtil.InitialPathState.DISCARDHEADING
-),
+        //The Limelight Race command will be active all the time to continously track the hub or use vision processing
 
-      sequence(
-        
-    new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
-    race(
-      PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain, 
-      PathUtil.InitialPathState.PRESERVEODOMETRY)
-    )
-      ),
+        race(
+            new DriveTurretWithLimelight(turret, limelight),
+            new ShootBasedOnDistance(shooter, hood, limelight),
+              // First sequence sets the shooter and hood for shots close to the tarmac line
+              // The robot moves backwards to collect a ball, the intake lower method lowers the intake
+              // to allow the QueueBallsForShotNoStop Method to collect the ball and prepare the shot
+            sequence(
+                new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
+                new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
+                new IntakeLower(intakeRaiseAndLower),
+                  race(
+                    new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                    PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain,
+                        PathUtil.InitialPathState.DISCARDHEADING)
+                  )),
+                  // The Robot moves back to the edge of the tarmac and shoots the shot
+                    sequence(
 
-    sequence(
-       new WaitUntilFireBalls(shooter, limelight),
-       new FireBalls(shooter, indexer, hopper),
-       new FireBalls(shooter, indexer, hopper)
-    ,
-     
-     new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
-     
-     sequence(
-      new IntakeLower(intakeRaiseAndLower),
-    
-    race(
-      new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-        PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain, 
-        PathUtil.InitialPathState.PRESERVEODOMETRY)
-      ),
+                        new StopMechanisms(hopper, indexer, intakeRoller),
+                        race(
+                            PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain,
+                                PathUtil.InitialPathState.PRESERVEODOMETRY))),
 
-       sequence(
-     new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
-      new IntakeRaise(intakeRaiseAndLower).withTimeout(0.1),
-      race(
-      PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain, 
-      PathUtil.InitialPathState.PRESERVEODOMETRY)
-      ),
+                    sequence(
+                        new WaitUntilFireBalls(shooter, limelight),
+                        new FireBalls(shooter, indexer, hopper),
+                        new FireBalls(shooter, indexer, hopper),
 
-      sequence(
-        parallel(
-      race(
-        new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-        new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
-      new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)
-      )
-        ).withTimeout(0.5),
+                        new StopMechanisms(hopper, indexer, intakeRoller)
+                    ),
+                    // The Intake is Raised whilst the robot moves around the hangar to the terminal assembly (loading cargo station) to collect a ball
+                        sequence(
+                            new IntakeLower(intakeRaiseAndLower),
 
-      new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
-      new WaitUntilFireBalls(shooter, limelight),
-      new FireBalls(shooter, indexer, hopper),
-      new FireBalls(shooter, indexer, hopper)
-         ),
+                            race(
+                                new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
+                                PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
+                                    PathUtil.InitialPathState.PRESERVEODOMETRY)),
+                             
+                                    
+                            sequence(
+                                new StopMechanisms(hopper, indexer, intakeRoller),
+                        
+                                race(
+                                  new IntakeRaise(intakeRaiseAndLower).withTimeout(0.1),
+                                    PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
+                                        PathUtil.InitialPathState.PRESERVEODOMETRY))),
+                                      // returns back to the tarmac line to setup shot sequence
+                                sequence(
+                                    parallel(
+                                        race(
+                                            new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
+                                            new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
+                                            new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)))
+                                                .withTimeout(0.5),
 
-     parallel(
-    new SetShooterSpeed(shooter,ShooterRPM.STOP),
-    new StopTurret(turret)
+                                    new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
+                                    new WaitUntilFireBalls(shooter, limelight),
+                                    new FireBalls(shooter, indexer, hopper),
+                                    new FireBalls(shooter, indexer, hopper)),
 
-     )
-)))))));
-    }
+                                parallel(
+                                    new SetShooterSpeed(shooter, ShooterRPM.STOP),
+                                    new StopTurret(turret)
+
+                                ))));
+  }
 }

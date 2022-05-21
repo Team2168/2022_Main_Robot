@@ -37,4 +37,17 @@ public class StopMechanisms extends ParallelCommandGroup {
 
     addRequirements(hopper, indexer, intakeRoller, drivetrain);
   }
+
+  public StopMechanisms(
+    Hopper hopper,
+    Indexer indexer,
+    IntakeRoller intakeRoller
+    ) {
+      addCommands(
+        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
+        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1)
+      );
+
+    }
 }
