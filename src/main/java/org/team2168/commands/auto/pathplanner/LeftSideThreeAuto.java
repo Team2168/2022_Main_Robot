@@ -16,6 +16,7 @@ import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.limelight.SetPipeline;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.SetShooterSpeed;
+import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
 import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
@@ -60,23 +61,23 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       Paths path = Paths.getInstance();
   
     addCommands(
+       
+      new RotateTurret(turret, 0.0).withTimeout(0.2),
+      new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
 
-     parallel(
+     race(
       new DriveTurretWithLimelight(turret, limelight),
-
+      new ShootBasedOnDistance(shooter, hood, limelight),
     
-     
+      sequence(
        new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
        new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
-        new IntakeLower(intakeRaiseAndLower)));
-
-
-       
-       race(
+        new IntakeLower(intakeRaiseAndLower),
+     race(
         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain, 
     PathUtil.InitialPathState.DISCARDHEADING
-));
+),
 
       sequence(
         
@@ -85,7 +86,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain, 
       PathUtil.InitialPathState.PRESERVEODOMETRY)
     )
-      );
+      ),
 
     sequence(
        new WaitUntilFireBalls(shooter, limelight),
@@ -132,6 +133,6 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
     new StopTurret(turret)
 
      )
-)));
+)))))));
     }
 }
