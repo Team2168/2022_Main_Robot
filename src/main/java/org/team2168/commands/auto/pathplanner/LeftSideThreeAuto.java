@@ -52,7 +52,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
       Pooper pooper,
       ColorSensor colorSensor,
       Limelight limelight) {
-    Paths path = Paths.getInstance();
+      Paths path = Paths.getInstance();
 
     addCommands(
      // Resets the turret and prevents shooter from waiting to reach speed, precautions before starting auto
@@ -100,17 +100,20 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                              
                                     
                             sequence(
+                              
+                              parallel(
                                 new StopMechanisms(hopper, indexer, intakeRoller),
-                        
+                                new IntakeRaise(intakeRaiseAndLower)
+                              ),
                                 race(
-                                  new IntakeRaise(intakeRaiseAndLower).withTimeout(0.1),
                                     PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
                                         PathUtil.InitialPathState.PRESERVEODOMETRY))),
                                       // returns back to the tarmac line to setup shot sequence
                                 sequence(
                                    
                                         race(
-                                            new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)),
+                                            new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE
+                                            )),
 
                                     new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
                                     new WaitUntilFireBalls(shooter, limelight),
