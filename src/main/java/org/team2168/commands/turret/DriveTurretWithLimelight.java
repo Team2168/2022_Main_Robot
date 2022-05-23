@@ -98,6 +98,7 @@ public class DriveTurretWithLimelight extends CommandBase {
       driveLimeTurn = turret.amountFromZeroToRotate(targetPos);
       unwind_target = driveLimeTurn;
       unwinding = true;
+      turret.setUnwind(unwinding);
     }
 
     turret.setRotationDegrees(driveLimeTurn);

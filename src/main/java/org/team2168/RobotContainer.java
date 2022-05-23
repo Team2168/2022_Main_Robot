@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import io.github.oblarg.oblog.Logger;
@@ -371,7 +372,25 @@ public class RobotContainer {
     // .whenPressed(new HoodToAngle(hood, Hood.HoodPosition.FOUR_METER_FROM_HUB.position_degrees))
     // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.FOUR_METER_FROM_HUB));
 
+    oi.testJoystick.ButtonY()
+    .whenPressed(new InstantCommand(()->{
+      turret.setUnwind(true);
+    }));
+
+    oi.testJoystick.ButtonY()
+    .whenReleased(new InstantCommand(()->{
+      turret.setUnwind(false);
+    }));
+
+    oi.testJoystick.ButtonRightBumper()
+    .whileHeld(new FireBalls(shooter, indexer, hopper))
+    //.whenPressed(new FireBalls(shooter, indexer, hopper))
+    //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+    .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+    .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+  
   }
+    
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
