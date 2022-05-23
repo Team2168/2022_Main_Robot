@@ -12,16 +12,15 @@ import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.limelight.SetPipeline;
-import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
 import org.team2168.commands.turret.StopTurret;
 import org.team2168.subsystems.ColorSensor;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hood;
+import org.team2168.subsystems.Hood.HoodPosition;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.IntakeRaiseAndLower;
@@ -31,12 +30,10 @@ import org.team2168.subsystems.Pooper;
 import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.subsystems.Turret;
-import org.team2168.subsystems.Hood.HoodPosition;
 import org.team2168.utils.PathUtil;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -71,14 +68,12 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
               // The robot moves backwards to collect a ball, the intake lower method lowers the intake
               // to allow the QueueBallsForShotNoStop Method to collect the ball and prepare the shot
             sequence(
-                new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-                new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
                 new IntakeLower(intakeRaiseAndLower),
                   race(
                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain,
                         PathUtil.InitialPathState.DISCARDHEADING)
-                  )),
+                  ))),
                   // The Robot moves back to the edge of the tarmac and shoots the shot
                     sequence(
 
@@ -101,7 +96,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                             race(
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                 PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
-                                    PathUtil.InitialPathState.PRESERVEODOMETRY)),
+                                    PathUtil.InitialPathState.PRESERVEODOMETRY))),
                              
                                     
                             sequence(
@@ -113,12 +108,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                         PathUtil.InitialPathState.PRESERVEODOMETRY))),
                                       // returns back to the tarmac line to setup shot sequence
                                 sequence(
-                                    parallel(
+                                   
                                         race(
-                                            new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
-                                            new SetShooterSpeed(shooter, ShooterRPM.AUTO_TARMAC_LINE),
-                                            new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)))
-                                                .withTimeout(0.5),
+                                            new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE)),
 
                                     new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
                                     new WaitUntilFireBalls(shooter, limelight),
@@ -129,6 +121,6 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                     new SetShooterSpeed(shooter, ShooterRPM.STOP),
                                     new StopTurret(turret)
 
-                                ))));
+                                ));
   }
 }

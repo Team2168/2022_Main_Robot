@@ -19,35 +19,31 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class StopMechanisms extends ParallelCommandGroup {
-  
 
   public StopMechanisms(
-   Hopper hopper,
-   Indexer indexer,
-   IntakeRoller intakeRoller,
-   Drivetrain drivetrain
-  ) {
-    
+      Hopper hopper,
+      Indexer indexer,
+      IntakeRoller intakeRoller,
+      Drivetrain drivetrain) {
+
     addCommands(
-      new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
-      new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
-      new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
-      new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0))
-    );
+        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
+        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
+        new InstantCommand(() -> drivetrain.tankDrive(0.0, 0.0)));
 
     addRequirements(hopper, indexer, intakeRoller, drivetrain);
   }
 
   public StopMechanisms(
-    Hopper hopper,
-    Indexer indexer,
-    IntakeRoller intakeRoller
-    ) {
-      addCommands(
+      Hopper hopper,
+      Indexer indexer,
+      IntakeRoller intakeRoller) 
+      {
+    addCommands(
         new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
         new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
-        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1)
-      );
+        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1));
 
-    }
+  }
 }
