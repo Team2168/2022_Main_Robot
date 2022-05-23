@@ -4,10 +4,7 @@
 
 package org.team2168.commands.turret;
 
-import org.team2168.subsystems.Drivetrain;
-import org.team2168.subsystems.Hood;
 import org.team2168.subsystems.Limelight;
-import org.team2168.subsystems.Shooter;
 import org.team2168.subsystems.Turret;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,27 +16,20 @@ public class FindTargetAndCenterTurret extends SequentialCommandGroup {
   /** Creates a new FindTargetAndCenterTurret. */
   private Turret turret;
   private Limelight limelight;
-  private Drivetrain drivetrain;
-  private Shooter shooter;
-  private Hood hood;
 
   /**
    * Drives the turret to find a target and lines it up
    * @param turret the turret instance
    * @param limelight the limelight instance
    */
-  public FindTargetAndCenterTurret(Turret turret, Limelight limelight, Drivetrain drivetrain, Shooter shooter, Hood hood) {
+  public FindTargetAndCenterTurret(Turret turret, Limelight limelight) {
     this.turret = turret;
     this.limelight = limelight;
-    this.drivetrain = drivetrain;
-    this.shooter = shooter;
-    this.hood = hood;
-
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new FindTargetWithTurret(turret, limelight),
-      new DriveTurretWithLimelight(turret, limelight, drivetrain, shooter, hood)
+      new DriveTurretWithLimelight(turret, limelight)
     );
   }
 }

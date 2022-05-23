@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 public final class Constants {
     
     public static final boolean IS_COMPBOT = new DigitalInput(DIO.PRACTICEBOT_JUMPER).get();
-    public static final double LOOP_TIME_SECS = 0.02;
     public static final class Joysticks {
         public static final int DRIVER_JOYSTICK = 0;
         public static final int OPERATOR_JOYSTICK = 1;

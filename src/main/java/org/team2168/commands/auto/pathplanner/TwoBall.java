@@ -36,7 +36,7 @@ public class TwoBall extends SequentialCommandGroup {
                 new RotateTurret(turret, 0.0).withTimeout(0.5),
                 new InstantCommand(() -> System.out.println("done turning turret")),
                 parallel(
-                        new DriveTurretWithLimelight(turret, lime, drivetrain, shooter, hood),
+                        new DriveTurretWithLimelight(turret, lime),
                         new InstantCommand(() -> System.out.println("beginning sequence")),
                         sequence(
                             new AutoTarmacLine(hood, shooter, lime).withTimeout(0.2),

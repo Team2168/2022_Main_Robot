@@ -62,7 +62,7 @@ public class FourBall extends SequentialCommandGroup {
       new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
 
       race( //constantly tracks the hub
-        new DriveTurretWithLimelight(turret, limelight, drivetrain, shooter, hood),
+        new DriveTurretWithLimelight(turret, limelight),
         sequence( // shoots preloaded ball and one behind it
           new HoodToAngle(hood, HoodPosition.AUTO_TARMAC_LINE.position_degrees),
           new SetShooterSpeed(shooter, ShooterRPM.AUTO_4_BALL),
