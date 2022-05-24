@@ -115,6 +115,10 @@ public class Drivetrain extends SubsystemBase implements Loggable {
 
         SmartDashboard.putData("Field", field);
 
+        SmartDashboard.putNumber("odo_x", 0.0);
+        SmartDashboard.putNumber("odo_y", 0.0);
+        SmartDashboard.putNumber("odo_angle", 0.0);
+
         leftMotor1.configFactoryDefault();
         leftMotor2.configFactoryDefault();
         rightMotor1.configFactoryDefault();
@@ -551,12 +555,39 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         this.resetOdometry(pose, false);
     }
 
+    public void setOdometry() {
+        odometry.resetPosition(new Pose2d(SmartDashboard.getNumber("odo_x", 0.0), SmartDashboard.getNumber("odo_y", 0.0), 
+        new Rotation2d(Units.degreesToRadians(SmartDashboard.getNumber("odo_angle", 0.0)))), new Rotation2d(Units.degreesToRadians(SmartDashboard.getNumber("odo_angle", 0.0))));
+    }
+
+    /**
+     * 
+     * @return The value of the heading the turret needs to rotate
+     * to face the hub.
+     * 
+     * angleOffset is used due to limitations with arctan. Uses the coordinate information
+     * to discover the quadrant of the robot to overcome this limitation.
+     * 
+     */
     @Log(name = "Hub Relative Heading")
     public double getHubHeadingFromRobot() {
-        double diffX = Constants.FieldPositions.HUB_X_METERS - getPose().getX();
-        double diffY = Constants.FieldPositions.HUB_Y_METERS - getPose().getY();
+        double diffX = getPose().getX() - Constants.FieldPositions.HUB_X_METERS;
+        double diffY = getPose().getY() - Constants.FieldPositions.HUB_Y_METERS;
+        double angleOffset = 0.0;
 
-        return -(Units.radiansToDegrees(Math.atan(diffY/diffX)) - getPose().getRotation().getDegrees());
+        if (diffX > 0.0) {
+            if (diffY > 0.0) {
+                angleOffset = -180.0;
+            }
+            if (diffY < 0.0) {
+                angleOffset = 180.0;
+            }
+        }
+        else {
+            angleOffset = 0.0;
+        }
+
+        return -((Units.radiansToDegrees(Math.atan(diffY/diffX)) - getPose().getRotation().getDegrees() + angleOffset) % 360.0);
     }
 
     /**
@@ -677,6 +708,11 @@ public class Drivetrain extends SubsystemBase implements Loggable {
         leftMotor2.setNeutralMode(NeutralMode.Coast);
         rightMotor1.setNeutralMode(NeutralMode.Coast);
         rightMotor2.setNeutralMode(NeutralMode.Coast);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        setOdometry();
     }
 
     /** 
