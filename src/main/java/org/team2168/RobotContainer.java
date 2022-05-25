@@ -373,13 +373,13 @@ public class RobotContainer {
     // .whenPressed(new SetShooterSpeed(shooter, Shooter.ShooterRPM.FOUR_METER_FROM_HUB));
 
     oi.testJoystick.ButtonY()
-    .whenPressed(new InstantCommand(()->{
-      turret.setUnwind(true);
+    .whenHeld(new InstantCommand(()->{
+      turret.syncUnwind(true);
     }));
 
     oi.testJoystick.ButtonY()
     .whenReleased(new InstantCommand(()->{
-      turret.setUnwind(false);
+      turret.syncUnwind(false);
     }));
 
     oi.testJoystick.ButtonRightBumper()
@@ -388,6 +388,8 @@ public class RobotContainer {
     //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
     .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
     .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+
+    oi.testJoystick.ButtonB().whenPressed(new TarmacLine(hood, shooter, lime));
   
   }
     

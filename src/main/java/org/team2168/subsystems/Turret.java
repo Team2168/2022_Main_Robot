@@ -127,7 +127,7 @@ public class Turret extends SubsystemBase implements Loggable {
     
   }
 
-  public void setUnwind(boolean unwinding) {
+  public void syncUnwind(boolean unwinding) {
     this.unwinding = unwinding;
   }
 
