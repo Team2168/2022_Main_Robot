@@ -232,7 +232,7 @@ public class Limelight extends SubsystemBase implements Loggable {
 
   @Log(name = "Has Target?", rowIndex = 2, columnIndex = 0)
   public boolean hasTarget() {
-    return tv.getBoolean(false);
+    return tv.getDouble(0.0) == 1.0;
   }
 
   /**

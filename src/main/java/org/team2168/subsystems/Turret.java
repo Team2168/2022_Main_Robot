@@ -266,10 +266,15 @@ public class Turret extends SubsystemBase implements Loggable {
    * @return the amount from a zero'd turret to rotate
    */
   public double amountFromZeroToRotate(double targetPos) {
-    if (targetPos > 0) 
+    if (targetPos > MAX_ROTATION_DEGREES) {
       return targetPos - 360;
-    else
+    } 
+    else if (targetPos < MIN_ROTATION_DEGREES) {
       return targetPos + 360; 
+    }
+    else {
+      return targetPos;
+    }
   }
 
   // public void zeroTurret() {

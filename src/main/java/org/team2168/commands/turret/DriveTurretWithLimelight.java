@@ -4,6 +4,7 @@
 
 package org.team2168.commands.turret;
 
+import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Turret;
 import org.team2168.utils.Util;
@@ -79,7 +80,14 @@ public class DriveTurretWithLimelight extends CommandBase {
     limeXPos = limelight.getPositionX();
     avg_limeXPos = Util.runningAverage(limeXPos, avg_limeXPos, 0.15);
     currentPos = turret.getPositionDegrees();
-    targetPos = currentPos + (avg_limeXPos * LIME_KP);
+
+    if (limelight.hasTarget()) {
+      targetPos = currentPos + (avg_limeXPos * LIME_KP);
+    }
+    else {
+      targetPos = turret.amountFromZeroToRotate(Drivetrain.getInstance().getHubHeadingFromRobot());
+    }
+
 
     if(unwinding) {
       //We are in the middle of rotating a full 360.0 we are going to lose view of the target
