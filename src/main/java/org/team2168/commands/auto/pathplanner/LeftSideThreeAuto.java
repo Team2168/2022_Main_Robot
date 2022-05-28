@@ -32,6 +32,7 @@ import org.team2168.subsystems.Shooter.ShooterRPM;
 import org.team2168.subsystems.Turret;
 import org.team2168.utils.PathUtil;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
@@ -78,9 +79,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                     sequence(
 
                         new StopMechanisms(hopper, indexer, intakeRoller),
-                        race(
-                            PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain,
-                                PathUtil.InitialPathState.PRESERVEODOMETRY))),
+                        //race(
+                            //PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain,
+                               // PathUtil.InitialPathState.PRESERVEODOMETRY))),
 
                     sequence(
                         new WaitUntilFireBalls(shooter, limelight),
@@ -100,7 +101,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                              
                                     
                             sequence(
-                              
+
                               parallel(
                                 new StopMechanisms(hopper, indexer, intakeRoller),
                                 new IntakeRaise(intakeRaiseAndLower)
@@ -124,6 +125,6 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                     new SetShooterSpeed(shooter, ShooterRPM.STOP),
                                     new StopTurret(turret)
 
-                                ));
+                                )));
   }
 }
