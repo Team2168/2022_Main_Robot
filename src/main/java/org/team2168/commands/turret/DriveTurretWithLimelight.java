@@ -97,7 +97,7 @@ public class DriveTurretWithLimelight extends CommandBase {
       }
     } else if ((targetPos > reverseSoftLimit) && (targetPos < forwardSoftLimit)) {
       // if the target is within the soft limits
-      if (Math.abs(avg_limeXPos) >= errorToleranceAngle) {
+      if ((limelight.hasTarget() && (Math.abs(avg_limeXPos) >= errorToleranceAngle)) || (!limelight.hasTarget() && (Math.abs(targetPos - currentPos) >= errorToleranceAngle))) {
         driveLimeTurn = targetPos;
       } else {  
         driveLimeTurn = currentPos;
@@ -109,6 +109,8 @@ public class DriveTurretWithLimelight extends CommandBase {
     }
 
     turret.setRotationDegrees(driveLimeTurn);
+    System.out.println(limelight.hasTarget());
+    System.out.println(targetPos);
   }
 
   // Called once the command ends or is interrupted.
