@@ -22,6 +22,11 @@ public class ResetOdometryWithVision extends CommandBase {
 
   double limeAdjustPoseX;
   double limeAdjustPoseY;
+  double limeAdjustPoseAngle;
+  double angleOffset = 0.0;
+
+  double poseDistFromHubX;
+
   double errorToleranceAngle;
   public ResetOdometryWithVision(Drivetrain drive, Turret turret, Limelight lime) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -37,16 +42,32 @@ public class ResetOdometryWithVision extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS + (Units.radiansToDegrees(Math.cos(turret.getPositionDegrees() + drive.getHeading()))) * lime.getDistanceMetersToCenterHub();
-    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - (Units.radiansToDegrees(Math.sin(turret.getPositionDegrees() + drive.getHeading()))) * lime.getDistanceMetersToCenterHub();
+    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - Math.sin(-turret.getPositionDegrees() + drive.getHeading()) * lime.getDistanceMetersToCenterHub();
     errorToleranceAngle = 1.0;
 
+    poseDistFromHubX = Math.cos(-turret.getPositionDegrees() + drive.getHeading()) * lime.getDistanceMetersToCenterHub();
+
     if (drive.getPoseY() < Constants.FieldPositions.HUB_Y_METERS) {
-      limeAdjustPoseX = -limeAdjustPoseX;
+      limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - poseDistFromHubX;
+    }
+    else {
+      limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS + poseDistFromHubX;
     }
 
+    if (drive.getHeading() > 180.0) {
+      angleOffset = -360.0;
+    }
+    else if (drive.getHeading() < -180.0) {
+      angleOffset = 360.0;
+    }
+    else {
+      angleOffset = 0.0;
+    }
+
+    limeAdjustPoseAngle = drive.getHeading() + angleOffset;
+
     if (lime.getPositionX() < errorToleranceAngle) {
-      drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(drive.getHeading()))));
+      drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle))));
     }
   }
 
