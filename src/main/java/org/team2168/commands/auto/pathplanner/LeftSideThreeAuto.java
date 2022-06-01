@@ -8,6 +8,7 @@ import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.StopMechanisms;
 import org.team2168.commands.WaitUntilFireBalls;
+import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hood.HoodToAngle;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeraiseandlower.IntakeRaise;
@@ -93,11 +94,12 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                     // The Intake is Raised whilst the robot moves around the hangar to the terminal assembly (loading cargo station) to collect a ball
                         sequence(
                             new IntakeLower(intakeRaiseAndLower),
-
+                            PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
+                            PathUtil.InitialPathState.PRESERVEODOMETRY),
                             race(
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
-                                    PathUtil.InitialPathState.PRESERVEODOMETRY))),
+                                PathUtil.getPathCommand(path.ToLauncherPad, drivetrain,
+                                    PathUtil.InitialPathState.PRESERVEODOMETRY)),
                              
                                     
                             sequence(
@@ -116,7 +118,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                             new SetPipeline(limelight, Limelight.PIPELINE_TARMAC_LINE
                                             )),
 
-                                    new StopMechanisms(hopper, indexer, intakeRoller, drivetrain),
+                                   
+                                    new ArcadeDrive(drivetrain, () -> 0.0, () -> 0.0)),
                                     new WaitUntilFireBalls(shooter, limelight),
                                     new FireBalls(shooter, indexer, hopper),
                                     new FireBalls(shooter, indexer, hopper)),
