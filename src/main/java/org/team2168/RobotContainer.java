@@ -210,6 +210,7 @@ public class RobotContainer {
 
     //red button
     oi.driverJoystick.ButtonLeftBumper().whenPressed(new DriveTurretWithLimelight(turret, lime));
+    oi.driverJoystick.ButtonLeftBumper().whenPressed(new ResetOdometryWithVision(drivetrain, turret, lime));
 
     //OPERATOR CONTROLS
     //// main button cluster

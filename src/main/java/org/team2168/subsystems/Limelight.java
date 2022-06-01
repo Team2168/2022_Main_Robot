@@ -166,9 +166,21 @@ public class Limelight extends SubsystemBase implements Loggable {
     desiredPipeline = pipelineNumber;
   }
 
+  /**
+   * This method is used for shooting distance calculations with the limelight.
+   * @return the distance from the front of the robot to the fender
+   */
   @Log (name = "Estimated Distance", rowIndex = 3, columnIndex = 4)
   public double calcDistanceMeters() {
     return (Constants.Heights.UPPER_HUB_HEIGHT_METERS - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_METERS)/Math.tan(Units.degreesToRadians(limelightMountAngle + ty.getDouble(0))) - (Constants.Distances.LIMELIGHT_OFFSET_METERS + Constants.Distances.HUB_OFFSET_FENDER_METERS);
+  }
+
+  /**
+   * This method should be used for pose calculations.
+   * @return the distance from the limelight to the center of the hub
+   */
+  public double getDistanceMetersToCenterHub() {
+    return (Constants.Heights.UPPER_HUB_HEIGHT_METERS - Constants.Heights.ROBOT_LIMELIGHT_HEIGHT_METERS)/Math.tan(Units.degreesToRadians(limelightMountAngle + ty.getDouble(0))) - Constants.Distances.AVG_TRACKED_POINTS_METERS + Constants.Distances.DIST_HUB_RIM_TO_CENTER_METERS;
   }
 
   @Log (name = "Active Pipeline", rowIndex = 1, columnIndex = 2)

@@ -171,6 +171,8 @@ public final class Constants {
     public static final class Distances {
         public static final double LIMELIGHT_OFFSET_METERS = 0.36195; // 14.25 ins, horizontal dist from bumpers to limelight
         public static final double HUB_OFFSET_FENDER_METERS = 0.37; // hub from fender dist + the average distance of the 5 tracked points
+        public static final double AVG_TRACKED_POINTS_METERS = 0.05;
+        public static final double DIST_HUB_RIM_TO_CENTER_METERS = 0.6096;
     }
 
     public static final class FieldPositions {
