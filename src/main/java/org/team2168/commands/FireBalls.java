@@ -40,7 +40,7 @@ public class FireBalls extends SequentialCommandGroup {
       new InstantCommand(() -> System.out.println(shooter.shouldWaitForShooterAtSpeed())),
       new ConditionalCommand(
           new WaitForShooterAtSpeed(shooter), new PrintCommand("No Wait"), shooter::shouldWaitForShooterAtSpeed),
-      new WaitForTurretToUnwind(),
+          new WaitForTurretToUnwind(),
       race( // Make sure the ball is queued up near the top before starting sequence 
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
         new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)

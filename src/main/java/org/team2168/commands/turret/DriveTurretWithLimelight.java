@@ -86,6 +86,7 @@ public class DriveTurretWithLimelight extends CommandBase {
       //  wait till we get where we were going
       if(Math.abs(unwind_target - currentPos) <= UNWIND_TOLERANCE_DEGREES) {
         unwinding = false;
+        turret.syncUnwind(unwinding);
       }
     } else if ((targetPos > reverseSoftLimit) && (targetPos < forwardSoftLimit)) {
       // if the target is within the soft limits
@@ -98,7 +99,7 @@ public class DriveTurretWithLimelight extends CommandBase {
       driveLimeTurn = turret.amountFromZeroToRotate(targetPos);
       unwind_target = driveLimeTurn;
       unwinding = true;
-      turret.setUnwind(unwinding);
+      turret.syncUnwind(unwinding);
     }
 
     turret.setRotationDegrees(driveLimeTurn);

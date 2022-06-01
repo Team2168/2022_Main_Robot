@@ -216,6 +216,9 @@ public class Hood extends SubsystemBase implements Loggable {
     return hoodMotor.getSelectedSensorPosition();
   }
 
+
+
+
   public double getHoodAnglefromDistance(double meters) {
     if (Constants.IS_COMPBOT) {
       return (2.5 * meters + 17.8); // new balls
