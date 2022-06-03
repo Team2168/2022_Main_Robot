@@ -40,26 +40,25 @@ public class LEDStatus extends CommandBase {
       leds.green(false);
       leds.blue(true);
     } else {
+        leds.blue(false);
+
         // if the shooter is at speed, the turret is locked on, 
         // and the limelight sees a target (turret will pretend 
         // to be locked on if there is no target), LEDs are green
         if (lime.getPositionX() < 5.0 && lime.hasTarget() == true) {
           leds.red(false);
           leds.green(true);
-          leds.blue(false);
         }
         // if the shooter is at speed but there is no target, LEDs are yellow
         else if (shooter.isAtSpeed() && lime.hasTarget() == false) {
           leds.red(true);
           leds.green(true);
-          leds.blue(false);
         }
         // if the shooter isn't at speed, LEDs are red  
         // regardless of whether there is a target/we are locked on or not
         else {
           leds.red(true);
           leds.green(false);
-          leds.blue(false);
         }
     }
   }
