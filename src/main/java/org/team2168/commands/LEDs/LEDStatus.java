@@ -6,20 +6,23 @@ package org.team2168.commands.LEDs;
 
 import org.team2168.subsystems.Climber;
 import org.team2168.subsystems.LEDs;
+import org.team2168.subsystems.Limelight;
 import org.team2168.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class ShowShooterAtSpeed extends CommandBase {
+public class LEDStatus extends CommandBase {
   /** Creates a new ShowShooterAtSpeed. */
   private LEDs leds;
   private Shooter shooter;
   private Climber climber;
+  private Limelight lime;
 
-  public ShowShooterAtSpeed(LEDs leds, Shooter shooter, Climber climber) {
+  public LEDStatus(LEDs leds, Shooter shooter, Climber climber, Limelight lime) {
     this.leds = leds;
     this.shooter = shooter;
     this.climber = climber;
+    this.lime = lime;
 
     addRequirements(leds);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -36,14 +39,27 @@ public class ShowShooterAtSpeed extends CommandBase {
       leds.red(false);
       leds.green(false);
       leds.blue(true);
-    } else if (shooter.isAtSpeed()) {
-      leds.red(false);
-      leds.green(true);
-      leds.blue(false);
     } else {
-      leds.red(true);
-      leds.blue(false);
-      leds.green(false);
+        leds.blue(false);
+
+        // if the shooter is at speed, the turret is locked on, 
+        // and the limelight sees a target (turret will pretend 
+        // to be locked on if there is no target), LEDs are green
+        if (lime.getPositionX() < 5.0 && lime.hasTarget() == true) {
+          leds.red(false);
+          leds.green(true);
+        }
+        // if the shooter is at speed but there is no target, LEDs are yellow
+        else if (shooter.isAtSpeed() && lime.hasTarget() == false) {
+          leds.red(true);
+          leds.green(true);
+        }
+        // if the shooter isn't at speed, LEDs are red  
+        // regardless of whether there is a target/we are locked on or not
+        else {
+          leds.red(true);
+          leds.green(false);
+        }
     }
   }
 
