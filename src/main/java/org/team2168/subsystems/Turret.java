@@ -29,6 +29,7 @@ public class Turret extends SubsystemBase implements Loggable {
   private static AnalogPotentiometer pot;
   private static TalonFXHelper turretMotor;
   private static Turret instance = null;
+  private boolean unwinding = false;
 
   private static final double TICKS_PER_REV = 2048;
   private static final double GEAR_RATIO = 280.0/18.0 * 36.0/12.0; //(60.0/10.0) * (45.0/15.0); //TODO: update to match real gear ratio
@@ -115,6 +116,7 @@ public class Turret extends SubsystemBase implements Loggable {
     turretMotor.configMotionAcceleration(ACCELERATION);
     turretMotor.configMotionCruiseVelocity(CRUISE_VELOCITY);
 
+
     //Setup simulation
     turretSim = new FlywheelSim(
       LinearSystemId.identifyVelocitySystem(KV, KA),
@@ -123,6 +125,10 @@ public class Turret extends SubsystemBase implements Loggable {
     );
     turretMotorSim = turretMotor.getSimCollection();
     
+  }
+
+  public void syncUnwind(boolean unwinding) {
+    this.unwinding = unwinding;
   }
 
   public static Turret getInstance() {
@@ -243,6 +249,8 @@ public class Turret extends SubsystemBase implements Loggable {
     return ticksPer100msToDegreesPerSec(turretMotor.getSelectedSensorVelocity());
   }
 
+  
+
    /**
    * 
    * @return The internal sensor's position
@@ -250,6 +258,12 @@ public class Turret extends SubsystemBase implements Loggable {
   @Log(name = "Encoder Position", rowIndex = 3, columnIndex = 4)
   public double getEncoderPosition() {
     return turretMotor.getSelectedSensorPosition();
+  }
+
+
+  @Log(name = "unwinding", rowIndex = 3, columnIndex = 5)
+  public boolean isUnwinding() {
+    return unwinding;
   }
 
   // public void zeroEncoder() {
@@ -284,6 +298,8 @@ public class Turret extends SubsystemBase implements Loggable {
   public double getReverseSoftLimit() {
     return ticksToDegrees(MIN_ROTATION_TICKS);
   }
+
+  
 
   @Override
   public void periodic() {

@@ -12,9 +12,12 @@ import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexerUntilBall;
 import org.team2168.commands.indexer.DriveIndexerUntilNoBall;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
+import org.team2168.commands.turret.DriveTurretWithLimelight;
+import org.team2168.commands.turret.WaitForTurretToUnwind;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
 import org.team2168.subsystems.Shooter;
+import org.team2168.subsystems.Turret;
 
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -31,10 +34,13 @@ public class FireBalls extends SequentialCommandGroup {
     // if (shooter.shouldWaitForShooterAtSpeed()) {
     //   addCommands(new WaitForShooterAtSpeed(shooter));
     // }
+    
+    
     addCommands(
       new InstantCommand(() -> System.out.println(shooter.shouldWaitForShooterAtSpeed())),
       new ConditionalCommand(
           new WaitForShooterAtSpeed(shooter), new PrintCommand("No Wait"), shooter::shouldWaitForShooterAtSpeed),
+          new WaitForTurretToUnwind(),
       race( // Make sure the ball is queued up near the top before starting sequence 
         new DriveHopperWithPercentOutput(hopper, () -> Constants.MotorSpeeds.HOPPER_SPEED),
         new DriveIndexerUntilBall(indexer, () -> Constants.MotorSpeeds.INTAKE_SPEED)
@@ -45,5 +51,6 @@ public class FireBalls extends SequentialCommandGroup {
       )
     );
   }
+
 
 }
