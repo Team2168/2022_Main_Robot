@@ -6,8 +6,9 @@ package org.team2168;
 
 import org.team2168.utils.Gains;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 /**
@@ -146,8 +147,23 @@ public final class Constants {
     }
     
     public static final class LiftPositions {
+
+        // First pass (under bar)
+        public static final double ABOVE_NEXT_BAR_RED = 29.0;
+        public static final double ABOVE_NEXT_BAR_BLUE = 29.4;
+        public static final double ABOVE_NEXT_BAR = ABOVE_NEXT_BAR_BLUE;
+
+        //Second pass (actual climb)
+        public static final double BELOW_NEXT_BAR_RED = 17.75;
+        public static final double BELOW_NEXT_BAR_BLUE = 18.175;
+        public static final double BELOW_NEXT_BAR = BELOW_NEXT_BAR_BLUE;
+
+
+        
+        // public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.0;
         public static final double LIFT_ABOVE_BAR_FROM_AIR_INCHES = 29.8;
         public static final double LIFT_ABOVE_BAR_FROM_GROUND_INCHES = 27.0;
+        // public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 18.0;
         public static final double LIFT_EXTEND_BELOW_NEXT_BAR_INCHES = 19.0;
         public static final double LIFT_RETRACT_TO_MINIMIZE_TRAVESE_SWING_INCHES = 19.0;
 

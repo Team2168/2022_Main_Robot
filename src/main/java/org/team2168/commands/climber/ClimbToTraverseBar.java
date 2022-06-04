@@ -27,15 +27,16 @@ public class ClimbToTraverseBar extends SequentialCommandGroup {
   public ClimbToTraverseBar(Climber climb, MonkeyBar monkey) {
     addCommands(
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_ARRESTING_INCHES),
-      // new Sleep().withTimeout(0.5), //stay connected with the climber bars to slow the swing down
-      // new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
-      new DriveClimberToPosition(climb, LiftPositions.LIFT_EXTEND_BELOW_NEXT_BAR_INCHES),
+      new Sleep().withTimeout(0.5), //stay connected with the climber bars to slow the swing down
+      new WaitUntilLevelRobot(Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_PITCH),
+      new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_UNLOAD_TO_MBAR_INCHES),
       new CheckMonkeyHookAttached(monkey),
       new ExtendMonkeyBar(monkey),
+      new DriveClimberToPosition(climb, LiftPositions.BELOW_NEXT_BAR),
       new WaitToExtendLiftWhileSwinging(LiftPositions.SAFE_TRAVERSE_BAR_EXTEND_PITCH, LiftPositions.TOO_CLOSE_TO_SWING_APEX_PITCH),
-      new DriveClimberToPosition(climb, LiftPositions.LIFT_ABOVE_BAR_FROM_AIR_INCHES),
+      new DriveClimberToPosition(climb, LiftPositions.ABOVE_NEXT_BAR),
       new RetractMonkeyBar(monkey),
-      new CheckClimberHookAttached(climb, 15),
+      new CheckClimberHookAttached(climb, 30),
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACT_TO_MINIMIZE_TRAVESE_SWING_INCHES),
       new WaitCommand(4.0),//swing low sweet chariot
       new DriveClimberToPosition(climb, Constants.LiftPositions.LIFT_RETRACTION_INCHES),
