@@ -274,6 +274,35 @@ public class RobotContainer {
     oi.operatorJoystick.ButtonRightTrigger()
             .whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
 
+    
+    // bop it
+    oi.bopIt.center()
+            .whileHeld(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new FireBalls(shooter, indexer, hopper))
+            //.whenPressed(new DriveHopperAndIndexer(hopper, indexer))
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)));
+    oi.bopIt.twist()
+            .whileHeld(new QueueBallForShot(hopper, indexer, pooper, colorSensor, intakeRoller))
+            .whenPressed(new IntakeLower(intakeRaiseAndLower))
+            .whenReleased(new IntakeRaise(intakeRaiseAndLower))
+            .whenReleased(new DriveIndexer(indexer, () -> (0.0)))
+            .whenReleased(new SetIntakeSpeed(intakeRoller, 0.0))
+            .whenReleased(new DriveHopperWithPercentOutput(hopper, () -> (0.0)))
+            .whenReleased(new PooperUnpoop(pooper));
+    oi.bopIt.twistToggled()
+            .whenPressed(new HoodToAngle(hood, 0.0))
+            .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP));
+    oi.bopIt.flick().whenPressed(new Launchpad(hood, shooter, lime));
+    oi.bopIt.flickToggled()
+            .whenPressed(new RotateTurret(turret, 0.0))
+            .whenPressed(new FenderHigh(hood, shooter, lime));
+    oi.bopIt.pull()
+            .whenPressed(new DriveTurretWithLimelight(turret, lime))
+            .whenPressed(new ShootBasedOnDistance(shooter, hood, lime));
+    oi.bopIt.pullToggled()
+          .whenPressed(zeroTurretAndResumeLimelightTracking);
+
 
     //TEST JOYSTICK
     // oi.testJoystick.ButtonLeftBumper()

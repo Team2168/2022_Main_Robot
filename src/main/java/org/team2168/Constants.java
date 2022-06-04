@@ -27,6 +27,7 @@ public final class Constants {
         public static final int BUTTON_BOX_1 = 2;
         public static final int BUTTON_BOX_2 = 3;
         public static final int DRIVER_OPERATOR_E_BACKUP = 4;
+        public static final int BOP_IT = 4;
         public static final int PID_TEST_JOYSTICK = 5;
     }
 

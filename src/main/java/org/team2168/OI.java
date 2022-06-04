@@ -3,11 +3,13 @@ package org.team2168;
 import org.team2168.Constants.Joysticks;
 import org.team2168.utils.F310;
 import org.team2168.utils.LinearInterpolator;
+import org.team2168.utils.contrib.BopIt;
 
 public class OI {
     public final F310 driverJoystick = new F310(Joysticks.DRIVER_JOYSTICK);
     public final F310 operatorJoystick = new F310(Joysticks.OPERATOR_JOYSTICK);
     public final F310 testJoystick = new F310(Joysticks.PID_TEST_JOYSTICK);
+    public final BopIt bopIt = new BopIt(Joysticks.BOP_IT);
 
     private LinearInterpolator driverJoystickInterpolator;
     private LinearInterpolator operatorJoystickInterpolator;
