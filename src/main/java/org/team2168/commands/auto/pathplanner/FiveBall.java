@@ -116,6 +116,7 @@ public class FiveBall extends SequentialCommandGroup {
                         
                         parallel(
                                 new DriveTurretWithLimelight(turret, lime),
+                                new ShootBasedOnDistance(shooter, hood, lime),
                                 sequence(
                                         parallel(
                                                 new WaitForLimelightInPosition(lime)
