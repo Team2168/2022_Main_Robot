@@ -55,11 +55,11 @@ public class Paths {
         path_3BALL_1 = getTrajectory("3BALL_1", true, 3.7, 0.7);
         path_Drive1Meter = getTrajectory("Drive1Meter", true);
         path_Drive3Meters = getTrajectory("Drive3Meters", true);
-        path_LineThreeSetupAuto = getTrajectory("LineThreeSetupAuto", true, 1.0, 2.0);
-        path_ReversedThreeSetupAuto = getTrajectory("ReversedThreeSetupAuto", false, 1.0, 2.0);
+        path_LineThreeSetupAuto = getTrajectory("LineThreeSetupAuto", true);
+        path_ReversedThreeSetupAuto = getTrajectory("ReversedThreeSetupAuto", false);
         path_TwoBallLeft = getTrajectory("TwoBallLeft", true);
         path_ReverseTwoBallLeft = getTrajectory("ReverseTwoBallLeft", true);
-        ToLauncherPad = getTrajectory("ToLauncherPad", true, 1.0, 2.0);
+        ToLauncherPad = getTrajectory("ToLauncherPad", true);
         
         path_Disturb_1 = getTrajectory("Disturb_1", true);
         path_Disturb_2 = getTrajectory("Disturb_2", true);
