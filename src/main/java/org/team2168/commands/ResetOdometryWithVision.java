@@ -37,7 +37,9 @@ public class ResetOdometryWithVision extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    limeAdjustPoseAngle = drive.getHeading();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -54,14 +56,11 @@ public class ResetOdometryWithVision extends CommandBase {
       limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS + poseDistFromHubX;
     }
 
-    if (drive.getHeading() > 180.0) {
-      angleOffset = -360.0;
+    if (limeAdjustPoseAngle > 180.0) {
+      angleOffset = angleOffset - 360.0;
     }
-    else if (drive.getHeading() < -180.0) {
-      angleOffset = 360.0;
-    }
-    else {
-      angleOffset = 0.0;
+    else if (limeAdjustPoseAngle < -180.0) {
+      angleOffset = angleOffset + 360.0;
     }
 
     limeAdjustPoseAngle = drive.getHeading() + angleOffset;
