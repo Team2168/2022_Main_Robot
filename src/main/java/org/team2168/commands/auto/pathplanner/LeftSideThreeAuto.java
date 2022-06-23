@@ -78,7 +78,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                         PathUtil.InitialPathState.DISCARDHEADING)))),
         // The Robot moves back to the edge of the tarmac and shoots the shot
         sequence(
-
+         
+            new IntakeRaise(intakeRaiseAndLower),
             new StopMechanisms(hopper, indexer, intakeRoller),
             // race(
             // PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain,
@@ -93,13 +94,13 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
             // The Intake is Raised whilst the robot moves around the hangar to the terminal
             // assembly (loading cargo station) to collect a ball
             sequence(
-                new IntakeLower(intakeRaiseAndLower),
                 PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
                     PathUtil.InitialPathState.PRESERVEODOMETRY),
+                    new IntakeLower(intakeRaiseAndLower),
                 race(
                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                     PathUtil.getPathCommand(path.ToLauncherPad, drivetrain,
-                        PathUtil.InitialPathState.PRESERVEODOMETRY))),
+                        PathUtil.InitialPathState.PRESERVEODOMETRY)),
 
                 sequence(
 
@@ -121,6 +122,6 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                 new SetShooterSpeed(shooter, ShooterRPM.STOP),
                 new StopTurret(turret)
 
-            )));
+            ))));
   }
 }
