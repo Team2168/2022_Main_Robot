@@ -77,10 +77,10 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                     PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain,
                         PathUtil.InitialPathState.DISCARDHEADING)))),
         // The Robot moves back to the edge of the tarmac and shoots the shot
-        sequence(
-         
+       
+         sequence(
             new IntakeRaise(intakeRaiseAndLower),
-            new StopMechanisms(hopper, indexer, intakeRoller),
+            new StopMechanisms(hopper, indexer, intakeRoller)),
             // race(
             // PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain,
             // PathUtil.InitialPathState.PRESERVEODOMETRY))),
@@ -100,7 +100,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                 race(
                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                     PathUtil.getPathCommand(path.ToLauncherPad, drivetrain,
-                        PathUtil.InitialPathState.PRESERVEODOMETRY)),
+                        PathUtil.InitialPathState.PRESERVEODOMETRY))),
 
                 sequence(
 
@@ -111,17 +111,22 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                         PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
                             PathUtil.InitialPathState.PRESERVEODOMETRY))),
                 // returns back to the tarmac line to setup shot sequence
+
+                parallel(
+                    new ShootBasedOnDistance(shooter, hood, limelight),
+                    new DriveTurretWithLimelight(turret, limelight),
                 sequence(
 
-                
                 new WaitUntilFireBalls(shooter, limelight),
                 new FireBalls(shooter, indexer, hopper),
-                new FireBalls(shooter, indexer, hopper)),
+                new FireBalls(shooter, indexer, hopper),
+                new StopMechanisms(hopper, indexer, intakeRoller)
+                )),
 
             parallel(
                 new SetShooterSpeed(shooter, ShooterRPM.STOP),
                 new StopTurret(turret)
 
-            ))));
+            ));
   }
 }
