@@ -7,6 +7,7 @@ package org.team2168.commands.auto.pathplanner;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
 import org.team2168.commands.StopMechanisms;
+import org.team2168.commands.StowEverything;
 import org.team2168.commands.WaitUntilFireBalls;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
@@ -66,6 +67,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
 
                         new DriveTurretWithLimelight(turret, limelight),
                         new ShootBasedOnDistance(shooter, hood, limelight),
+
+                        sequence(
                         // First sequence sets the shooter and hood for shots close to the tarmac line
                         // The robot moves backwards to collect a ball, the intake lower method lowers
                         // the intake
@@ -76,7 +79,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                 race(
                                         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                         PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain,
-                                                PathUtil.InitialPathState.DISCARDHEADING)))),
+                                                PathUtil.InitialPathState.DISCARDHEADING))),
                 // The Robot moves back to the edge of the tarmac and shoots the shot
 
                 sequence(
@@ -98,31 +101,31 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                         PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
                                 PathUtil.InitialPathState.PRESERVEODOMETRY),
                         new IntakeLower(intakeRaiseAndLower),
-                        new DriveTurretWithLimelight(turret, limelight).withTimeout(0.3),
-                        new ShootBasedOnDistance(shooter, hood, limelight).withTimeout(0.3),
                         race(
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                 PathUtil.getPathCommand(path.ToLauncherPad, drivetrain,
                                         PathUtil.InitialPathState.PRESERVEODOMETRY))),
 
-                sequence(
+                                        sequence(
+                                                parallel(
+                                                        new StopMechanisms(hopper, indexer, intakeRoller),
+                                                        new IntakeRaise(intakeRaiseAndLower)
+                                                        )
+                                        ),
 
-                        parallel(
-                                new StopMechanisms(hopper, indexer, intakeRoller),
-                                new IntakeRaise(intakeRaiseAndLower)
-                                ),
+                sequence(
                                 PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
                                 PathUtil.InitialPathState.PRESERVEODOMETRY),
-                                new WaitForShooterAtSpeed(shooter, 20).withTimeout(0.2),
+                                new WaitUntilFireBalls(shooter, limelight),
                                 new FireBalls(shooter, indexer, hopper),
                                 new FireBalls(shooter, indexer, hopper),
-                                new StopMechanisms(hopper, indexer, intakeRoller)),
-                             
+                                new StopMechanisms(hopper, indexer, intakeRoller))
+                          )
+                ),
+                 
 
 
                 // returns back to the tarmac line to setup shot sequence
-                parallel(
-                        new SetShooterSpeed(shooter, ShooterRPM.STOP),
-                        new StopTurret(turret)));
+                new StowEverything(hood, shooter));
     }
 }
