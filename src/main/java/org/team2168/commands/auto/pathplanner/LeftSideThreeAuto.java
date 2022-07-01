@@ -57,7 +57,7 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
         addCommands(
                 // Resets the turret and prevents shooter from waiting to reach speed,
                 // precautions before starting auto
-                new RotateTurret(turret, 0.0).withTimeout(0.2),
+                new RotateTurret(turret, 0.0).withTimeout(0.35),
                 new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
 
                 // The Limelight Race command will be active all the time to continously track
@@ -90,21 +90,23 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                 // PathUtil.InitialPathState.PRESERVEODOMETRY))),
 
                 sequence(
-                        new WaitUntilFireBalls(shooter, limelight),
+                        new WaitForShooterAtSpeed(shooter).withTimeout(0.4),
                         new FireBalls(shooter, indexer, hopper),
+                        new WaitForShooterAtSpeed(shooter).withTimeout(0.15),
                         new FireBalls(shooter, indexer, hopper),
 
                         new StopMechanisms(hopper, indexer, intakeRoller)),
                 // The Intake is Raised whilst the robot moves around the hangar to the terminal
                 // assembly (loading cargo station) to collect a ball
                 sequence(
-                        PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
-                                PathUtil.InitialPathState.PRESERVEODOMETRY),
                         new IntakeLower(intakeRaiseAndLower),
+                     
+                     
                         race(
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                PathUtil.getPathCommand(path.ToLauncherPad, drivetrain,
-                                        PathUtil.InitialPathState.PRESERVEODOMETRY))),
+                                PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
+                                PathUtil.InitialPathState.PRESERVEODOMETRY)
+                                )),
 
                                         sequence(
                                                 parallel(
@@ -116,8 +118,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                 sequence(
                                 PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
                                 PathUtil.InitialPathState.PRESERVEODOMETRY),
-                                new WaitUntilFireBalls(shooter, limelight),
+                                new WaitForShooterAtSpeed(shooter).withTimeout(0.35),
                                 new FireBalls(shooter, indexer, hopper),
+                                new WaitForShooterAtSpeed(shooter).withTimeout(0.15),
                                 new FireBalls(shooter, indexer, hopper),
                                 new StopMechanisms(hopper, indexer, intakeRoller))
                           )
