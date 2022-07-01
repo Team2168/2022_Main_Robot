@@ -98,6 +98,8 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                         PathUtil.getPathCommand(path.path_LineThreeSetupAuto, drivetrain,
                                 PathUtil.InitialPathState.PRESERVEODOMETRY),
                         new IntakeLower(intakeRaiseAndLower),
+                        new DriveTurretWithLimelight(turret, limelight).withTimeout(0.3),
+                        new ShootBasedOnDistance(shooter, hood, limelight).withTimeout(0.3),
                         race(
                                 new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                 PathUtil.getPathCommand(path.ToLauncherPad, drivetrain,
@@ -107,18 +109,16 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
 
                         parallel(
                                 new StopMechanisms(hopper, indexer, intakeRoller),
-                                new IntakeRaise(intakeRaiseAndLower))),
-
-                sequence(
-                        parallel(
+                                new IntakeRaise(intakeRaiseAndLower)
+                                ),
                                 PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
-                                        PathUtil.InitialPathState.PRESERVEODOMETRY),
-                                new DriveTurretWithLimelight(turret, limelight),
-                                new ShootBasedOnDistance(shooter, hood, limelight)),
-                        new WaitForShooterAtSpeed(shooter, 20).withTimeout(0.2),
-                        new FireBalls(shooter, indexer, hopper),
-                        new FireBalls(shooter, indexer, hopper),
-                        new StopMechanisms(hopper, indexer, intakeRoller)),
+                                PathUtil.InitialPathState.PRESERVEODOMETRY),
+                                new WaitForShooterAtSpeed(shooter, 20).withTimeout(0.2),
+                                new FireBalls(shooter, indexer, hopper),
+                                new FireBalls(shooter, indexer, hopper),
+                                new StopMechanisms(hopper, indexer, intakeRoller)),
+                             
+
 
                 // returns back to the tarmac line to setup shot sequence
                 parallel(
