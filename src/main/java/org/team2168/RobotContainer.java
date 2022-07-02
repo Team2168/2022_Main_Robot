@@ -38,8 +38,6 @@ import org.team2168.commands.auto.pathplanner.LeftSideThreeAuto;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
 import org.team2168.commands.climber.DriveClimber;
-import org.team2168.commands.climber.DriveClimberToPosition;
-import org.team2168.commands.climber.DriveClimberToZero;
 import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.*;
 import org.team2168.commands.hood.BumpHoodAngleDown;
@@ -59,9 +57,6 @@ import org.team2168.commands.shooter.BumpShooterSpeedDown;
 import org.team2168.commands.shooter.BumpShooterSpeedUp;
 import org.team2168.commands.shooter.SetShooterSpeed;
 import org.team2168.commands.shootingpositions.*;
-import org.team2168.commands.turret.RotateTurret;
-import org.team2168.commands.turret.ZeroTurret;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.*;
 import org.team2168.subsystems.*;
 import org.team2168.subsystems.Shooter.ShooterRPM;
@@ -93,14 +88,12 @@ public class RobotContainer {
   public final IntakeRoller intakeRoller = IntakeRoller.getInstance();
   private final Indexer indexer = Indexer.getInstance();
   private final Hood hood = Hood.getInstance();
-  private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
-  private final Turret m_turret = Turret.getInstance();
   private final ColorSensor colorSensor = ColorSensor.getInstance();
   private final Turret turret = Turret.getInstance();
 
   // private final ExampleCommand m_autoCommand = new
   // ExampleCommand(m_exampleSubsystem);
-
+  private final IntakeRaiseAndLower intakeRaiseAndLower= IntakeRaiseAndLower.getInstance();
   private final LEDs leds = LEDs.getInstance();
 
   OI oi = OI.getInstance();
@@ -155,17 +148,16 @@ public class RobotContainer {
       drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
       indexer, turret, hood, shooter, lime, pooper, colorSensor));
 
-  
-          autoChooser.addOption("Left Side Auto 3 ball", new LeftSideThreeAuto(drivetrain, intakeRaiseAndLower, 
-          intakeRoller, 
-          hopper, indexer, hood, 
-          shooter, turret, pooper, 
-          colorSensor, lime));
     autoChooser.addOption("5 Ball", new FiveBall(
       drivetrain, intakeRaiseAndLower, intakeRoller,
       hopper, indexer, hood,
       shooter, turret, pooper, colorSensor,
       lime));
+      autoChooser.addOption("Left Side Auto 3 ball", new LeftSideThreeAuto(drivetrain, intakeRaiseAndLower,
+      intakeRoller,
+      hopper, indexer, hood,
+      shooter, turret, pooper,
+      colorSensor, lime));
     autoChooser.addOption("Defensive", new Disturb(
       drivetrain, intakeRaiseAndLower, intakeRoller, hopper, 
       indexer, hood, shooter, turret, pooper, colorSensor, lime));
@@ -221,20 +213,6 @@ public class RobotContainer {
             .whenPressed(new RotateTurret(turret, 0.0));
     
 
-    oi.operatorJoystick.ButtonA().whenPressed(new ExtendMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonA().whenReleased(new RetractMonkeyBar(monkeyBar));
-    oi.operatorJoystick.ButtonBack().whenPressed(new RotateTurret(m_turret, 180.0));
-    oi.operatorJoystick.ButtonStart().whenPressed(new RotateTurret(m_turret, 0.0));
-    oi.operatorJoystick.ButtonB().whenHeld(new ZeroTurret(m_turret));
-    oi.operatorJoystick.ButtonX().whenHeld(new DriveClimberToPosition(climber, 12.0));
-    oi.operatorJoystick.ButtonY().whenPressed(new DriveClimberToZero(climber));
-    oi.operatorJoystick.ButtonRightBumper().whenPressed(new SetIntakeSpeed(intakeRoller, 200));
-    oi.operatorJoystick.ButtonRightBumper().whenReleased(new SetIntakeSpeed(intakeRoller, 0.0));
-
-    oi.operatorJoystick.ButtonLeftBumper().whenPressed(new SetIntakeSpeed(intakeRoller, -200));
-    oi.operatorJoystick.ButtonLeftBumper().whenReleased(new SetIntakeSpeed(intakeRoller, 0.0));
-    oi.operatorJoystick.ButtonRightBumper().whenHeld(new HoodToAngle(hood, 45));
-    // oi.operatorJoystick.ButtonLeftBumper().whenHeld(new HoodToAngle(hood, 0));
     //// Black button
     oi.driverJoystick.ButtonRightBumper()
             .whenPressed(new HoodToAngle(hood, 0.0).withTimeout(0.5))
