@@ -7,10 +7,12 @@ package org.team2168.commands;
 import org.team2168.commands.drivetrain.ArcadeDrive;
 import org.team2168.commands.hopper.DriveHopperWithPercentOutput;
 import org.team2168.commands.indexer.DriveIndexer;
+import org.team2168.commands.intakeraiseandlower.IntakeRaise;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.subsystems.Drivetrain;
 import org.team2168.subsystems.Hopper;
 import org.team2168.subsystems.Indexer;
+import org.team2168.subsystems.IntakeRaiseAndLower;
 import org.team2168.subsystems.IntakeRoller;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -43,5 +45,18 @@ public class StopMechanisms extends ParallelCommandGroup {
         new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
         new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
         new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1));
+       }
+
+       public StopMechanisms(
+      Hopper hopper,
+      Indexer indexer,
+      IntakeRoller intakeRoller,
+      IntakeRaiseAndLower intakeRaiseAndLower) 
+      {
+    addCommands(
+        new DriveHopperWithPercentOutput(hopper, () -> 0.0).withTimeout(0.1),
+        new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
+        new SetIntakeSpeed(intakeRoller, 0.0).withTimeout(0.1),
+        new IntakeRaise(intakeRaiseAndLower));
        }
 }

@@ -80,11 +80,10 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                         new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                         PathUtil.getPathCommand(path.path_TwoBallLeft, drivetrain,
                                                 PathUtil.InitialPathState.DISCARDHEADING))),
-                // The Robot moves back to the edge of the tarmac and shoots the shot
+                
 
                 sequence(
-                        new IntakeRaise(intakeRaiseAndLower),
-                        new StopMechanisms(hopper, indexer, intakeRoller)),
+                        new StopMechanisms(hopper, indexer, intakeRoller, intakeRaiseAndLower)),
                 // race(
                 // PathUtil.getPathCommand(path.path_ReverseTwoBallLeft, drivetrain,
                 // PathUtil.InitialPathState.PRESERVEODOMETRY))),
@@ -109,10 +108,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                                 )),
 
                                         sequence(
-                                                parallel(
-                                                        new StopMechanisms(hopper, indexer, intakeRoller),
-                                                        new IntakeRaise(intakeRaiseAndLower)
-                                                        )
+                                           
+                                                        new StopMechanisms(hopper, indexer, intakeRoller, intakeRaiseAndLower)
+                                                       
                                         ),
 
                 sequence(
