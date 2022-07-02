@@ -92,9 +92,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                         new WaitForShooterAtSpeed(shooter).withTimeout(0.4),
                         new FireBalls(shooter, indexer, hopper),
                         new WaitForShooterAtSpeed(shooter).withTimeout(0.15),
-                        new FireBalls(shooter, indexer, hopper),
+                        new FireBalls(shooter, indexer, hopper)
 
-                        new StopMechanisms(hopper, indexer, intakeRoller)),
+                     ),
                 // The Intake is Raised whilst the robot moves around the hangar to the terminal
                 // assembly (loading cargo station) to collect a ball
                 sequence(
