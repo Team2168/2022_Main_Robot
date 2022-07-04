@@ -89,9 +89,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                 // PathUtil.InitialPathState.PRESERVEODOMETRY))),
 
                 sequence(
-                        new WaitForShooterAtSpeed(shooter).withTimeout(0.4),
+                        new WaitUntilFireBalls(shooter, limelight).withTimeout(0.4),
                         new FireBalls(shooter, indexer, hopper),
-                        new WaitForShooterAtSpeed(shooter).withTimeout(0.15),
+                        new WaitForShooterAtSpeed(shooter, 10).withTimeout(0.2),
                         new FireBalls(shooter, indexer, hopper)
 
                      ),
@@ -116,9 +116,9 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
                 sequence(
                                 PathUtil.getPathCommand(path.path_ReversedThreeSetupAuto, drivetrain,
                                 PathUtil.InitialPathState.PRESERVEODOMETRY),
-                                new WaitForShooterAtSpeed(shooter).withTimeout(0.35),
+                                new WaitUntilFireBalls(shooter, limelight).withTimeout(0.4),
                                 new FireBalls(shooter, indexer, hopper),
-                                new WaitForShooterAtSpeed(shooter).withTimeout(0.15),
+                                new WaitForShooterAtSpeed(shooter, 8).withTimeout(0.2),
                                 new FireBalls(shooter, indexer, hopper),
                                 new StopMechanisms(hopper, indexer, intakeRoller))
                           )
