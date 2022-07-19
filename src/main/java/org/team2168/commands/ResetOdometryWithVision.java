@@ -12,6 +12,7 @@ import org.team2168.subsystems.Turret;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class ResetOdometryWithVision extends CommandBase {
@@ -37,19 +38,17 @@ public class ResetOdometryWithVision extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    limeAdjustPoseAngle = drive.getHeading();
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - Math.sin(-turret.getPositionDegrees() + drive.getHeading()) * lime.getDistanceMetersToCenterHub();
+    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - Math.sin(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
     errorToleranceAngle = 1.0;
 
-    poseDistFromHubX = Math.cos(-turret.getPositionDegrees() + drive.getHeading()) * lime.getDistanceMetersToCenterHub();
+    poseDistFromHubX = Math.cos(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
 
-    if (drive.getPoseY() < Constants.FieldPositions.HUB_Y_METERS) {
+    if (limeAdjustPoseY < Constants.FieldPositions.HUB_Y_METERS) {
       limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - poseDistFromHubX;
     }
     else {
@@ -64,9 +63,10 @@ public class ResetOdometryWithVision extends CommandBase {
     }
 
     limeAdjustPoseAngle = drive.getHeading() + angleOffset;
+    System.out.println(limeAdjustPoseAngle);
 
     if (lime.getPositionX() < errorToleranceAngle) {
-      drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle))));
+      drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(limeAdjustPoseAngle)));
     }
   }
 
