@@ -109,8 +109,6 @@ public class DriveTurretWithLimelight extends CommandBase {
     }
 
     turret.setRotationDegrees(driveLimeTurn);
-    System.out.println(limelight.hasTarget());
-    System.out.println(targetPos);
   }
 
   // Called once the command ends or is interrupted.

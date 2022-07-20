@@ -547,6 +547,17 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     /**
+     * Resets odometry top specified pose
+     * 
+     * @param pose pose to set the odometry
+     * @param rot rotation to set a specific rotation because we couldn't before
+     */
+    public void resetOdometry(Pose2d pose, Rotation2d rot) {
+        resetEncoders();
+        odometry.resetPosition(pose, rot);
+    }
+
+    /**
      * Reset odometry to specified pose, while resetting the gyro.
      *
      * @param pose pose to set odometry
