@@ -7,17 +7,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team2168.Constants;
 import org.team2168.commands.FireBalls;
 import org.team2168.commands.QueueBallsForShotNoStop;
-import org.team2168.commands.RetractAndStopIntake;
-import org.team2168.commands.drivetrain.DriveWithLimelight;
 import org.team2168.commands.indexer.DriveIndexer;
 import org.team2168.commands.intakeraiseandlower.IntakeLower;
 import org.team2168.commands.intakeroller.SetIntakeSpeed;
 import org.team2168.commands.limelight.WaitForLimelightInPosition;
 import org.team2168.commands.shooter.WaitForShooterAtSpeed;
-import org.team2168.commands.shootingpositions.Launchpad;
 import org.team2168.commands.shootingpositions.ShootBasedOnDistance;
-import org.team2168.commands.shootingpositions.TarmacLine;
-import org.team2168.commands.shootingpositions.auto.AutoTarmacLine;
 import org.team2168.commands.turret.DriveTurretWithLimelight;
 import org.team2168.commands.turret.RotateTurret;
 import org.team2168.subsystems.*;
@@ -50,11 +45,9 @@ public class ThreeBall extends SequentialCommandGroup {
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
                                     PathUtil.getPathCommand(paths.path_3BALL_0, drivetrain, PathUtil.InitialPathState.DISCARDHEADING)
                             ),
-                            // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
                             new DriveIndexer(indexer, () -> 0.0).withTimeout(0.1),
 
                             new WaitForLimelightInPosition(lime),
-                            new InstantCommand(() -> System.out.println("Limelight done!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             new FireBalls(shooter, indexer, hopper),
                             new WaitForShooterAtSpeed(shooter),
                             new FireBalls(shooter, indexer, hopper),
@@ -63,15 +56,9 @@ public class ThreeBall extends SequentialCommandGroup {
                             new IntakeLower(intakeRaiseAndLower),
                             race (
                                     new QueueBallsForShotNoStop(hopper, indexer, pooper, colorSensor, intakeRoller),
-                                    sequence(
-                                            PathUtil.getPathCommand(paths.path_3BALL_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
-                                            // PathUtil.getPathCommand(paths.path_3Ball_2, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY),
-                                            //new DriveWithLimelight(drivetrain, lime, 1.5, false)
-                                    )
-                            ),
+                                    PathUtil.getPathCommand(paths.path_3BALL_1, drivetrain, PathUtil.InitialPathState.PRESERVEODOMETRY)
+                                ),
 
-                            // new RetractAndStopIntake(intakeRaiseAndLower, intakeRoller).withTimeout(0.1),
-                            new InstantCommand(() -> System.out.println("path finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
                             race (
                                     new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
                                     sequence (
@@ -79,8 +66,7 @@ public class ThreeBall extends SequentialCommandGroup {
                                             new FireBalls(shooter, indexer, hopper)
                                     )
                             ),
-
-                            new InstantCommand(() -> System.out.println("fired!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")),
+                            
                             race (
                                     new SetIntakeSpeed(intakeRoller, Constants.MotorSpeeds.INTAKE_SPEED),
                                     new FireBalls(shooter, indexer, hopper)
