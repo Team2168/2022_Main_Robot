@@ -547,7 +547,7 @@ public class Drivetrain extends SubsystemBase implements Loggable {
     }
 
     /**
-     * Resets odometry top specified pose
+     * Resets odometry to specified pose
      * 
      * @param pose pose to set the odometry
      * @param rot rotation to set a specific rotation because we couldn't before

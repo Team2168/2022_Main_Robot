@@ -64,8 +64,6 @@ public class ResetOdometryWithVision extends CommandBase {
 
     limeAdjustPoseAngle = drive.getHeading() + angleOffset;
 
-    System.out.println(limeAdjustPoseAngle);
-
     if (lime.getPositionX() < errorToleranceAngle) {
       drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle))), new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle)));
     }

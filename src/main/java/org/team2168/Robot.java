@@ -90,10 +90,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    // TODO we probably don't want to do this
-    if (Math.abs(robotContainer.drivetrain.getHeading()) > 0.5)
-      robotContainer.drivetrain.zeroHeading();
-
     // TODO use shuffleboard here
     SmartDashboard.putString("The Actual Auto we will be running",
         robotContainer.getAutonomousCommand().getName());
@@ -125,6 +121,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    System.out.println(robotContainer.drivetrain.getHeading());
   }
 
   @Override
@@ -146,6 +143,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    System.out.println(robotContainer.drivetrain.getHeading());
   }
 
   @Override
