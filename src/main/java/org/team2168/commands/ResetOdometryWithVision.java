@@ -43,17 +43,10 @@ public class ResetOdometryWithVision extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - Math.sin(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
+    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS + Math.cos(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
     errorToleranceAngle = 1.0;
 
-    poseDistFromHubX = Math.cos(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
-
-    if (limeAdjustPoseY < Constants.FieldPositions.HUB_Y_METERS) {
-      limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - poseDistFromHubX;
-    }
-    else {
-      limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS + poseDistFromHubX;
-    }
+    limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - Math.sin(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
 
     if (limeAdjustPoseAngle > 180.0) {
       angleOffset = angleOffset - 360.0;
