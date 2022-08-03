@@ -38,16 +38,13 @@ public class ResetOdometryWithVision extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    angleOffset = drive.getPoseDegrees() - drive.getHeading();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS + Math.cos(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
-    errorToleranceAngle = 1.0;
-
-    limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - Math.sin(Units.degreesToRadians(-turret.getPositionDegrees() + drive.getHeading())) * lime.getDistanceMetersToCenterHub();
-
     if (limeAdjustPoseAngle > 180.0) {
       angleOffset = angleOffset - 360.0;
     }
@@ -55,10 +52,17 @@ public class ResetOdometryWithVision extends CommandBase {
       angleOffset = angleOffset + 360.0;
     }
 
+    System.out.println(limeAdjustPoseAngle);
+
     limeAdjustPoseAngle = drive.getHeading() + angleOffset;
 
-    if (lime.getPositionX() < errorToleranceAngle) {
-      drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle))), new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle)));
+    limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - Math.sin(Units.degreesToRadians(-turret.getPositionDegrees() + limeAdjustPoseAngle)) * lime.getDistanceMetersToCenterHub();
+    errorToleranceAngle = 1.0;
+
+    limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - Math.cos(Units.degreesToRadians(-turret.getPositionDegrees() + limeAdjustPoseAngle)) * lime.getDistanceMetersToCenterHub();
+
+    if (lime.getPositionX() < errorToleranceAngle && lime.getPositionX() > -errorToleranceAngle && lime.hasTarget()) {
+      drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle))), new Rotation2d(Units.degreesToRadians(drive.getHeading())));
     }
   }
 

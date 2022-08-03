@@ -120,9 +120,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    System.out.println(robotContainer.drivetrain.getHeading());
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -143,7 +141,6 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    System.out.println(robotContainer.drivetrain.getHeading());
   }
 
   @Override
