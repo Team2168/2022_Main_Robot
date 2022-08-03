@@ -39,13 +39,13 @@ public class ResetOdometryWithVision extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    angleOffset = drive.getPoseDegrees() - drive.getHeading();
+    angleOffset = drive.getPoseDegrees() - drive.getHeading();  // offset added to accurately give robot's rotation based on the pose.
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (limeAdjustPoseAngle > 180.0) {
+    if (limeAdjustPoseAngle > 180.0) { // angleoffset returns limeadjustposeangle to a value between -180 and 180 degrees to be usable in rotation2d.
       angleOffset = angleOffset - 360.0;
     }
     else if (limeAdjustPoseAngle < -180.0) {
@@ -56,12 +56,13 @@ public class ResetOdometryWithVision extends CommandBase {
 
     limeAdjustPoseAngle = drive.getHeading() + angleOffset;
 
+    // x and y are essentially two parts of a triangle, that we get by reverse engineering our hypotenuse, which is the distance from the hub to get these two values.
     limeAdjustPoseY = Constants.FieldPositions.HUB_Y_METERS - Math.sin(Units.degreesToRadians(-turret.getPositionDegrees() + limeAdjustPoseAngle)) * lime.getDistanceMetersToCenterHub();
     errorToleranceAngle = 1.0;
 
     limeAdjustPoseX = Constants.FieldPositions.HUB_X_METERS - Math.cos(Units.degreesToRadians(-turret.getPositionDegrees() + limeAdjustPoseAngle)) * lime.getDistanceMetersToCenterHub();
 
-    if (lime.getPositionX() < errorToleranceAngle && lime.getPositionX() > -errorToleranceAngle && lime.hasTarget()) {
+    if (lime.getPositionX() < errorToleranceAngle && lime.getPositionX() > -errorToleranceAngle && lime.hasTarget()) { // the first rotation2d gives the angle on the odometry, the second gives our actual gyro angle.
       drive.resetOdometry(new Pose2d(limeAdjustPoseX, limeAdjustPoseY, new Rotation2d(Units.degreesToRadians(limeAdjustPoseAngle))), new Rotation2d(Units.degreesToRadians(drive.getHeading())));
     }
   }
