@@ -57,11 +57,13 @@ public class LeftSideThreeAuto extends SequentialCommandGroup {
         addCommands(
                 // Resets the turret and prevents shooter from waiting to reach speed,
                 // precautions before starting auto
+                // resets turret to zero point where it faces the hub
                 new RotateTurret(turret, 0.0).withTimeout(0.35),
                 new InstantCommand(() -> shooter.setWaitForShooterAtSpeed(false)),
 
                 // The Limelight Race command will be active all the time to continously track
                 // the hub or use vision processing
+                // whilst it will calculate nessecary shooter and hood speeds.
 
                 race(
 
