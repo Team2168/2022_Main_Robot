@@ -12,9 +12,11 @@ import io.github.oblarg.oblog.annotations.Log;
 
 public class LEDs extends SubsystemBase {
 
-  private Solenoid redLED;
-  private Solenoid greenLED;
-  private Solenoid blueLED;
+  private static Solenoid redLED;
+  private static Solenoid greenLED;
+  private static Solenoid blueLED;
+
+  private double timecount = 0.0;
 
   static LEDs instance = null;
 
@@ -28,7 +30,7 @@ public class LEDs extends SubsystemBase {
    * Sets the red LED on/off
    * @param isOn whether the red LED should be on (true) or off (false)
    */
-  public void red(boolean isOn) {
+  public static void red(boolean isOn) {
     redLED.set(isOn);
   }
 
@@ -36,7 +38,7 @@ public class LEDs extends SubsystemBase {
    * Sets the green LED on/off
    * @param isOn whether the green LED should be on (true) or off (false)
    */
-  public void green(boolean isOn) {
+  public static void green(boolean isOn) {
     greenLED.set(isOn);
   }
 
@@ -44,7 +46,7 @@ public class LEDs extends SubsystemBase {
    * Sets the blue LED on/off
    * @param isOn whether the blue LED should be on (true) or off (false)
    */
-  public void blue(boolean isOn) {
+  public static void blue(boolean isOn) {
     blueLED.set(isOn);
   }
 
@@ -69,8 +71,29 @@ public class LEDs extends SubsystemBase {
     return instance;
   }
 
+  public static void setLED(boolean redOn, boolean greenOn, boolean blueOn) {
+    red(redOn);
+    green(greenOn);
+    blue(blueOn);
+  }
+
+  public void redWhiteBlueLED() {
+
+    if (timecount >= 0 && timecount <= 10) {
+    setLED(true, false, false);
+  } else if (timecount >= 10 && timecount <= 20) {
+    setLED(true, true, true);
+    } else if (timecount >= 20 && timecount <= 30) {
+      setLED(false, false, true);
+  }
+}
+
   @Override
   public void periodic() {
+    ++timecount;
+
+    if(timecount > 30)
+      timecount = 0.0;
     // This method will be called once per scheduler run
   }
 }
