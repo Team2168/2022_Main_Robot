@@ -14,6 +14,7 @@ public class RedWhiteBlueLEDs extends CommandBase {
   private double timecount = 0.0;
   public RedWhiteBlueLEDs(LEDs leds) {
     this.leds = leds;
+    addRequirements(leds);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
