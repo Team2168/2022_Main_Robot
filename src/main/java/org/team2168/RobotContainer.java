@@ -28,6 +28,7 @@ import org.team2168.commands.LEDs.SetBlueLED;
 import org.team2168.commands.LEDs.SetGreenLED;
 import org.team2168.commands.LEDs.SetRedLED;
 import org.team2168.commands.LEDs.LEDStatus;
+import org.team2168.commands.LEDs.RedWhiteBlueLEDs;
 import org.team2168.commands.auto.*;
 import org.team2168.commands.auto.pathplanner.Disturb;
 import org.team2168.commands.auto.pathplanner.DisturbShort;
@@ -196,7 +197,7 @@ public class RobotContainer {
    * Use this method to define your button->command mappings.
    */
   private void configureButtonBindings() {
-    leds.setDefaultCommand(new LEDStatus(leds, shooter, climber, lime));
+    leds.setDefaultCommand(new RedWhiteBlueLEDs(leds));
 
     //DRIVER CONTROLS
     drivetrain.setDefaultCommand(new ArcadeDrive(drivetrain, oi::getGunStyleTrigger, oi::getGunStyleWheel));
