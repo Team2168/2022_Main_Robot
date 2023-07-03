@@ -107,7 +107,7 @@ public final class Constants {
         public static final int MONKEYBAR_EXTEND = 1;
         public static final int POOPER_DOUBLE_SOLENOID_EXTEND = 2;
         public static final int POOPER_DOUBLE_SOLENOID_RETRACT = 3;
-        public static final int RED_LED = 5;
+        public static final int RED_LED = 10;
         public static final int GREEN_LED = 6;
         public static final int BLUE_LED = 7;
         public static final int INTAKE_RAISE = 12;

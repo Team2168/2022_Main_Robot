@@ -79,11 +79,11 @@ public class LEDs extends SubsystemBase {
 
   public void redWhiteBlueLED() {
 
-    if (timecount >= 0 && timecount <= 10) {
+    if (timecount >= 0 && timecount <= 20) {
     setLED(true, false, false);
-  } else if (timecount >= 10 && timecount <= 20) {
+  } else if (timecount >= 20 && timecount <= 40) {
     setLED(true, true, true);
-    } else if (timecount >= 20 && timecount <= 30) {
+    } else if (timecount >= 40 && timecount <= 60) {
       setLED(false, false, true);
   }
 }
@@ -92,7 +92,7 @@ public class LEDs extends SubsystemBase {
   public void periodic() {
     ++timecount;
 
-    if(timecount > 30)
+    if(timecount > 60)
       timecount = 0.0;
     // This method will be called once per scheduler run
   }
