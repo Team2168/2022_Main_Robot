@@ -36,6 +36,7 @@ import org.team2168.commands.auto.pathplanner.FourBall;
 // import org.team2168.commands.auto.pathplanner.DebugPathPlanner;
 import org.team2168.commands.auto.pathplanner.ThreeBall;
 import org.team2168.commands.auto.pathplanner.TwoBall;
+import org.team2168.commands.climber.DemoHangarClimbingSequence;
 import org.team2168.commands.climber.DriveClimber;
 import org.team2168.commands.climber.FullSendClimbingSequence;
 import org.team2168.commands.drivetrain.*;
@@ -213,7 +214,7 @@ public class RobotContainer {
             .whenPressed(new SetShooterSpeed(shooter, ShooterRPM.STOP).withTimeout(0.2))
             .whenPressed(new RotateTurret(turret, -90.0).withTimeout(0.5)
                 .andThen(new StopTurret(turret))
-                .andThen(new FullSendClimbingSequence(climber, monkeyBar))
+                .andThen(new DemoHangarClimbingSequence(climber, monkeyBar))
             );
 
     //lower left button ("Forward Fine-Tuning")
